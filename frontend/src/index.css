@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-gray-900 antialiased;
+    font-feature-settings: "kern" 1, "liga" 1, "tnum" 1;
+    background-color: #f8fafc;
+    background-image:
+      radial-gradient(ellipse 120% 80% at 100% -20%, rgba(14, 165, 233, 0.09), transparent 50%),
+      radial-gradient(ellipse 80% 60% at 0% 100%, rgba(99, 102, 241, 0.06), transparent 45%);
+  }
+  .dark body {
+    @apply text-gray-100;
+    background-color: rgb(3 7 18);
+    background-image:
+      radial-gradient(ellipse 100% 70% at 100% 0%, rgba(14, 165, 233, 0.12), transparent 55%),
+      radial-gradient(ellipse 70% 50% at 0% 100%, rgba(79, 70, 229, 0.08), transparent 50%);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .skeleton {
+    @apply rounded-lg;
+    @apply bg-gray-200/80 dark:bg-gray-800/80 animate-pulse;
+  }
+
+  .fade-in {
+    animation: fadeIn 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .slide-in-right {
+    animation: slideInRight 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .card-interactive {
+    @apply transition-all duration-200 ease-out;
+  }
+  .card-interactive:hover {
+    @apply shadow-md border-gray-300/90 dark:border-gray-600;
+  }
+  .card-interactive:active {
+    transform: scale(0.995);
+  }
+
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-agora-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-950;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes activePulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.dot-pulse {
+  animation: activePulse 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .slide-in-right,
+  .skeleton,
+  .dot-pulse {
+    animation: none !important;
+  }
+  .fade-in,
+  .slide-in-right {
+    opacity: 1;
+    transform: none;
+  }
+}

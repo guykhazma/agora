@@ -1,0 +1,111 @@
+# Crawls every project defined in projects/*.yaml (excluding schema.yaml).
+#
+# Incremental vs full is automatic per project (scripts/crawl.py):
+#   - If data/<project>/state.json has last_crawled_at → sources use that as `since`
+#     (mailing list scans from that month through now; GitHub etc. incremental).
+#   - If there is no checkpoint (new project or empty state) → full window from
+#     mailing_list.history_start in the project YAML (see mailing_list_crawler).
+#
+# Manual full re-ingest: workflow_dispatch with "Re-crawl from scratch" (--reset).
+name: Crawl & Enrich
+
+on:
+  schedule:
+    # Run daily at 6am UTC — all projects, incremental per state.json
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    # Only runs from the default branch — secrets are never available to fork PRs
+    inputs:
+      project:
+        description: "Project ID to crawl (leave empty for all)"
+        required: false
+        default: ""
+      no_llm:
+        description: "Skip LLM enrichment"
+        type: boolean
+        required: false
+        default: false
+      reset:
+        description: "Re-crawl from scratch (ignore previous state)"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write  # needed to commit updated data/
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: crawlers/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r crawlers/requirements.txt
+
+      - name: Download NLTK data (required by sumy tokenizer)
+        run: python -c "import nltk; nltk.download('punkt', quiet=True); nltk.download('punkt_tab', quiet=True)"
+
+      - name: List projects to crawl
+        run: |
+          python -c "
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('.').resolve()))
+          from scripts.crawl import list_project_ids
+          ids = list_project_ids()
+          print('Crawl targets:', ', '.join(ids) if ids else '(none)')
+          "
+
+      - name: Run crawler
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # LLM provider is auto-detected from whichever key is set (priority order):
+          #   anthropic > groq > openai > google > github_models > local
+          # If no secrets are set, github_models is used automatically (free, uses GITHUB_TOKEN).
+          # Set LLM_PROVIDER secret only if you want to force a specific provider.
+          LLM_PROVIDER: ${{ secrets.LLM_PROVIDER }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          # Rate limit delay — auto-set per provider (10s Groq, 1s github_models, 0.5s cloud).
+          # Override with LLM_REQUEST_DELAY secret if needed.
+          LLM_REQUEST_DELAY: ${{ secrets.LLM_REQUEST_DELAY }}
+        run: |
+          ARGS=""
+          if [ -n "${{ inputs.project }}" ]; then
+            ARGS="$ARGS --project ${{ inputs.project }}"
+          fi
+          if [ "${{ inputs.no_llm }}" = "true" ]; then
+            ARGS="$ARGS --no-llm"
+          fi
+          if [ "${{ inputs.reset }}" = "true" ]; then
+            ARGS="$ARGS --reset"
+          fi
+          python scripts/crawl.py $ARGS
+
+      - name: Commit updated data
+        run: |
+          git config user.name "agora-bot"
+          git config user.email "agora-bot@users.noreply.github.com"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "No data changes to commit."
+          else
+            # Note: no [skip ci] — we want the deploy workflow to trigger on data changes
+            git commit -m "chore: update crawled data $(date -u +%Y-%m-%d)"
+            git push
+          fi

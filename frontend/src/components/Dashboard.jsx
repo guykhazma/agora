@@ -1,0 +1,289 @@
+import { useState, useEffect, useMemo } from "react";
+import { fetchProposals, getStatus, getItemType, relativeTime, fetchInitiatives, projectLandingUrl } from "../lib/data";
+import HomeView from "./HomeView";
+import TypeGroupedView from "./TypeGroupedView";
+import DocsView from "./DocsView";
+import SearchBar from "./SearchBar";
+import FilterBar from "./FilterBar";
+import ActivityFeed from "./ActivityFeed";
+import KanbanBoard from "./KanbanBoard";
+import ProposalDetail from "./ProposalDetail";
+import InitiativesView from "./InitiativesView";
+import { useProposalKeyboard } from "../lib/useKeyboard";
+import { GlobeIcon, GitHubIcon, MailIcon, YouTubeIcon, SlackIcon } from "./Icons";
+
+const VIEWS = ["home", "topics", "activity", "docs"];
+
+export default function Dashboard({ project, view, setView }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [initiativesCount, setInitiativesCount] = useState(null);
+  const [search, setSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState(null);
+  const [filterSource, setFilterSource] = useState(null);
+  const [filterType, setFilterType] = useState(null);
+  const [selected, setSelected] = useState(null);
+  const [activityLayout, setActivityLayout] = useState("grouped"); // "grouped" | "kanban"
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    setSelected(null);
+    setInitiativesCount(null);
+    fetchProposals(project.id)
+      .then(setData)
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
+    fetchInitiatives(project.id).then(d => setInitiativesCount(d.total ?? (d.initiatives?.length || 0)));
+  }, [project.id]);
+
+  const proposals = data?.proposals || [];
+
+  // Build set of initiative IDs that span multiple sources (for cross-source badges)
+  const crossSourceInitIds = useMemo(() => {
+    const sourcesPerInit = {};
+    for (const p of proposals) {
+      if (p.initiative_id) {
+        if (!sourcesPerInit[p.initiative_id]) sourcesPerInit[p.initiative_id] = new Set();
+        sourcesPerInit[p.initiative_id].add(p.source);
+      }
+    }
+    return new Set(
+      Object.entries(sourcesPerInit)
+        .filter(([, sources]) => sources.size > 1)
+        .map(([id]) => id)
+    );
+  }, [proposals]);
+
+  const filtered = useMemo(() => {
+    let result = proposals;
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      result = result.filter(
+        (p) =>
+          p.title?.toLowerCase().includes(q) ||
+          p.llm_summary?.toLowerCase().includes(q) ||
+          p.author?.toLowerCase().includes(q)
+      );
+    }
+    if (filterType) result = result.filter((p) => getItemType(p) === filterType);
+    if (filterStatus) result = result.filter((p) => getStatus(p) === filterStatus);
+    if (filterSource) result = result.filter((p) => p.source === filterSource);
+    return result;
+  }, [proposals, search, filterStatus, filterSource, filterType]);
+
+  useProposalKeyboard({
+    proposals: filtered,
+    selected,
+    onSelect: setSelected,
+    onClose: () => setSelected(null),
+  });
+
+  if (loading) return (
+    <div className="space-y-4 mt-4 fade-in">
+      <div className="skeleton h-20 w-full rounded-xl" />
+      <div className="skeleton h-16 w-3/4 max-w-lg rounded-xl" />
+      <div className="skeleton h-20 w-full rounded-xl" />
+      <div className="skeleton h-12 w-full max-w-md rounded-lg" />
+    </div>
+  );
+  if (error)   return <div className="text-red-500 py-16 text-center text-sm">{error}</div>;
+
+  const showFilters = view === "activity";
+  const filtersActive = !!(search.trim() || filterStatus || filterSource || filterType);
+
+  function clearFilters() {
+    setSearch("");
+    setFilterStatus(null);
+    setFilterSource(null);
+    setFilterType(null);
+  }
+
+  return (
+    <>
+      {/* Sticky project header + tab bar — sits just below the global Header (h-14 = top-14) */}
+      <div className="sticky top-14 z-20 -mx-6 px-6 mb-6 bg-white/90 dark:bg-gray-950/90 backdrop-blur-md border-b border-gray-200/80 dark:border-gray-800 shadow-sm fade-in">
+        {/* Project name, description, quick links */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 pb-2">
+          <div className="flex items-center gap-3 min-w-0">
+            {project.logo && (
+              <a
+                href={projectLandingUrl(project)}
+                target="_blank"
+                rel="noreferrer"
+                className="flex-shrink-0 focus-ring rounded-lg"
+                aria-label={`${project.name} — project site`}
+              >
+                <img
+                  src={project.logo}
+                  alt=""
+                  className="h-7 w-auto max-h-7 max-w-[100px] object-contain rounded-md bg-white px-1 py-0.5"
+                  onError={(e) => { e.target.closest("a")?.classList.add("hidden"); }}
+                />
+              </a>
+            )}
+            <div className="min-w-0">
+              <button
+                onClick={() => { setView("home"); setSelected(null); }}
+                className="text-base font-semibold text-gray-900 dark:text-white hover:text-agora-600 dark:hover:text-agora-400 transition-colors text-left leading-tight"
+              >
+                {project.name}
+              </button>
+              {project.description && (
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">{project.description}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Quick links */}
+          <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
+            {project.website && (
+              <a href={project.website} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
+                <GlobeIcon className="w-3 h-3" /> Website
+              </a>
+            )}
+            {project.repo && (
+              <a href={`https://github.com/${project.repo}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
+                <GitHubIcon className="w-3 h-3" /> GitHub
+              </a>
+            )}
+            {project.mailing_list_url && (
+              <a href={project.mailing_list_url} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
+                <MailIcon className="w-3 h-3" /> Mailing List
+              </a>
+            )}
+            {project.youtube_url && (
+              <a href={project.youtube_url} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-red-600 transition-colors">
+                <YouTubeIcon className="w-3 h-3" /> YouTube
+              </a>
+            )}
+            {project.slack_url && (
+              <a href={project.slack_url} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-purple-600 transition-colors">
+                <SlackIcon className="w-3 h-3" /> {project.slack_channel || "Slack"}
+              </a>
+            )}
+          </div>
+        </div>
+
+        {/* Tab navigation */}
+        <div className="flex flex-wrap items-center gap-3 pb-2">
+          <div
+            className="inline-flex flex-wrap p-1 rounded-xl bg-gray-100/90 dark:bg-gray-800/80 border border-gray-200/60 dark:border-gray-700/80 shadow-inner gap-0.5"
+            role="tablist"
+          >
+            {VIEWS.map((v) => {
+              const label = v === "home" ? "Overview" : v === "topics" ? "Initiatives" : v === "activity" ? "Feed" : "Docs";
+              const count = v === "topics" ? initiativesCount : null;
+              return (
+                <button
+                  key={v}
+                  role="tab"
+                  aria-selected={view === v}
+                  onClick={() => setView(v)}
+                  className={`px-3.5 py-1.5 text-sm rounded-lg transition-all flex items-center gap-1.5 focus-ring ${
+                    view === v
+                      ? "text-gray-900 dark:text-white font-semibold bg-white dark:bg-gray-900 shadow-sm ring-1 ring-gray-200/80 dark:ring-gray-600"
+                      : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
+                  }`}
+                >
+                  {label}
+                  {count != null && count > 0 && (
+                    <span
+                      className={`text-xs tabular-nums px-1.5 py-0.5 rounded-md ${
+                        view === v
+                          ? "bg-agora-100 dark:bg-agora-900/50 text-agora-800 dark:text-agora-200"
+                          : "bg-gray-200/70 dark:bg-gray-700/60 text-gray-600 dark:text-gray-400"
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+          {project.last_updated && (
+            <span className="text-xs text-gray-400 dark:text-gray-500 sm:ml-auto">
+              Updated {relativeTime(project.last_updated)}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Filters for browse/list views */}
+      {showFilters && (
+        <div className="mb-5 flex flex-wrap gap-3">
+          <SearchBar value={search} onChange={setSearch} />
+          <div className="ml-auto flex items-center gap-0.5 p-1 rounded-xl bg-gray-100/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/80 shadow-inner">
+            {[["grouped", "List"], ["kanban", "Board"]].map(([key, label]) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setActivityLayout(key)}
+                className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-all focus-ring ${
+                  activityLayout === key
+                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-gray-200/80 dark:ring-gray-600"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <FilterBar
+            proposals={proposals}
+            filterStatus={filterStatus}
+            filterSource={filterSource}
+            filterType={filterType}
+            onStatusChange={setFilterStatus}
+            onSourceChange={setFilterSource}
+            onTypeChange={setFilterType}
+          />
+          <div className="w-full flex flex-wrap items-center gap-2 justify-between">
+            <p className="text-xs text-gray-400 dark:text-gray-500">
+              {filtered.length} item{filtered.length !== 1 ? "s" : ""}
+              {filtered.length !== proposals.length && ` of ${proposals.length}`}
+            </p>
+            {filtersActive && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="text-xs font-medium text-agora-600 dark:text-agora-400 hover:text-agora-700 dark:hover:text-agora-300 px-2 py-1 rounded-lg hover:bg-agora-50 dark:hover:bg-agora-900/20 transition-colors focus-ring"
+              >
+                Clear filters
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Main content */}
+      {view === "home" ? (
+        <HomeView project={project} proposals={proposals} onSelect={setSelected} onViewActivity={() => setView("activity")} />
+      ) : view === "topics" ? (
+        <InitiativesView project={project} />
+      ) : view === "docs" ? (
+        <DocsView proposals={proposals} onSelect={setSelected} />
+      ) : (
+        /* activity — all items with filters + sidebar feed */
+        activityLayout === "kanban" ? (
+          <KanbanBoard proposals={filtered} onSelect={setSelected} />
+        ) : (
+          <div className="flex gap-8 items-start">
+            <div className="flex-1 min-w-0">
+              <TypeGroupedView proposals={filtered} onSelect={setSelected} crossSourceInitIds={crossSourceInitIds} />
+            </div>
+            {proposals.length > 0 && (
+              <ActivityFeed proposals={proposals} onSelect={setSelected} crossSourceInitIds={crossSourceInitIds} />
+            )}
+          </div>
+        )
+      )}
+
+      {selected && (
+        <ProposalDetail proposal={selected} onClose={() => setSelected(null)} onSelect={setSelected} allProposals={proposals} />
+      )}
+    </>
+  );
+}

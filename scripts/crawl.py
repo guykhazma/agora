@@ -410,7 +410,26 @@ def enrich_with_llm(proposals: list[dict], existing_by_id: dict, stage2_llm_clie
                 if delay > 0:
                     time.sleep(delay)
             except Exception as ce:
-                logger.warning(f"LLM stage 2 failed for {p['id']}, keeping local baseline: {ce}")
+                # If we already had a good summary from a prior run, keep it rather than
+                # overwriting with the weaker local baseline due to transient API issues
+                # (quota / rate limit / vendor outage). Also keep the *old* content hash
+                # so the item remains eligible for a retry on the next incremental crawl.
+                old_rec = existing_by_id.get(p["id"])
+                if old_rec and old_rec.get("llm_summary"):
+                    p["llm_summary"] = old_rec.get("llm_summary")
+                    p["llm_status"] = old_rec.get("llm_status")
+                    p["llm_key_points"] = old_rec.get("llm_key_points", [])
+                    p["llm_topics"] = old_rec.get("llm_topics", [])
+                    p["llm_title"] = old_rec.get("llm_title", "")
+                    p["_content_hash"] = old_rec.get("_content_hash", "")
+                    if old_rec.get("_gdoc_len_at_summary") is not None:
+                        p["_gdoc_snap2048"] = old_rec.get("_gdoc_snap2048")
+                        p["_gdoc_len_at_summary"] = old_rec.get("_gdoc_len_at_summary")
+                    logger.warning(
+                        f"LLM stage 2 failed for {p['id']}, keeping previous summary for retry later: {ce}"
+                    )
+                else:
+                    logger.warning(f"LLM stage 2 failed for {p['id']}, keeping local baseline: {ce}")
 
         except Exception as e:
             logger.warning(f"Enrichment failed for {p['id']}: {e}")

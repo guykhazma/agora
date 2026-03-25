@@ -308,12 +308,14 @@ export default function Dashboard({ project, view, setView }) {
         activityLayout === "kanban" ? (
           <KanbanBoard proposals={filtered} onSelect={setSelected} />
         ) : (
-          <div className="flex gap-8 items-start">
+          <div className="flex flex-col lg:flex-row gap-8 items-start">
             <div className="flex-1 min-w-0">
               <TypeGroupedView proposals={filtered} onSelect={setSelected} crossSourceInitIds={crossSourceInitIds} />
             </div>
             {proposals.length > 0 && (
-              <ActivityFeed proposals={proposals} onSelect={setSelected} crossSourceInitIds={crossSourceInitIds} />
+              <div className="w-full lg:w-auto">
+                <ActivityFeed proposals={proposals} onSelect={setSelected} crossSourceInitIds={crossSourceInitIds} />
+              </div>
             )}
           </div>
         )

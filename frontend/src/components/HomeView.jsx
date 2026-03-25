@@ -328,7 +328,7 @@ export default function HomeView({ project, proposals, onSelect, onViewActivity 
       </div>
 
       {/* ── MAIN: 2-column layout ── */}
-      <div className="flex gap-6 items-start">
+      <div className="flex flex-col lg:flex-row gap-6 items-start">
 
         {/* LEFT: Initiatives preview (same data as Initiatives tab, engagement-ranked) */}
         <div className="flex-1 min-w-0">
@@ -375,7 +375,7 @@ export default function HomeView({ project, proposals, onSelect, onViewActivity 
         </div>
 
         {/* RIGHT: Recent activity + votes */}
-        <div className="w-64 flex-shrink-0 sticky top-20 self-start space-y-5">
+        <div className="w-full lg:w-64 flex-shrink-0 lg:sticky lg:top-20 self-start space-y-5">
 
           {/* Recent activity */}
           <div>

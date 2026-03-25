@@ -215,7 +215,8 @@ function ProposalDocGroup({ proposal: p, docs, onSelect }) {
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 export default function DocsView({ proposals, onSelect }) {
-  const [search, setSearch] = useState("");
+  // DocsView intentionally has no local search UI — the global header search
+  // already filters the `proposals` passed into this view.
 
   // Direct community docs (live tracked)
   const liveDocs = useMemo(() =>
@@ -288,19 +289,6 @@ export default function DocsView({ proposals, onSelect }) {
     return result.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
   }, [linkedDocs]);
 
-  const filtered = useMemo(() => {
-    if (!search.trim()) return items;
-    const q = search.toLowerCase();
-    return items.filter(item => {
-      if (item.type === "doc") {
-        return docLabel(item.doc).toLowerCase().includes(q) ||
-          item.doc.refs.some(p => p.title?.toLowerCase().includes(q));
-      }
-      return item.docs.some(d => docLabel(d).toLowerCase().includes(q)) ||
-        item.proposal.title?.toLowerCase().includes(q);
-    });
-  }, [items, search]);
-
   return (
     <div className="space-y-8 fade-in">
 
@@ -338,18 +326,8 @@ export default function DocsView({ proposals, onSelect }) {
           </div>
         ) : (
           <>
-            <div className="mb-4 flex items-center gap-3">
-              <input
-                type="text"
-                placeholder="Search documents or discussions…"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="flex-1 max-w-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded px-3 py-1.5 text-sm text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:border-gray-400 dark:focus:border-gray-500"
-              />
-              <span className="text-xs text-gray-400 dark:text-gray-600">{filtered.length} of {items.length}</span>
-            </div>
             <div className="space-y-2">
-              {filtered.map(item =>
+              {items.map(item =>
                 item.type === "doc"
                   ? <LinkedDocCard key={item.doc.url} doc={item.doc} onSelect={onSelect} />
                   : <ProposalDocGroup key={item.proposal.id} proposal={item.proposal} docs={item.docs} onSelect={onSelect} />

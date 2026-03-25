@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { fetchInitiatives, fetchProposals, STATUS_META, SOURCE_META, relativeTime } from "../lib/data";
+import { fetchInitiatives, fetchProposals, STATUS_META, SOURCE_META, relativeTime, matchesGlobalSearch } from "../lib/data";
 import { cleanTitle } from "../lib/utils";
 import { GitHubIcon, MailIcon, YouTubeIcon } from "./Icons";
 import ProposalDetail from "./ProposalDetail";
@@ -96,13 +96,12 @@ function SourceGroup({ source, items, onSelect, sharedDocs }) {
   );
 }
 
-export default function InitiativesView({ project }) {
+export default function InitiativesView({ project, searchQuery = "" }) {
   const [initiatives, setInitiatives] = useState([]);
   const [proposalsById, setProposalsById] = useState({});
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(null);
   const [selected, setSelected] = useState(null);
-  const [search, setSearch] = useState("");
   const [showArchived, setShowArchived] = useState(false);
 
   useEffect(() => {
@@ -125,8 +124,8 @@ export default function InitiativesView({ project }) {
 
   const visible = useMemo(() => {
     let list = showArchived ? sorted : sorted.filter(i => !i.archived);
-    if (!search.trim()) return list;
-    const q = search.toLowerCase();
+    if (!searchQuery.trim()) return list;
+    const q = searchQuery.toLowerCase();
     return list.filter((i) => {
       if (
         i.title?.toLowerCase().includes(q) ||
@@ -135,14 +134,10 @@ export default function InitiativesView({ project }) {
       ) {
         return true;
       }
-      // Parent title is often LLM-synthesized; match any member thread you saw in Activity
       const members = (i.proposal_ids || []).map((id) => proposalsById[id]).filter(Boolean);
-      return members.some((m) => {
-        const blob = `${m.title || ""} ${m.llm_title || ""}`.toLowerCase();
-        return blob.includes(q);
-      });
+      return members.some((m) => matchesGlobalSearch(m, searchQuery));
     });
-  }, [sorted, search, showArchived, proposalsById]);
+  }, [sorted, searchQuery, showArchived, proposalsById]);
 
   if (loading) return <div className="text-gray-400 py-12 text-center text-sm">Loading…</div>;
 
@@ -169,19 +164,10 @@ export default function InitiativesView({ project }) {
             <> · <button type="button" onClick={() => setShowArchived(false)} className="underline hover:text-gray-600 dark:hover:text-gray-300">hide archived</button></>
           )}
         </p>
-        {initiatives.length > 5 && (
-          <input
-            type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search topics or thread titles…"
-            className="ml-auto text-xs px-3 py-1.5 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:border-gray-400 dark:focus:border-gray-500 w-44"
-          />
-        )}
       </div>
 
-      {visible.length === 0 && search && (
-        <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-8">No topics match "{search}"</p>
+      {visible.length === 0 && searchQuery.trim() && (
+        <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-8">No topics match “{searchQuery.trim()}”. Try the header search or clear filters.</p>
       )}
 
       <div className="space-y-2">

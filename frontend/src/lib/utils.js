@@ -9,11 +9,20 @@ export function cleanTitle(proposalOrTitle = "") {
   const raw = typeof proposalOrTitle === "object"
     ? (proposalOrTitle.llm_title || proposalOrTitle.title || "")
     : proposalOrTitle;
-  return raw
-    .replace(/^(\s*Re:\s*)+/i, "")
+  let t = raw
+    .replace(/^(\s*(?:Re|Fw|Fwd):\s*)+/i, "")
     .replace(/^\[(DISCUSS|PROPOSAL|RFC|VOTE|RESULT|ANNOUNCE|ANNOUNCEMENT|SPEC|WIP)\]\s*/i, "")
-    .replace(/^(\s*Re:\s*)+/i, "")   // second pass catches "[DISCUSS] Re: ..."
+    .replace(/^(\s*(?:Re|Fw|Fwd):\s*)+/i, "")
+    .replace(/\(\s*phase\s*\d+[^)]*\)/gi, "")
+    .replace(/\s+/g, " ")
     .trim();
+  if (t.includes(":")) {
+    const head = t.split(":", 1)[0].trim();
+    if (head.length >= 12 && head.length <= 88 && !head.toLowerCase().startsWith("http")) {
+      t = head;
+    }
+  }
+  return t;
 }
 
 /**

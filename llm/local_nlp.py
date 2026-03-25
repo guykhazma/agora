@@ -180,10 +180,10 @@ class LocalNLPClient:
         if vote_data:
             return self.summarize_vote(title, body, vote_data)
 
-        # Combine body and top replies into one block
+        # Combine body and recent replies into one block (replies already truncated upstream)
         all_text = body[:3000]
-        for r in replies[:10]:
-            all_text += "\n\n" + r[:300]
+        for r in replies[:25]:
+            all_text += "\n\n" + r[:500]
         if doc_content:
             all_text += "\n\n" + doc_content[:1000]
 
@@ -193,7 +193,7 @@ class LocalNLPClient:
 
         # Build key points from top replies (first sentence of each)
         key_points = []
-        for r in replies[:5]:
+        for r in replies[:8]:
             first_sentence = re.split(r'(?<=[.!?])\s+', r.strip())[0]
             if len(first_sentence) > 20:
                 key_points.append(first_sentence[:120])
@@ -228,10 +228,13 @@ class LocalNLPClient:
         sentences = re.split(r'(?<=[.!?])\s+', content.strip())
         key_points = [s for s in sentences[1:6] if len(s) > 30][:3]
 
+        topics = [re.sub(r"[^a-z0-9]+", "-", kw.lower()).strip("-") for kw in _extract_keywords(f"{title} {content[:3000]}", top_n=4)]
+
         return {
             "summary": summary or title,
             "status": status,
             "key_points": key_points,
+            "topics": topics,
         }
 
     def classify_status(self, title: str, body: str) -> str:

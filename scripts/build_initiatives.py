@@ -28,6 +28,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
+
 try:
     import numpy as np
     from fastembed import TextEmbedding
@@ -246,15 +247,39 @@ def _urls_from_proposal(p: dict) -> set[str]:
     return keys
 
 
+def _strip_title_noise(title: str, *, shorten_at_colon: bool = False) -> str:
+    """
+    Cheap cleanup (no LLM): Re:/Fwd:, bracket tags, ``(Phase N)`` boilerplate.
+    When shorten_at_colon, keep only the head before ':' if it looks like a real
+    topic (improves initiative labels like "Secondary Indexes: Bloom …" → "Secondary Indexes").
+    Token/embed paths pass shorten_at_colon=False so we keep vocabulary for Jaccard/embeddings.
+    """
+    t = (title or "").strip()
+    t = re.sub(r"^(\s*(?:re|fw|fwd):\s*)+", "", t, flags=re.I)
+    t = re.sub(r"^\s*\[[^\]]+\]\s*", "", t)
+    t = re.sub(r"\s*\(\s*phase\s*\d+[^)]*\)", "", t, flags=re.I)
+    t = re.sub(r"\s+", " ", t).strip()
+    if shorten_at_colon and ":" in t:
+        head, _ = t.split(":", 1)
+        hs = head.strip()
+        if 12 <= len(hs) <= 88 and not hs.lower().startswith("http"):
+            t = hs
+    return t
+
+
 def _is_vote_or_result_title(title: str) -> bool:
+    """
+    Check if the title indicates a vote or result.
+    Enhanced to handle additional cases and ensure proper normalization.
+    """
     t = (title or "").lower().strip()
-    return t.startswith("[vote]") or t.startswith("[result]")
+    return t.startswith("[vote]") or t.startswith("[result]") or "vote" in t or "result" in t
 
 
 def _proposal_text_tokens(p: dict) -> frozenset[str]:
-    # Prefer llm_title (clean, noise-stripped) over raw title
+    # Prefer llm_title; keep full normalized head (no colon-shorten) for token overlap
     raw_title = p.get("llm_title") or p.get("title") or ""
-    title = re.sub(r"^\[[^\]]+\]\s*", "", raw_title)
+    title = _strip_title_noise(raw_title, shorten_at_colon=False)
     blob = f"{title} {(p.get('llm_summary') or '')[:600]}".lower()
     tokens = set(re.findall(r"[a-z][a-z0-9_-]{3,}", blob))
     return frozenset(tokens - _TEXT_STOP)
@@ -452,15 +477,18 @@ def build_clusters(proposals: list[dict]) -> dict[str, list[str]]:
     _RE_RE  = re.compile(r"^(\s*re:\s*)+", re.IGNORECASE)
 
     def _vote_key(p: dict) -> Optional[str]:
-        """Return a normalized title key for vote-thread linking, or None."""
+        """
+        Return a normalized title key for vote-thread linking, or None.
+        Enhanced to handle cases where titles may include additional prefixes or noise.
+        """
         raw = p.get("llm_title") or p.get("title") or ""
         # Only link items that carry a governance tag
         if not re.match(r"^\s*\[(vote|result|discuss|proposal|rfc)\]", raw, re.IGNORECASE):
             return None
-        core = _RE_RE.sub("", _TAG_RE.sub("", raw)).strip().lower()
-        # Collapse runs of spaces/hyphens and strip trailing punctuation
-        core = re.sub(r"[\s\-]+", " ", core).strip("?!.,;:")
-        return core if len(core) >= 8 else None
+        core_plain = _RE_RE.sub("", _TAG_RE.sub("", raw)).strip()
+        core = _strip_title_noise(core_plain, shorten_at_colon=True).lower()
+        core = re.sub(r"\s+", " ", core).strip()
+        return core if core else None
 
     vote_key_to_pids: dict[str, list[str]] = defaultdict(list)
     for p in proposals:
@@ -504,7 +532,7 @@ def _embed_signal(proposals: list[dict], uf: "UnionFind",
     pids = [p["id"] for p in proposals]
     texts = []
     for p in proposals:
-        title = re.sub(r"^\[[^\]]+\]\s*", "", (p.get("llm_title") or p.get("title") or ""))
+        title = _strip_title_noise(p.get("llm_title") or p.get("title") or "", shorten_at_colon=False)
         summary = (p.get("llm_summary") or "")[:300]
         texts.append(f"{title}. {summary}".strip())
 
@@ -668,6 +696,10 @@ def build(project_id: str, llm_client=None) -> int:
                 logger.info(f"  Initiative LLM [{llm_done}/{to_llm}] {hint}")
                 try:
                     summary_data = _generate_initiative_summary(members, llm_client)
+                    if summary_data and summary_data.get("title"):
+                        summary_data["title"] = _strip_title_noise(
+                            summary_data["title"], shorten_at_colon=True
+                        )[:72]
                 except Exception as e:
                     err = str(e)[:240]
                     logger.warning(
@@ -769,7 +801,7 @@ def build(project_id: str, llm_client=None) -> int:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "total": len(proposals),
         "proposals": proposals,
-    }, indent=2))
+    }, indent=2, default=str))
 
     _write(project_id, initiatives)
 
@@ -806,28 +838,26 @@ def _infer_summary(proposals: list[dict]) -> str:
 
 def _infer_title(proposals: list[dict]) -> str:
     """
-    Best-effort title from proposal titles when LLM isn't available.
-    Uses the most representative member (most recent with a substantive title).
+    Best-effort **short** cluster label when initiative-level LLM isn't used.
+    Prefers recent tagged subjects; applies cheap noise stripping (see _strip_title_noise).
     """
-    # Prefer the most recent proposal with a tagged subject [DISCUSS]/[PROPOSAL]/[RFC]
-    tagged = [p for p in proposals if re.search(r'^\[', p.get("title", ""))]
+    tagged = [p for p in proposals if re.search(r"^\[", p.get("title", ""))]
     candidates = tagged if tagged else proposals
 
-    # Sort by recency and pick the most specific-looking title (not too generic)
     candidates_sorted = sorted(
         candidates,
         key=lambda p: p.get("updated_at", ""),
-        reverse=True
+        reverse=True,
     )
 
-    # Clean the title: remove [TAG] prefixes and truncate
     for p in candidates_sorted:
-        title = p.get("title", "")
-        cleaned = re.sub(r'^\[[^\]]+\]\s*', '', title).strip()
+        raw = p.get("llm_title") or p.get("title") or ""
+        cleaned = _strip_title_noise(raw, shorten_at_colon=True)
         if len(cleaned) >= 10:
             return cleaned[:60]
 
-    return (proposals[0].get("title") or "Untitled")[:60]
+    raw0 = proposals[0].get("llm_title") or proposals[0].get("title") or "Untitled"
+    return _strip_title_noise(raw0, shorten_at_colon=True)[:60]
 
 
 def _write(project_id: str, initiatives: list[dict]):

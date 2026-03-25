@@ -39,6 +39,47 @@ export async function fetchEvents(projectId) {
   }
 }
 
+/**
+ * Client-side search across one proposal row (all sources: GitHub, mailing list, video, google_doc, etc.).
+ * Matches title, LLM fields, body, URLs, linked resources, vote payloads, labels.
+ */
+export function matchesGlobalSearch(proposal, queryRaw) {
+  const q = (queryRaw || "").trim().toLowerCase();
+  if (!q) return true;
+  const p = proposal;
+  const hay = (s) => (s || "").toLowerCase().includes(q);
+  if (hay(p.title)) return true;
+  if (hay(p.llm_title)) return true;
+  if (hay(p.llm_summary)) return true;
+  if (hay(p.author)) return true;
+  if (hay(p.body)) return true;
+  if (hay(p.url)) return true;
+  if (hay(p.source)) return true;
+  if (hay(p.kind)) return true;
+  if (hay(p.initiative_id)) return true;
+  for (const t of p.llm_topics || []) {
+    if (hay(t)) return true;
+  }
+  for (const kp of p.llm_key_points || []) {
+    if (hay(kp)) return true;
+  }
+  for (const lb of p.labels || []) {
+    if (hay(String(lb))) return true;
+  }
+  for (const r of p.linked_resources || []) {
+    if (hay(r.url)) return true;
+    if (hay(r.title)) return true;
+  }
+  if (p.vote_data) {
+    try {
+      if (JSON.stringify(p.vote_data).toLowerCase().includes(q)) return true;
+    } catch {
+      /* ignore */
+    }
+  }
+  return false;
+}
+
 /** Where the project logo / name should link (site, or GitHub if no site). */
 export function projectLandingUrl(project) {
   if (!project) return "#";

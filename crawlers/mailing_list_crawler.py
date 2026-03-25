@@ -24,7 +24,9 @@ logger = logging.getLogger(__name__)
 
 PONY_MAIL_BASE = "https://lists.apache.org/api"
 
-PROPOSAL_SUBJECTS = ["[discuss]", "[proposal]", "[rfc]", "[vote]", "[spec]", "[announce]", "[result]"]
+# Reply snippets passed into enrichment (full thread is used for vote extraction only).
+_ENRICH_REPLY_CHUNKS = 35
+_ENRICH_REPLY_CHARS = 500
 
 
 def _epoch_to_iso(val) -> str:
@@ -46,11 +48,6 @@ def _epoch_to_iso(val) -> str:
     except Exception:
         pass
     return s
-
-
-def _is_proposal(subject: str) -> bool:
-    lower = subject.lower()
-    return any(tag in lower for tag in PROPOSAL_SUBJECTS)
 
 
 def _fetch_month(domain: str, list_name: str, year: int, month: int) -> list[dict]:
@@ -93,7 +90,7 @@ def _fetch_email(mid: str) -> dict:
 
 
 def _fetch_thread(thread_id: str) -> list[dict]:
-    """Fetch all emails in a thread (root + replies)."""
+    """Fetch all emails in a thread (root + every reply we can resolve from the tree)."""
     url = f"{PONY_MAIL_BASE}/thread.lua?id={thread_id}"
     resp = requests.get(url, timeout=30)
     if resp.status_code in (404, 400):
@@ -108,9 +105,8 @@ def _fetch_thread(thread_id: str) -> list[dict]:
     root = root_emails[0]
     all_emails = [root]
 
-    # Collect child message IDs from the tree (limit to 8 replies to keep API calls manageable)
     seen = {root.get("mid") or root.get("id") or thread_id}
-    child_mids = _collect_child_mids(root, seen)[:8]
+    child_mids = _collect_child_mids(root, seen)
 
     for mid in child_mids:
         try:
@@ -123,65 +119,152 @@ def _fetch_thread(thread_id: str) -> list[dict]:
     return all_emails
 
 
+def _reply_head(text: str) -> str:
+    """
+    The author's new text usually appears above 'On … wrote:' quoted history.
+    Vote signals in the quoted part are stale; prefer the head when detecting votes.
+    """
+    if not text:
+        return ""
+    m = re.search(r"^On .+ wrote:\s*$", text, re.MULTILINE | re.IGNORECASE)
+    if m:
+        return text[: m.start()].strip()
+    if "\n---\n" in text:
+        return text.split("\n---\n", 1)[0].strip()
+    return text.strip()
+
+
+def _latest_vote_signal_in_body(body: str) -> str | None:
+    """
+    Pick a single vote token from one message: -1, +1, +1b (binding +1), or 0 (+0 / -0).
+    Prefer the reply head (above 'On … wrote:') so quoted history does not override.
+    """
+    if not body or not body.strip():
+        return None
+
+    def _scan_fragment(fragment: str) -> str | None:
+        if not fragment:
+            return None
+        lower = fragment.lower()
+        found: list[tuple[int, str]] = []
+
+        for m in re.finditer(
+            r"(?:changing|change|switch(?:ed|ing)?)\s+(?:my\s+)?vote\s+to\s*"
+            r"(\+1|\-1|\+0|\-0)(?:\s*\(([^)]*)\))?",
+            lower,
+        ):
+            t, paren = m.group(1), (m.group(2) or "").lower()
+            if t == "-1":
+                found.append((m.end(), "-1"))
+            elif "0" in t:
+                found.append((m.end(), "0"))
+            elif "binding" in paren and "non" not in paren:
+                found.append((m.end(), "+1b"))
+            else:
+                found.append((m.end(), "+1"))
+
+        for m in re.finditer(
+            r"my\s+vote\s+is\s+now\s*(\+1|\-1|\+0|\-0)(?:\s*\(([^)]*)\))?",
+            lower,
+        ):
+            t, paren = m.group(1), (m.group(2) or "").lower()
+            if t == "-1":
+                found.append((m.end(), "-1"))
+            elif "0" in t:
+                found.append((m.end(), "0"))
+            elif t == "+1" and "binding" in paren and "non" not in paren:
+                found.append((m.end(), "+1b"))
+            elif t == "+1":
+                found.append((m.end(), "+1"))
+
+        for m in re.finditer(r"(?m)^\+1(?:\s*\(([^)]*)\))?\b", lower):
+            label = (m.group(1) or "").lower()
+            is_binding = "binding" in label and "non" not in label
+            found.append((m.end(), "+1b" if is_binding else "+1"))
+
+        for m in re.finditer(r"(?m)^\-1\b", lower):
+            found.append((m.end(), "-1"))
+
+        for m in re.finditer(r"(?m)^(?:\+0|\-0)\b", lower):
+            found.append((m.end(), "0"))
+
+        if not found:
+            return None
+        found.sort(key=lambda x: x[0])
+        return found[-1][1]
+
+    head = _reply_head(body)
+    sig = _scan_fragment(head)
+    if sig is not None:
+        return sig
+    return _scan_fragment(body)
+
+
+def _reply_snippets_for_enrichment(emails: list[dict]) -> list[str]:
+    """Recent reply bodies only (truncated). Not persisted — enrichment input."""
+    if len(emails) <= 1:
+        return []
+    rest = emails[1:]
+    rest_sorted = sorted(rest, key=lambda e: e.get("date", "") or "")
+    tail = rest_sorted[-_ENRICH_REPLY_CHUNKS:]
+    return [(e.get("body") or "")[:_ENRICH_REPLY_CHARS] for e in tail]
+
+
 def _parse_vote(emails: list[dict]) -> dict:
     """
-    Extract structured vote data from email bodies.
-    Returns: {binding: int, nonbinding: int, vetoes: int, result: 'passed'|'failed'|'open', voters: list}
+    Extract structured vote data from email bodies, handling vote updates.
+    Each sender's latest explicit vote (line or prose, in chronological order) wins.
     """
-    import re
-
     binding_count = 0
     nonbinding_count = 0
     veto_count = 0
-    voters = []
+    voter_latest_votes: dict[str, dict] = {}
 
-    for email in emails:
-        body = (email.get("body") or "").lower()
+    emails_sorted = sorted(emails, key=lambda e: e.get("date", "") or "")
+
+    for email in emails_sorted:
         sender = email.get("from", "")
+        if not sender:
+            continue
+        body = email.get("body") or ""
+        sig = _latest_vote_signal_in_body(body)
+        if sig is None:
+            continue
+        if sig == "-1":
+            vote = "-1"
+        elif sig == "+1b":
+            vote = "+1 (binding)"
+        elif sig == "+1":
+            vote = "+1"
+        else:
+            vote = "0"
+        voter_latest_votes[sender] = {"voter": sender, "vote": vote}
 
-        # Check for -1 (veto) first
-        if re.search(r"^\s*-1\b", body, re.MULTILINE) or re.search(r"\bveto\b", body):
+    for vote in voter_latest_votes.values():
+        if vote["vote"] == "-1":
             veto_count += 1
-            voters.append({"voter": sender, "vote": "-1"})
-        elif re.search(r"^\s*\+1\s*(binding)?", body, re.MULTILINE):
-            is_binding = bool(re.search(r"\+1\s*\(?\s*binding", body))
-            if is_binding:
-                binding_count += 1
-                voters.append({"voter": sender, "vote": "+1 (binding)"})
-            else:
-                nonbinding_count += 1
-                voters.append({"voter": sender, "vote": "+1"})
-        elif re.search(r"^\s*0\b", body, re.MULTILINE):
-            voters.append({"voter": sender, "vote": "0"})
+        elif vote["vote"] == "+1 (binding)":
+            binding_count += 1
+        elif vote["vote"] == "+1":
+            nonbinding_count += 1
 
-    # Check if vote was cancelled or withdrawn
-    cancellation_patterns = re.compile(
-        r"\b(cancel(l(ed|ing))?|withdraw(n|ing)?|retract(ed|ing)?|postpone[d]?)\s+(this\s+)?(vote|proposal|rfc)\b",
-        re.IGNORECASE
-    )
-    is_cancelled = any(
-        cancellation_patterns.search(email.get("body") or "")
-        for email in emails
-    )
-
-    # Apache requires 3 binding +1 and no -1 to pass
-    if is_cancelled:
-        result = "cancelled"
-    elif binding_count >= 3 and veto_count == 0:
-        result = "passed"
-    elif veto_count > 0:
+    if veto_count > 0:
         result = "vetoed"
+    elif binding_count >= 3:
+        result = "passed"
     elif binding_count > 0 or nonbinding_count > 0:
         result = "open"
     else:
         result = "open"
+
+    voters_sorted = sorted(voter_latest_votes.values(), key=lambda v: v["voter"])
 
     return {
         "binding_plus1": binding_count,
         "nonbinding_plus1": nonbinding_count,
         "vetoes": veto_count,
         "result": result,
-        "voters": voters[:20],
+        "voters": voters_sorted,
     }
 
 
@@ -226,7 +309,7 @@ def _parse_thread(thread_meta: dict, emails: list[dict], project_id: str) -> dic
         "llm_status": None,
         "comment_count": max(0, len(emails) - 1),
         "participant_count": len(participants),
-        "_emails": [e.get("body", "")[:500] for e in emails[1:9]],
+        "_emails": _reply_snippets_for_enrichment(emails),
     }
 
     if vote_data:
@@ -286,10 +369,6 @@ def crawl(project_config: dict, since: Optional[str] = None) -> list[dict]:
             threads = []
 
         for thread_meta in threads:
-            subject = thread_meta.get("subject", "")
-            if not _is_proposal(subject):
-                continue
-
             tid = str(thread_meta.get("tid") or thread_meta.get("id", ""))
             if not tid or tid in seen_thread_ids:
                 continue

@@ -17,7 +17,7 @@ Full backfill / re-ingest:
 Usage:
   python scripts/crawl.py                              # crawl all projects
   python scripts/crawl.py --project iceberg            # crawl one project
-  python scripts/crawl.py --project iceberg --no-llm  # skip LLM enrichment
+  python scripts/crawl.py --project iceberg --no-llm  # stage-1 local only (skip API LLM stage 2)
   python scripts/crawl.py --project iceberg --reset   # ignore checkpoint; full source pull
   python scripts/crawl.py --project iceberg --re-enrich  # re-run LLM on existing data (no re-crawl)
   python scripts/generate_digest.py --project iceberg  # digest only (needs LLM key for narrative)
@@ -32,6 +32,7 @@ Environment variables:
 
 from __future__ import annotations
 import argparse
+import json
 import logging
 import sys
 import os
@@ -158,6 +159,22 @@ def _set_google_doc_summary_anchor(p: dict, doc_content: str) -> None:
     p["_gdoc_len_at_summary"] = len(doc_content)
 
 
+def _vote_data_fingerprint(vote_data: dict | None) -> str:
+    """Stable string so vote parsing fixes invalidate cached llm_* without relying on comment_count alone."""
+    if not vote_data:
+        return ""
+    voters = list(vote_data.get("voters") or [])
+    voters = sorted(voters, key=lambda v: (v.get("voter") or "", v.get("vote") or ""))
+    norm = {
+        "binding_plus1": vote_data.get("binding_plus1"),
+        "nonbinding_plus1": vote_data.get("nonbinding_plus1"),
+        "vetoes": vote_data.get("vetoes"),
+        "result": vote_data.get("result"),
+        "voters": voters,
+    }
+    return json.dumps(norm, sort_keys=True, default=str)
+
+
 def _compute_content_hash(proposal: dict, doc_content: str | None = None) -> str:
     """Hash the content that matters for summarization."""
     if proposal.get("source") == "google_doc":
@@ -169,6 +186,7 @@ def _compute_content_hash(proposal: dict, doc_content: str | None = None) -> str
         + str(proposal.get("comment_count", 0))
         + (proposal.get("_transcript") or "")
         + (proposal.get("_doc_content") or "")
+        + _vote_data_fingerprint(proposal.get("vote_data"))
     )
     return content_hash(text)
 
@@ -176,8 +194,11 @@ def _compute_content_hash(proposal: dict, doc_content: str | None = None) -> str
 def _default_delay(provider: str) -> float:
     """Seconds to sleep between LLM calls. Groq free tier: ~6k TPM → need ~10s gap."""
     env_override = os.environ.get("LLM_REQUEST_DELAY")
-    if env_override is not None:
-        return float(env_override)
+    if env_override:
+        try:
+            return float(env_override)
+        except ValueError:
+            logger.warning(f"Invalid LLM_REQUEST_DELAY value: {env_override}. Falling back to provider defaults.")
     if provider == "groq":
         return 10.0
     if provider in ("ollama", "llama_cpp"):
@@ -187,72 +208,99 @@ def _default_delay(provider: str) -> float:
     return 0.5
 
 
-def _can_handle_locally(proposal: dict) -> bool:
+def _can_handle_locally(proposal: dict, reply_count: int | None = None) -> bool:
     """
-    Return True if this proposal can be adequately summarized with local NLP,
-    saving cloud LLM tokens for items that truly benefit from it.
+    Return True if API LLM stage 2 is unnecessary — local / structural output is enough.
 
-    Local NLP is sufficient for:
-      - Vote threads (structured +1/-1 parsing is exact)
-      - Announcements (title says it all; body is usually short)
-      - Items with very short bodies (<300 chars) — not enough content for LLM to add value
-      - Items with no body and no replies at all
+    Pass reply_count=len(_emails) after popping _emails from the proposal (or None to read from p).
     """
     title_lower = (proposal.get("title") or "").lower()
-    body_len    = len(proposal.get("body") or "")
-    replies     = proposal.get("_emails") or []
+    body_len = len(proposal.get("body") or "")
+    if reply_count is None:
+        reply_count = len(proposal.get("_emails") or [])
 
     if proposal.get("vote_data"):
-        return True   # vote analysis is handled structurally, no LLM needed
+        return True
     if title_lower.startswith("[announce"):
-        return True   # announcement — title + short body is sufficient
+        return True
     if title_lower.startswith("[result]"):
-        return True   # vote result announcement
+        return True
     if proposal.get("kind") == "release":
-        return True   # release notes are self-describing; title + tag sufficient
+        return True
     if proposal.get("kind") == "milestone":
-        return True   # milestones are structural (title + progress); LLM adds little
-    if body_len < 300 and not replies:
-        return True   # no substantive content to summarize
+        return True
+    if body_len < 300 and reply_count == 0:
+        return True
     return False
 
 
-def enrich_with_llm(proposals: list[dict], existing_by_id: dict, llm_client) -> list[dict]:
+def _wants_llm_stage2(p: dict, source: str, reply_count: int, doc_content: str, stage2_client) -> bool:
     """
-    Add LLM summary/status to proposals that need it.
+    True when we should run stage-2 summarization via an API-capable LLMClient.
 
-    Strategy (local-first):
-      1. Items that don't need re-summarization → carry over existing summary
-      2. Items handled well by local NLP (votes, announcements, thin content) → local NLP
-      3. Only rich discussion threads + docs + videos → cloud LLM
+    This is not tied to any single vendor: OpenAI, Anthropic, GitHub Models (GITHUB_TOKEN
+    in Actions), Groq, Ollama, etc. LocalNLPClient is excluded — it only does stage 1.
+    Skipped when stage2_client is None (--no-llm) or for vote threads (stage 1 is exact).
+    """
+    if stage2_client is None:
+        return False
+    from llm.local_nlp import LocalNLPClient
 
-    This minimises cloud LLM calls to stay within free-tier quotas.
+    if isinstance(stage2_client, LocalNLPClient):
+        return False
+    if p.get("vote_data"):
+        return False
+    if source == "youtube":
+        return True
+    if source == "google_doc" and doc_content:
+        return True
+    return not _can_handle_locally(p, reply_count)
+
+
+def enrich_with_llm(proposals: list[dict], existing_by_id: dict, stage2_llm_client) -> list[dict]:
+    """
+    Derive llm_* fields in two stages:
+      1. Always: local / structural / extractive baseline (no paid API).
+      2. Optionally: stage2_llm_client (LLMClient) replaces that baseline for rich threads, docs, video.
+
+    Pass stage2_llm_client=None to run stage 1 only (--no-llm).
     """
     from llm.local_nlp import LocalNLPClient
     local_client = LocalNLPClient()
 
     total = len(proposals)
-    skipped = enriched = local_enriched = failed = 0
+    skipped = stage2_enriched = local_enriched = failed = 0
+
     llm_needed = sum(
-        1 for p in proposals
-        if _needs_summarization(p, existing_by_id) and not _can_handle_locally(p)
+        1
+        for p in proposals
+        if _needs_summarization(p, existing_by_id)
+        and _wants_llm_stage2(
+            p,
+            p.get("source") or "",
+            len(p.get("_emails") or []),
+            p.get("_doc_content") or "",
+            stage2_llm_client,
+        )
     )
-    if llm_needed:
-        delay = _default_delay(llm_client.provider)
+    if llm_needed and stage2_llm_client is not None:
+        delay = _default_delay(stage2_llm_client.provider)
         est_s = int(llm_needed * max(delay, 0.5))
         est_str = f"~{est_s//60}m{est_s%60:02d}s" if est_s >= 60 else f"~{est_s}s"
-        logger.info(f"LLM enrichment: {llm_needed} items via {llm_client.provider} ({est_str} estimated)")
+        logger.info(
+            f"LLM stage 2 (API): {llm_needed} items via {stage2_llm_client.provider} ({est_str} estimated)"
+        )
 
+    stage2_idx = 0
     for idx, p in enumerate(proposals):
         if not _needs_summarization(p, existing_by_id):
-            # Carry over existing summary from old record
             old = existing_by_id[p["id"]]
-            p["llm_summary"]    = old.get("llm_summary")
-            p["llm_status"]     = old.get("llm_status")
+            p["llm_summary"] = old.get("llm_summary")
+            p["llm_status"] = old.get("llm_status")
             p["llm_key_points"] = old.get("llm_key_points", [])
-            p["llm_topics"]     = old.get("llm_topics", [])
-            p["llm_title"]      = old.get("llm_title", "")
-            p["_content_hash"]  = old.get("_content_hash", "")
+            p["llm_topics"] = old.get("llm_topics", [])
+            p["llm_title"] = old.get("llm_title", "")
+            p["_content_hash"] = old.get("_content_hash", "")
             if old.get("_gdoc_len_at_summary") is not None:
                 p["_gdoc_snap2048"] = old.get("_gdoc_snap2048")
                 p["_gdoc_len_at_summary"] = old.get("_gdoc_len_at_summary")
@@ -262,15 +310,31 @@ def enrich_with_llm(proposals: list[dict], existing_by_id: dict, llm_client) -> 
             continue
 
         try:
-            source       = p.get("source")
-            replies      = p.pop("_emails", [])
-            doc_content  = p.pop("_doc_content", "")
-            transcript   = p.pop("_transcript", "")
+            source = p.get("source")
+            replies = p.pop("_emails", [])
+            doc_content = p.pop("_doc_content", "")
+            transcript = p.pop("_transcript", "")
             has_transcript = p.pop("_has_transcript", bool(transcript))
             p.pop("_force_summarize", None)
+            reply_count = len(replies)
 
-            # ── Local NLP path (free, no API call) ──
-            if source != "youtube" and _can_handle_locally(p):
+            # ── Stage 1: local baseline (always) ───────────────────────────────
+            if source == "youtube":
+                p["has_transcript"] = has_transcript
+                result = local_client.summarize_video(
+                    title=p["title"],
+                    description=p.get("body", ""),
+                    transcript=transcript,
+                )
+            elif source == "google_doc" and doc_content:
+                r0 = local_client.summarize_doc(p["title"], doc_content)
+                result = {
+                    "summary": r0.get("summary", ""),
+                    "status": r0.get("status") or "discussion",
+                    "key_points": r0.get("key_points", []),
+                    "topics": r0.get("topics", []),
+                }
+            else:
                 result = local_client.summarize_thread(
                     title=p["title"],
                     body=p.get("body", ""),
@@ -278,83 +342,86 @@ def enrich_with_llm(proposals: list[dict], existing_by_id: dict, llm_client) -> 
                     doc_content=doc_content,
                     vote_data=p.get("vote_data"),
                 )
-                p["llm_summary"]    = result.get("summary", "")
-                p["llm_status"]     = result.get("status") or "discussion"
-                p["llm_key_points"] = result.get("key_points", [])
-                p["llm_topics"]     = result.get("topics", [])
-                p["_content_hash"]  = _compute_content_hash(p, doc_content)
-                _set_google_doc_summary_anchor(p, doc_content)
-                local_enriched += 1
-                continue
 
-            # ── Cloud / local-LLM path ──
-            enriched += 1
-            title_hint = (p.get("title") or "")[:60]
-            used_delta = False
-
-            if source == "youtube":
-                p["has_transcript"] = has_transcript
-                result = llm_client.summarize_video(
-                    title=p["title"],
-                    description=p.get("body", ""),
-                    transcript=transcript,
-                )
-                p["llm_summary"]    = result.get("summary", "")
-                p["llm_key_points"] = result.get("key_points", [])
-                p["llm_topics"]     = result.get("topics", [])
-                p["llm_status"]     = "released"
-            else:
-                old_rec = existing_by_id.get(p["id"])
-                delta_excerpt = None
-                if (
-                    source == "google_doc"
-                    and doc_content
-                    and isinstance(llm_client, LLMClient)
-                ):
-                    delta_excerpt = _gdoc_delta_excerpt(doc_content, old_rec)
-                if delta_excerpt:
-                    used_delta = True
-                    result = llm_client.summarize_doc_delta(
-                        title=p["title"],
-                        previous_summary=old_rec.get("llm_summary") or "",
-                        previous_key_points=old_rec.get("llm_key_points") or [],
-                        delta_excerpt=delta_excerpt,
-                    )
-                else:
-                    result = llm_client.summarize_thread(
-                        title=p["title"],
-                        body=p.get("body", ""),
-                        replies=replies,
-                        doc_content=doc_content,
-                        vote_data=p.get("vote_data"),
-                    )
-                p["llm_summary"]    = result.get("summary", "")
-                p["llm_status"]     = result.get("status") or "discussion"
-                p["llm_key_points"] = result.get("key_points", [])
-                p["llm_topics"]     = result.get("topics", [])
-
-            if result.get("clean_title"):
-                p["llm_title"] = result["clean_title"]
-
-            suffix = " (delta)" if used_delta else ""
-            logger.info(f"  LLM [{enriched}/{llm_needed}] {title_hint}{suffix}")
-
+            p["llm_summary"] = result.get("summary", "")
+            p["llm_status"] = result.get("status") or "discussion"
+            p["llm_key_points"] = result.get("key_points", [])
+            p["llm_topics"] = result.get("topics", [])
+            local_enriched += 1
             p["_content_hash"] = _compute_content_hash(p, doc_content)
             _set_google_doc_summary_anchor(p, doc_content)
 
-            delay = _default_delay(llm_client.provider)
-            if delay > 0:
-                time.sleep(delay)
+            # ── Stage 2: API LLM (optional) ─────────────────────────────────────
+            if not _wants_llm_stage2(p, source or "", reply_count, doc_content, stage2_llm_client):
+                continue
+
+            stage2_idx += 1
+            title_hint = (p.get("title") or "")[:60]
+            used_delta = False
+
+            try:
+                if source == "youtube":
+                    result = stage2_llm_client.summarize_video(
+                        title=p["title"],
+                        description=p.get("body", ""),
+                        transcript=transcript,
+                    )
+                    p["llm_summary"] = result.get("summary", "")
+                    p["llm_key_points"] = result.get("key_points", [])
+                    p["llm_topics"] = result.get("topics", [])
+                    p["llm_status"] = "released"
+                else:
+                    old_rec = existing_by_id.get(p["id"])
+                    delta_excerpt = None
+                    if source == "google_doc" and doc_content and isinstance(stage2_llm_client, LLMClient):
+                        delta_excerpt = _gdoc_delta_excerpt(doc_content, old_rec)
+                    if delta_excerpt:
+                        used_delta = True
+                        result = stage2_llm_client.summarize_doc_delta(
+                            title=p["title"],
+                            previous_summary=old_rec.get("llm_summary") or "",
+                            previous_key_points=old_rec.get("llm_key_points") or [],
+                            delta_excerpt=delta_excerpt,
+                        )
+                    else:
+                        result = stage2_llm_client.summarize_thread(
+                            title=p["title"],
+                            body=p.get("body", ""),
+                            replies=replies,
+                            doc_content=doc_content,
+                            vote_data=None,
+                        )
+                    p["llm_summary"] = result.get("summary", "")
+                    p["llm_status"] = result.get("status") or "discussion"
+                    p["llm_key_points"] = result.get("key_points", [])
+                    p["llm_topics"] = result.get("topics", [])
+
+                if result.get("clean_title"):
+                    p["llm_title"] = result["clean_title"]
+
+                suffix = " (delta)" if used_delta else ""
+                logger.info(f"  LLM stage 2 [{stage2_idx}/{llm_needed}] {title_hint}{suffix}")
+
+                p["_content_hash"] = _compute_content_hash(p, doc_content)
+                _set_google_doc_summary_anchor(p, doc_content)
+
+                stage2_enriched += 1
+                delay = _default_delay(stage2_llm_client.provider)
+                if delay > 0:
+                    time.sleep(delay)
+            except Exception as ce:
+                logger.warning(f"LLM stage 2 failed for {p['id']}, keeping local baseline: {ce}")
 
         except Exception as e:
-            logger.warning(f"LLM enrichment failed for {p['id']}: {e}")
+            logger.warning(f"Enrichment failed for {p['id']}: {e}")
             p.pop("_emails", None)
             p.pop("_doc_content", None)
             p.pop("_transcript", None)
             failed += 1
 
+    local_only = local_enriched - stage2_enriched
     logger.info(
-        f"LLM enrichment: {enriched} cloud, {local_enriched} local, "
+        f"Enrichment: {stage2_enriched} LLM stage 2 (API), {local_only} local-only, "
         f"{skipped} skipped (unchanged), {failed} failed / {total} total"
     )
     return proposals
@@ -376,7 +443,10 @@ def crawl_project(project_id: str, use_llm: bool = True):
     since = state.get("last_crawled_at")
 
     mode = "incremental" if since else "full backfill"
-    logger.info(f"=== Crawling {project_id} [{mode}] — LLM={'on' if use_llm else 'off'} ===")
+    logger.info(
+        f"=== Crawling {project_id} [{mode}] — "
+        f"LLM stage 2 (API)={'on' if use_llm else 'off'} (stage 1 local baseline always) ==="
+    )
     if since:
         logger.info(f"  Checkpoint: fetching items updated since {since[:10]}")
 
@@ -392,32 +462,39 @@ def crawl_project(project_id: str, use_llm: bool = True):
     from crawlers import youtube_crawler, github_discussions_crawler, calendar_crawler
 
     def _crawl_github():
+        logger.info("  (parallel) GitHub issues/PRs — starting…")
         return ("GitHub issues/PRs", github_crawler.crawl(config, since=since))
 
     def _crawl_mailing_list():
+        logger.info("  (parallel) Mailing list — starting (often slowest: every thread + replies)…")
         return ("Mailing list", mailing_list_crawler.crawl(config, since=since))
 
     def _crawl_youtube():
         if not config.get("youtube"):
             return ("YouTube", [])
+        logger.info("  (parallel) YouTube — starting…")
         return ("YouTube", youtube_crawler.crawl(config, since=since))
 
     def _crawl_discussions():
         if not (config.get("github_discussions") or config.get("github", {}).get("repo")):
             return ("GitHub Discussions", [])
+        logger.info("  (parallel) GitHub Discussions — starting…")
         return ("GitHub Discussions", github_discussions_crawler.crawl(config, since=since))
 
     def _crawl_releases():
         if not (config.get("github", {}).get("repo") or config.get("repo")):
             return ("GitHub Releases", [])
+        logger.info("  (parallel) GitHub Releases — starting…")
         return ("GitHub Releases", github_crawler.crawl_releases(config, since=since))
 
     def _crawl_milestones():
         if not (config.get("github", {}).get("repo") or config.get("repo")):
             return ("GitHub Milestones", [])
+        logger.info("  (parallel) GitHub Milestones — starting…")
         return ("GitHub Milestones", github_crawler.crawl_milestones(config, since=since))
 
     def _crawl_calendar():
+        logger.info("  (parallel) Calendar — starting…")
         if config.get("calendars") or config.get("calendar", {}).get("ics_url"):
             calendar_crawler.crawl_events(config, project_id)
         return ("Calendar", [])
@@ -490,13 +567,12 @@ def crawl_project(project_id: str, use_llm: bool = True):
         if p.get("linked_resources") and p.get("source") != "google_doc":
             enrich_proposal_with_docs(p)
 
-    # LLM enrichment
-    if use_llm and new_proposals:
+    # Derived fields: stage 1 (local) always; stage 2 (API LLM) when use_llm
+    if new_proposals:
         from llm.client import get_client
-        client = get_client()
-        new_proposals = enrich_with_llm(new_proposals, existing_by_id, client)
-    else:
-        _strip_internal_fields(new_proposals)
+        stage2_llm = get_client() if use_llm else None
+        new_proposals = enrich_with_llm(new_proposals, existing_by_id, stage2_llm)
+    _strip_internal_fields(new_proposals)
 
     # Write merged data
     write_project_data(project_id, new_proposals, config)

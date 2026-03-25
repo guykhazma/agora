@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { fetchProposals, getStatus, getItemType, relativeTime, fetchInitiatives, projectLandingUrl } from "../lib/data";
+import { fetchProposals, getStatus, getItemType, relativeTime, fetchInitiatives, projectLandingUrl, matchesGlobalSearch } from "../lib/data";
 import HomeView from "./HomeView";
 import TypeGroupedView from "./TypeGroupedView";
 import DocsView from "./DocsView";
@@ -59,19 +59,17 @@ export default function Dashboard({ project, view, setView }) {
   const filtered = useMemo(() => {
     let result = proposals;
     if (search.trim()) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (p) =>
-          p.title?.toLowerCase().includes(q) ||
-          p.llm_summary?.toLowerCase().includes(q) ||
-          p.author?.toLowerCase().includes(q)
-      );
+      result = result.filter((p) => matchesGlobalSearch(p, search));
     }
     if (filterType) result = result.filter((p) => getItemType(p) === filterType);
     if (filterStatus) result = result.filter((p) => getStatus(p) === filterStatus);
     if (filterSource) result = result.filter((p) => p.source === filterSource);
     return result;
   }, [proposals, search, filterStatus, filterSource, filterType]);
+
+  const scrollToSearchResults = () => {
+    document.getElementById("global-search-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   useProposalKeyboard({
     proposals: filtered,
@@ -209,13 +207,47 @@ export default function Dashboard({ project, view, setView }) {
             </span>
           )}
         </div>
+
+        {/* Global search — same corpus as Feed (GitHub, ML, video, docs, votes…) */}
+        <div className="flex flex-wrap items-center gap-2 pb-3">
+          <SearchBar
+            id="global-search"
+            value={search}
+            onChange={setSearch}
+            placeholder="Search all sources — GitHub, mailing list, video, docs, links…"
+            onSubmit={scrollToSearchResults}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              document.getElementById("global-search")?.focus({ preventScroll: true });
+              scrollToSearchResults();
+            }}
+            className="shrink-0 px-4 py-2 text-sm font-medium rounded-xl bg-agora-600 hover:bg-agora-700 text-white dark:bg-agora-500 dark:hover:bg-agora-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-agora-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950 transition-colors"
+          >
+            Search
+          </button>
+          {search.trim() && view !== "topics" && (
+            <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums">
+              {filtered.length} match{filtered.length !== 1 ? "es" : ""}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Filters for browse/list views */}
       {showFilters && (
-        <div className="mb-5 flex flex-wrap gap-3">
-          <SearchBar value={search} onChange={setSearch} />
-          <div className="ml-auto flex items-center gap-0.5 p-1 rounded-xl bg-gray-100/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/80 shadow-inner">
+        <div className="mb-5 flex flex-wrap items-center gap-3">
+          <FilterBar
+            proposals={proposals}
+            filterStatus={filterStatus}
+            filterSource={filterSource}
+            filterType={filterType}
+            onStatusChange={setFilterStatus}
+            onSourceChange={setFilterSource}
+            onTypeChange={setFilterType}
+          />
+          <div className="flex items-center gap-0.5 p-1 rounded-xl bg-gray-100/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/80 shadow-inner ml-auto">
             {[["grouped", "List"], ["kanban", "Board"]].map(([key, label]) => (
               <button
                 key={key}
@@ -231,15 +263,6 @@ export default function Dashboard({ project, view, setView }) {
               </button>
             ))}
           </div>
-          <FilterBar
-            proposals={proposals}
-            filterStatus={filterStatus}
-            filterSource={filterSource}
-            filterType={filterType}
-            onStatusChange={setFilterStatus}
-            onSourceChange={setFilterSource}
-            onTypeChange={setFilterType}
-          />
           <div className="w-full flex flex-wrap items-center gap-2 justify-between">
             <p className="text-xs text-gray-400 dark:text-gray-500">
               {filtered.length} item{filtered.length !== 1 ? "s" : ""}
@@ -259,12 +282,27 @@ export default function Dashboard({ project, view, setView }) {
       )}
 
       {/* Main content */}
+      {view === "home" && search.trim() ? (
+        <div id="global-search-results" className="scroll-mt-36 mb-8 space-y-3 fade-in">
+          <h2 className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+            Matching items · {filtered.length} result{filtered.length !== 1 ? "s" : ""}
+          </h2>
+          {filtered.length === 0 ? (
+            <p className="text-sm text-gray-500 dark:text-gray-400 py-6 text-center border border-dashed border-gray-200 dark:border-gray-700 rounded-xl">
+              No proposals match “{search.trim()}”. Try other keywords or check linked URLs in the thread body.
+            </p>
+          ) : (
+            <TypeGroupedView proposals={filtered} onSelect={setSelected} crossSourceInitIds={crossSourceInitIds} />
+          )}
+        </div>
+      ) : null}
+
       {view === "home" ? (
         <HomeView project={project} proposals={proposals} onSelect={setSelected} onViewActivity={() => setView("activity")} />
       ) : view === "topics" ? (
-        <InitiativesView project={project} />
+        <InitiativesView project={project} searchQuery={search} />
       ) : view === "docs" ? (
-        <DocsView proposals={proposals} onSelect={setSelected} />
+        <DocsView proposals={filtered} onSelect={setSelected} />
       ) : (
         /* activity — all items with filters + sidebar feed */
         activityLayout === "kanban" ? (

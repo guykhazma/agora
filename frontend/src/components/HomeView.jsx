@@ -185,7 +185,7 @@ function RecentItem({ p, onSelect }) {
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
-export default function HomeView({ project, proposals, onSelect, onViewActivity }) {
+export default function HomeView({ project, proposals, onSelect, onViewActivity, onViewEvents }) {
   const [initiatives, setInitiatives]          = useState([]);
   const [initiativesLoading, setInitLoading]   = useState(true);
   const [upcomingEvents, setUpcomingEvents]    = useState([]);
@@ -288,6 +288,15 @@ export default function HomeView({ project, proposals, onSelect, onViewActivity 
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">Upcoming Events</span>
                   <div className="flex items-center gap-2">
+                    {typeof onViewEvents === "function" && (
+                      <button
+                        type="button"
+                        onClick={onViewEvents}
+                        className="text-xs font-medium text-agora-600 dark:text-agora-400 px-2 py-0.5 rounded-md hover:bg-agora-50 dark:hover:bg-agora-900/20 transition-colors focus-ring"
+                      >
+                        All events →
+                      </button>
+                    )}
                     {calendarUrl.map((c, i) => (
                       <a key={i} href={c.url} target="_blank" rel="noreferrer" className="text-xs font-medium text-indigo-600 dark:text-indigo-300 px-2 py-0.5 rounded-md hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors focus-ring" title={c.name}>
                         {c.name.includes("Dev") ? "Dev ↗" : "Community ↗"}

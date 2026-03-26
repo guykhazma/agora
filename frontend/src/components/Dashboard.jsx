@@ -3,6 +3,7 @@ import { fetchProposals, getStatus, getItemType, relativeTime, fetchInitiatives,
 import HomeView from "./HomeView";
 import TypeGroupedView from "./TypeGroupedView";
 import DocsView from "./DocsView";
+import EventsView from "./EventsView";
 import SearchBar from "./SearchBar";
 import FilterBar from "./FilterBar";
 import ActivityFeed from "./ActivityFeed";
@@ -12,7 +13,7 @@ import InitiativesView from "./InitiativesView";
 import { useProposalKeyboard } from "../lib/useKeyboard";
 import { GlobeIcon, GitHubIcon, MailIcon, YouTubeIcon, SlackIcon } from "./Icons";
 
-const VIEWS = ["home", "topics", "activity", "docs"];
+const VIEWS = ["home", "topics", "activity", "docs", "events"];
 
 export default function Dashboard({ project, view, setView }) {
   const [data, setData] = useState(null);
@@ -171,7 +172,7 @@ export default function Dashboard({ project, view, setView }) {
             role="tablist"
           >
             {VIEWS.map((v) => {
-              const label = v === "home" ? "Overview" : v === "topics" ? "Initiatives" : v === "activity" ? "Feed" : "Docs";
+              const label = v === "home" ? "Overview" : v === "topics" ? "Initiatives" : v === "activity" ? "Feed" : v === "docs" ? "Docs" : "Events";
               const count = v === "topics" ? initiativesCount : null;
               return (
                 <button
@@ -298,9 +299,17 @@ export default function Dashboard({ project, view, setView }) {
       ) : null}
 
       {view === "home" ? (
-        <HomeView project={project} proposals={proposals} onSelect={setSelected} onViewActivity={() => setView("activity")} />
+        <HomeView
+          project={project}
+          proposals={proposals}
+          onSelect={setSelected}
+          onViewActivity={() => setView("activity")}
+          onViewEvents={() => setView("events")}
+        />
       ) : view === "topics" ? (
         <InitiativesView project={project} searchQuery={search} />
+      ) : view === "events" ? (
+        <EventsView projectId={project.id} />
       ) : view === "docs" ? (
         <DocsView proposals={filtered} onSelect={setSelected} />
       ) : (

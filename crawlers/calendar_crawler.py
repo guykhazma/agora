@@ -58,6 +58,7 @@ def crawl_events(config: dict, project_id: str) -> None:
     now = datetime.now(tz=timezone.utc)
     cutoff = now + timedelta(days=LOOKAHEAD_DAYS)
     all_events: list[dict] = []
+    fetched_any = False
 
     for cal_cfg in cal_configs:
         ics_url = cal_cfg.get("ics_url")
@@ -77,15 +78,16 @@ def crawl_events(config: dict, project_id: str) -> None:
         except Exception as e:
             logger.error(f"calendar_crawler: failed to parse '{cal_name}' ICS: {e}")
             continue
+        fetched_any = True
 
         count = 0
         for component in cal.walk():
             if component.name != "VEVENT":
                 continue
-            event = _parse_event(component, now, cutoff, cal_name)
-            if event:
-                all_events.append(event)
-                count += 1
+            events = _parse_event(component, now, cutoff, cal_name) or []
+            if events:
+                all_events.extend(events)
+                count += len(events)
 
         logger.info(f"calendar: '{cal_name}' — {count} upcoming events")
 
@@ -97,7 +99,9 @@ def crawl_events(config: dict, project_id: str) -> None:
         if key not in seen:
             seen.add(key)
             unique_events.append(ev)
-    unique_events.sort(key=lambda e: e["start"])
+    unique_events.sort(key=lambda e: e["_start_ts"])
+    for ev in unique_events:
+        ev.pop("_start_ts", None)
 
     # Build calendar_urls list for frontend "View calendar" links
     calendar_urls = [
@@ -115,28 +119,36 @@ def crawl_events(config: dict, project_id: str) -> None:
     out_dir = DATA_DIR / project_id
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "events.json"
+    if not fetched_any:
+        logger.error(f"calendar: no ICS feeds could be fetched; keeping existing {out_path} (if any)")
+        return
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=2, ensure_ascii=False)
 
     logger.info(f"calendar: wrote {len(unique_events)} total upcoming events to {out_path}")
 
 
-def _parse_event(component, now: datetime, cutoff: datetime, calendar_name: str = "") -> Optional[dict]:
-    """Parse a VEVENT component and return a dict if it falls within [now, cutoff]."""
+def _to_utc(dt: datetime) -> datetime:
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc)
+
+
+def _parse_event(component, now: datetime, cutoff: datetime, calendar_name: str = "") -> list[dict]:
+    """
+    Parse a VEVENT component and return a list of dicts for occurrences within [now, cutoff].
+    Expands RRULE recurrences into concrete upcoming instances.
+    """
     try:
         dtstart = component.get("DTSTART")
         if dtstart is None:
-            return None
+            return []
         start = dtstart.dt
 
         # Convert date-only events to datetime
         if not isinstance(start, datetime):
             start = datetime(start.year, start.month, start.day, tzinfo=timezone.utc)
-        elif start.tzinfo is None:
-            start = start.replace(tzinfo=timezone.utc)
-
-        if start < now or start > cutoff:
-            return None
+        start = _to_utc(start)
 
         dtend = component.get("DTEND")
         end = None
@@ -144,23 +156,93 @@ def _parse_event(component, now: datetime, cutoff: datetime, calendar_name: str 
             end = dtend.dt
             if not isinstance(end, datetime):
                 end = datetime(end.year, end.month, end.day, tzinfo=timezone.utc)
-            elif end.tzinfo is None:
-                end = end.replace(tzinfo=timezone.utc)
+            end = _to_utc(end)
 
         title = str(component.get("SUMMARY") or "").strip()
         location = str(component.get("LOCATION") or "").strip()
         description = str(component.get("DESCRIPTION") or "").strip()
         rrule = component.get("RRULE")
 
-        return {
+        # Duration (for recurring instances)
+        duration = None
+        if end and isinstance(end, datetime):
+            duration = end - start
+
+        base = {
             "title": title,
-            "start": start.isoformat(),
-            "end": end.isoformat() if end else None,
             "location": location,
             "description": description[:500] if description else "",
-            "recurring": rrule is not None,
             "calendar": calendar_name,
         }
+
+        # Non-recurring
+        if not rrule:
+            if start < now or start > cutoff:
+                return []
+            return [{
+                **base,
+                "start": start.isoformat(),
+                "end": end.isoformat() if end else None,
+                "recurring": False,
+                "_start_ts": start.timestamp(),
+            }]
+
+        # Recurring: expand occurrences within window
+        try:
+            from dateutil.rrule import rrulestr
+        except Exception:
+            # python-dateutil is in requirements; if missing, fall back to including only DTSTART
+            if start < now or start > cutoff:
+                return []
+            return [{
+                **base,
+                "start": start.isoformat(),
+                "end": end.isoformat() if end else None,
+                "recurring": True,
+                "_start_ts": start.timestamp(),
+            }]
+
+        # rrulestr needs the RRULE line, not just the value
+        try:
+            rule_text = component.get("RRULE").to_ical().decode("utf-8", errors="ignore").strip()
+        except Exception:
+            rule_text = ""
+        if rule_text and not rule_text.upper().startswith("RRULE:"):
+            rule_text = f"RRULE:{rule_text}"
+
+        # Collect EXDATEs if present
+        exdates = set()
+        try:
+            ex = component.get("EXDATE")
+            if ex:
+                # icalendar may return vDDDLists; iterate defensively
+                for exd in getattr(ex, "dts", []) or []:
+                    dt = exd.dt
+                    if isinstance(dt, datetime):
+                        exdates.add(_to_utc(dt))
+                    else:
+                        exdates.add(datetime(dt.year, dt.month, dt.day, tzinfo=timezone.utc))
+        except Exception:
+            pass
+
+        occs: list[dict] = []
+        if rule_text:
+            rule = rrulestr(rule_text, dtstart=start)
+            # between() is inclusive; we want events starting in [now, cutoff]
+            for occ in rule.between(now, cutoff, inc=True):
+                occ_utc = _to_utc(occ)
+                if occ_utc in exdates:
+                    continue
+                occ_end = (occ_utc + duration) if duration else None
+                occs.append({
+                    **base,
+                    "start": occ_utc.isoformat(),
+                    "end": occ_end.isoformat() if occ_end else None,
+                    "recurring": True,
+                    "_start_ts": occ_utc.timestamp(),
+                })
+
+        return occs
     except Exception as e:
         logger.debug(f"calendar: skipping event due to parse error: {e}")
-        return None
+        return []

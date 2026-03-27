@@ -12,14 +12,17 @@ function periodLabel(period) {
   return "This week";
 }
 
+function formatCoverageDate(iso) {
+  // Parse YYYY-MM-DD as local date to avoid UTC-offset day shifts
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
 function coverageLine(digest) {
   if (!digest?.coverage?.from || !digest?.coverage?.to) return null;
-  const n = digest.coverage.thread_count ?? digest.item_count;
-  const range =
-    digest.coverage.from === digest.coverage.to
-      ? digest.coverage.from
-      : `${digest.coverage.from}–${digest.coverage.to}`;
-  return `Based on ${n} threads updated ${range} (UTC)`;
+  const from = formatCoverageDate(digest.coverage.from);
+  const to = formatCoverageDate(digest.coverage.to);
+  return from === to ? `Covers ${from}` : `Covers ${from} – ${to}`;
 }
 
 export default function DigestBanner({ projectId, compact = false }) {

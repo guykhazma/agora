@@ -6,6 +6,10 @@ on:
     paths:
       - "frontend/**"
       - "data/**"
+  workflow_run:
+    workflows: ["Crawl & Enrich"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -21,6 +25,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v4
 

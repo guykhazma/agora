@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { fetchEvents } from "../lib/data";
-
-function parseDate(s) {
-  const d = new Date(s);
-  return Number.isNaN(d.getTime()) ? null : d;
-}
+import {
+  formatEventLocalTimeRange,
+  formatEventWeekdayDate,
+  localTimeHint,
+  parseEventInstant,
+} from "../lib/eventTime";
 
 function calendarTextBlob(location, description) {
   const raw = `${location || ""} ${description || ""}`;
@@ -44,17 +45,12 @@ function extractEventActionLink(location, description) {
 }
 
 function EventRow({ ev }) {
-  const start = parseDate(ev.start);
-  const end = ev.end ? parseDate(ev.end) : null;
+  const start = parseEventInstant(ev.start);
+  const end = ev.end ? parseEventInstant(ev.end) : null;
   const action = extractEventActionLink(ev.location, ev.description);
 
-  const dateStr = start
-    ? start.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })
-    : "Unknown date";
-  const timeStr = start
-    ? start.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })
-    : "";
-  const endStr = end ? end.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" }) : null;
+  const dateStr = formatEventWeekdayDate(start);
+  const { timeRange, zoneShort } = formatEventLocalTimeRange(start, end);
 
   return (
     <div className="bg-white/90 dark:bg-gray-900/90 border border-gray-200/90 dark:border-gray-700 rounded-2xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
@@ -69,7 +65,10 @@ function EventRow({ ev }) {
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1 text-xs text-gray-500 dark:text-gray-400">
-            <span className="tabular-nums">{timeStr}{endStr ? `–${endStr}` : ""}</span>
+            <span className="tabular-nums">
+              {timeRange}
+              {zoneShort ? <span className="text-gray-400 dark:text-gray-500"> · {zoneShort}</span> : null}
+            </span>
             {ev.calendar && <span>· {ev.calendar}</span>}
             {ev.recurring && <span className="text-indigo-600 dark:text-indigo-300">· recurring</span>}
           </div>
@@ -109,7 +108,7 @@ export default function EventsView({ projectId }) {
   const events = useMemo(() => {
     const now = Date.now();
     const list = (data?.events || [])
-      .map((ev) => ({ ...ev, _ts: parseDate(ev.start)?.getTime() ?? 0 }))
+      .map((ev) => ({ ...ev, _ts: parseEventInstant(ev.start)?.getTime() ?? 0 }))
       .filter((ev) => ev._ts && ev._ts >= now - 60_000) // tolerate 1m clock drift
       .sort((a, b) => a._ts - b._ts);
     return list;
@@ -126,6 +125,9 @@ export default function EventsView({ projectId }) {
           <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Upcoming events</h2>
           <p className="text-xs text-gray-400 dark:text-gray-500">
             Showing {events.length} event{events.length !== 1 ? "s" : ""} in the next window.
+            <span className="block mt-0.5 text-gray-400/90 dark:text-gray-500/90">
+              Times in your local timezone ({localTimeHint()}).
+            </span>
           </p>
         </div>
         {calendars.length > 0 && (

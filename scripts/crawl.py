@@ -20,6 +20,7 @@ Usage:
   python scripts/crawl.py --project iceberg --no-llm  # stage-1 local only (skip API LLM stage 2)
   python scripts/crawl.py --project iceberg --reset   # ignore checkpoint; full source pull
   python scripts/crawl.py --project iceberg --re-enrich  # re-run LLM on existing data (no re-crawl)
+  python scripts/crawl.py --project iceberg --only calendar   # ICS calendars → data/<id>/events.json only
   python scripts/generate_digest.py --project iceberg  # digest only (needs LLM key for narrative)
 
 Environment variables:
@@ -687,12 +688,30 @@ def main():
         action="store_true",
         help="Re-run LLM enrichment on existing proposals without re-crawling sources (useful to upgrade quality or switch models)",
     )
+    parser.add_argument(
+        "--only",
+        choices=["calendar"],
+        metavar="SOURCE",
+        help="Run only this source (no GitHub, list, LLM, etc.). Requires calendars in projects/<id>.yaml",
+    )
     args = parser.parse_args()
+
+    if args.only and args.re_enrich:
+        parser.error("--only cannot be used with --re-enrich")
 
     project_ids = [args.project] if args.project else list_project_ids()
     if not project_ids:
         logger.error("No projects found in projects/")
         sys.exit(1)
+
+    if args.only:
+        from crawlers import calendar_crawler
+
+        for pid in project_ids:
+            config = load_project_config(pid)
+            logger.info(f"=== Calendar-only: {pid} ===")
+            calendar_crawler.crawl_events(config, pid)
+        return
 
     for pid in project_ids:
         if args.re_enrich:

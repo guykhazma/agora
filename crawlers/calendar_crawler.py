@@ -143,30 +143,36 @@ def _parse_event(component, now: datetime, cutoff: datetime, calendar_name: str 
         dtstart = component.get("DTSTART")
         if dtstart is None:
             return []
-        start = dtstart.dt
-
-        # Convert date-only events to datetime
-        if not isinstance(start, datetime):
-            start = datetime(start.year, start.month, start.day, tzinfo=timezone.utc)
-        start = _to_utc(start)
+        # Keep DTSTART/DTEND as icalendar parsed them (often TZID-aware) for RRULE.
+        # Converting DTSTART to UTC *before* rrulestr() makes WEEKLY/BYDAY expand in UTC,
+        # which shifts wall-clock times across DST (e.g. 9am America/Los_Angeles becomes wrong).
+        start_raw = dtstart.dt
+        if not isinstance(start_raw, datetime):
+            start_raw = datetime(
+                start_raw.year, start_raw.month, start_raw.day, tzinfo=timezone.utc
+            )
 
         dtend = component.get("DTEND")
-        end = None
+        end_raw: Optional[datetime] = None
         if dtend:
-            end = dtend.dt
-            if not isinstance(end, datetime):
-                end = datetime(end.year, end.month, end.day, tzinfo=timezone.utc)
-            end = _to_utc(end)
+            end_raw = dtend.dt
+            if not isinstance(end_raw, datetime):
+                end_raw = datetime(
+                    end_raw.year, end_raw.month, end_raw.day, tzinfo=timezone.utc
+                )
+
+        start_utc = _to_utc(start_raw)
+        end_utc = _to_utc(end_raw) if end_raw is not None else None
 
         title = str(component.get("SUMMARY") or "").strip()
         location = str(component.get("LOCATION") or "").strip()
         description = str(component.get("DESCRIPTION") or "").strip()
         rrule = component.get("RRULE")
 
-        # Duration (for recurring instances)
+        # Wall-duration between DTSTART and DTEND (stable for recurring instances).
         duration = None
-        if end and isinstance(end, datetime):
-            duration = end - start
+        if end_raw is not None:
+            duration = _to_utc(end_raw) - _to_utc(start_raw)
 
         base = {
             "title": title,
@@ -177,14 +183,14 @@ def _parse_event(component, now: datetime, cutoff: datetime, calendar_name: str 
 
         # Non-recurring
         if not rrule:
-            if start < now or start > cutoff:
+            if start_utc < now or start_utc > cutoff:
                 return []
             return [{
                 **base,
-                "start": start.isoformat(),
-                "end": end.isoformat() if end else None,
+                "start": start_utc.isoformat(),
+                "end": end_utc.isoformat() if end_utc else None,
                 "recurring": False,
-                "_start_ts": start.timestamp(),
+                "_start_ts": start_utc.timestamp(),
             }]
 
         # Recurring: expand occurrences within window
@@ -192,14 +198,14 @@ def _parse_event(component, now: datetime, cutoff: datetime, calendar_name: str 
             from dateutil.rrule import rrulestr
         except Exception:
             # python-dateutil is in requirements; if missing, fall back to including only DTSTART
-            if start < now or start > cutoff:
+            if start_utc < now or start_utc > cutoff:
                 return []
             return [{
                 **base,
-                "start": start.isoformat(),
-                "end": end.isoformat() if end else None,
+                "start": start_utc.isoformat(),
+                "end": end_utc.isoformat() if end_utc else None,
                 "recurring": True,
-                "_start_ts": start.timestamp(),
+                "_start_ts": start_utc.timestamp(),
             }]
 
         # rrulestr needs the RRULE line, not just the value
@@ -227,7 +233,7 @@ def _parse_event(component, now: datetime, cutoff: datetime, calendar_name: str 
 
         occs: list[dict] = []
         if rule_text:
-            rule = rrulestr(rule_text, dtstart=start)
+            rule = rrulestr(rule_text, dtstart=start_raw)
             # between() is inclusive; we want events starting in [now, cutoff]
             for occ in rule.between(now, cutoff, inc=True):
                 occ_utc = _to_utc(occ)

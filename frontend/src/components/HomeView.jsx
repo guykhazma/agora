@@ -8,6 +8,11 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { fetchInitiatives, fetchEvents, getItemType, relativeTime, SOURCE_META, trendScore } from "../lib/data";
+import {
+  formatEventLocalTimeRange,
+  formatEventMonthDayLocal,
+  parseEventInstant,
+} from "../lib/eventTime";
 import { cleanTitle } from "../lib/utils";
 import DigestBanner from "./DigestBanner";
 import InitiativeDetail from "./InitiativeDetail";
@@ -306,16 +311,19 @@ export default function HomeView({ project, proposals, onSelect, onViewActivity,
                 </div>
                 <div className="space-y-1.5">
                   {upcomingEvents.slice(0, 5).map((ev, i) => {
-                    const start = new Date(ev.start);
+                    const start = parseEventInstant(ev.start);
+                    const end = ev.end ? parseEventInstant(ev.end) : null;
                     const action = extractEventActionLink(ev.location, ev.description);
+                    const { timeRange, zoneShort } = formatEventLocalTimeRange(start, end);
                     return (
                       <div key={i} className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
                           <p className="text-xs font-medium text-gray-800 dark:text-gray-200 truncate">{ev.title}</p>
                           <p className="text-xs text-gray-400 dark:text-gray-500">
-                            {start.toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                            {formatEventMonthDayLocal(start)}
                             {" · "}
-                            {start.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}
+                            {timeRange}
+                            {zoneShort ? ` ${zoneShort}` : ""}
                           </p>
                         </div>
                         {action && (

@@ -1,6 +1,6 @@
 {
   "project_id": "iceberg",
-  "generated_at": "2026-04-05T07:00:11.645853+00:00",
+  "generated_at": "2026-04-06T07:22:48.455550+00:00",
   "total": 891,
   "proposals": [
     {
@@ -12,7 +12,7 @@
       "author": "community",
       "state": "open",
       "created_at": "",
-      "updated_at": "2026-04-05T06:56:34.491923+00:00",
+      "updated_at": "2026-04-06T07:19:10.755412+00:00",
       "body": "\ufeffIceberg - Spark Community Sync Notes\r\n\r\n\r\n* This doc has notes from Iceberg Spark integration work, it will include all past discussions in this area.\r\n* Everyone is welcome to join the Iceberg spark syncs to discuss Spark related topics.\r\n* The general community sync notes can be found here.\r\n* Join the \u201cIceberg Dev Events\u201d calendar to see the calendar event!\r\nIceberg - Spark Community Sync\r\nTuesday, January 20\u22c510:00 \u2013 11:00am (recurring Monthly on the third Tuesday) \r\nmeet.google.com/aqg-mdpq-myf\r\n\r\n\r\nMar 17, 2026 (Recording) \r\nHighlights\r\n\r\n\r\n* Spark 4.1 \r\n   * Version framework merged, pending release 1.11\r\n   * #15592 - Possible regression?\r\n* Spark side change \r\n   * CREATE TABLE LIKE.. support in Spark 4.2 (apache/spark#54890)\r\nDiscussion topics\r\n* Making Spark Readers Async \r\n   * Presenter: Varun Lakhyani | Related: Github Issue (Spark related) , Github PR, Dev ML Thread , Design/POC Doc\r\n   * Short discussion on introducing optional asynchronous file opening in Spark readers to improve performance for workloads with many small files. Includes POC and benchmark results for compaction of multiple files.\r\n* Variant update:\r\n   * Presenter: Neelesh Salian\r\n   * Issue: https://github.com/apache/iceberg/issues/10392\r\n   * Active Work:\r\n      * #14297 - Shredded variant write support for Spark\r\n      * #15384 -  Fixes manifest bounds byte order for variant columns\r\n      * apache/spark#54394 - Spark-side change to push VariantGet through DSv2 filter pushdown to connectors.\r\n      * #15385  - Wires variant_get predicate pushdown from Spark to Iceberg for manifest-level file skipping. Depends on #15384 and #14297 and #54394 (spark)\r\n   * Other active variant work: \r\n      * Flink shredded variant write (#15596)\r\n      * Kafka Connect variant support (#15498) and (#15283)\r\n      * #15629  - JMH variant benchmarks\r\n      * Trino Variant Work: https://github.com/trinodb/trino/pull/27753 \r\n* Datafusion Comet integration \r\n   * Datafusion community voted on and decided",
       "labels": [],
       "linked_resources": [
@@ -3617,13 +3617,13 @@
           "title": "\ufeffmain"
         }
       ],
-      "llm_summary": "The discussion focuses on the proposal to eliminate equality deletes in Flink's write path, which would enhance read efficiency and enable new capabilities like upserts. Participants express support for a gradual transition, emphasizing the importance of maintaining data integrity during the process.",
+      "llm_summary": "The discussion focuses on the proposal to eliminate equality deletes in Flink's write path, which is seen as a significant improvement for read efficiency and new capabilities like upserts. The transition involves using a staging branch to manage the change without disrupting existing write logic, while also addressing challenges related to row lineage and efficient data handling.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
         "Support for removing equality deletes",
-        "Gradual transition with staging branch"
+        "Staging branch as a transitional solution"
       ],
       "llm_topics": [
         "equality-deletes",
@@ -3728,13 +3728,13 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion focuses on the next steps for V4 file commits, including file status detection, upgrade paths for file content types, and partition tuple modeling. Participants are encouraged to contribute additional topics for discussion.",
+      "llm_summary": "The discussion focuses on the next steps for V4 file commits, including file status/change detection, upgrade paths for file content types, and partition tuple modeling. Participants are encouraged to contribute additional topics for discussion.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "File status/change detection debate",
-        "Upgrade path for file content types"
+        "Focus on file status/change detection",
+        "Discuss upgrade paths and content types"
       ],
       "llm_topics": [
         "file-commits",
@@ -3805,17 +3805,17 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "A discussion is underway regarding the introduction of a generic CatalogObjectIdentifier in the Iceberg REST catalog spec to better represent various catalog object types, including tables, views, and functions. This proposal aims to avoid confusion and type proliferation as Iceberg evolves to support more object types.",
+      "llm_summary": "A discussion is underway regarding the introduction of a generic CatalogObjectIdentifier for the Iceberg REST catalog spec. This change aims to improve the identification of various catalog objects, such as tables, views, and functions, by moving away from the current single TableIdentifier schema, which is semantically limiting.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "Current identifier schema is semantically inaccurate",
-        "A reusable schema will prevent naming confusion"
+        "Need for a generic identifier for various catalog objects",
+        "Avoids type proliferation and naming confusion"
       ],
       "llm_topics": [
-        "rest-catalog",
-        "generic-identifier"
+        "generic-catalog-identifier",
+        "rest-catalog"
       ],
       "_content_hash": "f409277f564f",
       "llm_title": "Proposal for Generic CatalogObjectIdentifier",

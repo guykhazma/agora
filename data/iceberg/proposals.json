@@ -1,6 +1,6 @@
 {
   "project_id": "iceberg",
-  "generated_at": "2026-04-07T07:11:10.999825+00:00",
+  "generated_at": "2026-04-08T07:12:39.909042+00:00",
   "total": 893,
   "proposals": [
     {
@@ -12,7 +12,7 @@
       "author": "community",
       "state": "open",
       "created_at": "",
-      "updated_at": "2026-04-07T07:06:08.962992+00:00",
+      "updated_at": "2026-04-08T07:08:14.580069+00:00",
       "body": "\ufeffIceberg - Spark Community Sync Notes\r\n\r\n\r\n* This doc has notes from Iceberg Spark integration work, it will include all past discussions in this area.\r\n* Everyone is welcome to join the Iceberg spark syncs to discuss Spark related topics.\r\n* The general community sync notes can be found here.\r\n* Join the \u201cIceberg Dev Events\u201d calendar to see the calendar event!\r\nIceberg - Spark Community Sync\r\nTuesday, January 20\u22c510:00 \u2013 11:00am (recurring Monthly on the third Tuesday) \r\nmeet.google.com/aqg-mdpq-myf\r\n\r\n\r\nMar 17, 2026 (Recording) \r\nHighlights\r\n\r\n\r\n* Spark 4.1 \r\n   * Version framework merged, pending release 1.11\r\n   * #15592 - Possible regression?\r\n* Spark side change \r\n   * CREATE TABLE LIKE.. support in Spark 4.2 (apache/spark#54890)\r\nDiscussion topics\r\n* Making Spark Readers Async \r\n   * Presenter: Varun Lakhyani | Related: Github Issue (Spark related) , Github PR, Dev ML Thread , Design/POC Doc\r\n   * Short discussion on introducing optional asynchronous file opening in Spark readers to improve performance for workloads with many small files. Includes POC and benchmark results for compaction of multiple files.\r\n* Variant update:\r\n   * Presenter: Neelesh Salian\r\n   * Issue: https://github.com/apache/iceberg/issues/10392\r\n   * Active Work:\r\n      * #14297 - Shredded variant write support for Spark\r\n      * #15384 -  Fixes manifest bounds byte order for variant columns\r\n      * apache/spark#54394 - Spark-side change to push VariantGet through DSv2 filter pushdown to connectors.\r\n      * #15385  - Wires variant_get predicate pushdown from Spark to Iceberg for manifest-level file skipping. Depends on #15384 and #14297 and #54394 (spark)\r\n   * Other active variant work: \r\n      * Flink shredded variant write (#15596)\r\n      * Kafka Connect variant support (#15498) and (#15283)\r\n      * #15629  - JMH variant benchmarks\r\n      * Trino Variant Work: https://github.com/trinodb/trino/pull/27753 \r\n* Datafusion Comet integration \r\n   * Datafusion community voted on and decided",
       "labels": [],
       "linked_resources": [
@@ -3444,40 +3444,6 @@
       "_content_hash": "7f727f0a61b8"
     },
     {
-      "id": "iceberg-ml-30shrt4qxr4fgv9cqnndfq879xz738ck",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Adding Basic Authentication to the OpenAPI Specification for REST Catalog",
-      "url": "https://lists.apache.org/thread/30shrt4qxr4fgv9cqnndfq879xz738ck",
-      "author": "roryqi <ro...@apache.org>",
-      "state": "open",
-      "created_at": "2026-04-07T03:19:10+00:00",
-      "updated_at": "2026-04-07T03:19:10+00:00",
-      "body": "Hello everyone,\n\nI have opened a pull request (#15892)\n<https://github.com/apache/iceberg/pull/15892> to add support for Basic\nAuthentication to the OpenAPI specification for the Iceberg REST Catalog.\n\nBackground & Purpose:\n\nThe Iceberg RESTCatalog already supports Basic Auth in its implementation.\nThis pull request aims to formally document that support within the\nproject's OpenAPI specification (rest-catalog-open-api.yaml), ensuring the\nspec accurately reflects the available authentication mechanisms. This\nimproves clarity for users and client implementers.\n\nKey Changes in the PR:\n\nThe update adds BasicAuth: [] to the global security schemes in the OpenAPI\nspec, alongside the existing OAuth2 and BearerAuthschemes. A definition for\nthe Basic Auth security scheme (type: http, scheme: basic) has also been\nadded, consistent with OpenAPI 3.0 standards.\n\nReference & Context:\n\nOpenAPI specification references:\n\nBearer Authentication\nhttps://swagger.io/docs/specification/v3_0/authentication/bearer-authentication/\n\nBasic Authentication\nhttps://swagger.io/docs/specification/v3_0/authentication/basic-authentication/\n\nIceberg RESTCatalog client already supports\n\nhttps://github.com/apache/iceberg/blob/main/core/src/main/java/org/apache/iceberg/rest/auth/BasicAuthManager.java\n\nIRC servers such as\n\nApache Gravitino already supports this\n\nhttps://github.com/apache/gravitino/blob/main/server-common/src/main/java/org/apache/gravitino/server/authentication/SimpleAuthenticator.java\n\nApache Polaris already supports this, too.\nhttps://github.com/apache/polaris/blob/main/runtime/service/src/main/java/org/apache/polaris/service/auth/internal/service/DefaultOAuth2ApiService.java#L84\n\nRequest for Feedback:\n\nWhile this is a straightforward documentation update aligning the spec with\nexisting functionality, I believe it's valuable to propose this change for\nbroader community discussion. I would appreciate your thoughts on:\n\nThe approach of adding Basic Auth to the global security schemes.\n\nA",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/iceberg/pull/15892",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "A pull request has been opened to add Basic Authentication support to the OpenAPI specification for the Iceberg REST Catalog. This update aims to document existing functionality and improve clarity for users and client implementers.",
-      "llm_status": "discussion",
-      "comment_count": 0,
-      "participant_count": 1,
-      "llm_key_points": [
-        "Formal documentation of Basic Auth support",
-        "Alignment with OpenAPI 3.0 standards"
-      ],
-      "llm_topics": [
-        "rest-catalog",
-        "authentication"
-      ],
-      "_content_hash": "2a9443671b05",
-      "llm_title": "Adding Basic Authentication to OpenAPI Specification",
-      "initiative_id": "iceberg-init-iceberg-gh-i13446"
-    },
-    {
       "id": "iceberg-ml-bcc62zxhc1rqjmwxxll81rpn8yfnr9fy",
       "source": "mailing_list",
       "kind": "thread",
@@ -3486,7 +3452,7 @@
       "author": "O\u011fuzhan \u00dcnl\u00fc <ce...@gmail.com>",
       "state": "open",
       "created_at": "2026-04-06T18:16:39+00:00",
-      "updated_at": "2026-04-06T20:04:00+00:00",
+      "updated_at": "2026-04-08T05:54:06+00:00",
       "body": "Hi everyone,\n\nI've observed a general consensus in the discussion thread at\nhttps://lists.apache.org/thread/07t5rfcxn3bbbpp75fkr2h1mwdp2o4mn and a\nsuggestion in the end to move this to a vote, hence a new thread for voting.\n\nThe proposed spec change is at https://github.com/apache/iceberg/pull/15746\n.\n\nThanks for all the votes in advance.\n\nBest,\nOguzhan\n",
       "labels": [],
       "linked_resources": [
@@ -3495,16 +3461,20 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "Vote in progress: 0 binding +1, 1 non-binding +1",
+      "llm_summary": "Vote in progress: 0 binding +1, 2 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 1,
-      "participant_count": 2,
+      "comment_count": 2,
+      "participant_count": 3,
       "vote_data": {
         "binding_plus1": 0,
-        "nonbinding_plus1": 1,
+        "nonbinding_plus1": 2,
         "vetoes": 0,
         "result": "open",
         "voters": [
+          {
+            "voter": "Steven Wu <st...@gmail.com>",
+            "vote": "+1"
+          },
           {
             "voter": "Yufei Gu <fl...@gmail.com>",
             "vote": "+1"
@@ -3513,7 +3483,7 @@
       },
       "llm_key_points": [
         "Hi everyone,\n\nI've observed a general consensus in the discussion thread at\nhttps://lists.apache.org/thread/07t5rfcxn3bbbpp75fkr2h1mwdp2o4mn and a\nsug",
-        "Voters include: Yufei Gu..."
+        "Voters include: Steven Wu, Yufei Gu..."
       ],
       "llm_topics": [
         "config-endpoint",
@@ -3521,8 +3491,76 @@
         "discussion-thread",
         "add"
       ],
-      "_content_hash": "3f63d89f7e94",
+      "_content_hash": "0e63291a4346",
       "initiative_id": "iceberg-init-iceberg-ml-43f4r20q4n1vow3nssvxnlsbdqw6g6w8"
+    },
+    {
+      "id": "iceberg-ml-y06yf924bo49kcy1xd71gf2ob0rjt01b",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] Exploring parallel task execution in Spark readers",
+      "url": "https://lists.apache.org/thread/y06yf924bo49kcy1xd71gf2ob0rjt01b",
+      "author": "Varun Lakhyani <la...@ce.iitr.ac.in>",
+      "state": "open",
+      "created_at": "2026-04-07T14:37:28+00:00",
+      "updated_at": "2026-04-07T14:37:28+00:00",
+      "body": "Update on this - I have proposed this as a GSoC 2026 idea.\nI ran a couple of benchmarkings:\n\nMode\n\nTime (s/op)\n\nAsync (true)\n\n78.319\n\nSync (false)\n\n301.904\n\nMetric\n\nAsync (true)\n\nSync (false)\n\nCPU Time\n\n12.4 s\n\n14.5 s\n\nPeak Heap\n\n425.4 MB\n\n418.3 MB\n\nTotal Allocated\n\n8.5 MB/iter\n\n8.9 MB/iter\n\nGC Time\n\n70.7 ms\n\n53.5 ms\n\nGC Count\n\n14.1\n\n11.2\n\nThis shows ~74% improvement in execution time, with similar memory usage\nand slightly higher GC activity\n\nNext, I plan to explore a more targeted async approach (e.g., parallelizing\nonly network calls instead of the entire open function) and also study\nparallel implementations in other projects like Datafusion Comet.\n\nOn Thu, Feb 12, 2026 at 12:44\u202fPM Varun Lakhyani <la...@ce.iitr.ac.in>\nwrote:\n\n> Hello All,\n>\n> I\u2019d like to start a discussion around adding Asynchronous capability to\n> Spark readers by making them capable to run parallel tasks especially when\n> large numbers of small files are involved.\n> Currently, readers are based on BaseReader.next() where each task is\n> opened, fully consumed, and closed before moving on to the next one.\n>\n> With workloads containing hundreds or thousands of small files (for\n> example, 4\u201310 KB files), this sequential behavior can introduce significant\n> overhead. Each file is opened independently, and the reader waits for one\n> task to be fully consumed before opening the next. Here more CPU idleness\n> can also be a major issue.\n>\n> One possible improvement is to optionally allow Spark readers to function\n> asynchronously for scans dominated by many small files.\n> At a high level, the idea would be to:\n>\n>    - Open multiple small-file scan tasks concurrently, Read from them\n>    asynchronously or in parallel and stitch their output into a single\n>    buffered iterator or stream for downstream processing\n>\n> The existing sequential behavior would remain the default, with this mode\n> being opt-in or conditionally enabled for small-file-heavy workloads.\n> This could benefit several Iceberg use ca",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/iceberg/issues/15287",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "A proposal has been made to enhance Spark readers by adding asynchronous capabilities to improve performance, especially when dealing with numerous small files. Initial benchmarks indicate a 74% improvement in execution time with similar memory usage, and further exploration into targeted async approaches is planned.",
+      "llm_status": "discussion",
+      "comment_count": 20,
+      "participant_count": 1,
+      "llm_key_points": [
+        "74% improvement in execution time",
+        "Exploring targeted async approaches"
+      ],
+      "llm_topics": [
+        "parallel-task-execution",
+        "spark-readers"
+      ],
+      "_content_hash": "62a3edc2986e",
+      "llm_title": "Exploring Asynchronous Capability in Spark Readers",
+      "initiative_id": "iceberg-init-iceberg-ml-y06yf924bo49kcy1xd71gf2ob0rjt01b"
+    },
+    {
+      "id": "iceberg-ml-30shrt4qxr4fgv9cqnndfq879xz738ck",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Adding Basic Authentication to the OpenAPI Specification for REST Catalog",
+      "url": "https://lists.apache.org/thread/30shrt4qxr4fgv9cqnndfq879xz738ck",
+      "author": "roryqi <ro...@apache.org>",
+      "state": "open",
+      "created_at": "2026-04-07T03:19:10+00:00",
+      "updated_at": "2026-04-07T11:29:41+00:00",
+      "body": "Hello everyone,\n\nI have opened a pull request (#15892)\n<https://github.com/apache/iceberg/pull/15892> to add support for Basic\nAuthentication to the OpenAPI specification for the Iceberg REST Catalog.\n\nBackground & Purpose:\n\nThe Iceberg RESTCatalog already supports Basic Auth in its implementation.\nThis pull request aims to formally document that support within the\nproject's OpenAPI specification (rest-catalog-open-api.yaml), ensuring the\nspec accurately reflects the available authentication mechanisms. This\nimproves clarity for users and client implementers.\n\nKey Changes in the PR:\n\nThe update adds BasicAuth: [] to the global security schemes in the OpenAPI\nspec, alongside the existing OAuth2 and BearerAuthschemes. A definition for\nthe Basic Auth security scheme (type: http, scheme: basic) has also been\nadded, consistent with OpenAPI 3.0 standards.\n\nReference & Context:\n\nOpenAPI specification references:\n\nBearer Authentication\nhttps://swagger.io/docs/specification/v3_0/authentication/bearer-authentication/\n\nBasic Authentication\nhttps://swagger.io/docs/specification/v3_0/authentication/basic-authentication/\n\nIceberg RESTCatalog client already supports\n\nhttps://github.com/apache/iceberg/blob/main/core/src/main/java/org/apache/iceberg/rest/auth/BasicAuthManager.java\n\nIRC servers such as\n\nApache Gravitino already supports this\n\nhttps://github.com/apache/gravitino/blob/main/server-common/src/main/java/org/apache/gravitino/server/authentication/SimpleAuthenticator.java\n\nApache Polaris already supports this, too.\nhttps://github.com/apache/polaris/blob/main/runtime/service/src/main/java/org/apache/polaris/service/auth/internal/service/DefaultOAuth2ApiService.java#L84\n\nRequest for Feedback:\n\nWhile this is a straightforward documentation update aligning the spec with\nexisting functionality, I believe it's valuable to propose this change for\nbroader community discussion. I would appreciate your thoughts on:\n\nThe approach of adding Basic Auth to the global security schemes.\n\nA",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/iceberg/pull/15892",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "A pull request has been opened to add Basic Authentication support to the OpenAPI specification for the Iceberg REST Catalog. This update aims to document existing functionality and improve clarity for users, although there are concerns about making it a global requirement for all endpoints.",
+      "llm_status": "discussion",
+      "comment_count": 2,
+      "participant_count": 2,
+      "llm_key_points": [
+        "Basic Auth will be added to global security schemes",
+        "Concerns about it being mandatory for all endpoints"
+      ],
+      "llm_topics": [
+        "rest-catalog",
+        "authentication"
+      ],
+      "_content_hash": "0f0a6078ab54",
+      "llm_title": "Adding Basic Authentication to OpenAPI Specification",
+      "initiative_id": "iceberg-init-iceberg-gh-i13446"
     },
     {
       "id": "iceberg-ml-s6f3qqjdbgg11btycly5720nqsh53rw4",
@@ -3539,7 +3577,7 @@
       "linked_resources": [],
       "llm_summary": "The Iceberg Summit 2026 Pre-Summit Community Meetup is scheduled for April 7, 2026, in San Francisco, with limited spots available. Attendees must register by April 6 and bring valid ID for entry, as walk-ins are not permitted due to security.",
       "llm_status": "discussion",
-      "comment_count": 2,
+      "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
         "Limited spots available for registration",
@@ -3549,8 +3587,8 @@
         "community-meetup",
         "event-planning"
       ],
-      "_content_hash": "be45ce4dca49",
       "llm_title": "Iceberg Summit 2026 Pre-Summit Meetup",
+      "_content_hash": "be45ce4dca49",
       "initiative_id": "iceberg-init-iceberg-ml-s6f3qqjdbgg11btycly5720nqsh53rw4"
     },
     {
@@ -3727,13 +3765,13 @@
           "title": "\ufeffmain"
         }
       ],
-      "llm_summary": "The discussion focuses on the proposal to eliminate equality deletes in Flink's write path, which is seen as a significant improvement for read efficiency and new capabilities. The transition involves using a staging branch to allow inspection of data before conversion, with an eventual goal of deprecating equality deletes in future versions.",
+      "llm_summary": "The discussion focuses on the proposal to eliminate equality deletes in Flink's write path, which would enhance read efficiency and enable new capabilities like upserts. Participants express support for a gradual transition, emphasizing the importance of maintaining data integrity during the process.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
         "Support for removing equality deletes",
-        "Staging branch allows data inspection"
+        "Gradual transition with staging branch"
       ],
       "llm_topics": [
         "equality-deletes",
@@ -3838,7 +3876,7 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion focuses on the status and change detection of files, the upgrade path for file content types, and partition tuple modeling. Participants are encouraged to contribute additional topics for discussion.",
+      "llm_summary": "The discussion focuses on the status and change detection of files in version 4, along with the upgrade path and allowed file content types. Additionally, partition tuple modeling is highlighted as a topic of interest, particularly in relation to expression extensions and unified table ID space.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
@@ -3851,7 +3889,7 @@
         "partition-modeling"
       ],
       "_content_hash": "93f248f375f6",
-      "llm_title": "Discussion on One File Commits",
+      "llm_title": "Discussion on V4 File Commits",
       "initiative_id": "iceberg-init-iceberg-ml-vymjlxyfnz2nv05c1dwxzdn3pn3vq21b"
     },
     {
@@ -3915,7 +3953,7 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "A discussion is underway regarding the introduction of a generic CatalogObjectIdentifier in the Iceberg REST catalog specification. This change aims to address the limitations of the current TableIdentifier schema, which inaccurately represents views and does not accommodate other catalog object types as Iceberg evolves.",
+      "llm_summary": "A discussion has been initiated regarding the introduction of a generic CatalogObjectIdentifier for the Iceberg REST catalog specification. This aims to address the limitations of the current TableIdentifier schema, which does not accurately represent various catalog object types such as views and functions.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
@@ -3924,8 +3962,8 @@
         "Need for a reusable identifier schema to avoid confusion"
       ],
       "llm_topics": [
-        "rest-catalog",
-        "generic-identifier"
+        "generic-catalog-identifier",
+        "rest-catalog"
       ],
       "_content_hash": "f409277f564f",
       "llm_title": "Proposal for Generic CatalogObjectIdentifier",
@@ -5516,54 +5554,6 @@
       ],
       "_content_hash": "d521464d12f0",
       "initiative_id": "iceberg-init-iceberg-ml-sl882srzsjz0xvy881tlc4hjq5kqmpyf"
-    },
-    {
-      "id": "iceberg-ml-b5jrlyv61lmw867kksw05sot2tro5ybn",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Exploring parallel task execution in Spark readers",
-      "url": "https://lists.apache.org/thread/b5jrlyv61lmw867kksw05sot2tro5ybn",
-      "author": "Varun Lakhyani <la...@ce.iitr.ac.in>",
-      "state": "open",
-      "created_at": "2026-02-12T07:14:20+00:00",
-      "updated_at": "2026-03-17T13:47:39+00:00",
-      "body": "Hello All,\n\nI\u2019d like to start a discussion around adding Asynchronous capability to\nSpark readers by making them capable to run parallel tasks especially when\nlarge numbers of small files are involved.\nCurrently, readers are based on BaseReader.next() where each task is\nopened, fully consumed, and closed before moving on to the next one.\n\nWith workloads containing hundreds or thousands of small files (for\nexample, 4\u201310 KB files), this sequential behavior can introduce significant\noverhead. Each file is opened independently, and the reader waits for one\ntask to be fully consumed before opening the next. Here more CPU idleness\ncan also be a major issue.\n\nOne possible improvement is to optionally allow Spark readers to function\nasynchronously for scans dominated by many small files.\nAt a high level, the idea would be to:\n\n   - Open multiple small-file scan tasks concurrently, Read from them\n   asynchronously or in parallel and stitch their output into a single\n   buffered iterator or stream for downstream processing\n\nThe existing sequential behavior would remain the default, with this mode\nbeing opt-in or conditionally enabled for small-file-heavy workloads.\nThis could benefit several Iceberg use cases, including compaction or\ncleanup jobs.\n\n*My Question*\n\n   - Are there known constraints in Spark\u2019s task execution model that would\n   make this approach problematic?\n   - Is it suitable if I plan a proposal for this idea and work around it?\n\nI\u2019ve opened a related issue [1] to capture the problem statement and\ninitial thoughts:\nAny feedback, pointers to prior discussions, or guidance on would be very\nhelpful.\n\n[1] Github issue - https://github.com/apache/iceberg/issues/15287\n--\nLakhyani Varun\nIndian Institute of Technology Roorkee\nContact: +91 96246 46174\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/17vBz5t-gSDdmB0S40MYRceyvmcBSzw9Gii-FcU97Lds/edit?usp=sharing",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffBenchmarks"
-        },
-        {
-          "url": "https://github.com/apache/iceberg/pull/15341",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/iceberg/issues/15287",
-          "kind": "github_issue"
-        }
-      ],
-      "comment_count": 20,
-      "participant_count": 2,
-      "initiative_id": "iceberg-init-iceberg-ml-d5wr7567ccfd86kf64n7snovnjhvtlqz",
-      "llm_summary": "Discussion on adding asynchronous/parallel task execution capability to Spark readers to improve performance when handling large numbers of small files. Currently, readers process tasks sequentially, causing CPU idleness and overhead. The proposal suggests an opt-in async mode that opens and reads multiple small-file tasks concurrently while maintaining backward compatibility.",
-      "llm_status": "discussion",
-      "llm_key_points": [
-        "Sequential BaseReader.next() causes significant overhead with hundreds/thousands of small files",
-        "Proposed solution: concurrent task opening and asynchronous reading with buffered output stitching",
-        "Opt-in feature to maintain backward compatibility and default sequential behavior",
-        "Potential benefits for compaction and cleanup jobs",
-        "Seeking feedback on Spark task execution model constraints"
-      ],
-      "llm_topics": [
-        "spark-readers",
-        "performance",
-        "small-files"
-      ],
-      "_content_hash": "e638af37c43a",
-      "llm_title": "Parallel task execution for Spark readers with small files"
     },
     {
       "id": "iceberg-ml-fm3ly9q3xlwwtqgcfqxhrblot665rf6c",
@@ -31239,7 +31229,7 @@
       ],
       "comment_count": 4,
       "participant_count": 3,
-      "initiative_id": "iceberg-init-iceberg-ml-1ml2s5bn8yj4no9xm1jrw4gkb22bh37l",
+      "initiative_id": "iceberg-init-iceberg-ml-d5wr7567ccfd86kf64n7snovnjhvtlqz",
       "llm_summary": "RewriteFiles API accumulates all file objects for addition and deletion in memory before committing, causing significant heap pressure (up to 1GB) when dealing with large datasets containing millions of files with wide schemas. The issue is particularly acute for tables with many string columns, billions of records, or recently partitioned tables undergoing compaction.",
       "llm_status": "discussion",
       "llm_key_points": [

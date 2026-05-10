@@ -1,6 +1,6 @@
 {
   "project_id": "iceberg",
-  "generated_at": "2026-05-09T07:50:41.347450+00:00",
+  "generated_at": "2026-05-10T08:04:08.751345+00:00",
   "total": 937,
   "proposals": [
     {
@@ -12,7 +12,7 @@
       "author": "community",
       "state": "open",
       "created_at": "",
-      "updated_at": "2026-05-09T07:45:09.036357+00:00",
+      "updated_at": "2026-05-10T07:58:47.997351+00:00",
       "body": "\ufeffIceberg - Spark Community Sync Notes\r\n\r\n\r\n* This doc has notes from Iceberg Spark integration work, it will include all past discussions in this area.\r\n* Everyone is welcome to join the Iceberg spark syncs to discuss Spark related topics.\r\n* The general community sync notes can be found here.\r\n* Join the \u201cIceberg Dev Events\u201d calendar to see the calendar event!\r\nIceberg - Spark Community Sync\r\nTuesday, January 20\u22c510:00 \u2013 11:00am (recurring Monthly on the third Tuesday) \r\nmeet.google.com/aqg-mdpq-myf\r\n\r\n\r\n\r\n\r\nApr 21, 2026\r\nHighlights\r\nIceberg changes:\r\n* Spark 4.1: Set data file sort_order_id in manifest (#15150)\r\n* Spark 4.1: Pass FileIO on read path (#15832) - Enables passing FileIO from distributed scan planning\r\n* Spark 4.1: Control merge schema evolution by table property (#15825)\r\nSpark changes:\r\n* CREATE TABLE LIKE.. support in Spark 4.2 (apache/spark#54890)\r\n* Keep outputOrdering when GroupPartitionsExec coalesces partitions(apche/spark#55116) \r\n   * Merged in 4.2, Iceberg still is at 4.1\r\n\r\n\r\nDiscussion topics\r\n* Variant Update Neelesh Salian\r\n   * Community Tracking Document: Iceberg - Variant Community Update\r\n      * Mailing list thread: https://lists.apache.org/thread/f8l27lr55nlrdg4qwno29r796d4v2p8l\r\n* WAP branch bug fixes \r\n   * https://github.com/apache/iceberg/pull/15592 - Review needed\r\n   * https://github.com/apache/iceberg/pull/15512 - In review and a release blocker.\r\n* Report Sort metadata to Spark\r\n   * For 4.1 and below, Iceberg still needs to do the merge.(#14948) - Needs review\r\n   * For 4.2 and above can just report sort orders but let Spark merge\r\n\r\n\r\nMar 17, 2026 (Recording) \r\nHighlights\r\n\r\n\r\n* Spark 4.1 \r\n   * Version framework merged, pending release 1.11\r\n   * #15592 - Possible regression?\r\n* Spark side change \r\n   * CREATE TABLE LIKE.. support in Spark 4.2 (apache/spark#54890)\r\nDiscussion topics\r\n* Making Spark Readers Async \r\n   * Presenter: Varun Lakhyani | Related: Github Issue (Spark related) , Github PR, Dev ML Thread , Design/PO",
       "labels": [],
       "linked_resources": [
@@ -2867,7 +2867,7 @@
           "kind": "github_pr"
         }
       ],
-      "initiative_id": "iceberg-init-iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
+      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-5-0",
       "llm_summary": "Apache Iceberg 1.5.0 was released on March 11, 2024. The 1.5.0 release adds a variety of new features and bug fixes. * API\r\n  - Extend FileIO and add EncryptingFileIO.",
       "llm_status": "discussion",
       "llm_key_points": [],
@@ -3691,52 +3691,6 @@
       "_content_hash": "7f727f0a61b8"
     },
     {
-      "id": "iceberg-ml-wlz1dl28hsy1krj6ymtxg87tbt3rqkbo",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "Re: [DISCUSS] Iceberg Variant - Tracking Document & Sync Proposal",
-      "url": "https://lists.apache.org/thread/wlz1dl28hsy1krj6ymtxg87tbt3rqkbo",
-      "author": "Neelesh Salian <ne...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-05-08T22:20:56+00:00",
-      "updated_at": "2026-05-08T22:20:56+00:00",
-      "body": "Hi folks,\n\nHere is the Meeting Notes and Recording link from the Variant Sync on May\n7, 2026: [Notes\n<https://docs.google.com/document/d/1IuhLRxw1rcPD_f4jgHuGe3SwFgy7Y5wgEGvLzf6311s/edit?tab=t.g06kaw1fbwhz>\n].\nThere are some action items and active work.\nPlease reach out if you have any questions.\nThanks.\n\nOn Thu, Apr 30, 2026 at 1:36\u202fPM Neelesh Salian <ne...@gmail.com>\nwrote:\n\n> Hi folks,\n>\n> I've set up a time starting next week on Thursday (May 7, 2026) at 10 am\n> Pacific time for a sync for the active work on Variant.\n> This will be a monthly sync (on the first Thursday of every month).\n> You can find it on the dev calendar.\n> Here is the calendar invite: https://calendar.app.google/b8ykdTV3EaNnVnkv8\n> I'll be recording the call and capturing notes in the sync document: Iceberg\n> - Variant Community Update\n> <https://docs.google.com/document/d/1IuhLRxw1rcPD_f4jgHuGe3SwFgy7Y5wgEGvLzf6311s/edit?usp=sharing> (Meeting\n> Notes tab).\n> Thanks.\n>\n>\n>\n>\n>\n>\n> On Mon, Apr 20, 2026 at 1:49\u202fPM Steve Loughran <st...@cloudera.com>\n> wrote:\n>\n>> + regarding the rust, go and cpp impls, a status from each team would be\n>> great!\n>>\n>> I've been reviewing arrow parquet variant stuff and it is all there,\n>> including with some benchmarks and optimisations. Which may put it ahead of\n>> the others.\n>>\n>> It also has some special handling for sorted variants, as key search\n>> there is straightforward. AFAIK I don't think the others do that, and nor\n>> do I see them going to any effort to sort fields in an object. I think\n>> sorting would be good, but you would have to handle the case where there\n>> are duplicate keys. It's allowed in the spec, and seems like itcould creep\n>> in from nested variants. Has anyone looked at this?\n>>\n>> Also: has anyone created malformed parquet files with a shredded variant\n>> and a metadata entry of the same name. The requirement is \"ignore the\n>> metadata one\", but that's something to test. You'd have to write a shredded\n>> file and then edit the bina",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1IuhLRxw1rcPD_f4jgHuGe3SwFgy7Y5wgEGvLzf6311s/edit?tab=t.g06kaw1fbwhz",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffOverview"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1IuhLRxw1rcPD_f4jgHuGe3SwFgy7Y5wgEGvLzf6311s/edit?usp=sharing",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffOverview"
-        },
-        {
-          "url": "https://github.com/apache/iceberg/issues/10392",
-          "kind": "github_issue"
-        }
-      ],
-      "llm_summary": "The Iceberg Variant community held a sync meeting on May 7, 2026, to discuss ongoing work and action items related to the Variant feature. Key topics included performance improvements, shredded writes, and updates on various implementations.",
-      "llm_status": "discussion",
-      "comment_count": 4,
-      "participant_count": 1,
-      "llm_key_points": [
-        "Monthly sync meetings established",
-        "Focus on performance and integration improvements"
-      ],
-      "llm_topics": [
-        "variant-sync",
-        "performance"
-      ],
-      "_content_hash": "01eea82b144e",
-      "llm_title": "Iceberg Variant Sync Meeting Notes",
-      "initiative_id": "iceberg-init-iceberg-gh-p13879"
-    },
-    {
       "id": "iceberg-ml-4vq3yct3wljvr8nchvqhmgyg5okdf4g8",
       "source": "mailing_list",
       "kind": "thread",
@@ -3745,7 +3699,7 @@
       "author": "Aihua Xu <ai...@gmail.com>",
       "state": "open",
       "created_at": "2026-05-07T16:26:25+00:00",
-      "updated_at": "2026-05-08T21:29:01+00:00",
+      "updated_at": "2026-05-10T00:43:02+00:00",
       "body": "Hi Everyone,\n\nI propose that we release the following RC as the official Apache Iceberg\n1.11.0 release.\n\nThe commit ID is 0f657edf12dc29f8487a679bfdd4210e9588d014\n* This corresponds to the tag: apache-iceberg-1.11.0-rc1\n* https://github.com/apache/iceberg/commits/apache-iceberg-1.11.0-rc1\n*\nhttps://github.com/apache/iceberg/tree/0f657edf12dc29f8487a679bfdd4210e9588d014\n\nThe release tarball, signature, and checksums are here:\n* https://dist.apache.org/repos/dist/dev/iceberg/apache-iceberg-1.11.0-rc1\n\nYou can find the KEYS file here:\n* https://downloads.apache.org/iceberg/KEYS\n\nConvenience binary artifacts are staged on Nexus. The Maven repository URL\nis:\n* https://repository.apache.org/content/repositories/orgapacheiceberg-1278/\n\nPlease download, verify, and test.\n\nInstructions for verifying a release can be found here:\n* https://iceberg.apache.org/how-to-release/#how-to-verify-a-release\n\nPlease vote in the next 72 hours.\n\n[ ] +1 Release this as Apache Iceberg 1.11.0\n[ ] +0\n[ ] -1 Do not release this because...\n\nOnly PMC members have binding votes, but other community members are\nencouraged to cast\nnon-binding votes. This vote will pass if there are 3 binding +1 votes and\nmore binding\n+1 votes than -1 votes.\n",
       "labels": [],
       "linked_resources": [
@@ -3792,12 +3746,16 @@
         {
           "url": "https://github.com/apache/iceberg/pull/16258",
           "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/16263",
+          "kind": "github_pr"
         }
       ],
       "llm_summary": "Vote in progress: 0 binding +1, 1 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 13,
-      "participant_count": 8,
+      "comment_count": 15,
+      "participant_count": 9,
       "vote_data": {
         "binding_plus1": 0,
         "nonbinding_plus1": 1,
@@ -3820,7 +3778,7 @@
         "iceberg",
         "release"
       ],
-      "_content_hash": "027affeaa976",
+      "_content_hash": "199dd44119fb",
       "initiative_id": "iceberg-init-iceberg-gh-m36"
     },
     {
@@ -3832,7 +3790,7 @@
       "author": "G\u00e1bor Kaszab <ga...@apache.org>",
       "state": "open",
       "created_at": "2026-05-07T13:06:09+00:00",
-      "updated_at": "2026-05-08T13:30:33+00:00",
+      "updated_at": "2026-05-09T08:31:39+00:00",
       "body": "Hey All,\n\nThank you for the constructive participation on the latest sync! Let me sum\nup the key highlights. I found the recording is already uploaded here\n<https://youtu.be/vOZwG0O4cSA?si=C5-yY61gg1WQC75W>.\n\n   - Decided: What update file representation to use for partial updates?\n   - We have been rolling this for a while but it seems we reached\n      consensus here\n      - Options were:\n         - Sparse representation: write only what we update\n         - \"Complete\" / \"Dense\" / \"Projected copy-on-write\" representation:\n         Write entire columns including values that are unchanged\n      - Decision: After a long discussion we had consensus to go with the\n      \"Complete\" approach due to the simplicity it provides compared to the\n      complexity of the other approach especially on the write path.\n   - Open: What update file representation to use if we have deletes?\n      - Going with the \"Complete\" representation for partial updates, it is\n      still a question how to represent update files when some rows are\n      deleted/invalidated in the base file with DVs.\n      - Options are:\n         - Positional matching update files (same number of rows as in base\n         file, in same order).\n            - We have to fill the deleted rows with some values\n            - Options to fill these rows:\n               - NULLs: In Parquet we can't set an entire row to NULL, but\n               we can set each field to NULL.\n               - Same value as in base file\n               - Last valid value (backfill when deleted from beginning):\n               similarly as Lance does\n            - Pros:\n               - Stitching with the base file seems more straightforward.\n               - We might not even need to write 'position' column to the\n               update file\n            - Cons:\n               - We write values just to discard them later\n               - Extra complexity on the write path\n               - Auxiliary values might bring the stats OFF (num nulls, avg\n",
       "labels": [],
       "linked_resources": [
@@ -3866,21 +3824,67 @@
           "kind": "github_issue"
         }
       ],
-      "llm_summary": "The discussion focused on the representation of update files for efficient column updates in Apache Iceberg. A consensus was reached to use a 'Complete' representation for partial updates, while the approach for handling deletes remains open for debate.",
+      "llm_summary": "The discussion focused on the representation of update files for partial updates in Apache Iceberg, with a consensus reached to use a 'Complete' approach for its simplicity. However, there are still open questions regarding how to handle update files when rows are deleted or invalidated, with various options being considered.",
       "llm_status": "discussion",
-      "comment_count": 2,
-      "participant_count": 3,
+      "comment_count": 3,
+      "participant_count": 4,
       "llm_key_points": [
-        "Consensus on 'Complete' representation for updates",
-        "Open question on delete handling"
+        "Consensus on 'Complete' representation for partial updates",
+        "Open question on handling deletes in update files"
       ],
       "llm_topics": [
-        "efficient-column-updates",
+        "column-updates",
         "data-representation"
       ],
-      "_content_hash": "d05abada5522",
+      "_content_hash": "cad5516d1aca",
       "llm_title": "Efficient Column Updates in Iceberg",
       "initiative_id": "iceberg-init-iceberg-gh-p13879"
+    },
+    {
+      "id": "iceberg-ml-wlz1dl28hsy1krj6ymtxg87tbt3rqkbo",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] Iceberg Variant - Tracking Document & Sync Proposal",
+      "url": "https://lists.apache.org/thread/wlz1dl28hsy1krj6ymtxg87tbt3rqkbo",
+      "author": "Neelesh Salian <ne...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-05-08T22:20:56+00:00",
+      "updated_at": "2026-05-08T22:20:56+00:00",
+      "body": "Hi folks,\n\nHere is the Meeting Notes and Recording link from the Variant Sync on May\n7, 2026: [Notes\n<https://docs.google.com/document/d/1IuhLRxw1rcPD_f4jgHuGe3SwFgy7Y5wgEGvLzf6311s/edit?tab=t.g06kaw1fbwhz>\n].\nThere are some action items and active work.\nPlease reach out if you have any questions.\nThanks.\n\nOn Thu, Apr 30, 2026 at 1:36\u202fPM Neelesh Salian <ne...@gmail.com>\nwrote:\n\n> Hi folks,\n>\n> I've set up a time starting next week on Thursday (May 7, 2026) at 10 am\n> Pacific time for a sync for the active work on Variant.\n> This will be a monthly sync (on the first Thursday of every month).\n> You can find it on the dev calendar.\n> Here is the calendar invite: https://calendar.app.google/b8ykdTV3EaNnVnkv8\n> I'll be recording the call and capturing notes in the sync document: Iceberg\n> - Variant Community Update\n> <https://docs.google.com/document/d/1IuhLRxw1rcPD_f4jgHuGe3SwFgy7Y5wgEGvLzf6311s/edit?usp=sharing> (Meeting\n> Notes tab).\n> Thanks.\n>\n>\n>\n>\n>\n>\n> On Mon, Apr 20, 2026 at 1:49\u202fPM Steve Loughran <st...@cloudera.com>\n> wrote:\n>\n>> + regarding the rust, go and cpp impls, a status from each team would be\n>> great!\n>>\n>> I've been reviewing arrow parquet variant stuff and it is all there,\n>> including with some benchmarks and optimisations. Which may put it ahead of\n>> the others.\n>>\n>> It also has some special handling for sorted variants, as key search\n>> there is straightforward. AFAIK I don't think the others do that, and nor\n>> do I see them going to any effort to sort fields in an object. I think\n>> sorting would be good, but you would have to handle the case where there\n>> are duplicate keys. It's allowed in the spec, and seems like itcould creep\n>> in from nested variants. Has anyone looked at this?\n>>\n>> Also: has anyone created malformed parquet files with a shredded variant\n>> and a metadata entry of the same name. The requirement is \"ignore the\n>> metadata one\", but that's something to test. You'd have to write a shredded\n>> file and then edit the bina",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1IuhLRxw1rcPD_f4jgHuGe3SwFgy7Y5wgEGvLzf6311s/edit?tab=t.g06kaw1fbwhz",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffOverview"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1IuhLRxw1rcPD_f4jgHuGe3SwFgy7Y5wgEGvLzf6311s/edit?usp=sharing",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffOverview"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/issues/10392",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "The Iceberg Variant community held a sync meeting on May 7, 2026, to discuss ongoing work and action items related to the Variant feature. The meeting notes and recording are available for reference, and participants are encouraged to reach out with questions.",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [
+        "Monthly sync established for Variant updates",
+        "Action items and ongoing work discussed"
+      ],
+      "llm_topics": [
+        "variant-sync",
+        "community-update"
+      ],
+      "_content_hash": "01eea82b144e",
+      "llm_title": "Iceberg Variant Sync Meeting Notes",
+      "initiative_id": "iceberg-init-iceberg-yt-bq2e6-71beA"
     },
     {
       "id": "iceberg-ml-kr9x53nknh0wc9r0wvbcgs6fk915noxy",
@@ -3907,8 +3911,8 @@
         "checksumming",
         "data-integrity"
       ],
-      "_content_hash": "aebbb6412e6a",
       "llm_title": "Checksums in Iceberg Libraries",
+      "_content_hash": "aebbb6412e6a",
       "initiative_id": "iceberg-init-iceberg-ml-kr9x53nknh0wc9r0wvbcgs6fk915noxy"
     },
     {
@@ -4494,21 +4498,20 @@
           "kind": "github_issue"
         }
       ],
-      "llm_summary": "Varun Lakhyani has been selected for GSoC 2026 to work on implementing parallel scan task execution in Apache Iceberg's Spark readers. This project aims to improve performance for workloads involving many small files by allowing concurrent task execution, which has shown promising initial benchmarking results.",
+      "llm_summary": "Varun Lakhyani has been selected for GSoC 2026 to work on improving the performance of Apache Iceberg's Spark readers by implementing parallel scan task execution. This approach aims to enhance the handling of large numbers of small files, significantly reducing execution time through asynchronous processing.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
         "Selected for GSoC 2026",
-        "Mentored by Russell Spitzer",
-        "Initial benchmarking shows 76.4% performance improvement"
+        "Mentored by Russell Spitzer"
       ],
       "llm_topics": [
         "parallel-scan",
         "performance"
       ],
       "_content_hash": "9b08ee12ace0",
-      "llm_title": "GSoC 2026: Parallel Scan Execution in Iceberg",
+      "llm_title": "GSoC 2026: Parallel Scan Task Execution",
       "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
@@ -26195,7 +26198,7 @@
       ],
       "comment_count": 8,
       "participant_count": 1,
-      "initiative_id": "iceberg-init-iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
+      "initiative_id": "iceberg-init-iceberg-gh-p13879",
       "llm_summary": "The community has reached consensus on simplifying the tableExists API for HiveCatalog to improve performance. The API will now return true if a table identifier exists in HMS and is an Iceberg table, without attempting to load full table metadata. A PR with explicit test coverage has been submitted for review.",
       "llm_status": "implementation",
       "llm_key_points": [
@@ -26698,7 +26701,7 @@
       "linked_resources": [],
       "comment_count": 2,
       "participant_count": 3,
-      "initiative_id": "iceberg-init-iceberg-gh-m36",
+      "initiative_id": "iceberg-init-iceberg-ml-yd92h88jznyyvjztzwzx2zlo83g3x4nd",
       "llm_summary": "Hi everyone,\n\nI'm pleased to announce the release of Apache Iceberg Go v0.1.0! Apache Iceberg is an open table format for huge analytic datasets, Iceberg\ndelivers high query performance for tables with tens of petabytes of data,\nalong with atomic commits, concurrent writes, and SQL-compatible table\nevolution. This Go release can be installed via `go get\ngithub.com/apache/iceberg@v0.1.0` and the documentation can be found at\nhttps://pkg.go.dev/github.com/apache/iceberg-go@v0.1.0\n\nThanks to everyone for contributing!!",
       "llm_status": "abandoned",
       "llm_key_points": [],
@@ -29320,7 +29323,7 @@
       ],
       "comment_count": 0,
       "participant_count": 1,
-      "initiative_id": "iceberg-init-iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
+      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-5-0",
       "llm_summary": "The community has successfully implemented view support for REST, NESSIE, and JDBC catalogs in Iceberg. The Hive catalog implementation is pending and requires refactoring to abstract common code between Iceberg Tables and Views. The PR has stalled and needs attention from Hive experts to move forward.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -33389,7 +33392,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
+      "initiative_id": "iceberg-init-iceberg-ml-7jccszv7m01yj21yx5htmqv021htfw1o",
       "llm_summary": "Vote PASSED with 5 binding +1 votes and 3 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -33693,7 +33696,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
+      "initiative_id": "iceberg-init-iceberg-ml-7jccszv7m01yj21yx5htmqv021htfw1o",
       "llm_summary": "Vote in progress: 0 binding +1, 2 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -33784,7 +33787,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
+      "initiative_id": "iceberg-init-iceberg-ml-7jccszv7m01yj21yx5htmqv021htfw1o",
       "llm_summary": "Vote in progress: 0 binding +1, 1 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -33856,7 +33859,7 @@
       ],
       "comment_count": 1,
       "participant_count": 2,
-      "initiative_id": "iceberg-init-iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
+      "initiative_id": "iceberg-init-iceberg-ml-7jccszv7m01yj21yx5htmqv021htfw1o",
       "llm_summary": "A critical bug was discovered in PyIceberg that prevents creating version 1 tables with non-empty partition specs and sort orders. A patch release (0.6.1) is planned for this week with 7 PRs included in the milestone to address this and other fixes.",
       "llm_status": "implementation",
       "llm_key_points": [
@@ -34718,7 +34721,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
+      "initiative_id": "iceberg-init-iceberg-ml-7jccszv7m01yj21yx5htmqv021htfw1o",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -34815,7 +34818,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
+      "initiative_id": "iceberg-init-iceberg-ml-7jccszv7m01yj21yx5htmqv021htfw1o",
       "llm_summary": "Vote VETOED \u2014 1 veto(es) recorded",
       "llm_status": "abandoned",
       "llm_key_points": [
@@ -35156,7 +35159,7 @@
       ],
       "comment_count": 8,
       "participant_count": 6,
-      "initiative_id": "iceberg-init-iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
+      "initiative_id": "iceberg-init-iceberg-ml-7jccszv7m01yj21yx5htmqv021htfw1o",
       "llm_summary": "Discussion of PyIceberg 0.6.0 release which introduces write support for unpartitioned tables, metadata writing for catalog support, name-mapping, and schema evolution features. The release has known limitations including lack of partitioned writes and compaction support, but the maintainers want to release it to gather community feedback.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -36743,7 +36746,7 @@
       ],
       "comment_count": 0,
       "participant_count": 1,
-      "initiative_id": "iceberg-init-iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
+      "initiative_id": "iceberg-init-iceberg-ml-7jccszv7m01yj21yx5htmqv021htfw1o",
       "llm_summary": "I'm pleased to announce the release of Apache PyIceberg 0.5.0! PyIceberg 0.5.0 comes with many new features:\n\n   - Add gzip metadata support <https://github.com/apache/iceberg/pull/7984>\n   - PyArrow HDFS support <https://github.com/apache/iceberg/pull/7997>\n   - Support serverless environments (AWS Lambda)\n   <https://github.com/apache/iceberg/pull/8061>\n   - Many fixes around Avro performance (PRs 1\n   <https://github.com/apache/iceberg/pull/8074>, 2\n   <https://github.com/apache/iceberg/pull/8075>, 3\n   <https://github.com/apache/iceberg/pull/8082>, 4\n   <https://github.com/apache/iceberg/pull/8084>)\n   - Remove the upper bound of PyParsing dependency\n   <https://github.com/apache/iceberg/pull/8116> (blocking a PR in Airflow\n   <https://github.com/apache/airflow/pull/32786>)\n   - Moving the reading of Avro to Cython\n   <https://github.com/apache/iceberg/pull/8134> (10x speed improvement(!))\n   - Support for the SQLCatalog\n   <https://github.com/apache/iceberg/pull/7921> (JDBC in Java)\n   - Fix support for UUID columns\n   <https://github.com/apache/iceberg/pull/8267>\n   - Support for adding columns\n   <https://github.com/apache/iceberg/pull/8174>\n   - Optimize concurrency <https://github.com/apache/iceberg/pull/8104> (follow\n   up on the Support serverless environments)\n   - Bump Pydantic to v2 <https://github.com/apache/iceberg/pull/7782>\n(improved\n   performance of the JSON (de)serialization)\n   - A lot of bugfixes! The docs have been updated <https://py.iceberg.apache.org/> to the latest\nrelease.",
       "llm_status": "abandoned",
       "llm_key_points": [],
@@ -36859,7 +36862,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
+      "initiative_id": "iceberg-init-iceberg-ml-7jccszv7m01yj21yx5htmqv021htfw1o",
       "llm_summary": "Vote VETOED \u2014 1 veto(es) recorded",
       "llm_status": "abandoned",
       "llm_key_points": [
@@ -36930,7 +36933,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
+      "initiative_id": "iceberg-init-iceberg-ml-7jccszv7m01yj21yx5htmqv021htfw1o",
       "llm_summary": "Vote in progress: 2 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -38285,7 +38288,7 @@
       ],
       "comment_count": 2,
       "participant_count": 2,
-      "initiative_id": "iceberg-init-iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
+      "initiative_id": "iceberg-init-iceberg-ml-f6188s5z3twxdo8jpfdohyfomlxlnrmt",
       "llm_summary": "Proposal to remove Hive locks from HiveCatalog by leveraging a new Hive feature (HIVE-26882) that provides transactional metadata location checks before table alterations. This approach eliminates abandoned locks from disappeared clients while improving commit performance through fewer HMS calls. The solution includes a configuration option to disable Hive locking and relies on Hive's atomicity guarantees instead.",
       "llm_status": "proposal",
       "llm_key_points": [

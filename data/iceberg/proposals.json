@@ -1,7 +1,7 @@
 {
   "project_id": "iceberg",
-  "generated_at": "2026-05-17T08:18:29.393185+00:00",
-  "total": 952,
+  "generated_at": "2026-05-18T09:48:33.349151+00:00",
+  "total": 953,
   "proposals": [
     {
       "id": "iceberg-doc-19nno1RoPznb",
@@ -12,7 +12,7 @@
       "author": "community",
       "state": "open",
       "created_at": "",
-      "updated_at": "2026-05-17T08:12:29.132614+00:00",
+      "updated_at": "2026-05-18T09:43:22.503661+00:00",
       "body": "\ufeffIceberg - Spark Community Sync Notes\r\n\r\n\r\n* This doc has notes from Iceberg Spark integration work, it will include all past discussions in this area.\r\n* Everyone is welcome to join the Iceberg spark syncs to discuss Spark related topics.\r\n* The general community sync notes can be found here.\r\n* Join the \u201cIceberg Dev Events\u201d calendar to see the calendar event!\r\nIceberg - Spark Community Sync\r\nTuesday, January 20\u22c510:00 \u2013 11:00am (recurring Monthly on the third Tuesday) \r\nmeet.google.com/aqg-mdpq-myf\r\n\r\n\r\n\r\n\r\nApr 21, 2026\r\nHighlights\r\nIceberg changes:\r\n* Spark 4.1: Set data file sort_order_id in manifest (#15150)\r\n* Spark 4.1: Pass FileIO on read path (#15832) - Enables passing FileIO from distributed scan planning\r\n* Spark 4.1: Control merge schema evolution by table property (#15825)\r\nSpark changes:\r\n* CREATE TABLE LIKE.. support in Spark 4.2 (apache/spark#54890)\r\n* Keep outputOrdering when GroupPartitionsExec coalesces partitions(apche/spark#55116) \r\n   * Merged in 4.2, Iceberg still is at 4.1\r\n\r\n\r\nDiscussion topics\r\n* Variant Update Neelesh Salian\r\n   * Community Tracking Document: Iceberg - Variant Community Update\r\n      * Mailing list thread: https://lists.apache.org/thread/f8l27lr55nlrdg4qwno29r796d4v2p8l\r\n* WAP branch bug fixes \r\n   * https://github.com/apache/iceberg/pull/15592 - Review needed\r\n   * https://github.com/apache/iceberg/pull/15512 - In review and a release blocker.\r\n* Report Sort metadata to Spark\r\n   * For 4.1 and below, Iceberg still needs to do the merge.(#14948) - Needs review\r\n   * For 4.2 and above can just report sort orders but let Spark merge\r\n\r\n\r\nMar 17, 2026 (Recording) \r\nHighlights\r\n\r\n\r\n* Spark 4.1 \r\n   * Version framework merged, pending release 1.11\r\n   * #15592 - Possible regression?\r\n* Spark side change \r\n   * CREATE TABLE LIKE.. support in Spark 4.2 (apache/spark#54890)\r\nDiscussion topics\r\n* Making Spark Readers Async \r\n   * Presenter: Varun Lakhyani | Related: Github Issue (Spark related) , Github PR, Dev ML Thread , Design/PO",
       "labels": [],
       "linked_resources": [
@@ -49,6 +49,78 @@
       "_content_hash": "569b450a4b0c",
       "_gdoc_snap2048": "\ufeffIceberg - Spark Community Sync Notes\r\n\r\n\r\n* This doc has notes from Iceberg Spark integration work, it will include all past discussions in this area.\r\n* Everyone is welcome to join the Iceberg spark syncs to discuss Spark related topics.\r\n* The general community sync notes can be found here.\r\n* Join the \u201cIceberg Dev Events\u201d calendar to see the calendar event!\r\nIceberg - Spark Community Sync\r\nTuesday, January 20\u22c510:00 \u2013 11:00am (recurring Monthly on the third Tuesday) \r\nmeet.google.com/aqg-mdpq-myf\r\n\r\n\r\n\r\n\r\nApr 21, 2026\r\nHighlights\r\nIceberg changes:\r\n* Spark 4.1: Set data file sort_order_id in manifest (#15150)\r\n* Spark 4.1: Pass FileIO on read path (#15832) - Enables passing FileIO from distributed scan planning\r\n* Spark 4.1: Control merge schema evolution by table property (#15825)\r\nSpark changes:\r\n* CREATE TABLE LIKE.. support in Spark 4.2 (apache/spark#54890)\r\n* Keep outputOrdering when GroupPartitionsExec coalesces partitions(apche/spark#55116) \r\n   * Merged in 4.2, Iceberg still is at 4.1\r\n\r\n\r\nDiscussion topics\r\n* Variant Update Neelesh Salian\r\n   * Community Tracking Document: Iceberg - Variant Community Update\r\n      * Mailing list thread: https://lists.apache.org/thread/f8l27lr55nlrdg4qwno29r796d4v2p8l\r\n* WAP branch bug fixes \r\n   * https://github.com/apache/iceberg/pull/15592 - Review needed\r\n   * https://github.com/apache/iceberg/pull/15512 - In review and a release blocker.\r\n* Report Sort metadata to Spark\r\n   * For 4.1 and below, Iceberg still needs to do the merge.(#14948) - Needs review\r\n   * For 4.2 and above can just report sort orders but let Spark merge\r\n\r\n\r\nMar 17, 2026 (Recording) \r\nHighlights\r\n\r\n\r\n* Spark 4.1 \r\n   * Version framework merged, pending release 1.11\r\n   * #15592 - Possible regression?\r\n* Spark side change \r\n   * CREATE TABLE LIKE.. support in Spark 4.2 (apache/spark#54890)\r\nDiscussion topics\r\n* Making Spark Readers Async \r\n   * Presenter: Varun Lakhyani | Related: Github Issue (Spark related) , Github PR, Dev ML Thread , Design/POC Doc\r\n   * Short discussion on introducing opti",
       "_gdoc_len_at_summary": 8000,
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
+    },
+    {
+      "id": "iceberg-gh-p13879",
+      "source": "github",
+      "kind": "pr",
+      "number": 13879,
+      "title": "[SPEC] Add finer grained read restrictions as part of loadTable",
+      "url": "https://github.com/apache/iceberg/pull/13879",
+      "author": "singhpk234",
+      "state": "open",
+      "created_at": "2025-08-20T21:33:52Z",
+      "updated_at": "2026-05-18T05:55:06Z",
+      "body": "## About the proposal \r\n\r\nThis aims at returning, policy evaluation result (Access decisions) for fine grained access policies based on the calling user as part of the loadTable response. \r\n\r\nThis defines a new object called `ReadRestrictions` which an optional field catalog would use to convey the access decision, The expectation is these rules (projections and the row filters) are correctly applied and enforced by the client, which brings an implicit requirement to have a trusted partner, establishing trust between callers engine and catalog is not scope of this proposal as its totally up to the catalog on how its established via OAuth Delegation Flow or mTLS.\r\n\r\n\r\nThe `ReadRestrictions` returns back projections which are modeled as Actions and the row filters are modeled as [Expression](https://github.com/apache/iceberg/blob/main/open-api/rest-catalog-open-api.yaml#L2162) \r\n\r\nwe have been iterating about the actions in the community sync :)\r\n- https://docs.google.com/document/d/1iGNydKY7XT1N5Nz056vDPM0P8v0MFymGqNtOlUGUp-c/edit?tab=t.0#heading=h.tevndn85fps\r\n\r\n- https://lists.apache.org/thread/xddrotmxs7tyoc4jc5npwqs40vs120yr\r\n\r\n\r\n## Future Extension \r\n\r\nExpression Expansion in Progress, which can allow expressions to contain udfs\r\n\r\nProposal : https://docs.google.com/document/d/1VthBz0S2I39TeQM8oiF9_gSPQu_gHAjWXvdFpv0QqDk\r\n\r\n\r\n\r\n## Additional consideration \r\n\r\n* clients expression handling capability : lets say we introduce a new expression or a transform in the IRC spec, and the catalog returns this new expression, but the client is running on a lower version so it doesn't understand this newly added expression, IMHO its fine if the client fails in interpreting / parsing the expression as it doesn't understands it, open to broader feedback, (similar discussion in past for spark community ([here](https://github.com/apache/spark/pull/50253#discussion_r1997406617)))\r\n\r\n* Schema evolution cases, consider a column got renamed, essentially the DDM and RAP should be Bi",
+      "labels": [
+        "Specification",
+        "OPENAPI",
+        "not-stale"
+      ],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1iGNydKY7XT1N5Nz056vDPM0P8v0MFymGqNtOlUGUp-c/edit?tab=t.0#heading=h.tevndn85fps",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffIceberg Read Restrictions: Community Syncs"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1VthBz0S2I39TeQM8oiF9_gSPQu_gHAjWXvdFpv0QqDk",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffExtending Iceberg Expressions"
+        },
+        {
+          "url": "https://docs.google.com/document/d/14nmuxxfzQsYo59o0Fbpb-pxOlzS6bVtduL8P8pwKZ6U/edit?tab=t.0#bookmark=id.eekzk8xl6uo",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffIceberg REST Spec Extensions for Access Decision Exchange"
+        },
+        {
+          "url": "https://docs.google.com/document/d/108Y0E8XsZi91x-UY0_aHLEbmXDNmxmS5BnDjunEKvTM/edit?tab=t.0",
+          "kind": "google_doc"
+        },
+        {
+          "url": "https://github.com/apache/spark/pull/50253",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/singhpk234/iceberg/pull/270",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/issues/10395",
+          "kind": "github_issue"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/issues/14187",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "The proposal aims to implement fine-grained access policies in the loadTable response, introducing a new object called 'ReadRestrictions' to convey access decisions. It emphasizes the need for trusted client-catalog relationships and discusses potential future extensions for expression handling and schema evolution.",
+      "llm_status": "discussion",
+      "comment_count": 15,
+      "llm_key_points": [
+        "Introduction of ReadRestrictions object",
+        "Need for trusted client-catalog relationships"
+      ],
+      "llm_topics": [
+        "fine-grained-access",
+        "read-restrictions"
+      ],
+      "_content_hash": "130750129c28",
+      "llm_title": "Add finer grained read restrictions",
       "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
@@ -146,78 +218,6 @@
       "llm_title": "",
       "_content_hash": "bef2852ef211",
       "initiative_id": "iceberg-init-iceberg-ml-vkn21zvbcg9vxt2prysp15f269l0s9h0"
-    },
-    {
-      "id": "iceberg-gh-p13879",
-      "source": "github",
-      "kind": "pr",
-      "number": 13879,
-      "title": "[SPEC] Add finer grained read restrictions as part of loadTable",
-      "url": "https://github.com/apache/iceberg/pull/13879",
-      "author": "singhpk234",
-      "state": "open",
-      "created_at": "2025-08-20T21:33:52Z",
-      "updated_at": "2026-05-14T23:11:20Z",
-      "body": "## About the proposal \r\n\r\nThis aims at returning, policy evaluation result (Access decisions) for fine grained access policies based on the calling user as part of the loadTable response. \r\n\r\nThis defines a new object called `ReadRestrictions` which an optional field catalog would use to convey the access decision, The expectation is these rules (projections and the row filters) are correctly applied and enforced by the client, which brings an implicit requirement to have a trusted partner, establishing trust between callers engine and catalog is not scope of this proposal as its totally up to the catalog on how its established via OAuth Delegation Flow or mTLS.\r\n\r\n\r\nThe `ReadRestrictions` returns back projections which are modeled as Actions and the row filters are modeled as [Expression](https://github.com/apache/iceberg/blob/main/open-api/rest-catalog-open-api.yaml#L2162) \r\n\r\nwe have been iterating about the actions in the community sync :)\r\n- https://docs.google.com/document/d/1iGNydKY7XT1N5Nz056vDPM0P8v0MFymGqNtOlUGUp-c/edit?tab=t.0#heading=h.tevndn85fps\r\n\r\n- https://lists.apache.org/thread/xddrotmxs7tyoc4jc5npwqs40vs120yr\r\n\r\n\r\n## Future Extension \r\n\r\nExpression Expansion in Progress, which can allow expressions to contain udfs\r\n\r\nProposal : https://docs.google.com/document/d/1VthBz0S2I39TeQM8oiF9_gSPQu_gHAjWXvdFpv0QqDk\r\n\r\n\r\n\r\n## Additional consideration \r\n\r\n* clients expression handling capability : lets say we introduce a new expression or a transform in the IRC spec, and the catalog returns this new expression, but the client is running on a lower version so it doesn't understand this newly added expression, IMHO its fine if the client fails in interpreting / parsing the expression as it doesn't understands it, open to broader feedback, (similar discussion in past for spark community ([here](https://github.com/apache/spark/pull/50253#discussion_r1997406617)))\r\n\r\n* Schema evolution cases, consider a column got renamed, essentially the DDM and RAP should be Bi",
-      "labels": [
-        "Specification",
-        "OPENAPI",
-        "not-stale"
-      ],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1iGNydKY7XT1N5Nz056vDPM0P8v0MFymGqNtOlUGUp-c/edit?tab=t.0#heading=h.tevndn85fps",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffIceberg Read Restrictions: Community Syncs"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1VthBz0S2I39TeQM8oiF9_gSPQu_gHAjWXvdFpv0QqDk",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffExtending Iceberg Expressions"
-        },
-        {
-          "url": "https://docs.google.com/document/d/14nmuxxfzQsYo59o0Fbpb-pxOlzS6bVtduL8P8pwKZ6U/edit?tab=t.0#bookmark=id.eekzk8xl6uo",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffIceberg REST Spec Extensions for Access Decision Exchange"
-        },
-        {
-          "url": "https://docs.google.com/document/d/108Y0E8XsZi91x-UY0_aHLEbmXDNmxmS5BnDjunEKvTM/edit?tab=t.0",
-          "kind": "google_doc"
-        },
-        {
-          "url": "https://github.com/apache/spark/pull/50253",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/singhpk234/iceberg/pull/270",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/iceberg/issues/10395",
-          "kind": "github_issue"
-        },
-        {
-          "url": "https://github.com/apache/iceberg/issues/14187",
-          "kind": "github_issue"
-        }
-      ],
-      "llm_summary": "The proposal aims to introduce a new object called 'ReadRestrictions' to return access decisions for fine-grained access policies in the loadTable response. It emphasizes the need for trusted client-catalog relationships and discusses future extensions for expression handling and schema evolution.",
-      "llm_status": "discussion",
-      "comment_count": 15,
-      "llm_key_points": [
-        "Introduction of ReadRestrictions object",
-        "Need for trusted client-catalog relationships"
-      ],
-      "llm_topics": [
-        "fine-grained-access",
-        "read-restrictions"
-      ],
-      "_content_hash": "130750129c28",
-      "llm_title": "Add Fine Grained Read Restrictions",
-      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-gh-m59",
@@ -809,7 +809,7 @@
       "llm_key_points": [],
       "llm_topics": [],
       "_content_hash": "b6589fc6ab0d",
-      "initiative_id": "iceberg-init-iceberg-yt-4_nA8PlK1as"
+      "initiative_id": "iceberg-init-iceberg-yt-VYkkMvZkJ-k"
     },
     {
       "id": "iceberg-yt-Rw4HF9pr7mw",
@@ -833,7 +833,7 @@
       "llm_key_points": [],
       "llm_topics": [],
       "_content_hash": "b6589fc6ab0d",
-      "initiative_id": "iceberg-init-iceberg-yt-Rw4HF9pr7mw"
+      "initiative_id": "iceberg-init-iceberg-yt-VYkkMvZkJ-k"
     },
     {
       "id": "iceberg-yt-usgUe8r_e9E",
@@ -3345,7 +3345,7 @@
           "kind": "github_pr"
         }
       ],
-      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-4-0",
+      "initiative_id": "iceberg-init-iceberg-ml-mt4y8vw80glnqqwsr8czfmwvhqf09h46",
       "llm_summary": "* API\r\n  - Implement bound expression sanitization ([\\#8149](https://github.com/apache/iceberg/pull/8149))\r\n  - Remove overflow checks in `DefaultCounter` causing performance issues ([\\#8297](https://github.com/apache/iceberg/pull/8297))\r\n  - Support incremental scanning with branch ([\\#5984](https://github.com/apache/iceberg/pull/5984))\r\n  - Add a validation API to `DeleteFiles` which validates files exist ([\\#8525](https://github.com/apache/iceberg/pull/8525))\r\n* Core\r\n  - Use V2 format by default in new tables ([\\#8381](https://github.com/apache/iceberg/pull/8381))\r\n  - Use `zstd` compression for Parquet by default in new tables ([\\#8593](https://github.com/apache/iceberg/pull/8593))\r\n  - Add strict metadata cleanup mode and enable it by default ([\\#8397](https://github.com/apache/iceberg/pull/8397)) ([\\#8599](https://github.com/apache/iceberg/pull/8599))\r\n  - Avoid generating huge manifests during commits ([\\#6335](https://github.com/apache/iceberg/pull/6335))\r\n  - Add a writer for unordered position deletes ([\\#7692](https://github.com/apache/iceberg/pull/7692))\r\n  - Optimize `DeleteFileIndex` ([\\#8157](https://github.com/apache/iceberg/pull/8157))\r\n  - Optimize lookup in `DeleteFileIndex` without useful bounds ([\\#8278](https://github.com/apache/iceberg/pull/8278))\r\n  - Optimize split offsets handling ([\\#8336](https://github.com/apache/iceberg/pull/8336))\r\n  - Optimize computing user-facing state in data tasks ([\\#8346](https://github.com/apache/iceberg/pull/8346))\r\n  - Don't persist useless file and position bounds for deletes ([\\#8360](https://github.com/apache/iceberg/pull/8360))\r\n  - Don't persist counts for paths and positions in position delete files ([\\#8590](https://github.com/apache/iceberg/pull/8590))\r\n  - Support setting system-level properties via environmental variables ([\\#5659](https://github.com/apache/iceberg/pull/5659))\r\n  - Add JSON parser for `ContentFile` and `FileScanTask` ([\\#6934](https://github.com/apache/iceberg/pull/6934))\r\n  - Add",
       "llm_status": "discussion",
       "llm_key_points": [],
@@ -3795,99 +3795,6 @@
       "_content_hash": "7f727f0a61b8"
     },
     {
-      "id": "iceberg-ml-vrt3oytl3dwo34wr07tkf73r0kkx0b1h",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Docs: Are duplicated results in search on iceberg.apache.org a bug or a feature?",
-      "url": "https://lists.apache.org/thread/vrt3oytl3dwo34wr07tkf73r0kkx0b1h",
-      "author": "Max Konstantinov <ko...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-05-14T06:17:16+00:00",
-      "updated_at": "2026-05-16T16:49:44+00:00",
-      "body": "Hi all,\n\n\nProblem statement\nIf you open https://iceberg.apache.org/ and use a search bar to look for\nanything, ex: \"rewrite\", you get duplicated results because results(ex:\nrewrite_table_path) are found multiple times, once for each version of\nIceberg documentation(1.4 to 1.10), all these versions are present on the\nwebsite under the previous section in the navigation tab and all of them\nare indexed.\n\nQuestion\nIs that a bug and does it need to be addressed? I have a suggestion on how\nto approach this.\n\nNotes\nIceberg's site build uses mkdocs and mkdocs-material which in turn utilize\nlunrjs for search.\n\n\nMax.\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/iceberg/issues/14521",
-          "kind": "github_issue"
-        }
-      ],
-      "llm_summary": "The discussion revolves around the issue of duplicated search results on the Iceberg documentation site, caused by multiple versions of documents being indexed. Participants are exploring potential solutions, including excluding older versions from search results and possibly adding a version dropdown for better user experience.",
-      "llm_status": "discussion",
-      "comment_count": 11,
-      "participant_count": 6,
-      "llm_key_points": [
-        "Duplicated results are not ideal for users",
-        "Excluding older versions may improve search"
-      ],
-      "llm_topics": [
-        "search-optimization",
-        "documentation"
-      ],
-      "_content_hash": "33d59fdbfe65",
-      "llm_title": "Duplicated Search Results on Iceberg Docs",
-      "initiative_id": "iceberg-init-iceberg-gh-i13446"
-    },
-    {
-      "id": "iceberg-ml-x5x9fzq3j1wybx3fc5orbc5c2mnxmbzp",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[VOTE] Release Apache Iceberg 1.11.0 RC4",
-      "url": "https://lists.apache.org/thread/x5x9fzq3j1wybx3fc5orbc5c2mnxmbzp",
-      "author": "Aihua Xu <ai...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-05-15T05:31:45+00:00",
-      "updated_at": "2026-05-16T16:47:47+00:00",
-      "body": "Hi Everyone,\n\nI propose that we release the following RC as the official Apache Iceberg\n1.11.0 release.\n\nThe commit ID is 6976e020b894f6a6777704df2b8c4458cb291ae9\n* This corresponds to the tag: apache-iceberg-1.11.0-rc4\n* https://github.com/apache/iceberg/commits/apache-iceberg-1.11.0-rc4\n*\nhttps://github.com/apache/iceberg/tree/6976e020b894f6a6777704df2b8c4458cb291ae9\n\nThe release tarball, signature, and checksums are here:\n* https://dist.apache.org/repos/dist/dev/iceberg/apache-iceberg-1.11.0-rc4\n\nYou can find the KEYS file here:\n* https://downloads.apache.org/iceberg/KEYS\n\nConvenience binary artifacts are staged on Nexus. The Maven repository URL\nis:\n* https://repository.apache.org/content/repositories/orgapacheiceberg-1282/\n\nPlease download, verify, and test.\n\nInstructions for verifying a release can be found here:\n* https://iceberg.apache.org/how-to-release/#how-to-verify-a-release\n\nPlease vote in the next 72 hours.\n\n[ ] +1 Release this as Apache Iceberg 1.11.0\n[ ] +0\n[ ] -1 Do not release this because...\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/kevinjqliu/iceberg-python/pull/42",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Vote in progress: 0 binding +1, 4 non-binding +1",
-      "llm_status": "proposal",
-      "comment_count": 4,
-      "participant_count": 5,
-      "vote_data": {
-        "binding_plus1": 0,
-        "nonbinding_plus1": 4,
-        "vetoes": 0,
-        "result": "open",
-        "voters": [
-          {
-            "voter": "Kevin Liu <ke...@apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Steven Wu <st...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Yufei Gu <fl...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "huaxin gao <hu...@gmail.com>",
-            "vote": "+1"
-          }
-        ]
-      },
-      "llm_key_points": [
-        "Hi Everyone,\n\nI propose that we release the following RC as the official Apache Iceberg\n1.11.0 release.",
-        "Voters include: Kevin Liu, Steven Wu, Yufei Gu..."
-      ],
-      "llm_topics": [
-        "apache-iceberg",
-        "official-apache",
-        "iceberg",
-        "release"
-      ],
-      "_content_hash": "3671fc6e0ea6",
-      "initiative_id": "iceberg-init-iceberg-ml-x5x9fzq3j1wybx3fc5orbc5c2mnxmbzp"
-    },
-    {
       "id": "iceberg-ml-o5rmmlqvyl6my1p5mr6jxxo8cs0lvyo1",
       "source": "mailing_list",
       "kind": "thread",
@@ -3896,17 +3803,17 @@
       "author": "Amogh Jahagirdar <2a...@gmail.com>",
       "state": "open",
       "created_at": "2026-05-14T00:12:50+00:00",
-      "updated_at": "2026-05-16T00:12:45+00:00",
+      "updated_at": "2026-05-18T09:03:59+00:00",
       "body": "Hi Everyone,\n\nI propose that we release the following RC as the official Apache Iceberg\n1.10.2 release.\n\nThe commit ID is 57396d628cb9f92e121f9c2919398475393f0a3a\n* This corresponds to the tag: apache-iceberg-1.10.2-rc1\n* https://github.com/apache/iceberg/commits/apache-iceberg-1.10.2-rc1\n*\nhttps://github.com/apache/iceberg/tree/57396d628cb9f92e121f9c2919398475393f0a3a\n\nThe release tarball, signature, and checksums are here:\n* https://dist.apache.org/repos/dist/dev/iceberg/apache-iceberg-1.10.2-rc1\n\nYou can find the KEYS file here:\n* https://downloads.apache.org/iceberg/KEYS\n\nConvenience binary artifacts are staged on Nexus. The Maven repository URL\nis:\n* https://repository.apache.org/content/repositories/orgapacheiceberg-1281/\n\nPlease download, verify, and test.\n\nInstructions for verifying a release can be found here:\n* https://iceberg.apache.org/how-to-release/#how-to-verify-a-release\n\nPlease vote in the next 72 hours.\n\n[ ] +1 Release this as Apache Iceberg 1.10.2\n[ ] +0\n[ ] -1 Do not release this because...\n\nOnly PMC members have binding votes, but other community members are\nencouraged to cast\nnon-binding votes. This vote will pass if there are 3 binding +1 votes and\nmore binding\n+1 votes than -1 votes.\n",
       "labels": [],
       "linked_resources": [],
-      "llm_summary": "Vote in progress: 0 binding +1, 9 non-binding +1",
+      "llm_summary": "Vote in progress: 0 binding +1, 10 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 8,
-      "participant_count": 9,
+      "comment_count": 9,
+      "participant_count": 10,
       "vote_data": {
         "binding_plus1": 0,
-        "nonbinding_plus1": 9,
+        "nonbinding_plus1": 10,
         "vetoes": 0,
         "result": "open",
         "voters": [
@@ -3916,6 +3823,10 @@
           },
           {
             "voter": "Amogh Jahagirdar <2a...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Eduard Tudenh\u00f6fner <et...@apache.org>",
             "vote": "+1"
           },
           {
@@ -3950,7 +3861,7 @@
       },
       "llm_key_points": [
         "Hi Everyone,\n\nI propose that we release the following RC as the official Apache Iceberg\n1.10.2 release.",
-        "Voters include: Aihua Xu, Amogh Jahagirdar, Kevin Liu..."
+        "Voters include: Aihua Xu, Amogh Jahagirdar, Eduard Tudenh\u00f6fner..."
       ],
       "llm_topics": [
         "apache-iceberg",
@@ -3958,8 +3869,176 @@
         "iceberg",
         "release"
       ],
-      "_content_hash": "45d818de1033",
+      "_content_hash": "3c9a6aca8eb1",
       "initiative_id": "iceberg-init-iceberg-ml-o5rmmlqvyl6my1p5mr6jxxo8cs0lvyo1"
+    },
+    {
+      "id": "iceberg-ml-kr9x53nknh0wc9r0wvbcgs6fk915noxy",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[Curiosity] Checksums in Iceberg Libraries",
+      "url": "https://lists.apache.org/thread/kr9x53nknh0wc9r0wvbcgs6fk915noxy",
+      "author": "Kurtis Wright <ku...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-05-07T18:08:01+00:00",
+      "updated_at": "2026-05-18T08:59:49+00:00",
+      "body": "Hi Everyone,\n\n  Kurtis from S3Tables, S3 utilizes checksums\n<https://en.wikipedia.org/wiki/Checksum> for durability and correctness\n<https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html>.\nI see that S3 & GCS clients utilize checksumming, but after searching\nthrough both the Java implementation and the mail list (just going back a\nfew months) I couldn't find any reference to something in the spec. I\nstarted writing a proposal for adding checksums for durability and\ncorrectness at a few different layers of Iceberg, but before I complete a\nproposal I wanted to check with the community to gauge interest in the\nconcepts and hopefully have some initial feedback.\n\nThe layers of Iceberg I am considering are:\n\n   1. At rest/storage in the file layer (metadata.json, manifest layer,\n   data file layer)\n   2. Bracketing in the Catalog\n   3. Maybe during compaction operations (unsure exactly how this would\n   work)\n\nPlease let me know if there were considerations that we denied or grew\nstale in the past. I would really appreciate reading more on what the\ncommunity has considered already and learn from that. Otherwise if you\nthink this is cool and want to talk or just plus one please reach out.\n\n-- \nThank You,\nKurtis C. Wright\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "Kurtis from S3Tables is proposing the addition of checksums in various layers of Iceberg to enhance durability and correctness. He seeks community feedback on the idea, particularly regarding its implementation in file storage, catalog bracketing, and during compaction operations.",
+      "llm_status": "discussion",
+      "comment_count": 7,
+      "participant_count": 6,
+      "llm_key_points": [
+        "Interest in checksums for durability",
+        "Considerations for security and integrity"
+      ],
+      "llm_topics": [
+        "checksumming",
+        "data-integrity"
+      ],
+      "_content_hash": "ab5540b34507",
+      "llm_title": "Checksums in Iceberg Libraries",
+      "initiative_id": "iceberg-init-iceberg-ml-kr9x53nknh0wc9r0wvbcgs6fk915noxy"
+    },
+    {
+      "id": "iceberg-ml-s7ogoyc8y8hrj8374m82mqbmpdv4kq0w",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] KAFKA CONNECT: Worker needs to detect the Coordinator's progress",
+      "url": "https://lists.apache.org/thread/s7ogoyc8y8hrj8374m82mqbmpdv4kq0w",
+      "author": "Henry Haiying Cai via dev <de...@iceberg.apache.org>",
+      "state": "open",
+      "created_at": "2026-05-18T07:21:11+00:00",
+      "updated_at": "2026-05-18T07:21:11+00:00",
+      "body": "Hi All,\n\nI would like to add support a simple back-pressure control between Coordinator and Worker in iceberg-kafka-connect connector, as described in detail below. Please take a look at the feature request:\n\nhttps://github.com/apache/iceberg/issues/16389\n\n1. Proposed Change\n\nWe are proposing a simple backpressure control mechanism between iceberg-kafka-connect\u2019s Coordinator and Worker to be used when the Coordinator is overloaded or in trouble. We propose the Worker add Coordinator\u2019s progress detection to pause itself to prevent exponential growth of control topic messages on the Coordinator.\n\n2. The Problem\n\nIn the current iceberg-kafka-connect, Coordinator and Worker works in more or less decoupled mode with one-way communication from Coordinator to the Worker through a control topic. \u00a0When Coordinator faced network issue when committing to Iceberg Catalog Server and failed the current commit, the Worker keeps working and generating more or more new data files on S3 and caused Coordinator even bigger troubles on the next commit cycle.\n\n3. The Solution\n\nBuilding a sophisticated backpressure control feedback loop between the Coordinator and the Worker can be complex, but there is a relatively simple solution here.\n\nThe Idea\n\nWorker can detect that Coordinator is in trouble:\n\nThe worker can read both START_COMMIT and COMMIT_COMPLETE messages from the control topic. When the worker only sees START_COMMIT message without matching COMMIT_COMPLETE message, it knows the Coordinator didn\u2019t finish the Iceberg Commit in this cycle. If this fails for several consecutive cycles, it knows the Coordinator is in trouble and it needs to slow down or pause.\n\nWorker can pause the work when the Coordinator is in trouble\n\n4. The Proposal\n\nProposed spec changes:\n\nAdd two optional config parameters to control whether coordinator progress detection is enabled and how many failed committed cycles to mark coordinator as stalled.\n\nChanges to iceberg-kafka-connect classes:\n\nWorker class\n- r",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/iceberg/issues/16389",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "A proposal has been made to implement a back-pressure control mechanism between the Coordinator and Worker in the iceberg-kafka-connect connector. This aims to prevent the Worker from overwhelming the Coordinator during network issues by detecting the Coordinator's progress and pausing operations when necessary.",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [
+        "Proposed back-pressure control mechanism",
+        "Worker to detect Coordinator's progress"
+      ],
+      "llm_topics": [
+        "back-pressure",
+        "kafka-connect"
+      ],
+      "_content_hash": "a39575751eae",
+      "llm_title": "Back-pressure Control in Iceberg Kafka Connect",
+      "initiative_id": "iceberg-init-iceberg-ml-s7ogoyc8y8hrj8374m82mqbmpdv4kq0w"
+    },
+    {
+      "id": "iceberg-ml-x5x9fzq3j1wybx3fc5orbc5c2mnxmbzp",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] Release Apache Iceberg 1.11.0 RC4",
+      "url": "https://lists.apache.org/thread/x5x9fzq3j1wybx3fc5orbc5c2mnxmbzp",
+      "author": "Aihua Xu <ai...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-05-15T05:31:45+00:00",
+      "updated_at": "2026-05-18T07:02:26+00:00",
+      "body": "Hi Everyone,\n\nI propose that we release the following RC as the official Apache Iceberg\n1.11.0 release.\n\nThe commit ID is 6976e020b894f6a6777704df2b8c4458cb291ae9\n* This corresponds to the tag: apache-iceberg-1.11.0-rc4\n* https://github.com/apache/iceberg/commits/apache-iceberg-1.11.0-rc4\n*\nhttps://github.com/apache/iceberg/tree/6976e020b894f6a6777704df2b8c4458cb291ae9\n\nThe release tarball, signature, and checksums are here:\n* https://dist.apache.org/repos/dist/dev/iceberg/apache-iceberg-1.11.0-rc4\n\nYou can find the KEYS file here:\n* https://downloads.apache.org/iceberg/KEYS\n\nConvenience binary artifacts are staged on Nexus. The Maven repository URL\nis:\n* https://repository.apache.org/content/repositories/orgapacheiceberg-1282/\n\nPlease download, verify, and test.\n\nInstructions for verifying a release can be found here:\n* https://iceberg.apache.org/how-to-release/#how-to-verify-a-release\n\nPlease vote in the next 72 hours.\n\n[ ] +1 Release this as Apache Iceberg 1.11.0\n[ ] +0\n[ ] -1 Do not release this because...\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/kevinjqliu/iceberg-python/pull/42",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Vote in progress: 0 binding +1, 7 non-binding +1",
+      "llm_status": "proposal",
+      "comment_count": 7,
+      "participant_count": 8,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 7,
+        "vetoes": 0,
+        "result": "open",
+        "voters": [
+          {
+            "voter": "Jean-Baptiste Onofr\u00e9 <jb...@nanthrax.net>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Kevin Liu <ke...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Neelesh Salian <ne...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Steven Wu <st...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Yufei Gu <fl...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Yuya Ebihara <yu...@starburstdata.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "huaxin gao <hu...@gmail.com>",
+            "vote": "+1"
+          }
+        ]
+      },
+      "llm_key_points": [
+        "Hi Everyone,\n\nI propose that we release the following RC as the official Apache Iceberg\n1.11.0 release.",
+        "Voters include: Jean-Baptiste Onofr\u00e9, Kevin Liu, Neelesh Salian..."
+      ],
+      "llm_topics": [
+        "apache-iceberg",
+        "official-apache",
+        "iceberg",
+        "release"
+      ],
+      "_content_hash": "6b604a86b4cd",
+      "initiative_id": "iceberg-init-iceberg-ml-x5x9fzq3j1wybx3fc5orbc5c2mnxmbzp"
+    },
+    {
+      "id": "iceberg-ml-vrt3oytl3dwo34wr07tkf73r0kkx0b1h",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Docs: Are duplicated results in search on iceberg.apache.org a bug or a feature?",
+      "url": "https://lists.apache.org/thread/vrt3oytl3dwo34wr07tkf73r0kkx0b1h",
+      "author": "Max Konstantinov <ko...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-05-14T06:17:16+00:00",
+      "updated_at": "2026-05-16T16:49:44+00:00",
+      "body": "Hi all,\n\n\nProblem statement\nIf you open https://iceberg.apache.org/ and use a search bar to look for\nanything, ex: \"rewrite\", you get duplicated results because results(ex:\nrewrite_table_path) are found multiple times, once for each version of\nIceberg documentation(1.4 to 1.10), all these versions are present on the\nwebsite under the previous section in the navigation tab and all of them\nare indexed.\n\nQuestion\nIs that a bug and does it need to be addressed? I have a suggestion on how\nto approach this.\n\nNotes\nIceberg's site build uses mkdocs and mkdocs-material which in turn utilize\nlunrjs for search.\n\n\nMax.\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/iceberg/issues/14521",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "The discussion revolves around the issue of duplicated search results on the Iceberg documentation site, caused by multiple versions of documents being indexed. Participants are exploring potential solutions, including excluding older versions from search results and possibly adding a version dropdown for better user experience.",
+      "llm_status": "discussion",
+      "comment_count": 11,
+      "participant_count": 6,
+      "llm_key_points": [
+        "Duplicated results are not ideal for users",
+        "Excluding older versions may improve search"
+      ],
+      "llm_topics": [
+        "search-optimization",
+        "documentation"
+      ],
+      "llm_title": "Duplicated Search Results on Iceberg Docs",
+      "_content_hash": "33d59fdbfe65",
+      "initiative_id": "iceberg-init-iceberg-gh-i13446"
     },
     {
       "id": "iceberg-ml-v3bq8snhtdwmj20v4s6kv5byg18cv84t",
@@ -4270,16 +4349,16 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion centers around the need for a V2-compatible conversion path for the EqualityDeleteConverter in Flink, as many organizations are still using V2 tables. Contributors express interest in supporting this initiative to facilitate smoother migration to V3.",
+      "llm_summary": "The discussion centers around the need for a V2-compatible conversion path for the EqualityDeleteConverter in Flink, as many organizations are still using V2 tables. Contributors express interest in collaborating on this path to support their use cases while acknowledging the trade-offs involved in storage and lookup efficiency.",
       "llm_status": "discussion",
       "comment_count": 1,
       "participant_count": 2,
       "llm_key_points": [
-        "V2 compatibility is crucial for current users",
-        "Interest in contributing to the V2 path"
+        "Need for V2 compatibility",
+        "Interest in collaboration on the proposal"
       ],
       "llm_topics": [
-        "equality-deletion",
+        "equality-deletes",
         "streaming-ingestion"
       ],
       "_content_hash": "9f8830382c82",
@@ -4324,17 +4403,17 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion centers around updates to the Content Stats Spec for Iceberg, including the removal of unused fields and the addition of new metrics for variable-length types. The proposal aims to enhance the representation of column statistics to improve efficiency and extensibility.",
+      "llm_summary": "The team is discussing updates to the Content Stats Spec for Iceberg, focusing on improving column statistics representation. Key changes include removing unused fields, adding average and maximum value sizes, and ensuring sufficient ID space for future expansions.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "Updated proposal with new metrics",
-        "Removed unused column_size field"
+        "Iterating on Content Stats Spec changes",
+        "Preparing for a vote on the design proposal"
       ],
       "llm_topics": [
         "column-statistics",
-        "data-optimization"
+        "data-representation"
       ],
       "_content_hash": "ed112a8a7c8d",
       "llm_title": "Improved Column Statistics Proposal",
@@ -4383,17 +4462,17 @@
           "kind": "github_issue"
         }
       ],
-      "llm_summary": "The discussion focuses on the representation of update files for partial updates in Apache Iceberg, with a consensus reached to use a 'Complete' representation for its simplicity. However, the team is still deliberating on how to handle update files when rows are deleted, weighing options for positional matching and the implications on performance and complexity.",
+      "llm_summary": "The discussion focuses on the representation of update files for efficient column updates in Apache Iceberg. A consensus was reached to use a 'Complete' representation for partial updates due to its simplicity, while the representation for deletes remains an open question with various options being considered.",
       "llm_status": "discussion",
       "comment_count": 6,
       "participant_count": 5,
       "llm_key_points": [
-        "Consensus on 'Complete' representation for partial updates",
-        "Ongoing debate on handling deleted rows in update files"
+        "Consensus on 'Complete' representation for updates",
+        "Open question on representation for deletes"
       ],
       "llm_topics": [
         "column-updates",
-        "data-representation"
+        "file-representation"
       ],
       "_content_hash": "f0c78b3b19cd",
       "llm_title": "Efficient Column Updates in Iceberg",
@@ -4482,17 +4561,17 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion centers on implementing a row timestamp feature for V4 tables, which includes a monotonic snapshot timestamp and an inherited row timestamp. The proposal aims to enhance temporal queries, latency tracking, and auditing by ensuring timestamps are consistent and reliable across updates.",
+      "llm_summary": "The discussion centers around implementing a row timestamp feature for V4 tables, which includes a monotonic snapshot timestamp and an inherited row timestamp. The proposal aims to enhance temporal queries, latency tracking, data TTL, and auditing compliance by ensuring reliable time travel and incremental processing.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
       "llm_key_points": [
-        "Consensus on monotonic snapshot timestamps",
-        "Row timestamp inheritance to be implemented after V4 metadata tree"
+        "Monotonic snapshot timestamps are required for V4 writers.",
+        "Row timestamp will be inherited from the snapshot timestamp."
       ],
       "llm_topics": [
         "row-timestamp",
-        "temporal-queries"
+        "v4-tables"
       ],
       "_content_hash": "b8898f1f1455",
       "llm_title": "Row Timestamp Proposal for V4 Tables",
@@ -4566,13 +4645,13 @@
           "kind": "github_issue"
         }
       ],
-      "llm_summary": "A discussion is underway regarding the introduction of a first-class Tag concept in the Iceberg REST Catalog to enhance classification, ownership, and governance across various data platforms. The proposal aims to standardize tagging to improve interoperability and utility across different catalogs, while also addressing concerns about potential overlaps with existing label mechanisms.",
+      "llm_summary": "A discussion is underway about introducing a first-class Tag concept in the Iceberg REST Catalog to enhance classification, ownership, and governance across various data platforms. The proposal aims to standardize tagging to improve interoperability and reduce the need for catalog-specific adapters, while also addressing concerns about potential overlaps with existing label mechanisms.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 3,
       "llm_key_points": [
-        "Standardizing tags can enhance interoperability across catalogs.",
-        "Concerns about overlapping functionalities with existing label proposals."
+        "Standardizing tagging can enhance interoperability across platforms.",
+        "Concerns about overlapping efforts with existing label proposals."
       ],
       "llm_topics": [
         "tagging",
@@ -4783,50 +4862,21 @@
           "kind": "github_issue"
         }
       ],
-      "llm_summary": "The Iceberg Variant community held a sync meeting on May 7, 2026, to discuss ongoing work and action items. The meeting notes and recording are available for reference, and participants are encouraged to reach out with questions.",
+      "llm_summary": "The discussion revolves around the ongoing work and updates related to the Iceberg Variant project. A monthly sync meeting was established to track progress and address action items, with a focus on performance improvements and integration with various data processing engines.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
         "Monthly sync meetings established",
-        "Action items and ongoing work discussed"
+        "Focus on performance improvements and integration"
       ],
       "llm_topics": [
         "variant-sync",
-        "community-update"
+        "performance"
       ],
       "_content_hash": "01eea82b144e",
       "llm_title": "Iceberg Variant Sync Meeting Notes",
-      "initiative_id": "iceberg-init-iceberg-yt-VYkkMvZkJ-k"
-    },
-    {
-      "id": "iceberg-ml-kr9x53nknh0wc9r0wvbcgs6fk915noxy",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[Curiosity] Checksums in Iceberg Libraries",
-      "url": "https://lists.apache.org/thread/kr9x53nknh0wc9r0wvbcgs6fk915noxy",
-      "author": "Kurtis Wright <ku...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-05-07T18:08:01+00:00",
-      "updated_at": "2026-05-08T10:41:31+00:00",
-      "body": "Hi Everyone,\n\n  Kurtis from S3Tables, S3 utilizes checksums\n<https://en.wikipedia.org/wiki/Checksum> for durability and correctness\n<https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html>.\nI see that S3 & GCS clients utilize checksumming, but after searching\nthrough both the Java implementation and the mail list (just going back a\nfew months) I couldn't find any reference to something in the spec. I\nstarted writing a proposal for adding checksums for durability and\ncorrectness at a few different layers of Iceberg, but before I complete a\nproposal I wanted to check with the community to gauge interest in the\nconcepts and hopefully have some initial feedback.\n\nThe layers of Iceberg I am considering are:\n\n   1. At rest/storage in the file layer (metadata.json, manifest layer,\n   data file layer)\n   2. Bracketing in the Catalog\n   3. Maybe during compaction operations (unsure exactly how this would\n   work)\n\nPlease let me know if there were considerations that we denied or grew\nstale in the past. I would really appreciate reading more on what the\ncommunity has considered already and learn from that. Otherwise if you\nthink this is cool and want to talk or just plus one please reach out.\n\n-- \nThank You,\nKurtis C. Wright\n",
-      "labels": [],
-      "linked_resources": [],
-      "llm_summary": "Kurtis from S3Tables is proposing the addition of checksums in Iceberg for durability and correctness across various layers, including file storage and catalog operations. He seeks community feedback and insights on previous considerations regarding checksums, especially in relation to security and integrity.",
-      "llm_status": "discussion",
-      "comment_count": 6,
-      "participant_count": 5,
-      "llm_key_points": [
-        "Proposal for checksums in Iceberg",
-        "Community feedback requested"
-      ],
-      "llm_topics": [
-        "checksumming",
-        "data-integrity"
-      ],
-      "llm_title": "Checksums in Iceberg Libraries",
-      "_content_hash": "aebbb6412e6a",
-      "initiative_id": "iceberg-init-iceberg-ml-kr9x53nknh0wc9r0wvbcgs6fk915noxy"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-9t1kq6p2qtf9d718ldo6b5s9p9jvboo5",
@@ -4858,7 +4908,7 @@
       ],
       "llm_title": "",
       "_content_hash": "8288da01c0f2",
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j"
+      "initiative_id": "iceberg-init-iceberg-gh-m36"
     },
     {
       "id": "iceberg-ml-z48t5wgx778j17pzto9kqxwysw4ysxxo",
@@ -5331,21 +5381,21 @@
           "kind": "github_issue"
         }
       ],
-      "llm_summary": "Varun Lakhyani has been selected for GSoC 2026 to work on implementing parallel scan task execution in Apache Iceberg's Spark readers. This project aims to improve performance for workloads with many small files by allowing concurrent task execution, which has shown promising initial benchmarking results.",
+      "llm_summary": "Varun Lakhyani has been selected for GSoC 2026 to work on implementing parallel scan task execution in Apache Iceberg's Spark readers, mentored by Russell Spitzer. This initiative aims to improve performance for workloads with many small files by allowing concurrent task execution, significantly reducing processing time.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
         "Selected for GSoC 2026",
         "Mentored by Russell Spitzer",
-        "Focus on improving small-file performance"
+        "Proposal aims to improve performance for small files"
       ],
       "llm_topics": [
         "parallel-scan",
         "performance"
       ],
       "_content_hash": "9b08ee12ace0",
-      "llm_title": "GSoC 2026: Parallel Scan Task Execution",
+      "llm_title": "GSoC 2026: Parallel Scan Execution in Iceberg",
       "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
@@ -5689,7 +5739,7 @@
         "rust-version"
       ],
       "_content_hash": "eb56f71f9405",
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j"
+      "initiative_id": "iceberg-init-iceberg-gh-m36"
     },
     {
       "id": "iceberg-ml-5fwofb1j2myojbxmofstxf5njboy0yqy",
@@ -5985,7 +6035,7 @@
         "rust-version"
       ],
       "_content_hash": "1f9776764c5d",
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j"
+      "initiative_id": "iceberg-init-iceberg-gh-m36"
     },
     {
       "id": "iceberg-ml-ymnmhmhhnx1kwrn4s1gg7gcnmhd4mnkw",
@@ -8225,7 +8275,7 @@
       ],
       "llm_title": "",
       "_content_hash": "cdc068f2e413",
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j"
+      "initiative_id": "iceberg-init-iceberg-gh-m36"
     },
     {
       "id": "iceberg-ml-k6xz5pzn50p8s2xqs6xt8dqcdmglkh0q",
@@ -8261,7 +8311,7 @@
         "release-apache"
       ],
       "_content_hash": "d521464d12f0",
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j"
+      "initiative_id": "iceberg-init-iceberg-gh-m36"
     },
     {
       "id": "iceberg-ml-fm3ly9q3xlwwtqgcfqxhrblot665rf6c",
@@ -8400,7 +8450,7 @@
         "rust-version"
       ],
       "_content_hash": "e8d703b25a8e",
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j"
+      "initiative_id": "iceberg-init-iceberg-gh-m36"
     },
     {
       "id": "iceberg-ml-441bhlb37xo5hn2pl5mhfq3f288s4nwp",
@@ -11654,7 +11704,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote PASSED with 4 binding +1 votes and 3 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -12017,7 +12067,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote PASSED with 3 binding +1 votes and 2 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -14727,7 +14777,7 @@
       "linked_resources": [],
       "comment_count": 1,
       "participant_count": 2,
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Hi all,\n\nThe Apache Iceberg Rust community is pleased to announce that Apache\nIceberg Rust 0.7.0 has been released! Iceberg is a data access layer that allows users to easily and efficiently\nretrieve data from various storage services in a unified way. Notable updates in version 0.7.0 include:\n1.",
       "llm_status": "released",
       "llm_key_points": [],
@@ -15009,7 +15059,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-ml-gyog4v147jddtlkxv7zrj7419y82h8d0",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -15288,7 +15338,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote PASSED with 5 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -16113,7 +16163,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -16435,7 +16485,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-5gff76hvqy7r1lksrt9ld9h3pdp03nb5",
+      "initiative_id": "iceberg-init-iceberg-ml-tfy96bqmz1bmdxr73x17w3xxj3yzs606",
       "llm_summary": "Vote PASSED with 6 binding +1 votes and 2 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -16683,7 +16733,7 @@
       ],
       "comment_count": 4,
       "participant_count": 4,
-      "initiative_id": "iceberg-init-iceberg-ml-mt4y8vw80glnqqwsr8czfmwvhqf09h46",
+      "initiative_id": "iceberg-init-iceberg-ml-tfy96bqmz1bmdxr73x17w3xxj3yzs606",
       "llm_summary": "Discussion about restoring the `added-rows` field to the Iceberg snapshot specification after it was removed in 1.10.0 RC5. The field is needed by REST catalog servers to compute row-id increments without reading manifest files, and keeping it maintains consistency between the spec and Java implementation. The field will be retained with its current name for compatibility despite being semantically more accurate as `assigned-rows`.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -18282,7 +18332,7 @@
       "linked_resources": [],
       "comment_count": 2,
       "participant_count": 3,
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Hi all,\n\nThe Apache Iceberg Rust community is pleased to announce\nthat Apache Iceberg Rust v0.6.0 has been released! The notable changes since v0.6.0 include:\n1. Enhanced Transaction Support: Added TransactionAction for various operations (update_location, update_properties, upgrade_format, replace_sort_order, fast_append, update_statistics) with improved ownership model where Transaction now owns base_table instead of borrowing\n2.",
       "llm_status": "released",
       "llm_key_points": [],
@@ -18352,7 +18402,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -18511,7 +18561,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote PASSED with 4 binding +1 votes and 2 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -19314,7 +19364,7 @@
       "linked_resources": [],
       "comment_count": 1,
       "participant_count": 2,
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Hi all,\n\nThe Apache Iceberg Rust community is pleased to announce that Apache\nIceberg Rust 0.5.1 has been released! This also includes the release of\npyiceberg-core 0.5.1, which is the rust bindings for python. Apache Iceberg is an open table format for huge analytic datasets.",
       "llm_status": "released",
       "llm_key_points": [],
@@ -20056,7 +20106,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote PASSED with 3 binding +1 votes and 4 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -20238,7 +20288,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote in progress: 2 binding +1, 3 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -21010,7 +21060,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-pdb9c7yw9w2tfs7cfv847xqp7nl7tsx5",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote PASSED with 6 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -22061,7 +22111,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-gh-m36",
+      "initiative_id": "iceberg-init-iceberg-ml-pdb9c7yw9w2tfs7cfv847xqp7nl7tsx5",
       "llm_summary": "Vote PASSED with 5 binding +1 votes and 3 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -22635,7 +22685,7 @@
       ],
       "comment_count": 9,
       "participant_count": 8,
-      "initiative_id": "iceberg-init-iceberg-gh-p13879",
+      "initiative_id": "iceberg-init-iceberg-ml-mt4y8vw80glnqqwsr8czfmwvhqf09h46",
       "llm_summary": "Proposal to write metadata files without pretty-printing to reduce storage space and network overhead. A real-world example showed a 53.6MB metadata file reduced to 41.4MB after removing whitespace, with potential impact for tables with gigabyte-scale metadata files.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -26084,7 +26134,7 @@
       ],
       "comment_count": 13,
       "participant_count": 7,
-      "initiative_id": "iceberg-init-iceberg-ml-mt4y8vw80glnqqwsr8czfmwvhqf09h46",
+      "initiative_id": "iceberg-init-iceberg-ml-tfy96bqmz1bmdxr73x17w3xxj3yzs606",
       "llm_summary": "Proposal to officially document optional fields in snapshot summaries (metrics, partition-level summaries) that are currently supported in Java and Python implementations but lack specification documentation. This standardization aims to ensure consistency across implementations and reduce ambiguity as other engines adopt these fields.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -26157,7 +26207,7 @@
       ],
       "comment_count": 5,
       "participant_count": 6,
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Hi all,\n\nThe Apache Iceberg Rust community is pleased to announce that Apache\nIceberg Rust v0.4.0 has been released! The notable changes since v0.3.0 include:\n- Caching parsed Manifests and ManifestLists for performance\n- Support projection pushdown in Datafusion Iceberg\n- Utilize row group and row selection filtering when reading parquet\nfile backed tables\n- Support for GCP OAuth\n- Introduce list, load, rename, drop, create table operations in SQLCatalog\n- TableMetadataBuilder that enables building modifications to TableMetadata\n- Datafusion Iceberg table provider for reading a table at a given snapshot\n- New Puffin crate and compression codec\n- Support for reading tables with schema evolution\n- Support for reading Decimal type columns\n- Support for StatisticsFile and PartitionsStatisticsFile in TableMetadata\n- Enable conversion of Datafusion expression filters to Iceberg predicates\n- Publish Transforms as Python bindings in pyiceberg_core\n\nPlease refer to the change log for the complete list of changes:\nhttps://github.com/apache/iceberg-rust/releases/tag/v0.4.0\n\nApache Iceberg Rust website: https://rust.iceberg.apache.org/\n\nDownload Links: https://rust.iceberg.apache.org/download\n\nIceberg Resources:\n- Issue: https://github.com/apache/iceberg-rust/issues\n- Mailing list: dev@iceberg.apache.org\n\nThank you\nOn behalf of Apache Iceberg Community",
       "llm_status": "released",
       "llm_key_points": [],
@@ -26200,7 +26250,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote in progress: 2 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -26300,7 +26350,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote in progress: 2 binding +1, 2 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -26423,7 +26473,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -27603,7 +27653,7 @@
       ],
       "comment_count": 3,
       "participant_count": 4,
-      "initiative_id": "iceberg-init-iceberg-ml-mt4y8vw80glnqqwsr8czfmwvhqf09h46",
+      "initiative_id": "iceberg-init-iceberg-ml-tfy96bqmz1bmdxr73x17w3xxj3yzs606",
       "llm_summary": "Proposal to standardize a file system-based method for identifying Iceberg tables' current snapshot by replicating the version-hint metadata file name from the catalog to the file system. This enhances interoperability and reduces catalog dependency for read-only scenarios, particularly useful for Microsoft Fabric's OneLake integration with Iceberg tables.",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -30651,7 +30701,7 @@
       "linked_resources": [],
       "comment_count": 4,
       "participant_count": 4,
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Hi all,\n\nThe Apache Iceberg Rust community is pleased to announce\nthat Apache Iceberg Rust v0.3.0 has been released! Iceberg is an open table format for analytic datasets, and \nIceberg Rust is the native Rust implementation of Iceberg. The notable changes since v0.3.0 include:\n\n- Added Sync + Send to Catalog trait.",
       "llm_status": "released",
       "llm_key_points": [],
@@ -30926,7 +30976,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -30996,7 +31046,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote PASSED with 4 binding +1 votes and 2 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -31542,7 +31592,7 @@
       ],
       "comment_count": 2,
       "participant_count": 3,
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-ml-yz9k52qzmf6v85tr07ytdq6nxp2ljymv",
       "llm_summary": "Discussion to begin the iceberg-rust 0.3.0 release process, which was previously blocked by Avro Rust dependencies. Most milestone issues are resolved and a tracking issue has been created to manage the release workflow.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -33399,7 +33449,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-4-0",
+      "initiative_id": "iceberg-init-iceberg-ml-dplytsw3j6v6lg5rs8pws9g105xqmpt9",
       "llm_summary": "Vote in progress: 0 binding +1, 8 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -34351,7 +34401,7 @@
       ],
       "comment_count": 5,
       "participant_count": 3,
-      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-4-0",
+      "initiative_id": "iceberg-init-iceberg-ml-mt4y8vw80glnqqwsr8czfmwvhqf09h46",
       "llm_summary": "Discussion about removing an incorrectly added file scan task JSON serialization section from the Iceberg table specification. The community has reached consensus that this section should not have been included and is seeking clarification on the process for removing it.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -34636,7 +34686,7 @@
       ],
       "comment_count": 11,
       "participant_count": 3,
-      "initiative_id": "iceberg-init-iceberg-ml-d5bvr5r4sx0mrmmlbn2pzgk43opr475l",
+      "initiative_id": "iceberg-init-iceberg-ml-yz9k52qzmf6v85tr07ytdq6nxp2ljymv",
       "llm_summary": "Discussion initiating community-driven planning for Iceberg 2.0.0 release, proposing major topics for consideration including Spec v3, catalog consolidation and deprecation, REST Catalog enhancements, engine support decisions, data/table format updates, and data injection capabilities.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -35119,7 +35169,7 @@
       "linked_resources": [],
       "comment_count": 2,
       "participant_count": 3,
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Hi all,\n\nThe Apache Iceberg Rust community is pleased to announce that Apache\nIceberg Rust 0.2.0 has been released! Iceberg is a data access layer that allows users to easily and efficiently\nretrieve data from various storage services in a unified way. This first release provides integration with the REST catalog and a lot of\nscaffolding that's needed for reading the data.",
       "llm_status": "released",
       "llm_key_points": [],
@@ -35307,7 +35357,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-gh-m36",
       "llm_summary": "Vote PASSED with 6 binding +1 votes",
       "llm_status": "released",
       "llm_key_points": [
@@ -35493,7 +35543,7 @@
       ],
       "comment_count": 13,
       "participant_count": 3,
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-ml-yz9k52qzmf6v85tr07ytdq6nxp2ljymv",
       "llm_summary": "Community has reached consensus to proceed with the first release of iceberg-rust version 0.2.0. The project has implemented basic features for reading tables and the team believes releasing now will help attract more users and developers while streamlining the release process.",
       "llm_status": "implementation",
       "llm_key_points": [
@@ -36181,7 +36231,7 @@
       ],
       "comment_count": 13,
       "participant_count": 4,
-      "initiative_id": "iceberg-init-iceberg-ml-6s55n6y2obm52bp894yqyfwh6jo5zh8j",
+      "initiative_id": "iceberg-init-iceberg-ml-yz9k52qzmf6v85tr07ytdq6nxp2ljymv",
       "llm_summary": "The team discusses planning for Apache Iceberg 1.4.3 patch release. After investigating an Avro CVE, they determined it has no impact on Iceberg, so there is no urgency. The release will proceed when additional fixes are ready, with a vote planned for the following week.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -36935,7 +36985,7 @@
       ],
       "comment_count": 4,
       "participant_count": 4,
-      "initiative_id": "iceberg-init-iceberg-ml-v27bn3wvnhxb7mh9bwmy5qmghnhf4s7f",
+      "initiative_id": "iceberg-init-iceberg-ml-yz9k52qzmf6v85tr07ytdq6nxp2ljymv",
       "llm_summary": "Discussion to plan a 1.4.1 patch release addressing a critical issue with split offsets in manifests that can corrupt metadata. The release will include fixes for manifest corruption and other identified bugs, with a GitHub milestone created to track additional fixes.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -37702,7 +37752,7 @@
       ],
       "comment_count": 6,
       "participant_count": 6,
-      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-4-0",
+      "initiative_id": "iceberg-init-iceberg-ml-n21ojvn0go5yvky06cyw2yrlhx77x7mm",
       "llm_summary": "Discussion on changing the default table format version from v1 to v2 for new tables. The proposal aims to avoid v1 spec evolution workarounds and enable snapshot ID inheritance, which is critical for manifest rewriting performance. Delete files would only be produced when explicitly configured.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -37940,7 +37990,7 @@
       ],
       "comment_count": 8,
       "participant_count": 5,
-      "initiative_id": "iceberg-init-iceberg-ml-v27bn3wvnhxb7mh9bwmy5qmghnhf4s7f",
+      "initiative_id": "iceberg-init-iceberg-ml-yz9k52qzmf6v85tr07ytdq6nxp2ljymv",
       "llm_summary": "Discussion initiated about releasing Apache Iceberg 1.3.1 as a patch release following a bug fix discovered by Xiangyang. The initiator is soliciting additional bug fixes to include and seeking a volunteer release manager.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -38692,7 +38742,7 @@
       ],
       "comment_count": 7,
       "participant_count": 4,
-      "initiative_id": "iceberg-init-iceberg-ml-v27bn3wvnhxb7mh9bwmy5qmghnhf4s7f",
+      "initiative_id": "iceberg-init-iceberg-ml-yz9k52qzmf6v85tr07ytdq6nxp2ljymv",
       "llm_summary": "Discussion initiated for a patch release 1.2.1 to address small issues found in the current 1.2.0 release. A milestone has been created to track related issues, and the community is invited to suggest additional issues for inclusion and volunteer as release manager.",
       "llm_status": "discussion",
       "llm_key_points": [

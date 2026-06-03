@@ -1,7 +1,7 @@
 {
   "project_id": "iceberg",
-  "generated_at": "2026-06-02T10:11:47.387278+00:00",
-  "total": 1014,
+  "generated_at": "2026-06-03T10:50:08.452519+00:00",
+  "total": 1015,
   "proposals": [
     {
       "id": "iceberg-doc-19nno1RoPznb",
@@ -12,7 +12,7 @@
       "author": "community",
       "state": "open",
       "created_at": "",
-      "updated_at": "2026-06-02T10:06:03.754873+00:00",
+      "updated_at": "2026-06-03T10:44:18.779588+00:00",
       "body": "\ufeffIceberg - Spark Community Sync Notes\r\n\r\n\r\n* This doc has notes from Iceberg Spark integration work, it will include all past discussions in this area.\r\n* Everyone is welcome to join the Iceberg spark syncs to discuss Spark related topics.\r\n* The general community sync notes can be found here.\r\n* Join the \u201cIceberg Dev Events\u201d calendar to see the calendar event!\r\nIceberg - Spark Community Sync\r\nTuesday, January 20\u22c510:00 \u2013 11:00am (recurring Monthly on the third Tuesday) \r\nmeet.google.com/aqg-mdpq-myf\r\n\r\n\r\n\r\n\r\n\r\n\r\nMay 19, 2026\r\nHighlights\r\n\r\n\r\nVariant Support\r\n* Spark: \r\n   * Spark 4.1: Support writing shredded variant in Iceberg-Spark (#14297) \r\n   * Spark 4.0 backport - #16241\r\nDSv2 API upgrades\r\n* Migrate SparkWriteBuilder to SupportsOverwriteV2 (#16164)\r\n* Migrate RollBackStageTable to SupportsDeleteV2 (#16211)\r\n* Migrate SparkCopyOnWriteScan to SupportsRuntimeV2Filtering (#16295)\r\nAggregate Pushdown \r\n* Disable min/max aggregation push down for string under any mode (#16320)\r\n* Disable min/max aggregation push down for binary (#16328)\r\nOther bug fixes \r\n* Fix ThreadLocal leak in CommitMetadata (#16031)\r\n* Fix FileIO path/length passthrough in SerializableFileIOWithSize (#16284)\r\n* Fix NPE in RemoveOrphanFiles with prefix_listing for root table location (#16351)\r\nReview requests\r\n* RewriteTablePath bug fixes and improvements \r\n   * Fix invalid snapshot ID filtering \u2014 replaces #15975, no activity since May 8 (#16220)\r\n   * Add targetTable support \u2014 marked stale again May 15 (#15412)\r\n   * Separate data/metadata file lists \u2014 marked stale again May 15 (#15382)\r\n   * Multiple prefix support (#14355)\r\n   * Core: update manifest delete file size after rewrite table action (#15470)\r\n* Support CALL older_than with function expressions \u2014 no activity since Apr 25, policy check needed (#16058)\r\n* Sort improvements: Three related PRs that together enable sort-aware compaction and sort elimination in Iceberg:\r\n* Implement SupportsReportOrdering DSv2 API  (manuzhang reviewed Ma",
       "labels": [],
       "linked_resources": [
@@ -125,7 +125,7 @@
       ],
       "_content_hash": "130750129c28",
       "llm_title": "Add finer grained read restrictions",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-yt-KckCjeP-4DM",
@@ -1636,7 +1636,7 @@
       ],
       "_content_hash": "82e0de49f8db",
       "llm_title": "Fine Grained Access Control Proposal",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-yt-cbNaqGQgTzU",
@@ -4716,7 +4716,7 @@
       "author": "Anurag Mantripragada <an...@apache.org>",
       "state": "open",
       "created_at": "2026-06-01T22:24:49+00:00",
-      "updated_at": "2026-06-02T02:25:12+00:00",
+      "updated_at": "2026-06-03T06:04:36+00:00",
       "body": "Hi all,\n\n\n\nWith Spark 3.4 now removed </> after the 1.11 release, and Spark community\nproposing\n<https://docs.google.com/document/d/1gBoZ4KH5zQUWpgK3M7zAN7p6Glz4S_e9bO3PvQA9sQs/edit?tab=t.0#heading=h.vj8hviw7ebqz>\nquarterly minor releases, I'd like to start a discussion on how Iceberg\nshould adapt its Spark version support strategy going forward.\n\n*Where we are today   *\n\n\nOn main we support three Spark versions: 3.5, 4.0, and 4.1. Our CI matrix\nruns 16 jobs across these which is already becoming a bottleneck\n<https://github.com/apache/iceberg/issues/16397>.\n\n\n\nHistorically, we have deprecated and removed Spark versions in an ad-hoc\nfashion. This worked with ~2 Spark minors per year, but with the new\nquarterly releases of spark it may not scale.\n\nAs per the Spark SPIP we have this coming next\n\nDate\n\nRelease\n\nMaintenance\n\nNotes\n\nApril 2026\n\n4.2\n\n6 months\n\nNon-LTS (Past)\n\nJuly 2026\n\n4.3\n\n6 months\n\nNon-LTS\n\nOctober 2026\n\n4.4\n\n6 months\n\nNon-LTS\n\nJanuary 2027\n\n4.5\n\n18 months\n\nLTS\n\nApril 2027\n\n5.0\n\n\u2014\n\nMajor\n\nThis means 4 Spark minors per year, each with only a 6-month maintenance\nwindow, and an LTS roughly once a year.\n\nI propose we adopt a policy instead of making ad-hoc decisions. Some\noptions I see:\n\n\n   1. *LTS + rolling window of 2 minors*: Support the current Spark LTS and\n   the 2 most recent minors. For example, when 4.2 GA ships, add it and\n   deprecate 4.0 and when 4.3 ships, add it and deprecate 4.1. This provides\n   predictable cadence but also means a version add/drop every quarter.\n\n   2. *LTS + selective minors*:  Support the Spark LTS and choose minors\n   that have meaningful DSv2 API changes, skipping versions that are\n   incremental. More flexible but less predictable for users. (This is the\n   current strategy)\n\n\nAny strategy must account for CI infra ceiling too. Recent improvements\n<https://github.com/apache/iceberg/issues/16397> have helped, but I think\nwe should support at most 3 versions to keep this under control.\n",
       "labels": [],
       "linked_resources": [
@@ -4731,19 +4731,19 @@
           "kind": "github_issue"
         }
       ],
-      "llm_summary": "The discussion focuses on how Iceberg should adapt its Spark version support strategy in light of Spark's new quarterly release schedule. Two proposed strategies include supporting the current Spark LTS and the two most recent minors or selectively supporting minors with significant API changes.",
+      "llm_summary": "The discussion focuses on how Iceberg should adapt its Spark version support strategy in light of Spark's new quarterly release schedule. Current support includes three Spark versions, but the community is considering a more structured approach to manage version support and CI infrastructure constraints.",
       "llm_status": "discussion",
-      "comment_count": 2,
+      "comment_count": 4,
       "participant_count": 3,
       "llm_key_points": [
-        "Adoption of a structured version support policy is needed.",
-        "Current CI infrastructure limits support to a maximum of 3 Spark versions."
+        "Proposal for LTS and minor version support",
+        "Need for predictable versioning cadence"
       ],
       "llm_topics": [
         "spark-versioning",
         "ci-infrastructure"
       ],
-      "_content_hash": "68120ab827f0",
+      "_content_hash": "aadc7a736c06",
       "llm_title": "Spark Versioning Strategy Discussion",
       "initiative_id": "iceberg-init-iceberg-yt-GsmRKvnaQ0I"
     },
@@ -4756,25 +4756,80 @@
       "author": "samuel pacheco cantu via dev <de...@iceberg.apache.org>",
       "state": "open",
       "created_at": "2026-06-01T19:10:21+00:00",
-      "updated_at": "2026-06-02T00:22:11+00:00",
+      "updated_at": "2026-06-02T22:12:51+00:00",
       "body": "Helo everyone,\n\nI have a question about relative-path resolution in the context of\nmulti-region replication.\n\n*Context:* We have a use case where data files may reside in different\nstorage locations depending on the replication state. To resolve a relative\npath, we'd need additional context (e.g., the commit's sequence-id) to\ndetermine which region/scheme a given file should resolve to.\n\nWe are actually thinking about swapping the absolute path scheme while we\nwait for relative-path support.  We plan to do this at the FileIO layer\nwhen requesting new input files.\n\nThe problem we've got on doing the swap at the FileIO is that there are raw\nstring path calls without not context to do any routing decision.  I would\nexpect the same problem to occur here for relative-paths where there isn't\nenough context to determine the scheme.  The same argument can be made that\nwe require even more metadata to support more complicated use-cases, such\nas sequence-id (and/or data-sequence-id) .\n\n\n*Questions:*\n\n   1.\n\n   What is the intended use case for relative paths in Iceberg? Is it\n   designed primarily for DR/replication scenarios?  What about real-time\n   replication?\n   2. At what point can a manifest or data file's relative path be resolved\n   to an absolute path? Does the current design assume all referenced data is\n   already available locally?\n   3. In FileIO, newInputFile(String path) takes a raw path string. Is\n   there a planned mechanism to provide additional metadata (like sequence\n   context) to help resolve paths in more complex topologies?\n\nWe'd like to understand Iceberg's direction on relative-path resolution so\nwe can align our approach with the community rather than diverging.\n\n\nThanks,\nSam\n",
       "labels": [],
       "linked_resources": [],
-      "llm_summary": "The discussion revolves around the challenges of resolving relative paths in multi-region replication scenarios within Iceberg. Sam raises questions about the intended use cases for relative paths, the timing of path resolution, and the need for additional metadata to support complex topologies.",
+      "llm_summary": "The discussion focuses on the challenges of implementing relative-path resolution in Iceberg for multi-region replication scenarios. Participants are exploring the need for additional metadata, such as sequence-ids, to effectively resolve paths and manage data files across different storage locations.",
       "llm_status": "discussion",
-      "comment_count": 2,
-      "participant_count": 3,
+      "comment_count": 6,
+      "participant_count": 4,
       "llm_key_points": [
-        "Need for context in path resolution",
+        "Need for additional context for path resolution",
         "Challenges with current FileIO implementation"
       ],
       "llm_topics": [
         "relative-paths",
         "multi-region-replication"
       ],
-      "_content_hash": "1c8440fb252c",
-      "llm_title": "Relative paths and location resolution",
+      "_content_hash": "f9a4162c9cbc",
+      "llm_title": "Relative Paths and Multi-Region Replication",
       "initiative_id": "iceberg-init-iceberg-ml-dqlgo3rmz1tnshx0bgk2cv4qm1h06k2n"
+    },
+    {
+      "id": "iceberg-ml-63xpzdp10nd3wgv43z2phz5o9zwwx818",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [VOTE][REST-SPEC] Add list and load function endpoints",
+      "url": "https://lists.apache.org/thread/63xpzdp10nd3wgv43z2phz5o9zwwx818",
+      "author": "huaxin gao <hu...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-06-01T18:21:11+00:00",
+      "updated_at": "2026-06-02T20:47:09+00:00",
+      "body": "Hi all,\n\nBumping this thread. The FunctionIdentifier vs CatalogObjectIdentifier\ndiscussion has been resolved \u2014 #16144\n<https://github.com/apache/iceberg/pull/16144> merged\nCatalogObjectIdentifier, and PR #15180\n<https://github.com/apache/iceberg/pull/15180> now uses it.\n\nRestarting the vote:\n\n[ ] +1 Add these changes to the spec\n[ ] +0\n[ ] -1 I have questions and/or concerns\n\nThanks,\n\nHuaxin\n\nOn Fri, Apr 10, 2026 at 11:13\u202fAM vaquar khan <va...@gmail.com> wrote:\n\n> +1\n>\n> Regards,\n> Vaquar Khan\n>\n> On Fri, Apr 10, 2026, 1:03\u202fPM Maximilian Michels <mx...@apache.org> wrote:\n>\n>> +1 (non-binding)\n>>\n>> On Wed, Apr 1, 2026 at 7:22\u202fPM Ajantha Bhat <aj...@gmail.com>\n>> wrote:\n>> >\n>> > +1 (non binding)\n>> >\n>> > with minor comments on the PR.\n>> >\n>> > - Ajantha\n>> >\n>> > On Thu, Apr 2, 2026 at 12:40\u202fAM Jean-Baptiste Onofr\u00e9 <jb...@nanthrax.net>\n>> wrote:\n>> >>\n>> >> +1 (non binding)\n>> >>\n>> >> Regards\n>> >> JB\n>> >>\n>> >> Le jeu. 26 mars 2026 \u00e0 01:44, huaxin gao <hu...@gmail.com> a\n>> \u00e9crit :\n>> >>>\n>> >>> Hi All,\n>> >>>\n>> >>> I propose adding REST catalog endpoints for listing and loading\n>> functions, following the Iceberg UDF spec.\n>> >>>\n>> >>> New endpoints:\n>> >>>\n>> >>> GET /v1/{prefix}/namespaces/{namespace}/functions \u2014 list functions in\n>> a namespace\n>> >>> GET /v1/{prefix}/namespaces/{namespace}/functions/{function} \u2014 load a\n>> function\n>> >>>\n>> >>> ListFunctionsResponse returns FunctionIdentifier objects (namespace +\n>> name), consistent with listTables. LoadFunctionResult returns inline UDF\n>> metadata and optional metadata-location, following the\n>> LoadTableResult/LoadViewResult pattern. Read-only; CRUD endpoints will\n>> follow in a separate proposal.\n>> >>>\n>> >>> For details please check:\n>> >>>\n>> >>> Spec PR: https://github.com/apache/iceberg/pull/15180\n>> >>>\n>> >>> Please vote in the next 72 hours:\n>> >>>\n>> >>> [ ] +1 Add these changes to the spec\n>> >>> [ ] +0\n>> >>> [ ] -1 I have questions and/or concerns\n>> >>>\n>> >>> Best,\n>> >>> Huaxin\n>>\n>\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/iceberg/pull/16144",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/15180",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Vote in progress: 0 binding +1, 2 non-binding +1",
+      "llm_status": "proposal",
+      "comment_count": 2,
+      "participant_count": 3,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 2,
+        "vetoes": 0,
+        "result": "open",
+        "voters": [
+          {
+            "voter": "Ryan Blue <bl...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Steven Wu <st...@gmail.com>",
+            "vote": "+1"
+          }
+        ]
+      },
+      "llm_key_points": [
+        "Hi all,\n\nBumping this thread.",
+        "Voters include: Ryan Blue, Steven Wu..."
+      ],
+      "llm_topics": [
+        "apr",
+        "add-list",
+        "load-function",
+        "function-endpoints"
+      ],
+      "_content_hash": "9b2da690ec25",
+      "initiative_id": "iceberg-init-iceberg-ml-43f4r20q4n1vow3nssvxnlsbdqw6g6w8"
     },
     {
       "id": "iceberg-ml-83y72ly6m5nk9p7hyyydnhr3hf33sthr",
@@ -4785,25 +4840,109 @@
       "author": "Xiening Dai <xn...@apache.org>",
       "state": "open",
       "created_at": "2026-06-01T18:17:41+00:00",
-      "updated_at": "2026-06-01T20:47:50+00:00",
+      "updated_at": "2026-06-02T18:44:21+00:00",
       "body": "> but we should develop some concreteness around how feasible it is for engines to produce the DVs on the column update.\n\nActually I don't think this would be a problem. As mentioned, in order to generate correct column file, we already need to product the correct set of deleted positions, and we just need an extra step to materialize these positions into DV.\n\nThe real challenge comes from the read path. In the case when we have a data file f0, an equality delete file d0, and column file f1, and the materialized dv d1. How do we reconcile the deletes during read? If we don't do anything special, following the existing spec (based on sequence number rule), we would apply d0 on f0, and then apply d1 on f1, which should still give us the correct results as both d0 and d1 represent the same set of positions. But this is undesired because we dont want to load and re-evaluate the old column values. So we need a change in the spec so that in this scenario the new d1 supersede the existing equality delete file (d0).  \n\nOn 2026/05/29 23:21:33 Amogh Jahagirdar wrote:\n> One approach that\u2019s helped me reason about all this is to treat each base\n> file as its own little mini\u2011table inside the larger table: the row range of\n> the base file keyed by row_id, and column files/deletes just layer on top.Once\n> a row is deleted in that mini\u2011table, it stays deleted in that mini\u2011table\u2019s\n> state (whether that\u2019s via equality deletes, or DVs), and column updates are\n> just layering changed or additional columns on top of whatever rowsare\n> still there. Then I can reason about \"what are desirable properties of this\n> mini-table\".\n> \n> Once I look at it that way, stacking equality deletes with column updates\n> on the same column, and then forcing the write path to read all the older\n> column files when producing new column updates, feels like the worst\n> outcome; and it gets worse the more column updates there are for the\n> column. It blows up complexity and performance and compromises the valu",
       "labels": [],
       "linked_resources": [],
-      "llm_summary": "The discussion focuses on the feasibility of generating delete vectors (DVs) for column updates and the challenges associated with reconciling deletes during read operations. Participants emphasize the need for a specification change to ensure that new delete vectors supersede existing delete files to avoid unnecessary complexity and performance issues.",
+      "llm_summary": "The discussion focuses on the challenges of reconciling deletes during the read path when dealing with column updates and equality delete files. Participants emphasize the need for a change in specifications to ensure that new delete versions supersede existing ones to avoid unnecessary complexity and performance issues.",
       "llm_status": "discussion",
-      "comment_count": 14,
-      "participant_count": 2,
+      "comment_count": 4,
+      "participant_count": 3,
       "llm_key_points": [
-        "Feasibility of generating DVs",
-        "Challenges in read path reconciliation"
+        "Need to reconcile deletes during read path",
+        "Proposed changes to specifications for delete handling"
       ],
       "llm_topics": [
         "secondary-indexing",
         "performance"
       ],
-      "_content_hash": "6a39faa6fc77",
+      "_content_hash": "8ed79bbb85f1",
       "llm_title": "Column Update File Representation Discussion",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
+    },
+    {
+      "id": "iceberg-ml-781cyhoq5x7rc1k9074pdcf873bjofog",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[Discuss] Efficient CDC Upserts",
+      "url": "https://lists.apache.org/thread/781cyhoq5x7rc1k9074pdcf873bjofog",
+      "author": "Ankit Kumar <26...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-06-02T13:04:56+00:00",
+      "updated_at": "2026-06-02T13:04:56+00:00",
+      "body": "Hi all,\n\nI was working with CDC use cases on Iceberg and came across this doc:\nhttps://docs.google.com/document/d/1kyyJp4masbd1FrIKUHF1ED_z1hTARL8bNoKCgb7fhSQ/edit?tab=t.0\nand thread here:\nhttps://lists.apache.org/thread/6fhpjszsfxd8p0vfzc3k5vw7zmcyv2mq\n\nIt was a very interesting discussion that was happening, pointing out the\npain problem. Where the real-time query and the query on the mirror table\nwith respect to cost were the center point of the discussion.\n\nIs there any conclusion that has been reached on this topic? (Some\nsolutions were discussed in the thread by @russel and by @Jack Ye)\n\nMy concerns are that some catalogs do not support branching as of now, as\nwell as Iceberg logical views (for real-time purposes).\n\n\nThanks\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1kyyJp4masbd1FrIKUHF1ED_z1hTARL8bNoKCgb7fhSQ/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffImproving Change Data Capture Use Case for Apache Iceberg"
+        }
+      ],
+      "llm_summary": "The discussion revolves around improving Change Data Capture (CDC) use cases with Apache Iceberg, focusing on the challenges related to real-time queries and cost implications. Participants have raised concerns about the lack of support for certain catalogs and Iceberg logical views, while potential solutions have been suggested by community members.",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [
+        "Concerns about catalog support for branching",
+        "Need for improvements in Iceberg CDC solutions"
+      ],
+      "llm_topics": [
+        "change-data-capture",
+        "performance"
+      ],
+      "_content_hash": "44de304fa7fa",
+      "llm_title": "Efficient CDC Upserts Discussion",
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
+    },
+    {
+      "id": "iceberg-ml-3x1nkzoptvw80q7z2tpmd85yrozn7tz8",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [Discuss] Column Update metadata representation",
+      "url": "https://lists.apache.org/thread/3x1nkzoptvw80q7z2tpmd85yrozn7tz8",
+      "author": "G\u00e1bor Kaszab <ga...@apache.org>",
+      "state": "open",
+      "created_at": "2026-06-02T11:57:49+00:00",
+      "updated_at": "2026-06-02T11:57:49+00:00",
+      "body": "Hey Iceberg Community,\n\nYesterday in the V4 AMT sync there were some discussions that are also\nrelevant here. Let me summarize!\n\n1) No new sequence number(s)\nOne decision we made is to not introduce a new field for the sequence\nnumber of the latest column file, but to *bump the data sequence number of\nTrackedFile* whenever we add a new column file. With this what we can\nachieve:\n\n   - Use TrackedFile.dataSequenceNumber() for last_updated_sequence_number\n   for the null LUSN values in the latest update file\n   - We can get rid of the equality deletes associated to the base file\n   when adding a column update (current direction is to rewrite eq-deletes to\n   DVs when adding column updates)\n\n\nWith this, the metadata structures would look like the following:\nTracking\n...\noptional latest_column_file_snapshot_id long\nColumnFile\nrequired field_ids list<int>\nrequired location string\nrequired file_size_in_bytes long\n2) Treat base file as a regular column file\nThis seemed a more exploratory idea: What if we include (some of the) base\nfile details into TrackedFile.column_files? With this we could have the\nfollowing advantages:\n\n   - We won't need the \"duplication\" of some field in the schema, like\n   TrackedFile.location vs ColumnFile.location, and the same for\n   file_size_in_bytes (maybe also for split_offsets)\n   - This design would be a more natural fit for column families (not being\n   designed now but seems there is some interest for the future)\n\nWhile I think this approach makes sense, there are some areas that *we have\nto think through*:\n\n   - *Making base file a first class citizen of column_files would require\n   the following:*\n      - Move location, file_size_in_bytes and potentially split_offsets\n      from TrackedFile into ColumnFile\n      - Populate fieldIDs list for the base file entry too\n         - Include row_id into the field IDs too. Don't allow to change\n         this field to be served by regular column files?\n         - We tackle wide tables here: 1k co",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/160-FizR6zOASMb86NycfgCm7cZbh6HK7FLcUW8_Xp-0/edit?usp=sharing",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffRow Lineage with Column Updates"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1Bd7JVzgajA8-DozzeEE24mID_GLuz6iwj0g4TlcVJcs/edit?tab=t.xvm52pv4m7lq#heading=h.k2neg79ocgu",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffEfficient Column Updates in Apache Iceberg"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1Bd7JVzgajA8-DozzeEE24mID_GLuz6iwj0g4TlcVJcs/edit?pli=1&tab=t.xvm52pv4m7lq",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffEfficient Column Updates in Apache Iceberg"
+        }
+      ],
+      "llm_summary": "The Iceberg community discussed the representation of column update metadata, deciding against introducing a new sequence number for the latest column file. Instead, they will use the data sequence number of TrackedFile for updates and consider treating the base file as a regular column file to streamline schema design.",
+      "llm_status": "discussion",
+      "comment_count": 3,
+      "participant_count": 1,
+      "llm_key_points": [
+        "No new sequence number for column files",
+        "Base file may be treated as a regular column file"
+      ],
+      "llm_topics": [
+        "metadata-representation",
+        "column-updates"
+      ],
+      "_content_hash": "44558e1349eb",
+      "llm_title": "Column Update Metadata Representation",
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-15ggks202s920wbjwv4dgcr65mvt8wo9",
@@ -4849,7 +4988,7 @@
       ],
       "llm_summary": "A proposal suggests running continuous integration (CI) on contributor forks instead of the ASF shared pool to reduce CI usage. This method involves switching workflows to push triggers on non-main branches, allowing tests to run on merged branches while billing CI minutes to the fork owner's account, thus alleviating pressure on the ASF runners.",
       "llm_status": "discussion",
-      "comment_count": 12,
+      "comment_count": 2,
       "participant_count": 3,
       "llm_key_points": [
         "Reduces CI usage on ASF shared pool",
@@ -4859,60 +4998,9 @@
         "ci-optimization",
         "fork-compute"
       ],
-      "_content_hash": "5adf8e505105",
       "llm_title": "Running CI on Contributor Forks",
+      "_content_hash": "5adf8e505105",
       "initiative_id": "iceberg-init-iceberg-ml-15ggks202s920wbjwv4dgcr65mvt8wo9"
-    },
-    {
-      "id": "iceberg-ml-63xpzdp10nd3wgv43z2phz5o9zwwx818",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "Re: [VOTE][REST-SPEC] Add list and load function endpoints",
-      "url": "https://lists.apache.org/thread/63xpzdp10nd3wgv43z2phz5o9zwwx818",
-      "author": "huaxin gao <hu...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-06-01T18:21:11+00:00",
-      "updated_at": "2026-06-01T18:30:47+00:00",
-      "body": "Hi all,\n\nBumping this thread. The FunctionIdentifier vs CatalogObjectIdentifier\ndiscussion has been resolved \u2014 #16144\n<https://github.com/apache/iceberg/pull/16144> merged\nCatalogObjectIdentifier, and PR #15180\n<https://github.com/apache/iceberg/pull/15180> now uses it.\n\nRestarting the vote:\n\n[ ] +1 Add these changes to the spec\n[ ] +0\n[ ] -1 I have questions and/or concerns\n\nThanks,\n\nHuaxin\n\nOn Fri, Apr 10, 2026 at 11:13\u202fAM vaquar khan <va...@gmail.com> wrote:\n\n> +1\n>\n> Regards,\n> Vaquar Khan\n>\n> On Fri, Apr 10, 2026, 1:03\u202fPM Maximilian Michels <mx...@apache.org> wrote:\n>\n>> +1 (non-binding)\n>>\n>> On Wed, Apr 1, 2026 at 7:22\u202fPM Ajantha Bhat <aj...@gmail.com>\n>> wrote:\n>> >\n>> > +1 (non binding)\n>> >\n>> > with minor comments on the PR.\n>> >\n>> > - Ajantha\n>> >\n>> > On Thu, Apr 2, 2026 at 12:40\u202fAM Jean-Baptiste Onofr\u00e9 <jb...@nanthrax.net>\n>> wrote:\n>> >>\n>> >> +1 (non binding)\n>> >>\n>> >> Regards\n>> >> JB\n>> >>\n>> >> Le jeu. 26 mars 2026 \u00e0 01:44, huaxin gao <hu...@gmail.com> a\n>> \u00e9crit :\n>> >>>\n>> >>> Hi All,\n>> >>>\n>> >>> I propose adding REST catalog endpoints for listing and loading\n>> functions, following the Iceberg UDF spec.\n>> >>>\n>> >>> New endpoints:\n>> >>>\n>> >>> GET /v1/{prefix}/namespaces/{namespace}/functions \u2014 list functions in\n>> a namespace\n>> >>> GET /v1/{prefix}/namespaces/{namespace}/functions/{function} \u2014 load a\n>> function\n>> >>>\n>> >>> ListFunctionsResponse returns FunctionIdentifier objects (namespace +\n>> name), consistent with listTables. LoadFunctionResult returns inline UDF\n>> metadata and optional metadata-location, following the\n>> LoadTableResult/LoadViewResult pattern. Read-only; CRUD endpoints will\n>> follow in a separate proposal.\n>> >>>\n>> >>> For details please check:\n>> >>>\n>> >>> Spec PR: https://github.com/apache/iceberg/pull/15180\n>> >>>\n>> >>> Please vote in the next 72 hours:\n>> >>>\n>> >>> [ ] +1 Add these changes to the spec\n>> >>> [ ] +0\n>> >>> [ ] -1 I have questions and/or concerns\n>> >>>\n>> >>> Best,\n>> >>> Huaxin\n>>\n>\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/iceberg/pull/16144",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/iceberg/pull/15180",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Vote in progress: 0 binding +1, 1 non-binding +1",
-      "llm_status": "proposal",
-      "comment_count": 1,
-      "participant_count": 2,
-      "vote_data": {
-        "binding_plus1": 0,
-        "nonbinding_plus1": 1,
-        "vetoes": 0,
-        "result": "open",
-        "voters": [
-          {
-            "voter": "Steven Wu <st...@gmail.com>",
-            "vote": "+1"
-          }
-        ]
-      },
-      "llm_key_points": [
-        "Hi all,\n\nBumping this thread.",
-        "Voters include: Steven Wu..."
-      ],
-      "llm_topics": [
-        "apr",
-        "add-list",
-        "load-function",
-        "function-endpoints"
-      ],
-      "_content_hash": "87acbc682798",
-      "initiative_id": "iceberg-init-iceberg-ml-43f4r20q4n1vow3nssvxnlsbdqw6g6w8"
     },
     {
       "id": "iceberg-ml-vn4gglocg2g40p69mfrrh86qzkn1rr4b",
@@ -5100,7 +5188,7 @@
       ],
       "_content_hash": "d6ef8f71e2af",
       "llm_title": "Increasing Reviewer Bandwidth for Iceberg-Rust",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-sgtobp6b3w9b3t4xdzo2xfgrsz960yxv",
@@ -5209,54 +5297,6 @@
       "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
     },
     {
-      "id": "iceberg-ml-7jryw9dfvc02s411twn4o7s5gjrybfxg",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[Discuss] Column Update metadata representation",
-      "url": "https://lists.apache.org/thread/7jryw9dfvc02s411twn4o7s5gjrybfxg",
-      "author": "G\u00e1bor Kaszab <ga...@apache.org>",
-      "state": "open",
-      "created_at": "2026-05-20T18:56:04+00:00",
-      "updated_at": "2026-05-28T14:45:45+00:00",
-      "body": "Hey Iceberg Community,\n\nAnurag started a separate, focused discussion\n<https://lists.apache.org/thread/jbh1gbrso5h6l4by9rh9poy2cjjtb8j0> on the\ncolumn update file representation, similarly, let me start another one for\nthe metadata representation. Hopefully, we can make some iterations on this\nbefore the next sync.\n\nWe covered this topic in the sync yesterday and agreed on some of the\nfields, but we left the \"tracking\" information part open. The *required*\nfields we agreed on so far:\n\nColumnFile\nfield_ids list<int>\nlocation string\nfile_size_in_bytes long\n\n*Tracking information*\nAdditionally to the above, we discussed the need of tracking information.\nThese are the potential ones:\n\n*1) Sequence number*\n\n   - Usage for _last_updated_sequence_number\n\nI did think about how to produce _last_updated_sequence_number and I think\ntechnically we don't need to store the sequence number on the update file\nlevel for that. I wrote up the steps here\n<https://docs.google.com/document/d/1Bd7JVzgajA8-DozzeEE24mID_GLuz6iwj0g4TlcVJcs/edit?pli=1&tab=t.xvm52pv4m7lq>,\nbut in a nutshell: we could either fille that from the\n_last_updated_sequence_number written into the latest column file, or if\nnull we can use the base file's file_sequence_number.\n\n   - Usage for equality deletes\n\nAs we agreed previously, we don't want to support update files together\nwith equality deletes, so we won't need to store column file level sequence\nnumbers for this either.\n\n   - Usage for CDC, observability, etc.\n\nI'm wondering if there is any use case where we want to see the order of\nthe column updates to see the sequence they were created. If this matters\nfor CDC or reproducibility or anything else, then let's have a column file\nlevel sequence number too, if not, we can omit this.\n\n*2) Status*\nI think, similarly to TrackedFile, we need the following statuses here:\nEXISTING, ADDED, DELETED, REPLACED\nWith these, when the base file's status is REPLACED, taking a look at the\ncolumn_files we can know exactly what ",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1Bd7JVzgajA8-DozzeEE24mID_GLuz6iwj0g4TlcVJcs/edit?pli=1&tab=t.xvm52pv4m7lq",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffEfficient Column Updates in Apache Iceberg"
-        },
-        {
-          "url": "https://docs.google.com/document/d/160-FizR6zOASMb86NycfgCm7cZbh6HK7FLcUW8_Xp-0/edit?usp=sharing",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffRow Lineage with Column Updates"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1Bd7JVzgajA8-DozzeEE24mID_GLuz6iwj0g4TlcVJcs/edit?tab=t.xvm52pv4m7lq#heading=h.k2neg79ocgu",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffEfficient Column Updates in Apache Iceberg"
-        }
-      ],
-      "llm_summary": "The Iceberg community is discussing the metadata representation for column updates, focusing on required fields and tracking information. Key points include the need for sequence numbers and status indicators for column files, with considerations for their implications on change detection and update efficiency.",
-      "llm_status": "discussion",
-      "comment_count": 3,
-      "participant_count": 2,
-      "llm_key_points": [
-        "Agreement on required fields for column updates",
-        "Discussion on tracking information and its necessity"
-      ],
-      "llm_topics": [
-        "metadata-representation",
-        "column-updates"
-      ],
-      "_content_hash": "adec5eecfd65",
-      "llm_title": "Column Update Metadata Representation Discussion",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
-    },
-    {
       "id": "iceberg-ml-k0mb314hbsqyws6n1kgqk2zhybbpc5z4",
       "source": "mailing_list",
       "kind": "thread",
@@ -5292,7 +5332,7 @@
       ],
       "llm_title": "Reviving Catalog Cache Policy Proposal",
       "_content_hash": "b8b77f19a3aa",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-wfgqlsnpyvt1t42fg6o4q48w8nc14oof",
@@ -5361,7 +5401,7 @@
       ],
       "_content_hash": "6869761fb874",
       "llm_title": "Iceberg Read Restrictions Sync Summary",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-xlqx6k7g625p38bxxy141wt02d00w2h4",
@@ -5399,7 +5439,7 @@
       ],
       "llm_title": "Adding X-Iceberg-Client-Capabilities Header",
       "_content_hash": "916661507ff1",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-0nw37qvf81dky8f0nyvsx25ysznb1j2z",
@@ -5436,7 +5476,7 @@
       ],
       "_content_hash": "2a420b27e009",
       "llm_title": "Dedicated sync for Iceberg constraint support",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-wv64wgq9n9ydk0pblwphcjjz528vjx72",
@@ -6502,7 +6542,7 @@
       ],
       "llm_title": "Refactoring OSSFileIO for Performance Improvement",
       "_content_hash": "9fa1f5d0f793",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-q60ymn6rq1qzs102zj0vm0fnqjjv0knw",
@@ -6686,7 +6726,7 @@
       ],
       "_content_hash": "d9275f45bec9",
       "llm_title": "Efficient Column Updates in Iceberg",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-v3bq8snhtdwmj20v4s6kv5byg18cv84t",
@@ -7362,7 +7402,7 @@
       ],
       "_content_hash": "9f8830382c82",
       "llm_title": "V2-Compatible Conversion Path for Flink",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-qqmvd8cndj3216bjvhpt5coz2ym0q4ns",
@@ -7579,7 +7619,7 @@
       ],
       "llm_title": "Benchmark for Compaction Implementation",
       "_content_hash": "c23beb078217",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-4vq3yct3wljvr8nchvqhmgyg5okdf4g8",
@@ -8282,7 +8322,7 @@
       ],
       "_content_hash": "9b08ee12ace0",
       "llm_title": "GSoC 2026: Parallel Scan Execution in Iceberg",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-1269w5pzoy723sr1c6xxq8jg02zcf3on",
@@ -8791,7 +8831,7 @@
       ],
       "_content_hash": "b6d67cf29451",
       "llm_title": "Adding Constraint Support to Iceberg",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-mwf397s2nlkt8tokz6rk2sxvhws1jjh7",
@@ -8901,7 +8941,7 @@
       ],
       "_content_hash": "b9ea0c1d3f74",
       "llm_title": "Dedicated sync for Iceberg Index Support",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-5442q5bddyoss9mw27r0zbnobysfpn0t",
@@ -9188,7 +9228,7 @@
       ],
       "_content_hash": "e8b6690d5018",
       "llm_title": "Flink: Transitioning from Equality Deletes",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-szr5x525c8bwwryy04srhc54kkzrh3ks",
@@ -9242,7 +9282,7 @@
       ],
       "_content_hash": "8a1ad37cef22",
       "llm_title": "Discussion on Adding Tags Field to Iceberg V4",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-bcc62zxhc1rqjmwxxll81rpn8yfnr9fy",
@@ -9810,7 +9850,7 @@
       ],
       "_content_hash": "93f248f375f6",
       "llm_title": "Discussion on V4 File Commits",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-cqwg7fmnhyhnh4rnnpfjqsvllp2lxvvk",
@@ -10918,7 +10958,7 @@
       ],
       "_content_hash": "3bd51f6ef4d4",
       "llm_title": "Spark: Support CREATE TABLE LIKE Feature",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-dt03b25ncc42l5cp9vh3qpcjr7jshoow",
@@ -11291,7 +11331,7 @@
       ],
       "_content_hash": "4976f98ed749",
       "llm_title": "Dedicated Sync for Iceberg Index Support",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-25k9cy51bl57wwqwx656yk7ly41bz4jt",
@@ -11392,7 +11432,7 @@
       ],
       "llm_title": "Benchmarking Iceberg transaction commit performance",
       "_content_hash": "39abf29bf577",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-ml-1rsyt4mlybbo7j5ylnjcwot6klbdynt8"
     },
     {
       "id": "iceberg-ml-9h157zrmbvzp6nrgj94x7c337qxcwzx8",
@@ -11651,7 +11691,7 @@
       ],
       "_content_hash": "d39f88d609dc",
       "llm_title": "Extending Iceberg Expressions for New Use Cases",
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4"
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-gr7xdvo29mcw7fn7lxh0whh3kn8ykv9j",
@@ -11884,7 +11924,7 @@
       ],
       "comment_count": 16,
       "participant_count": 1,
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4",
+      "initiative_id": "iceberg-init-iceberg-gh-p13879",
       "llm_summary": "Discussion on standardizing data masking in Iceberg's Read Restrictions feature. The community needs to decide between an Action model (syntactic sugar for common operations) versus a full Transform approach, and establish a minimal set of predefined masks based on industry standards like Apache Ranger and Google BigQuery.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -13958,7 +13998,7 @@
       ],
       "comment_count": 7,
       "participant_count": 3,
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4",
+      "initiative_id": "iceberg-init-iceberg-gh-p13879",
       "llm_summary": "Proposal to introduce file-skipping secondary indexes to Apache Iceberg using per-column Bloom filters stored in Puffin format. Indexes are snapshot-scoped and advisory-only, enabling query engines to prune data files during planning while maintaining full backward compatibility.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -15532,7 +15572,7 @@
       ],
       "comment_count": 16,
       "participant_count": 2,
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4",
+      "initiative_id": "iceberg-init-iceberg-gh-p13879",
       "llm_summary": "Huaxin and Miao plan to resume secondary index work for Iceberg, updating a 2020 proposal. The discussion includes concerns about external database dependencies for indexing and alternative approaches using REST catalog-based planning with metadata caching.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -17161,7 +17201,7 @@
       "linked_resources": [],
       "comment_count": 10,
       "participant_count": 7,
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4",
+      "initiative_id": "iceberg-init-iceberg-gh-p13879",
       "llm_summary": "Apache Iceberg project status report covering community membership, recent releases across multiple language implementations (Java, Python, C++, Rust, Go), and ongoing work on v4 spec, REST catalog, and language-specific features. Project shows active development with 35 committers and 21 PMC members, recent addition of one new committer, and multiple releases in recent months.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -18382,7 +18422,7 @@
       ],
       "comment_count": 22,
       "participant_count": 4,
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4",
+      "initiative_id": "iceberg-init-iceberg-gh-p13879",
       "llm_summary": "Community discussion on the Iceberg REST Fine-Grained Access Control (FGAC) OpenAPI proposal, with alignment on using Iceberg Expressions and UDFs as the mechanism for retrieving protection instructions. The approach emphasizes separation of policy definitions from protection instructions, with plans to update the OpenAPI proposal for broader review.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -18446,7 +18486,7 @@
       ],
       "comment_count": 6,
       "participant_count": 3,
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4",
+      "initiative_id": "iceberg-init-iceberg-gh-p13879",
       "llm_summary": "Laurent raises concerns about the Iceberg REST FGAC proposal not following the established proposal process, which calls for mailing list discussion with Google Docs support before moving to PR review. He questions whether conversations should be consolidated on the mailing list and asks for clarification on why this proposal appears to deviate from standard procedures.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -21211,7 +21251,7 @@
       ],
       "comment_count": 11,
       "participant_count": 5,
-      "initiative_id": "iceberg-init-iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4",
+      "initiative_id": "iceberg-init-iceberg-gh-p13879",
       "llm_summary": "Proposal to add row-level and column-level access control (masking) to the Iceberg REST catalog with focus on interoperability between catalogs and query engines. Authors seek feedback on the high-level concept before proceeding with detailed REST specification and technical implementation details.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -32921,7 +32961,7 @@
       "linked_resources": [],
       "comment_count": 15,
       "participant_count": 5,
-      "initiative_id": "iceberg-init-iceberg-ml-76pm9cr43jybrwnrbhyz15081y60pt7t",
+      "initiative_id": "iceberg-init-iceberg-ml-1rsyt4mlybbo7j5ylnjcwot6klbdynt8",
       "llm_summary": "Discussion on implementing DROP PARTITION command in Iceberg-Spark to support users migrating from Hive tables. The feature addresses concerns about partition-aligned deletions and metadata-only operations, with consideration for partition evolution compatibility.",
       "llm_status": "discussion",
       "llm_key_points": [

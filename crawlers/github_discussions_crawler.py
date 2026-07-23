@@ -82,7 +82,12 @@ def crawl(config: dict, since: Optional[str] = None) -> list[dict]:
 
     for page in range(MAX_PAGES):
         data = _graphql(DISCUSSIONS_QUERY, {"owner": owner, "repo": repo, "after": cursor})
-        discussions = data["repository"]["discussions"]
+        discussions = (data.get("repository") or {}).get("discussions")
+        # Discussions can be disabled on a repo (e.g. apache/spark) — GraphQL returns
+        # null rather than an error. Treat that as "no discussions", not a crash.
+        if not discussions:
+            logger.info(f"GitHub Discussions: none for {owner}/{repo} (disabled or empty)")
+            return results
         nodes = discussions["nodes"]
 
         for node in nodes:

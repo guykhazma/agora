@@ -318,6 +318,28 @@ def _parse_thread(thread_meta: dict, emails: list[dict], project_id: str) -> dic
     return result
 
 
+def _normalize_subject(subject: str) -> str:
+    """Lowercase and strip leading Re:/Fwd:/Fw: reply markers for prefix matching."""
+    s = (subject or "").strip()
+    while True:
+        m = re.match(r"^(re|fwd|fw)\s*(\[\d+\])?\s*:\s*", s, re.IGNORECASE)
+        if not m:
+            break
+        s = s[m.end():].lstrip()
+    return s.lower()
+
+
+def _subject_matches_prefixes(subject: str, prefixes: list[str]) -> bool:
+    """
+    True if `subject` (ignoring Re:/Fwd:) starts with one of `prefixes`.
+    Empty `prefixes` means "no filter" — every thread matches (default behavior).
+    """
+    if not prefixes:
+        return True
+    norm = _normalize_subject(subject)
+    return any(norm.startswith(p.strip().lower()) for p in prefixes if p and p.strip())
+
+
 def _mailing_list_start_month(ml_config: dict, since: Optional[str], now: datetime) -> tuple[int, int]:
     """
     First (year, month) to scan, inclusive.
@@ -356,8 +378,16 @@ def crawl(project_config: dict, since: Optional[str] = None) -> list[dict]:
     project_id = project_config["id"]
     now = datetime.now(timezone.utc)
 
+    # Optional governance filter: only ingest threads whose subject (ignoring
+    # Re:/Fwd:) starts with one of these prefixes, e.g. ["[VOTE]", "[DISCUSS]",
+    # "[SPIP]"]. Essential for high-volume lists (Spark) where full ingest would
+    # pull tens of thousands of support threads. Absent/empty = ingest everything
+    # (unchanged behavior for existing projects like Iceberg).
+    thread_prefixes = ml_config.get("thread_prefixes") or []
+
     results = []
     seen_thread_ids: set[str] = set()
+    skipped = 0
     year, month = _mailing_list_start_month(ml_config, since, now)
 
     while (year, month) <= (now.year, now.month):
@@ -374,6 +404,12 @@ def crawl(project_config: dict, since: Optional[str] = None) -> list[dict]:
                 continue
             seen_thread_ids.add(tid)
 
+            # Cheap subject-level filter before the (expensive) full-thread fetch.
+            subject = thread_meta.get("subject", "")
+            if not _subject_matches_prefixes(subject, thread_prefixes):
+                skipped += 1
+                continue
+
             try:
                 emails = _fetch_thread(tid)
             except Exception as e:
@@ -387,5 +423,11 @@ def crawl(project_config: dict, since: Optional[str] = None) -> list[dict]:
             month = 1
             year += 1
 
-    logger.info(f"Mailing list: fetched {len(results)} threads for {project_id}")
+    if thread_prefixes:
+        logger.info(
+            f"Mailing list: fetched {len(results)} threads for {project_id} "
+            f"({skipped} skipped by thread_prefixes filter)"
+        )
+    else:
+        logger.info(f"Mailing list: fetched {len(results)} threads for {project_id}")
     return results

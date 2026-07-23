@@ -1,0 +1,49 @@
+id: spark
+name: Apache Spark
+description: Unified analytics engine for large-scale data processing
+# Public image URL (SVG/PNG). Shown in the app; clicking the logo opens `website`.
+logo: https://spark.apache.org/images/spark-logo-trademark.png
+website: https://spark.apache.org
+repo: apache/spark
+
+# Mailing list (Apache Pony Mail).
+# Spark's dev@ list is very high volume, so we only ingest governance threads via
+# thread_prefixes — SPIP votes/discussions, release votes, announcements, results.
+# Support/how-to threads ("How do I read parquet?") are skipped before any fetch.
+mailing_list:
+  address: dev@spark.apache.org
+  pony_mail_list: dev
+  pony_mail_domain: spark.apache.org
+  # Only threads whose subject (ignoring Re:/Fwd:) starts with one of these.
+  # Empty/omitted = ingest everything (default). See mailing_list_crawler.py.
+  thread_prefixes:
+    - "[VOTE]"
+    - "[DISCUSS]"
+    - "[SPIP]"
+    - "[PROPOSAL]"
+    - "[RESULT]"
+    - "[ANNOUNCE"
+    - "[FYI]"
+  # First run backfills from here; incremental runs only scan last_crawled_at → now.
+  history_start: "2021-01"
+
+# GitHub crawl config.
+# Spark tracks work in JIRA (issues are disabled on the GitHub repo), so the value
+# here is releases + milestones + any PR/issue whose title matches a proposal prefix.
+# Governance (SPIP) lives on the mailing list above.
+github:
+  repo: apache/spark
+  title_prefixes:
+    - "[SPIP]"
+
+# Tags for categorizing proposals
+components:
+  - core
+  - sql
+  - pyspark
+  - connect
+  - streaming
+  - mllib
+  - kubernetes
+  - graphx
+  - r

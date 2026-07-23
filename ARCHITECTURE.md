@@ -36,11 +36,17 @@ Known docs from YAML (`known_docs`) — merged after fetch (first-class `google_
                          digest.json
                     (AI briefing — date-bounded; cloud LLM or local extractive fallback)
                                           │
+                    (deploy time) scripts/build_site_data.py
+                      ├─ index.json  (slim rows: proposals.json minus `body`, ~45% smaller)
+                      └─ feed.xml    (RSS 2.0 of recent activity — stable, subscribable)
+                                          │
                         React + Tailwind dashboard
                         (static files, no server)
 ```
 
 **No server required.** All data is static JSON. The dashboard reads directly from `data/`.
+
+**Two-tier frontend load.** The dashboard fetches the slim **`index.json`** for every list/feed/home view; the heavy `body` field is lazy-loaded from `proposals.json` only when an item's detail panel is opened (fetched at most once per project, cached). `index.json` / `feed.xml` are **derived** — generated at deploy time from the canonical `proposals.json` and **not committed** (see `.gitignore`), so the crawl/merge path stays untouched. If the index is absent (e.g. local dev before running `build_site_data.py`), the frontend falls back to `proposals.json` automatically.
 
 **Secrets:** Put API keys only in `.env` (gitignored) or GitHub Actions **secrets** / **variables**. Scripts read keys from `os.environ` and pass them to official SDKs — they do not echo keys in logs. Error messages from providers are truncated where logged (e.g. initiative LLM failures) to avoid huge HTML bodies in CI output.
 
@@ -67,14 +73,17 @@ agora/
 │   ├── crawl.py             # Main entry — parallel crawlers + LLM; `--re-enrich` = no fetch, re-summarize disk
 │   ├── build_initiatives.py # Union-find: one initiative per proposal (merge related)
 │   ├── generate_digest.py   # Weekly digest; run as `python scripts/generate_digest.py --project <id>`
+│   ├── build_site_data.py   # Deploy-time: derive index.json + feed.xml from proposals.json
 │   └── update_data.py       # Write projects.json; state management
 ├── data/              # Generated output (committed, served as static assets)
 │   └── {project}/
-│       ├── proposals.json    # All items with summaries and metadata
+│       ├── proposals.json    # All items with summaries and metadata (canonical)
 │       ├── initiatives.json  # One row per component (singleton or cluster)
 │       ├── digest.json       # AI briefing
 │       ├── events.json       # Upcoming calendar events
-│       └── state.json        # Crawl cursor (timestamps / last-seen IDs)
+│       ├── state.json        # Crawl cursor (timestamps / last-seen IDs)
+│       ├── index.json        # Derived slim rows for the UI (deploy-time; gitignored)
+│       └── feed.xml          # Derived RSS feed (deploy-time; gitignored)
 └── frontend/          # React + Tailwind dashboard (Vite)
     └── src/
         ├── components/
@@ -172,12 +181,26 @@ Initiatives are built with [union-find](scripts/build_initiatives.py). **Every p
 
 **Display:** Multi-member groups get a synthesized title/summary (LLM when available). Singles reuse each proposal’s `llm_title` / `llm_summary` / `llm_key_points`. `shared_docs` lists docs cited by ≥2 members in a cluster (ranked); single-item initiatives show that proposal’s own design-doc links.
 
+**LLM vs clustering order:** `scripts/crawl.py` runs per-proposal enrichment **before** `write_project_data`, then `build_initiatives.build()` reads the merged `proposals.json`. Union–find signals already use `llm_title`, `llm_summary`, `llm_topics`, and `llm_summary` token overlap — so **stage-2 API LLM output on each proposal feeds the next clustering run**. Multi-member initiatives can call the LLM again for a unified cluster blurb. If you run **`--no-llm`**, local extractive `llm_*` still populate topics/summaries for those signals. After **`--re-enrich`**, initiatives are rebuilt with the same client so cluster copy stays aligned.
+
+**Cheap initiative labels:** `build_initiatives._strip_title_noise` shortens noisy subjects (e.g. strips `(Phase N)`, optional head-before-`:` for labels like “Secondary Indexes: …”). The frontend `cleanTitle()` follows the same idea for list cards. Token/embeddings paths keep the longer normalized title so Jaccard/embeddings do not lose vocabulary.
+
 ## Go live (operator checklist)
 
-- Crawl or `--re-enrich` with a working LLM key; commit `data/` if the static site should match.
+- **Enrichment is two-stage:** (1) local / structural / extractive always; (2) API **LLMClient** pass for rich threads, docs, and video when not using `--no-llm`. Commit `data/` if the static site should match.
+- **`--re-enrich`** re-runs enrichment on **existing** `proposals.json` rows only — it does **not** re-fetch sources. It will **not** refresh **`vote_data`** or other crawler-derived fields; run a normal **crawl** for that.
 - GitHub **Pages** source = **GitHub Actions**; set **`VITE_BASE_PATH`** repo variable if the site is not at domain root (e.g. `/agora/`).
-- **Actions**: enable workflows; optional **`OPENAI_API_KEY` / `ANTHROPIC_API_KEY`** / **`LLM_API_KEY`** secrets for CI — otherwise **`GITHUB_TOKEN`** can drive **GitHub Models** for incremental enrichment.
+- **Actions**: enable workflows; optional **`OPENAI_API_KEY` / `ANTHROPIC_API_KEY`** / **`GROQ_API_KEY` / `GOOGLE_API_KEY`** repository secrets — if none are set, **`get_client()`** falls through to **`github_models`** using the job’s **`GITHUB_TOKEN`** (see `llm/client.py` priority order). Ensure **GitHub Models** is available for the repo/org if you rely on that default.
 
 ### Scheduled / incremental crawl in CI
 
-The **Crawl & Enrich** workflow (`.github/workflows/crawl.yml`) runs `python scripts/crawl.py` on a cron and on manual dispatch. It uses **`data/<project>/state.json`** (`last_crawled_at`) so each run is **incremental** (not a full re-ingest) unless you dispatch with **Re-crawl from scratch** (`--reset`). Successful runs commit **`data/`**; that push triggers **Deploy** when `data/**` changes. No extra setup is required beyond secrets and a populated `state.json` on `main` (created by the first crawl).
+The **Crawl & Enrich** workflow (`.github/workflows/crawl.yml`) runs `python scripts/crawl.py` on a cron and on manual dispatch. It passes **`GITHUB_TOKEN`** and optional vendor key secrets into the job env. It uses **`data/<project>/state.json`** (`last_crawled_at`) so each run is **incremental** (not a full re-ingest) unless you dispatch with **Re-crawl from scratch** (`--reset`). Successful runs commit **`data/`**; that push triggers **Deploy** when `data/**` changes. Workflow input **Skip LLM** maps to **`--no-llm`** (skips stage 2 only; stage 1 still runs).
+
+**Autonomy / resilience.** The cron crawls **every** `projects/*.yaml` automatically — a new project YAML is picked up and backfilled on the next run with no other change. `scripts/crawl.py` **isolates each project** in its own `try/except`: one project (or one flaky source) failing is logged and skipped, the rest still refresh, and the job exits non-zero only at the end so failures are visible without losing a day of updates. With no vendor LLM secret set, enrichment falls through to **GitHub Models** via the job's `GITHUB_TOKEN` — so the whole loop runs at zero marginal cost. The **Deploy** workflow regenerates `index.json` + `feed.xml` from the freshly-committed `proposals.json`, so the site and RSS feed stay current unattended.
+
+### Refreshing existing data after pipeline changes
+
+- **Mailing list / `vote_data` / full thread text:** run **`python scripts/crawl.py --project <id>`** (incremental is enough if the thread’s month is still within the scanned window). **`--reset`** only if you need a full re-ingest.
+- **LLM wording only (same raw rows):** **`python scripts/crawl.py --project <id> --re-enrich`** (needs API client as for stage 2, unless you only care about local output).
+
+Future partitioning (index + monthly archives + richer `state.json`) is tracked in **`docs/DATA_LAYOUT_ROADMAP.md`** — not implemented in the codebase yet.

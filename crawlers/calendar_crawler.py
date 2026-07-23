@@ -28,7 +28,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
 
-import requests
+from crawlers._http import get_session
+from crawlers._io import write_json_atomic
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +68,7 @@ def crawl_events(config: dict, project_id: str) -> None:
             continue
 
         try:
-            resp = requests.get(ics_url, timeout=15)
+            resp = get_session().get(ics_url, timeout=15)
             resp.raise_for_status()
         except Exception as e:
             logger.error(f"calendar_crawler: failed to fetch '{cal_name}' ICS feed: {e}")
@@ -122,8 +123,7 @@ def crawl_events(config: dict, project_id: str) -> None:
     if not fetched_any:
         logger.error(f"calendar: no ICS feeds could be fetched; keeping existing {out_path} (if any)")
         return
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(out, f, indent=2, ensure_ascii=False)
+    write_json_atomic(out_path, out, indent=2, ensure_ascii=False)
 
     logger.info(f"calendar: wrote {len(unique_events)} total upcoming events to {out_path}")
 

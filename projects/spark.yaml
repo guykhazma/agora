@@ -30,11 +30,20 @@ mailing_list:
 # GitHub crawl config.
 # Spark tracks work in JIRA (issues are disabled on the GitHub repo), so the value
 # here is releases + milestones + any PR/issue whose title matches a proposal prefix.
-# Governance (SPIP) lives on the mailing list above.
+# Governance (SPIP) lives on the mailing list above + JIRA below.
 github:
   repo: apache/spark
   title_prefixes:
     - "[SPIP]"
+
+# Apache JIRA — Spark's SPIPs (Spark Project Improvement Proposals) are tracked here
+# as issues labelled "SPIP". Free public REST API, no auth. This is where Spark's real
+# proposals live (GitHub issues are disabled on the repo).
+jira:
+  base_url: https://issues.apache.org/jira
+  project_key: SPARK
+  jql: "labels = SPIP"
+  max_issues: 300
 
 # Tags for categorizing proposals
 components:

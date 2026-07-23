@@ -23,6 +23,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+import sys
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -39,6 +40,10 @@ from urllib.parse import unquote, urlparse, urlunparse
 
 ROOT = Path(__file__).parent.parent
 DATA_DIR = ROOT / "data"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from crawlers._io import write_json_atomic  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -796,12 +801,12 @@ def build(project_id: str, llm_client=None) -> int:
             p.pop("initiative_id", None)
 
     # Persist updated proposals (with initiative_id stamps)
-    proposals_path.write_text(json.dumps({
+    write_json_atomic(proposals_path, {
         "project_id": project_id,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "total": len(proposals),
         "proposals": proposals,
-    }, indent=2, default=str))
+    }, indent=2, default=str)
 
     _write(project_id, initiatives)
 
@@ -862,10 +867,10 @@ def _infer_title(proposals: list[dict]) -> str:
 
 def _write(project_id: str, initiatives: list[dict]):
     out = DATA_DIR / project_id / "initiatives.json"
-    out.write_text(json.dumps({
+    write_json_atomic(out, {
         "project_id": project_id,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "total": len(initiatives),
         "initiatives": initiatives,
-    }, indent=2))
+    }, indent=2)
     logger.info(f"Wrote {len(initiatives)} initiatives to {out}")

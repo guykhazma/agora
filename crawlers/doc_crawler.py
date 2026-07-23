@@ -8,7 +8,7 @@ from __future__ import annotations
 import logging
 import re
 from typing import Optional
-import requests
+from crawlers._http import get_session
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +33,7 @@ def fetch_doc_text(url: str, max_chars: int = 6000) -> str:
 
     export_url = EXPORT_URL.format(doc_id=doc_id)
     try:
-        resp = requests.get(export_url, timeout=20, allow_redirects=True)
+        resp = get_session().get(export_url, timeout=20, allow_redirects=True)
         # 200 = success, 302 with login redirect = private
         if resp.status_code == 200 and "accounts.google.com" not in resp.url:
             return resp.text[:max_chars]

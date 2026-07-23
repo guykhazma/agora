@@ -55,7 +55,7 @@ sys.path.insert(0, str(ROOT))
 
 from crawlers import github_crawler, mailing_list_crawler
 from crawlers.doc_crawler import enrich_proposal_with_docs, fetch_doc_text, extract_doc_id, extract_doc_title
-from scripts.update_data import clear_project_outputs, load_state, save_state, write_project_data
+from scripts.update_data import clear_project_outputs, load_state, save_state, write_project_data, update_health
 from llm.client import LLMClient, content_hash
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -258,19 +258,28 @@ def _wants_llm_stage2(p: dict, source: str, reply_count: int, doc_content: str, 
     return not _can_handle_locally(p, reply_count)
 
 
-def enrich_with_llm(proposals: list[dict], existing_by_id: dict, stage2_llm_client) -> list[dict]:
+def enrich_with_llm(proposals: list[dict], existing_by_id: dict, stage2_llm_client,
+                    status_out: dict | None = None) -> list[dict]:
     """
     Derive llm_* fields in two stages:
       1. Always: local / structural / extractive baseline (no paid API).
       2. Optionally: stage2_llm_client (LLMClient) replaces that baseline for rich threads, docs, video.
 
     Pass stage2_llm_client=None to run stage 1 only (--no-llm).
+
+    Circuit breaker: if the stage-2 provider hits a fatal error (auth/quota) or fails
+    repeatedly, it is disabled for the rest of the run so we don't hammer a dead provider
+    and log hundreds of warnings — the remaining items fall back to the local baseline.
+    When `status_out` is provided it is filled with {stage2_degraded, stage2_enriched,
+    stage2_failures} so the caller can surface it in health.json.
     """
     from llm.local_nlp import LocalNLPClient
     local_client = LocalNLPClient()
 
     total = len(proposals)
     skipped = stage2_enriched = local_enriched = failed = 0
+    consecutive_fail = 0
+    stage2_dead = False
 
     llm_needed = sum(
         1
@@ -407,10 +416,26 @@ def enrich_with_llm(proposals: list[dict], existing_by_id: dict, stage2_llm_clie
                 _set_google_doc_summary_anchor(p, doc_content)
 
                 stage2_enriched += 1
+                consecutive_fail = 0
                 delay = _default_delay(stage2_llm_client.provider)
                 if delay > 0:
                     time.sleep(delay)
             except Exception as ce:
+                consecutive_fail += 1
+                err = str(ce).lower()
+                fatal = any(t in err for t in (
+                    "insufficient_quota", "exceeded your current quota",
+                    "invalid api key", "invalid_api_key", "authentication",
+                    "401", "403", "permission",
+                ))
+                if not stage2_dead and (fatal or consecutive_fail >= 5):
+                    stage2_dead = True
+                    stage2_llm_client = None  # stop trying — remaining items use local baseline
+                    logger.error(
+                        f"LLM stage 2 disabled for the rest of this run after "
+                        f"{'a fatal auth/quota error' if fatal else f'{consecutive_fail} consecutive failures'}: {ce}. "
+                        f"Remaining items fall back to the local baseline; see health.json."
+                    )
                 # If we already had a good summary from a prior run, keep it rather than
                 # overwriting with the weaker local baseline due to transient API issues
                 # (quota / rate limit / vendor outage). Also keep the *old* content hash
@@ -443,7 +468,11 @@ def enrich_with_llm(proposals: list[dict], existing_by_id: dict, stage2_llm_clie
     logger.info(
         f"Enrichment: {stage2_enriched} LLM stage 2 (API), {local_only} local-only, "
         f"{skipped} skipped (unchanged), {failed} failed / {total} total"
+        + (" [stage-2 DEGRADED to local]" if stage2_dead else "")
     )
+    if status_out is not None:
+        status_out["stage2_degraded"] = stage2_dead
+        status_out["stage2_enriched"] = stage2_enriched
     return proposals
 
 
@@ -519,6 +548,13 @@ def crawl_project(project_id: str, use_llm: bool = True):
             calendar_crawler.crawl_events(config, project_id)
         return ("Calendar", [])
 
+    def _crawl_jira():
+        if not config.get("jira"):
+            return ("JIRA", [])
+        from crawlers import jira_crawler
+        logger.info("  (parallel) JIRA — starting…")
+        return ("JIRA", jira_crawler.crawl(config, since=since))
+
     tasks = [
         _crawl_github,
         _crawl_mailing_list,
@@ -527,7 +563,22 @@ def crawl_project(project_id: str, use_llm: bool = True):
         _crawl_releases,
         _crawl_milestones,
         _crawl_calendar,
+        _crawl_jira,
     ]
+
+    # Readable label per task fn — used when a task raises (no return value to read).
+    source_labels = {
+        "_crawl_github": "GitHub issues/PRs",
+        "_crawl_mailing_list": "Mailing list",
+        "_crawl_youtube": "YouTube",
+        "_crawl_discussions": "GitHub Discussions",
+        "_crawl_releases": "GitHub Releases",
+        "_crawl_milestones": "GitHub Milestones",
+        "_crawl_calendar": "Calendar",
+        "_crawl_jira": "JIRA",
+    }
+    # Per-source outcome for health.json + the checkpoint decision below.
+    source_status: dict[str, dict] = {}
 
     logger.info(f"  Launching {len(tasks)} source crawlers in parallel…")
     with ThreadPoolExecutor(max_workers=len(tasks)) as executor:
@@ -535,13 +586,16 @@ def crawl_project(project_id: str, use_llm: bool = True):
         completed = 0
         for future in as_completed(futures):
             completed += 1
+            label = source_labels.get(futures[future], futures[future])
             try:
                 label, items = future.result()
                 new_proposals.extend(items)
+                source_status[label] = {"ok": True, "item_count": len(items), "error": None}
                 status = f"{len(items)} items" if items else "0 items (skipped or up-to-date)"
                 logger.info(f"  [{completed}/{len(tasks)}] {label}: {status}")
             except Exception as e:
-                logger.error(f"  [{completed}/{len(tasks)}] {futures[future]} failed: {e}")
+                source_status[label] = {"ok": False, "item_count": 0, "error": str(e)[:300]}
+                logger.error(f"  [{completed}/{len(tasks)}] {label} failed: {e}")
 
     # Known docs — always crawl these as first-class proposals
     for doc_cfg in config.get("known_docs", []):
@@ -588,10 +642,11 @@ def crawl_project(project_id: str, use_llm: bool = True):
             enrich_proposal_with_docs(p)
 
     # Derived fields: stage 1 (local) always; stage 2 (API LLM) when use_llm
+    enrich_status: dict = {}
     if new_proposals:
         from llm.client import get_client
         stage2_llm = get_client() if use_llm else None
-        new_proposals = enrich_with_llm(new_proposals, existing_by_id, stage2_llm)
+        new_proposals = enrich_with_llm(new_proposals, existing_by_id, stage2_llm, enrich_status)
     _strip_internal_fields(new_proposals)
 
     # Write merged data
@@ -618,9 +673,44 @@ def crawl_project(project_id: str, use_llm: bool = True):
                 "local NLP now uses an extractive fallback)."
             )
 
-    # Update state
-    state["last_crawled_at"] = datetime.now(timezone.utc).isoformat()
+    # Update state — but only advance the checkpoint if no CRITICAL source failed.
+    # Advancing after a GitHub/mailing-list failure would permanently skip everything
+    # updated in this window (the silent-data-gap bug). Keeping the old checkpoint just
+    # means the next run re-scans it; dedup makes that safe. Supplementary sources
+    # (YouTube/Calendar) failing don't block the checkpoint — they self-heal and we'd
+    # otherwise re-backfill the mailing list forever.
+    now_iso = datetime.now(timezone.utc).isoformat()
+    critical_failed = [
+        lbl for lbl, st in source_status.items()
+        if not st["ok"] and (lbl.startswith("GitHub") or lbl in ("Mailing list", "JIRA"))
+    ]
+    any_failed = [lbl for lbl, st in source_status.items() if not st["ok"]]
+
+    if critical_failed:
+        logger.error(
+            f"  Critical source(s) failed ({', '.join(critical_failed)}) — NOT advancing "
+            f"checkpoint; this window will be re-scanned next run."
+        )
+    else:
+        state["last_crawled_at"] = now_iso
     save_state(project_id, state)
+
+    # Health / freshness signal (committed + served; read by the UI and the alert workflow).
+    # A degraded LLM stage 2 counts as a non-critical source failure (data still lands,
+    # but summaries are weaker) so it surfaces without blocking the checkpoint.
+    if enrich_status.get("stage2_degraded"):
+        source_status["LLM enrichment"] = {
+            "ok": False, "item_count": enrich_status.get("stage2_enriched", 0),
+            "error": "stage-2 provider failed; fell back to local baseline",
+        }
+        any_failed.append("LLM enrichment")
+    run_status = "error" if critical_failed else ("degraded" if any_failed else "ok")
+    update_health(project_id, {
+        "last_run_at": now_iso,
+        "last_crawled_at": state.get("last_crawled_at"),
+        "status": run_status,
+        "sources": source_status,
+    })
 
     n_total = len(new_proposals)
     logger.info(

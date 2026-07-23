@@ -16,8 +16,8 @@ import re
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 from typing import Optional
-import requests
 
+from crawlers._http import get_session
 from crawlers.link_extractor import extract_links
 
 logger = logging.getLogger(__name__)
@@ -54,7 +54,7 @@ def _fetch_month(domain: str, list_name: str, year: int, month: int) -> list[dic
     """Fetch thread index for a single month using d=YYYY-MM format."""
     month_str = f"{year}-{month:02d}"
     url = f"{PONY_MAIL_BASE}/stats.lua?list={list_name}&domain={domain}&d={month_str}"
-    resp = requests.get(url, timeout=30)
+    resp = get_session().get(url, timeout=30)
     if resp.status_code in (404, 400):
         logger.debug(f"No data for {month_str} ({resp.status_code})")
         return []
@@ -80,7 +80,7 @@ def _collect_child_mids(node, seen: set) -> list[str]:
 def _fetch_email(mid: str) -> dict:
     """Fetch a single email by its message ID."""
     url = f"{PONY_MAIL_BASE}/thread.lua?id={mid}"
-    resp = requests.get(url, timeout=30)
+    resp = get_session().get(url, timeout=30)
     if resp.status_code in (404, 400):
         return {}
     resp.raise_for_status()
@@ -92,7 +92,7 @@ def _fetch_email(mid: str) -> dict:
 def _fetch_thread(thread_id: str) -> list[dict]:
     """Fetch all emails in a thread (root + every reply we can resolve from the tree)."""
     url = f"{PONY_MAIL_BASE}/thread.lua?id={thread_id}"
-    resp = requests.get(url, timeout=30)
+    resp = get_session().get(url, timeout=30)
     if resp.status_code in (404, 400):
         return []
     resp.raise_for_status()
@@ -177,7 +177,10 @@ def _latest_vote_signal_in_body(body: str) -> str | None:
             elif t == "+1":
                 found.append((m.end(), "+1"))
 
-        for m in re.finditer(r"(?m)^\+1(?:\s*\(([^)]*)\))?\b", lower):
+        # `\b` must sit right after "+1" — if placed after the optional (binding)
+        # group it backtracks and drops the annotation, miscounting binding as
+        # non-binding (which decides whether a vote "passed").
+        for m in re.finditer(r"(?m)^\+1\b(?:\s*\(([^)]*)\))?", lower):
             label = (m.group(1) or "").lower()
             is_binding = "binding" in label and "non" not in label
             found.append((m.end(), "+1b" if is_binding else "+1"))
@@ -268,6 +271,34 @@ def _parse_vote(emails: list[dict]) -> dict:
     }
 
 
+def _extract_vote_deadline(body: str, created_iso: str) -> str | None:
+    """
+    Best-effort close time for an ASF [VOTE] thread. ASF votes state a window in the
+    opening email ("open for at least 72 hours" / "3 days"); we add that to the thread
+    start. Returns ISO 8601 or None. Advisory only — used for a "closing soon" badge.
+    """
+    if not body or not created_iso:
+        return None
+    from datetime import timedelta
+
+    low = body.lower()
+    hours = None
+    m = re.search(r"(?:at least\s+|for\s+|open\s+for\s+)?(\d{1,3})\s*(?:hours?|hrs?|h)\b", low)
+    if m:
+        hours = int(m.group(1))
+    else:
+        m = re.search(r"(?:at least\s+|for\s+|open\s+for\s+)?(\d{1,2})\s*(?:business\s+)?days?\b", low)
+        if m:
+            hours = int(m.group(1)) * 24
+    if not hours or hours > 24 * 30:  # ignore absurd matches
+        return None
+    try:
+        dt = datetime.fromisoformat(created_iso.replace("Z", "+00:00"))
+    except (ValueError, AttributeError):
+        return None
+    return (dt + timedelta(hours=hours)).isoformat()
+
+
 def _parse_thread(thread_meta: dict, emails: list[dict], project_id: str) -> dict:
     subject = thread_meta.get("subject", "") or (emails[0].get("subject", "") if emails else "")
     first = emails[0] if emails else {}
@@ -291,6 +322,10 @@ def _parse_thread(thread_meta: dict, emails: list[dict], project_id: str) -> dic
     title_lower = subject.lower()
     if "[vote]" in title_lower:
         vote_data = _parse_vote(emails)
+        if vote_data:
+            deadline = _extract_vote_deadline(first.get("body") or "", created)
+            if deadline:
+                vote_data["closes_at"] = deadline
 
     result = {
         "id": f"{project_id}-ml-{thread_id}",

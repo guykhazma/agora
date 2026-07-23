@@ -163,10 +163,25 @@ class LLMClient:
                         "ChatGPT Plus does not fund the API."
                     )
                     raise
-                is_rate_limit = "429" in str(e) or "rate" in err_text or "quota" in err_text
-                if is_rate_limit and attempt < _retries - 1:
+                # Retry on transient failures: rate limits AND 5xx / timeouts /
+                # connection drops (previously only substring "rate"/"429"/"quota"
+                # matched, so a 503 or socket timeout raised immediately).
+                status = getattr(e, "status_code", None) or getattr(
+                    getattr(e, "response", None), "status_code", None
+                )
+                etype = type(e).__name__.lower()
+                is_retryable = (
+                    status in (429, 500, 502, 503, 504)
+                    or "429" in str(e)
+                    or "rate" in err_text
+                    or "quota" in err_text
+                    or "timeout" in etype or "timed out" in err_text
+                    or "connection" in etype or "connection" in err_text
+                    or "serviceunavailable" in etype or "overloaded" in err_text
+                )
+                if is_retryable and attempt < _retries - 1:
                     wait = 2 ** (attempt + 1)   # 2, 4, 8, 16 seconds
-                    logger.warning(f"Rate limited by {p} — waiting {wait}s (attempt {attempt + 1}/{_retries})")
+                    logger.warning(f"{p} transient error ({etype}) — waiting {wait}s (attempt {attempt + 1}/{_retries})")
                     time.sleep(wait)
                 else:
                     raise

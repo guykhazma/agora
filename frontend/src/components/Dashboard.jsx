@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { fetchProposals, getStatus, getItemType, relativeTime, fetchInitiatives, projectLandingUrl, matchesGlobalSearch } from "../lib/data";
+import { fetchProjectIndex, getStatus, getItemType, relativeTime, fetchInitiatives, projectLandingUrl, matchesGlobalSearch } from "../lib/data";
 import HomeView from "./HomeView";
 import TypeGroupedView from "./TypeGroupedView";
 import DocsView from "./DocsView";
@@ -11,6 +11,7 @@ import KanbanBoard from "./KanbanBoard";
 import ProposalDetail from "./ProposalDetail";
 import InitiativesView from "./InitiativesView";
 import { useProposalKeyboard } from "../lib/useKeyboard";
+import { useWatchlist } from "../lib/prefs";
 import { GlobeIcon, GitHubIcon, MailIcon, YouTubeIcon, SlackIcon } from "./Icons";
 
 const VIEWS = ["home", "topics", "activity", "docs", "events"];
@@ -26,13 +27,15 @@ export default function Dashboard({ project, view, setView }) {
   const [filterType, setFilterType] = useState(null);
   const [selected, setSelected] = useState(null);
   const [activityLayout, setActivityLayout] = useState("grouped"); // "grouped" | "kanban"
+  const [starredOnly, setStarredOnly] = useState(false);
+  const { ids: watchIds, count: watchCount } = useWatchlist();
 
   useEffect(() => {
     setLoading(true);
     setError(null);
     setSelected(null);
     setInitiativesCount(null);
-    fetchProposals(project.id)
+    fetchProjectIndex(project.id)
       .then(setData)
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -65,8 +68,9 @@ export default function Dashboard({ project, view, setView }) {
     if (filterType) result = result.filter((p) => getItemType(p) === filterType);
     if (filterStatus) result = result.filter((p) => getStatus(p) === filterStatus);
     if (filterSource) result = result.filter((p) => p.source === filterSource);
+    if (starredOnly) result = result.filter((p) => watchIds.has(p.id));
     return result;
-  }, [proposals, search, filterStatus, filterSource, filterType]);
+  }, [proposals, search, filterStatus, filterSource, filterType, starredOnly, watchIds]);
 
   const scrollToSearchResults = () => {
     document.getElementById("global-search-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -90,13 +94,14 @@ export default function Dashboard({ project, view, setView }) {
   if (error)   return <div className="text-red-500 py-16 text-center text-sm">{error}</div>;
 
   const showFilters = view === "activity";
-  const filtersActive = !!(search.trim() || filterStatus || filterSource || filterType);
+  const filtersActive = !!(search.trim() || filterStatus || filterSource || filterType || starredOnly);
 
   function clearFilters() {
     setSearch("");
     setFilterStatus(null);
     setFilterSource(null);
     setFilterType(null);
+    setStarredOnly(false);
   }
 
   return (
@@ -248,6 +253,21 @@ export default function Dashboard({ project, view, setView }) {
             onSourceChange={setFilterSource}
             onTypeChange={setFilterType}
           />
+          <button
+            type="button"
+            onClick={() => setStarredOnly((v) => !v)}
+            aria-pressed={starredOnly}
+            title={watchCount ? `${watchCount} starred item${watchCount !== 1 ? "s" : ""}` : "Star items to build a watchlist"}
+            className={`text-xs px-3 py-1.5 rounded-xl font-medium border transition-colors focus-ring flex items-center gap-1.5 ${
+              starredOnly
+                ? "bg-amber-50 dark:bg-amber-900/20 border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-300"
+                : "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-amber-300 dark:hover:border-amber-700"
+            }`}
+          >
+            <span className={starredOnly ? "text-amber-400" : "text-gray-400"}>★</span>
+            Starred
+            {watchCount > 0 && <span className="tabular-nums opacity-80">{watchCount}</span>}
+          </button>
           <div className="flex items-center gap-0.5 p-1 rounded-xl bg-gray-100/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/80 shadow-inner ml-auto">
             {[["grouped", "List"], ["kanban", "Board"]].map(([key, label]) => (
               <button
@@ -331,7 +351,7 @@ export default function Dashboard({ project, view, setView }) {
       )}
 
       {selected && (
-        <ProposalDetail proposal={selected} onClose={() => setSelected(null)} onSelect={setSelected} allProposals={proposals} />
+        <ProposalDetail proposal={selected} projectId={project.id} onClose={() => setSelected(null)} onSelect={setSelected} allProposals={proposals} />
       )}
     </>
   );

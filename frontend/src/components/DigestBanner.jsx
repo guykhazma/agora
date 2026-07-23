@@ -25,9 +25,23 @@ function coverageLine(digest) {
   return from === to ? `Covers ${from}` : `Covers ${from} – ${to}`;
 }
 
-export default function DigestBanner({ projectId, compact = false }) {
+function digestToMarkdown(digest, projectName) {
+  const lines = [`# ${projectName || "Project"} — Digest`];
+  if (digest.period) lines.push(`_${periodLabel(digest.period)}_`);
+  const cov = coverageLine(digest);
+  if (cov) lines.push(cov);
+  if (digest.generated_at) lines.push(`Generated ${formatDate(digest.generated_at)}`);
+  lines.push("", digest.summary || "");
+  if (digest.highlights?.length) {
+    lines.push("", "## Highlights", ...digest.highlights.map((h) => `- ${h}`));
+  }
+  return lines.join("\n").trim() + "\n";
+}
+
+export default function DigestBanner({ projectId, projectName, compact = false }) {
   const [digest, setDigest] = useState(null);
   const [phase, setPhase] = useState(() => (projectId ? "loading" : "idle"));
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!projectId) {
@@ -111,6 +125,27 @@ export default function DigestBanner({ projectId, compact = false }) {
   }
 
   const covFull = coverageLine(digest);
+
+  const markdown = () => digestToMarkdown(digest, projectName || projectId);
+  async function copyMarkdown() {
+    try {
+      await navigator.clipboard.writeText(markdown());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      /* clipboard blocked — no-op */
+    }
+  }
+  function downloadMarkdown() {
+    const blob = new Blob([markdown()], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${projectId || "project"}-digest.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="relative overflow-hidden rounded-2xl border border-agora-200/70 dark:border-agora-800/80 bg-gradient-to-br from-white via-agora-50/40 to-indigo-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-agora-950/30 shadow-md shadow-agora-900/5 dark:shadow-none">
       <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-agora-400 to-indigo-500" aria-hidden />
@@ -127,6 +162,24 @@ export default function DigestBanner({ projectId, compact = false }) {
               {digest.generated_at && (
                 <span className="text-xs text-gray-400 dark:text-gray-500">· {formatDate(digest.generated_at)}</span>
               )}
+              <span className="ml-auto flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={copyMarkdown}
+                  className="text-[11px] font-medium px-2 py-0.5 rounded-md text-agora-700 dark:text-agora-300 hover:bg-agora-100/70 dark:hover:bg-agora-900/40 transition-colors focus-ring"
+                  title="Copy digest as Markdown"
+                >
+                  {copied ? "Copied ✓" : "Copy MD"}
+                </button>
+                <button
+                  type="button"
+                  onClick={downloadMarkdown}
+                  className="text-[11px] font-medium px-2 py-0.5 rounded-md text-agora-700 dark:text-agora-300 hover:bg-agora-100/70 dark:hover:bg-agora-900/40 transition-colors focus-ring"
+                  title="Download digest as a .md file"
+                >
+                  Download
+                </button>
+              </span>
             </div>
             {covFull && <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-2">{covFull}</p>}
             <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">{digest.summary}</p>

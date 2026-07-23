@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { fetchInitiatives, fetchProposals, STATUS_META, SOURCE_META, relativeTime, matchesGlobalSearch } from "../lib/data";
+import { fetchInitiatives, fetchProjectIndex, STATUS_META, SOURCE_META, relativeTime, matchesGlobalSearch } from "../lib/data";
 import { cleanTitle } from "../lib/utils";
 import { GitHubIcon, MailIcon, YouTubeIcon } from "./Icons";
 import ProposalDetail from "./ProposalDetail";
@@ -107,7 +107,7 @@ export default function InitiativesView({ project, searchQuery = "" }) {
   useEffect(() => {
     Promise.all([
       fetchInitiatives(project.id),
-      fetchProposals(project.id),
+      fetchProjectIndex(project.id),
     ]).then(([initData, propData]) => {
       setInitiatives(initData.initiatives || []);
       const byId = {};
@@ -325,6 +325,7 @@ export default function InitiativesView({ project, searchQuery = "" }) {
       {selected && (
         <ProposalDetail
           proposal={selected}
+          projectId={project.id}
           onClose={() => setSelected(null)}
           onSelect={setSelected}
           allProposals={Object.values(proposalsById)}

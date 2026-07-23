@@ -1,5 +1,24 @@
 import { STATUS_META, SOURCE_META, TYPE_META, getStatus, getItemType, relativeTime, isHot } from "../lib/data";
 import { cleanTitle } from "../lib/utils";
+import { useWatchlist } from "../lib/prefs";
+
+/** Star toggle used on cards. Stops propagation so it never opens the detail panel. */
+function StarButton({ id, starred, toggle, className = "" }) {
+  return (
+    <button
+      type="button"
+      onClick={(e) => { e.stopPropagation(); toggle(id); }}
+      aria-pressed={starred}
+      aria-label={starred ? "Remove from watchlist" : "Add to watchlist"}
+      title={starred ? "Remove from watchlist" : "Add to watchlist"}
+      className={`flex-shrink-0 leading-none px-0.5 rounded focus-ring transition-colors ${
+        starred ? "text-amber-400" : "text-gray-300 dark:text-gray-600 hover:text-amber-400"
+      } ${className}`}
+    >
+      ★
+    </button>
+  );
+}
 
 const TYPE_BORDER = {
   vote:         "border-l-amber-400",
@@ -21,6 +40,8 @@ export default function ProposalCard({ proposal: p, compact = false, onClick, cr
   const sourceMeta = SOURCE_META[p.source] || { label: p.source, color: "bg-gray-100 text-gray-600" };
   const borderClass = TYPE_BORDER[type] || "border-l-gray-300";
   const hot        = isHot(p);
+  const { has, toggle } = useWatchlist();
+  const starred    = has(p.id);
 
   const docs = (p.linked_resources || []).filter(l => l.kind === "google_doc" || l.kind === "google_drive");
 
@@ -39,6 +60,7 @@ export default function ProposalCard({ proposal: p, compact = false, onClick, cr
           <p className="text-xs font-medium text-gray-900 dark:text-gray-100 truncate flex-1">
             {cleanTitle(p)}
           </p>
+          <StarButton id={p.id} starred={starred} toggle={toggle} className="text-xs" />
           <span className="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">{relativeTime(p.updated_at)}</span>
         </div>
         <div className="flex items-center gap-2 mt-1 pl-3.5">
@@ -80,9 +102,12 @@ export default function ProposalCard({ proposal: p, compact = false, onClick, cr
       <div className="flex items-start gap-2.5">
         <span className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${statusMeta.dot} ${hot ? "dot-pulse" : ""}`} />
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-900 dark:text-gray-100 leading-snug line-clamp-2">
-            {cleanTitle(p)}
-          </p>
+          <div className="flex items-start gap-2">
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 flex-1">
+              {cleanTitle(p)}
+            </p>
+            <StarButton id={p.id} starred={starred} toggle={toggle} className="text-sm mt-0.5" />
+          </div>
           {p.llm_summary && (
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-2">
               {p.llm_summary}

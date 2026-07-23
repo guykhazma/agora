@@ -61,11 +61,14 @@ agora/
 ├── crawlers/          # One Python module per data source
 │   ├── github_crawler.py          # Issues, PRs, Releases, Milestones
 │   ├── github_discussions_crawler.py  # GitHub Discussions (GraphQL)
-│   ├── mailing_list_crawler.py    # Apache Pony Mail
+│   ├── mailing_list_crawler.py    # Apache Pony Mail (+ thread_prefixes filter, vote parsing)
+│   ├── jira_crawler.py            # Apache JIRA (e.g. Spark SPIPs) — free REST, no auth
 │   ├── youtube_crawler.py         # YouTube RSS
 │   ├── calendar_crawler.py        # Google Calendar ICS
 │   ├── doc_crawler.py             # Google Docs text fetch
-│   └── link_extractor.py          # Extract linked resources from bodies
+│   ├── link_extractor.py          # Extract linked resources from bodies
+│   ├── _http.py                   # Shared retrying HTTP session (backoff on 429/5xx)
+│   └── _io.py                     # Atomic JSON/text writes (never truncate on crash)
 ├── llm/
 │   ├── client.py      # OpenAI, Anthropic, Google, Groq, GitHub Models (`GITHUB_TOKEN`), Ollama, llama.cpp
 │   └── local_nlp.py   # Local enrichment: vote parsing, announcement detection
@@ -74,7 +77,8 @@ agora/
 │   ├── build_initiatives.py # Union-find: one initiative per proposal (merge related)
 │   ├── generate_digest.py   # Weekly digest; run as `python scripts/generate_digest.py --project <id>`
 │   ├── build_site_data.py   # Deploy-time: derive index.json + feed.xml from proposals.json
-│   └── update_data.py       # Write projects.json; state management
+│   ├── check_health.py      # Read health.json → exit 1 + report if stale/failing (CI alert)
+│   └── update_data.py       # Write projects.json; health.json; state management
 ├── data/              # Generated output (committed, served as static assets)
 │   └── {project}/
 │       ├── proposals.json    # All items with summaries and metadata (canonical)
@@ -84,6 +88,7 @@ agora/
 │       ├── state.json        # Crawl cursor (timestamps / last-seen IDs)
 │       ├── index.json        # Derived slim rows for the UI (deploy-time; gitignored)
 │       └── feed.xml          # Derived RSS feed (deploy-time; gitignored)
+│   └── health.json           # Global per-project/per-source freshness (committed + served)
 └── frontend/          # React + Tailwind dashboard (Vite)
     └── src/
         ├── components/
@@ -197,6 +202,15 @@ Initiatives are built with [union-find](scripts/build_initiatives.py). **Every p
 The **Crawl & Enrich** workflow (`.github/workflows/crawl.yml`) runs `python scripts/crawl.py` on a cron and on manual dispatch. It passes **`GITHUB_TOKEN`** and optional vendor key secrets into the job env. It uses **`data/<project>/state.json`** (`last_crawled_at`) so each run is **incremental** (not a full re-ingest) unless you dispatch with **Re-crawl from scratch** (`--reset`). Successful runs commit **`data/`**; that push triggers **Deploy** when `data/**` changes. Workflow input **Skip LLM** maps to **`--no-llm`** (skips stage 2 only; stage 1 still runs).
 
 **Autonomy / resilience.** The cron crawls **every** `projects/*.yaml` automatically — a new project YAML is picked up and backfilled on the next run with no other change. `scripts/crawl.py` **isolates each project** in its own `try/except`: one project (or one flaky source) failing is logged and skipped, the rest still refresh, and the job exits non-zero only at the end so failures are visible without losing a day of updates. With no vendor LLM secret set, enrichment falls through to **GitHub Models** via the job's `GITHUB_TOKEN` — so the whole loop runs at zero marginal cost. The **Deploy** workflow regenerates `index.json` + `feed.xml` from the freshly-committed `proposals.json`, so the site and RSS feed stay current unattended.
+
+Hardening that keeps an unattended pipeline from silently rotting:
+
+- **Retries** — all crawler HTTP goes through `crawlers/_http.py` (a `requests.Session` with `urllib3` backoff on 429/5xx; GitHub GraphQL `RATE_LIMITED` is retried explicitly), so a transient blip doesn't drop a source.
+- **Atomic writes** — every data file is written via `crawlers/_io.py` (`tmp` + `os.replace`), so a cancelled/OOM'd job can never leave a truncated `proposals.json` for the next run to read.
+- **Checkpoint safety** — `last_crawled_at` only advances when no **critical** source (GitHub / mailing list / JIRA) failed. Otherwise the window is re-scanned next run (dedup makes that safe), closing the silent-data-gap hole. Supplementary sources (YouTube/Calendar) don't block it.
+- **LLM circuit breaker** — a fatal (auth/quota) or repeatedly-failing stage-2 provider is disabled for the rest of the run (remaining items use the local baseline) and flagged in `health.json`.
+- **Observability** — each run writes `data/health.json` (per-project, per-source: `ok`, `item_count`, `last_success_at`, `error`). The **Health Check** workflow (`.github/workflows/health-check.yml`) runs `scripts/check_health.py` and opens/updates a GitHub issue when a project or source goes stale or keeps failing. The dashboard shows the same data as a source-freshness strip.
+- **Pinned deps + CI** — `crawlers/requirements.txt` is pinned to exact versions (Dependabot proposes bumps); `.github/workflows/ci.yml` runs the `pytest` suite (vote parsing, `thread_prefixes`, dedup, hashing, index) and the frontend lint/test/build on every PR.
 
 ### Refreshing existing data after pipeline changes
 

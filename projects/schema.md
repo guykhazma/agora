@@ -22,6 +22,9 @@ To add a new project, open a PR adding a `projects/<id>.yaml` file.
 | `github.proposal_labels` | no | Labels that mark proposals/discussions |
 | `github.title_prefixes` | no | Issue/PR title prefixes to treat as proposals |
 | `github_discussions.repo` | no | Repo for GitHub Discussions (defaults to `github.repo`) |
+| `jira.base_url` | no | Apache JIRA base, e.g. `https://issues.apache.org/jira` |
+| `jira.project_key` | no | JIRA project key, e.g. `SPARK` |
+| `jira.jql` | no | Extra JQL to focus on proposals, e.g. `labels = SPIP` |
 | `youtube.channel_id` | no | YouTube channel for community-sync videos (public RSS, no API key) |
 | `calendars` | no | List of public Google Calendar `.ics` URLs for events |
 | `known_docs` | no | Google Docs to always crawl as first-class items (community-sync notes) |

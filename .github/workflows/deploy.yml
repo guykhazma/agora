@@ -44,12 +44,12 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-          cache-dependency-path: frontend/package.json
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install frontend dependencies
         working-directory: frontend
-        # Use npm install (not ci) until package-lock.json is committed
-        run: npm install
+        # Reproducible install from the committed lockfile.
+        run: npm ci
 
       - name: Copy data into frontend public
         run: |

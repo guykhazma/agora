@@ -1,6 +1,8 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useId } from "react";
 import { STATUS_META, SOURCE_META, getItemType, relativeTime } from "../lib/data";
 import { cleanTitle } from "../lib/utils";
+import { useFocusTrap } from "../lib/useFocusTrap";
+import StarButton from "./StarButton";
 
 /** Human-readable labels for `signals` from build_initiatives.py */
 function formatSignal(s) {
@@ -17,6 +19,9 @@ function formatSignal(s) {
 }
 
 export default function InitiativeDetail({ initiative, proposalsById = {}, onClose, onSelectProposal }) {
+  const panelRef = useRef(null);
+  const titleId = useId();
+  useFocusTrap(panelRef);
   useEffect(() => {
     const handler = (e) => {
       if (e.key === "Escape") onClose?.();
@@ -24,6 +29,12 @@ export default function InitiativeDetail({ initiative, proposalsById = {}, onClo
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
+
+  const signalLabels = useMemo(() => {
+    const raw = initiative?.signals;
+    if (!Array.isArray(raw) || raw.length === 0) return [];
+    return [...new Set(raw)].map(formatSignal);
+  }, [initiative?.signals]);
 
   if (!initiative) return null;
 
@@ -37,12 +48,6 @@ export default function InitiativeDetail({ initiative, proposalsById = {}, onClo
   const activeVote = members.find(
     m => getItemType(m) === "vote" && (!m.vote_data || m.vote_data.result === "open")
   );
-
-  const signalLabels = useMemo(() => {
-    const raw = initiative.signals;
-    if (!Array.isArray(raw) || raw.length === 0) return [];
-    return [...new Set(raw)].map(formatSignal);
-  }, [initiative.signals]);
 
   // Group members by source
   const bySource = {};
@@ -59,12 +64,20 @@ export default function InitiativeDetail({ initiative, proposalsById = {}, onClo
         aria-hidden
       />
 
-      <div className="fixed right-0 top-0 h-full w-full max-w-lg bg-white/95 dark:bg-gray-950/95 backdrop-blur-md border-l border-gray-200/90 dark:border-gray-800 z-50 flex flex-col shadow-2xl shadow-gray-900/10 dark:shadow-black/40 overflow-hidden slide-in-right rounded-l-2xl">
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
+        className="fixed right-0 top-0 h-full w-full max-w-lg bg-white/95 dark:bg-gray-950/95 backdrop-blur-md border-l border-gray-200/90 dark:border-gray-800 z-50 flex flex-col shadow-2xl shadow-gray-900/10 dark:shadow-black/40 overflow-hidden slide-in-right rounded-l-2xl focus:outline-none"
+      >
 
         {/* Header */}
         <div className="flex items-start gap-3 px-5 py-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex-1 min-w-0">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug">
+            <h2 id={titleId} className="text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug flex items-center gap-2">
+              <StarButton id={initiative.id} className="text-base" label="watchlist" />
               {initiative.title}
             </h2>
             <div className="flex flex-wrap items-center gap-2 mt-2">

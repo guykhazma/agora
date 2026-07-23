@@ -1,0 +1,24 @@
+# Controlled dependency bumps via PR, so pinned versions stay current without a human
+# watching for upstream releases. Grouped weekly to keep noise low.
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/crawlers"
+    schedule:
+      interval: "weekly"
+    groups:
+      python-deps:
+        patterns: ["*"]
+
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+    groups:
+      frontend-deps:
+        patterns: ["*"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

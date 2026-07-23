@@ -11,7 +11,7 @@ import logging
 import re
 import xml.etree.ElementTree as ET
 from typing import Optional
-import requests
+from crawlers._http import get_session
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ NS = {
 def _fetch_rss(channel_id: str) -> list[dict]:
     """Fetch video list from public YouTube RSS feed. No API key needed."""
     url = RSS_URL.format(channel_id=channel_id)
-    resp = requests.get(url, timeout=20)
+    resp = get_session().get(url, timeout=20)
     resp.raise_for_status()
 
     root = ET.fromstring(resp.content)

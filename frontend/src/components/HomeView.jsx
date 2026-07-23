@@ -15,9 +15,11 @@ import {
 } from "../lib/eventTime";
 import { cleanTitle } from "../lib/utils";
 import { usePreviousVisit } from "../lib/prefs";
+import { useHashRoute } from "../lib/useHashRoute";
 import DigestBanner from "./DigestBanner";
+import HealthStrip from "./HealthStrip";
+import HealthPanel from "./HealthPanel";
 import InitiativeDetail from "./InitiativeDetail";
-import ProposalDetail from "./ProposalDetail";
 
 const DAYS = (n) => n * 86400000;
 
@@ -196,8 +198,13 @@ export default function HomeView({ project, proposals, onSelect, onViewActivity,
   const [initiativesLoading, setInitLoading]   = useState(true);
   const [upcomingEvents, setUpcomingEvents]    = useState([]);
   const [calendarUrl, setCalendarUrl]          = useState([]);
-  const [selectedInitiative, setSelectedInitiative] = useState(null);
-  const [selectedProposal, setSelectedProposal]     = useState(null);
+
+  // Open initiative detail is driven by the hash (?init=). Resolve id → object.
+  const [route, setRoute] = useHashRoute();
+  const selectedInitiative = route.init
+    ? initiatives.find((i) => i.id === route.init) || null
+    : null;
+  const openInitiative = (i) => setRoute({ init: i?.id || null });
 
   useEffect(() => {
     if (!project?.id) return;
@@ -271,7 +278,9 @@ export default function HomeView({ project, proposals, onSelect, onViewActivity,
 
       {/* ── TOP: Digest + info strip ── */}
       <div className="space-y-3">
+        <HealthStrip projectId={project?.id} />
         <DigestBanner projectId={project?.id} projectName={project?.name} compact={false} />
+        <HealthPanel proposals={proposals} initiatives={initiatives} />
 
         {/* What's new since your last visit */}
         {newSinceVisit.length > 0 && (
@@ -286,7 +295,7 @@ export default function HomeView({ project, proposals, onSelect, onViewActivity,
                 <button
                   key={p.id}
                   type="button"
-                  onClick={() => setSelectedProposal(p)}
+                  onClick={() => onSelect(p)}
                   className="max-w-full text-left text-xs px-2 py-1 rounded-lg bg-agora-50/70 dark:bg-agora-900/20 hover:bg-agora-100 dark:hover:bg-agora-900/40 text-agora-800 dark:text-agora-200 truncate transition-colors focus-ring"
                   title={cleanTitle(p.title)}
                 >
@@ -414,7 +423,7 @@ export default function HomeView({ project, proposals, onSelect, onViewActivity,
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {shown.map(({ initiative, key }) => {
                     const members = (initiative.proposal_ids || []).map(id => proposalsById[id]).filter(Boolean);
-                    return <TopicCard key={initiative.id} initiative={initiative} members={members} stage={key} onSelect={onSelect} onOpenInitiative={setSelectedInitiative} />;
+                    return <TopicCard key={initiative.id} initiative={initiative} members={members} stage={key} onSelect={onSelect} onOpenInitiative={openInitiative} />;
                   })}
                 </div>
                 {hiddenCount > 0 && (
@@ -485,18 +494,8 @@ export default function HomeView({ project, proposals, onSelect, onViewActivity,
       <InitiativeDetail
         initiative={selectedInitiative}
         proposalsById={proposalsById}
-        onClose={() => setSelectedInitiative(null)}
-        onSelectProposal={(p) => { setSelectedInitiative(null); setSelectedProposal(p); }}
-      />
-    )}
-
-    {selectedProposal && (
-      <ProposalDetail
-        proposal={selectedProposal}
-        projectId={project?.id}
-        onClose={() => setSelectedProposal(null)}
-        onSelect={setSelectedProposal}
-        allProposals={proposals}
+        onClose={() => setRoute({ init: null })}
+        onSelectProposal={(p) => setRoute({ init: null, item: p.id })}
       />
     )}
     </>

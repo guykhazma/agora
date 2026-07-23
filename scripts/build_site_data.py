@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import sys
 from datetime import datetime, timezone
 from email.utils import format_datetime, parsedate_to_datetime
 from pathlib import Path
@@ -32,6 +33,10 @@ from xml.sax.saxutils import escape
 
 ROOT = Path(__file__).parent.parent
 DATA_DIR = ROOT / "data"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from crawlers._io import write_json_atomic, write_text_atomic  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -97,7 +102,7 @@ def build_index(project_id: str) -> bool:
         "total": len(slim),
         "proposals": slim,
     }
-    out.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
+    write_json_atomic(out, payload, ensure_ascii=False, separators=(",", ":"))
 
     full_kb = proposals_path.stat().st_size / 1024
     slim_kb = out.stat().st_size / 1024
@@ -189,7 +194,7 @@ def build_feed(project_id: str) -> bool:
     lines.append("</channel></rss>")
 
     out = DATA_DIR / project_id / "feed.xml"
-    out.write_text("\n".join(lines), encoding="utf-8")
+    write_text_atomic(out, "\n".join(lines))
     logger.info(f"[{project_id}] feed.xml: {len(recent)} items")
     return True
 

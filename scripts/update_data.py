@@ -12,11 +12,16 @@ Data layout:
 from __future__ import annotations
 import json
 import logging
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 DATA_DIR = ROOT / "data"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from crawlers._io import write_json_atomic
 
 logger = logging.getLogger(__name__)
 
@@ -34,8 +39,48 @@ def load_state(project_id: str) -> dict:
 
 def save_state(project_id: str, state: dict):
     path = DATA_DIR / project_id / "state.json"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(state, indent=2))
+    write_json_atomic(path, state, indent=2)
+
+
+def update_health(project_id: str, record: dict) -> None:
+    """
+    Merge one project's crawl outcome into data/health.json (committed + served).
+
+    `record` = {last_run_at, last_crawled_at, status, sources: {label: {ok, item_count, error}}}.
+    For each source, `last_success_at` is stamped to now on success, else the prior
+    value is preserved — so the frontend / alert workflow can tell how long a source
+    has been failing.
+    """
+    path = DATA_DIR / "health.json"
+    try:
+        health = json.loads(path.read_text()) if path.exists() else {}
+    except (json.JSONDecodeError, OSError):
+        health = {}
+    if not isinstance(health, dict):
+        health = {}
+
+    projects = health.setdefault("projects", {})
+    prior_sources = (projects.get(project_id) or {}).get("sources", {}) or {}
+    now = datetime.now(timezone.utc).isoformat()
+
+    sources = {}
+    for label, st in (record.get("sources") or {}).items():
+        last_success = now if st.get("ok") else (prior_sources.get(label) or {}).get("last_success_at")
+        sources[label] = {
+            "ok": bool(st.get("ok")),
+            "item_count": int(st.get("item_count") or 0),
+            "error": st.get("error"),
+            "last_success_at": last_success,
+        }
+
+    projects[project_id] = {
+        "last_run_at": record.get("last_run_at"),
+        "last_crawled_at": record.get("last_crawled_at"),
+        "status": record.get("status"),
+        "sources": sources,
+    }
+    health["generated_at"] = now
+    write_json_atomic(path, health, indent=2)
 
 
 def clear_project_outputs(project_id: str) -> None:
@@ -163,12 +208,12 @@ def write_project_data(project_id: str, new_proposals: list[dict], config: dict)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     proposals_path = out_dir / "proposals.json"
-    proposals_path.write_text(json.dumps({
+    write_json_atomic(proposals_path, {
         "project_id": project_id,
         "last_updated": datetime.now(timezone.utc).isoformat(),
         "total": len(merged),
         "proposals": merged,
-    }, indent=2, default=str))
+    }, indent=2, default=str)
 
     logger.info(f"Wrote {len(merged)} proposals to {proposals_path}")
 
@@ -231,6 +276,5 @@ def _rebuild_projects_index():
         })
 
     out = DATA_DIR / "projects.json"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({"projects": index}, indent=2))
+    write_json_atomic(out, {"projects": index}, indent=2)
     logger.info(f"Rebuilt projects index: {len(index)} projects")

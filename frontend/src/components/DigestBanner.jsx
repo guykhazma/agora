@@ -167,6 +167,7 @@ export default function DigestBanner({ projectId, projectName, compact = false }
                   type="button"
                   onClick={copyMarkdown}
                   className="text-[11px] font-medium px-2 py-0.5 rounded-md text-agora-700 dark:text-agora-300 hover:bg-agora-100/70 dark:hover:bg-agora-900/40 transition-colors focus-ring"
+                  aria-label="Copy digest as Markdown"
                   title="Copy digest as Markdown"
                 >
                   {copied ? "Copied ✓" : "Copy MD"}
@@ -175,6 +176,7 @@ export default function DigestBanner({ projectId, projectName, compact = false }
                   type="button"
                   onClick={downloadMarkdown}
                   className="text-[11px] font-medium px-2 py-0.5 rounded-md text-agora-700 dark:text-agora-300 hover:bg-agora-100/70 dark:hover:bg-agora-900/40 transition-colors focus-ring"
+                  aria-label="Download digest as a Markdown file"
                   title="Download digest as a .md file"
                 >
                   Download

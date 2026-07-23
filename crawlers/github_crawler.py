@@ -6,11 +6,12 @@ Uses GitHub GraphQL API. Incremental: only fetches items updated since last run.
 from __future__ import annotations
 import os
 import re
+import time
 import logging
 from datetime import datetime, timezone
 from typing import Optional
-import requests
 
+from crawlers._http import get_session
 from crawlers.link_extractor import extract_links
 
 logger = logging.getLogger(__name__)
@@ -25,8 +26,8 @@ def _headers() -> dict:
     return {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
 
-def _graphql(query: str, variables: dict) -> dict:
-    resp = requests.post(
+def _graphql(query: str, variables: dict, _attempt: int = 0) -> dict:
+    resp = get_session().post(
         GITHUB_API,
         json={"query": query, "variables": variables},
         headers=_headers(),
@@ -35,7 +36,16 @@ def _graphql(query: str, variables: dict) -> dict:
     resp.raise_for_status()
     data = resp.json()
     if "errors" in data:
-        raise RuntimeError(f"GraphQL errors: {data['errors']}")
+        errors = data["errors"]
+        # GraphQL rate-limit / transient errors return HTTP 200 with an errors block
+        # (so the HTTP retry adapter never sees them). Back off and retry a few times.
+        types = {e.get("type") for e in errors if isinstance(e, dict)}
+        if types & {"RATE_LIMITED", "SERVICE_UNAVAILABLE"} and _attempt < 4:
+            wait = 30 * (_attempt + 1)
+            logger.warning(f"GraphQL {types} — backing off {wait}s (attempt {_attempt + 1}/4)")
+            time.sleep(wait)
+            return _graphql(query, variables, _attempt + 1)
+        raise RuntimeError(f"GraphQL errors: {errors}")
     return data["data"]
 
 
@@ -231,7 +241,7 @@ def crawl_releases(project_config: dict, since: Optional[str] = None) -> list[di
         return []
     project_id = project_config["id"]
 
-    resp = requests.get(
+    resp = get_session().get(
         f"https://api.github.com/repos/{repo}/releases",
         params={"per_page": 50},
         headers=_headers(),

@@ -35,6 +35,11 @@ permissions:
   contents: write  # needed to commit updated data/
   models: read     # needed to access github_models
 
+# Never let two crawls race on the same branch push (cron + manual dispatch overlap).
+concurrency:
+  group: crawl
+  cancel-in-progress: false
+
 jobs:
   crawl:
     runs-on: ubuntu-latest
@@ -108,5 +113,8 @@ jobs:
           else
             # Note: no [skip ci] — we want the deploy workflow to trigger on data changes
             git commit -m "chore: update crawled data $(date -u +%Y-%m-%d)"
+            # Rebase onto any commits that landed while the (possibly long) crawl ran,
+            # so an unattended push doesn't fail on a fast-forward rejection.
+            git pull --rebase origin "${GITHUB_REF_NAME}" || true
             git push
           fi

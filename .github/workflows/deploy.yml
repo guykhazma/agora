@@ -29,6 +29,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Generate derived site data (index.json + feed.xml)
+        # Pure-stdlib; builds slim per-project index + RSS feed from proposals.json.
+        # Regenerated on every deploy so the site stays fast and the feed stays fresh.
+        run: python scripts/build_site_data.py
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:

@@ -14,6 +14,7 @@ import {
   parseEventInstant,
 } from "../lib/eventTime";
 import { cleanTitle } from "../lib/utils";
+import { usePreviousVisit } from "../lib/prefs";
 import DigestBanner from "./DigestBanner";
 import InitiativeDetail from "./InitiativeDetail";
 import ProposalDetail from "./ProposalDetail";
@@ -213,6 +214,16 @@ export default function HomeView({ project, proposals, onSelect, onViewActivity,
     return m;
   }, [proposals]);
 
+  // "What's new since you were last here" — items updated after the previous visit.
+  const previousVisit = usePreviousVisit(project?.id);
+  const newSinceVisit = useMemo(() => {
+    if (!previousVisit) return [];
+    return proposals
+      .filter(p => p.updated_at && new Date(p.updated_at).getTime() > previousVisit)
+      .sort((a, b) => (b.updated_at || "").localeCompare(a.updated_at || ""))
+      .slice(0, 8);
+  }, [proposals, previousVisit]);
+
   const { votes, recentItems, syncDoc } = useMemo(() => {
     const sorted = [...proposals].sort((a, b) =>
       (b.updated_at || "").localeCompare(a.updated_at || "")
@@ -260,7 +271,32 @@ export default function HomeView({ project, proposals, onSelect, onViewActivity,
 
       {/* ── TOP: Digest + info strip ── */}
       <div className="space-y-3">
-        <DigestBanner projectId={project?.id} compact={false} />
+        <DigestBanner projectId={project?.id} projectName={project?.name} compact={false} />
+
+        {/* What's new since your last visit */}
+        {newSinceVisit.length > 0 && (
+          <div className="bg-white/90 dark:bg-gray-900/90 border border-agora-200/80 dark:border-agora-800/60 border-l-4 border-l-agora-500 rounded-2xl px-4 py-3 shadow-sm">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-xs font-semibold text-agora-600 dark:text-agora-400 uppercase tracking-wider">
+                ✨ {newSinceVisit.length} update{newSinceVisit.length !== 1 ? "s" : ""} since your last visit
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {newSinceVisit.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setSelectedProposal(p)}
+                  className="max-w-full text-left text-xs px-2 py-1 rounded-lg bg-agora-50/70 dark:bg-agora-900/20 hover:bg-agora-100 dark:hover:bg-agora-900/40 text-agora-800 dark:text-agora-200 truncate transition-colors focus-ring"
+                  title={cleanTitle(p.title)}
+                >
+                  <span className="opacity-60 mr-1">{relativeTime(p.updated_at)}</span>
+                  {cleanTitle(p)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Community sync + upcoming events side by side */}
         {(syncDoc || upcomingEvents.length > 0) && (
@@ -457,6 +493,7 @@ export default function HomeView({ project, proposals, onSelect, onViewActivity,
     {selectedProposal && (
       <ProposalDetail
         proposal={selectedProposal}
+        projectId={project?.id}
         onClose={() => setSelectedProposal(null)}
         onSelect={setSelectedProposal}
         allProposals={proposals}

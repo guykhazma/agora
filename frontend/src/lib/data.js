@@ -21,6 +21,47 @@ export async function fetchProposals(projectId) {
   return data;
 }
 
+/**
+ * Load the lightweight per-project index (list/feed/home views).
+ * `index.json` is generated at deploy time from proposals.json with the heavy
+ * `body` field stripped (~45% smaller). Falls back to the full proposals.json
+ * when the index is absent (e.g. local dev before running build_site_data.py),
+ * so nothing breaks either way. Same shape: `{ proposals: [...] }`.
+ */
+export async function fetchProjectIndex(projectId) {
+  try {
+    return await fetchJSON(`/data/${projectId}/index.json`);
+  } catch {
+    return fetchProposals(projectId);
+  }
+}
+
+// Lazy full-detail cache: the full proposals.json (with `body`) is fetched at most
+// once per project, only when a user actually opens an item's detail panel.
+const _fullProposalsCache = new Map();
+
+export function loadFullProposals(projectId) {
+  if (!_fullProposalsCache.has(projectId)) {
+    _fullProposalsCache.set(
+      projectId,
+      fetchProposals(projectId)
+        .then((d) => {
+          const map = new Map();
+          for (const p of d.proposals || []) map.set(p.id, p);
+          return map;
+        })
+        .catch(() => new Map()) // detail body is best-effort; preview still shows
+    );
+  }
+  return _fullProposalsCache.get(projectId);
+}
+
+/** Resolve one full proposal (with `body`) by id — for the detail panel. */
+export async function loadFullProposal(projectId, id) {
+  const map = await loadFullProposals(projectId);
+  return map.get(id) || null;
+}
+
 export async function fetchInitiatives(projectId) {
   try {
     const data = await fetchJSON(`/data/${projectId}/initiatives.json`);
@@ -52,7 +93,9 @@ export function matchesGlobalSearch(proposal, queryRaw) {
   if (hay(p.llm_title)) return true;
   if (hay(p.llm_summary)) return true;
   if (hay(p.author)) return true;
+  // `body` is present only on fully-loaded rows; index rows carry `body_preview`.
   if (hay(p.body)) return true;
+  if (hay(p.body_preview)) return true;
   if (hay(p.url)) return true;
   if (hay(p.source)) return true;
   if (hay(p.kind)) return true;

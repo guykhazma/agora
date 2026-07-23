@@ -1,6 +1,6 @@
 # Quickstart
 
-**Prerequisites:** Python 3.10+, Node 18+ or [Bun](https://bun.sh), a GitHub token
+**Prerequisites:** Python 3.10+, [Bun](https://bun.sh), a GitHub token
 
 ```bash
 git clone https://github.com/guykhazma/agora
@@ -22,9 +22,9 @@ python scripts/crawl.py --project iceberg             # enrich with LLM summarie
 
 # 4. Frontend
 cd frontend
-bun install          # or: npm install
+bun install
 ln -sf ../../data public/data
-bun dev              # or: npm run dev
+bun dev
 # → http://localhost:5173
 ```
 
@@ -43,6 +43,21 @@ python scripts/generate_digest.py --project iceberg
 ```
 
 Requires the same LLM API key env vars as a normal crawl.
+
+## Derived site data (index.json + RSS feed)
+
+The dashboard loads a slim `data/<id>/index.json` (the full `proposals.json` minus the
+heavy `body` field, ~45% smaller) and a subscribable `data/<id>/feed.xml`. Both are
+generated from `proposals.json` — no extra crawl:
+
+```bash
+python scripts/build_site_data.py                 # all projects
+python scripts/build_site_data.py --project spark  # one project
+```
+
+These are **regenerated automatically at deploy time** and are gitignored, so you only
+need to run this locally if you want the exact production payloads. Local `bun dev` works
+without it — the frontend falls back to `proposals.json` when `index.json` is absent.
 
 ## Re-enrich without re-crawling
 
@@ -72,7 +87,7 @@ Deleting only `state.json` without `--reset` does **not** remove old proposals �
 
 ## Deploying to GitHub Pages
 
-The repo uses **GitHub Actions** (`.github/workflows/deploy.yml`): on push to `main` that touches `frontend/**` or `data/**`, it copies `data/` into `frontend/public/data`, runs `npm run build`, and publishes `frontend/dist` to Pages.
+The repo uses **GitHub Actions** (`.github/workflows/deploy.yml`): on push to `main` that touches `frontend/**` or `data/**`, it copies `data/` into `frontend/public/data`, runs `bun run build`, and publishes `frontend/dist` to Pages.
 
 - In the repo, set **Settings → Pages** source to **GitHub Actions**.
 - If the site is not at the domain root, add a repository variable **`VITE_BASE_PATH`** (e.g. `/agora/`) — same value you’d use locally.

@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from "react";
-import { STATUS_META, SOURCE_META, getStatus, relativeTime } from "../lib/data";
+import { useEffect, useMemo, useState } from "react";
+import { STATUS_META, SOURCE_META, getStatus, relativeTime, loadFullProposal } from "../lib/data";
 import { cleanTitle } from "../lib/utils";
 
 const LINK_META = {
@@ -12,7 +12,9 @@ const LINK_META = {
 
 const GROUP_ORDER = ["Design Documents", "Related Work"];
 
-export default function ProposalDetail({ proposal: p, onClose, onSelect, allProposals = [] }) {
+export default function ProposalDetail({ proposal: p, projectId, onClose, onSelect, allProposals = [] }) {
+  // Index rows omit the heavy `body`; fetch the full text lazily on open.
+  const [lazyBody, setLazyBody] = useState(null);
   useEffect(() => {
     const handler = (e) => {
       if (e.key === "Escape") onClose?.();
@@ -21,7 +23,22 @@ export default function ProposalDetail({ proposal: p, onClose, onSelect, allProp
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
+  useEffect(() => {
+    let alive = true;
+    setLazyBody(null);
+    if (p && projectId && p.body == null) {
+      loadFullProposal(projectId, p.id).then((full) => {
+        if (alive && full?.body) setLazyBody(full.body);
+      });
+    }
+    return () => { alive = false; };
+  }, [p?.id, projectId, p?.body]);
+
   if (!p) return null;
+
+  // Full body when loaded, else the short preview from the index (so the panel
+  // always shows something without waiting on the lazy fetch).
+  const bodyText = p.body ?? lazyBody ?? p.body_preview ?? "";
 
   const status     = getStatus(p);
   const statusMeta = STATUS_META[status] || STATUS_META.discussion;
@@ -220,13 +237,13 @@ export default function ProposalDetail({ proposal: p, onClose, onSelect, allProp
             </section>
           )}
 
-          {p.body && (
+          {bodyText && (
             <section>
               <h3 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
                 Original
               </h3>
               <pre className="text-xs text-gray-500 dark:text-gray-400 whitespace-pre-wrap leading-relaxed bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded p-3 max-h-48 overflow-y-auto">
-                {p.body}
+                {bodyText}
               </pre>
             </section>
           )}

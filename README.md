@@ -40,15 +40,21 @@ Open-source communities have the same problem as a city without a town square: d
 
 **Docs** — design documents and Google Docs extracted from discussions, grouped by topic and sorted by date
 
+**Follow along** — ★ star anything to build a personal watchlist, see *what changed since your last visit*, subscribe to a per-project **RSS feed**, and copy the digest as Markdown. All client-side / static — no account, no server.
+
 ---
 
 ## Currently tracking
 
 | Project | Sources |
 |---------|---------|
-| [Apache Iceberg](https://iceberg.apache.org) | GitHub issues, PRs & discussions · dev@ mailing list · YouTube community syncs · Releases & milestones · Community calendar |
+| [Apache Iceberg](https://iceberg.apache.org) | GitHub issues, PRs & discussions · dev@ mailing list · YouTube community syncs · Releases & milestones · Community calendars |
+| [Apache Spark](https://spark.apache.org) | dev@ mailing list (SPIP votes & discussions) · GitHub releases & milestones |
+| [Apache Parquet](https://parquet.apache.org) | dev@ mailing list (governance) · GitHub issues, PRs, releases & milestones (`parquet-java`) |
 
-**Want to add a project?** It's [one YAML file](#adding-a-project).
+Governance-heavy lists (like Spark's) use a `mailing_list.thread_prefixes` filter so only `[VOTE]` / `[DISCUSS]` / `[SPIP]`-style threads are ingested — signal, not support noise.
+
+**Want to add a project?** It's [one YAML file](#adding-a-project) — the daily crawl picks it up automatically.
 
 ---
 
@@ -68,9 +74,11 @@ mailing_list:
   pony_mail_list: dev
   pony_mail_domain: my-project.apache.org
   history_start: "2024-01"   # full backfill from this month when state is empty / --reset
+  # For a high-volume list, keep only governance threads (omit to ingest everything):
+  thread_prefixes: ["[VOTE]", "[DISCUSS]", "[PROPOSAL]", "[RESULT]", "[ANNOUNCE"]
 ```
 
-For all available fields and how the pipeline works, see [ARCHITECTURE.md](ARCHITECTURE.md).
+See [`projects/spark.yaml`](projects/spark.yaml) and [`projects/parquet.yaml`](projects/parquet.yaml) for real-world examples, and [ARCHITECTURE.md](ARCHITECTURE.md) for all available fields and how the pipeline works.
 
 ---
 

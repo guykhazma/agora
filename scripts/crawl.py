@@ -713,15 +713,28 @@ def main():
             calendar_crawler.crawl_events(config, pid)
         return
 
+    # Per-project isolation: one project failing (rate limit, a bad source, an
+    # unreachable list) must NOT abort the others. Critical for unattended cron
+    # runs across many projects — the daily job should still refresh everything it
+    # can and only report failure at the end.
+    failures: list[str] = []
     for pid in project_ids:
-        if args.re_enrich:
-            re_enrich_project(pid)
-        else:
-            if args.reset:
-                clear_project_outputs(pid)
-                save_state(pid, {"last_crawled_at": None})
-                logger.info(f"Fresh crawl for {pid}: cleared cached data and reset state")
-            crawl_project(pid, use_llm=not args.no_llm)
+        try:
+            if args.re_enrich:
+                re_enrich_project(pid)
+            else:
+                if args.reset:
+                    clear_project_outputs(pid)
+                    save_state(pid, {"last_crawled_at": None})
+                    logger.info(f"Fresh crawl for {pid}: cleared cached data and reset state")
+                crawl_project(pid, use_llm=not args.no_llm)
+        except Exception:
+            logger.exception(f"Project '{pid}' failed — continuing with remaining projects")
+            failures.append(pid)
+
+    if failures:
+        logger.error(f"Completed with {len(failures)} failed project(s): {', '.join(failures)}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

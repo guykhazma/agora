@@ -12,28 +12,34 @@ import ProposalDetail from "./ProposalDetail";
 import InitiativesView from "./InitiativesView";
 import { useProposalKeyboard } from "../lib/useKeyboard";
 import { useWatchlist } from "../lib/prefs";
+import { useHashRoute } from "../lib/useHashRoute";
+import { useDebouncedValue } from "../lib/useDebouncedValue";
 import { GlobeIcon, GitHubIcon, MailIcon, YouTubeIcon, SlackIcon } from "./Icons";
 
 const VIEWS = ["home", "topics", "activity", "docs", "events"];
 
-export default function Dashboard({ project, view, setView }) {
+export default function Dashboard({ project }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [initiativesCount, setInitiativesCount] = useState(null);
-  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const search = useDebouncedValue(searchInput, 200);
   const [filterStatus, setFilterStatus] = useState(null);
   const [filterSource, setFilterSource] = useState(null);
   const [filterType, setFilterType] = useState(null);
-  const [selected, setSelected] = useState(null);
   const [activityLayout, setActivityLayout] = useState("grouped"); // "grouped" | "kanban"
   const [starredOnly, setStarredOnly] = useState(false);
   const { ids: watchIds, count: watchCount } = useWatchlist();
 
+  // Route is the single source of truth for the active tab + open detail.
+  const [route, setRoute] = useHashRoute();
+  const view = VIEWS.includes(route.tab) ? route.tab : "home";
+  const setView = (v) => setRoute({ tab: v, item: null, init: null });
+
   useEffect(() => {
     setLoading(true);
     setError(null);
-    setSelected(null);
     setInitiativesCount(null);
     fetchProjectIndex(project.id)
       .then(setData)
@@ -43,6 +49,11 @@ export default function Dashboard({ project, view, setView }) {
   }, [project.id]);
 
   const proposals = data?.proposals || [];
+
+  // Open proposal detail is driven by the hash (?item=). Resolve id → row.
+  const openProposal = (p) => setRoute({ item: p?.id || null });
+  const closeProposal = () => setRoute({ item: null });
+  const selected = route.item ? proposals.find((p) => p.id === route.item) || null : null;
 
   // Build set of initiative IDs that span multiple sources (for cross-source badges)
   const crossSourceInitIds = useMemo(() => {
@@ -79,8 +90,8 @@ export default function Dashboard({ project, view, setView }) {
   useProposalKeyboard({
     proposals: filtered,
     selected,
-    onSelect: setSelected,
-    onClose: () => setSelected(null),
+    onSelect: openProposal,
+    onClose: closeProposal,
   });
 
   if (loading) return (
@@ -97,7 +108,7 @@ export default function Dashboard({ project, view, setView }) {
   const filtersActive = !!(search.trim() || filterStatus || filterSource || filterType || starredOnly);
 
   function clearFilters() {
-    setSearch("");
+    setSearchInput("");
     setFilterStatus(null);
     setFilterSource(null);
     setFilterType(null);
@@ -129,7 +140,7 @@ export default function Dashboard({ project, view, setView }) {
             )}
             <div className="min-w-0">
               <button
-                onClick={() => { setView("home"); setSelected(null); }}
+                onClick={() => setView("home")}
                 className="text-base font-semibold text-gray-900 dark:text-white hover:text-agora-600 dark:hover:text-agora-400 transition-colors text-left leading-tight"
               >
                 {project.name}
@@ -218,8 +229,8 @@ export default function Dashboard({ project, view, setView }) {
         <div className="flex flex-wrap items-center gap-2 pb-3">
           <SearchBar
             id="global-search"
-            value={search}
-            onChange={setSearch}
+            value={searchInput}
+            onChange={setSearchInput}
             placeholder="Search all sources — GitHub, mailing list, video, docs, links…"
             onSubmit={scrollToSearchResults}
           />
@@ -313,7 +324,7 @@ export default function Dashboard({ project, view, setView }) {
               No proposals match “{search.trim()}”. Try other keywords or check linked URLs in the thread body.
             </p>
           ) : (
-            <TypeGroupedView proposals={filtered} onSelect={setSelected} crossSourceInitIds={crossSourceInitIds} />
+            <TypeGroupedView proposals={filtered} onSelect={openProposal} crossSourceInitIds={crossSourceInitIds} />
           )}
         </div>
       ) : null}
@@ -322,28 +333,28 @@ export default function Dashboard({ project, view, setView }) {
         <HomeView
           project={project}
           proposals={proposals}
-          onSelect={setSelected}
+          onSelect={openProposal}
           onViewActivity={() => setView("activity")}
           onViewEvents={() => setView("events")}
         />
       ) : view === "topics" ? (
-        <InitiativesView project={project} searchQuery={search} />
+        <InitiativesView project={project} searchQuery={search} onSelect={openProposal} />
       ) : view === "events" ? (
         <EventsView projectId={project.id} />
       ) : view === "docs" ? (
-        <DocsView proposals={filtered} onSelect={setSelected} />
+        <DocsView proposals={filtered} onSelect={openProposal} />
       ) : (
         /* activity — all items with filters + sidebar feed */
         activityLayout === "kanban" ? (
-          <KanbanBoard proposals={filtered} onSelect={setSelected} />
+          <KanbanBoard proposals={filtered} onSelect={openProposal} />
         ) : (
           <div className="flex flex-col lg:flex-row gap-8 items-start">
             <div className="flex-1 min-w-0">
-              <TypeGroupedView proposals={filtered} onSelect={setSelected} crossSourceInitIds={crossSourceInitIds} />
+              <TypeGroupedView proposals={filtered} onSelect={openProposal} crossSourceInitIds={crossSourceInitIds} />
             </div>
             {proposals.length > 0 && (
               <div className="w-full lg:w-auto">
-                <ActivityFeed proposals={proposals} onSelect={setSelected} crossSourceInitIds={crossSourceInitIds} />
+                <ActivityFeed proposals={proposals} onSelect={openProposal} crossSourceInitIds={crossSourceInitIds} />
               </div>
             )}
           </div>
@@ -351,7 +362,7 @@ export default function Dashboard({ project, view, setView }) {
       )}
 
       {selected && (
-        <ProposalDetail proposal={selected} projectId={project.id} onClose={() => setSelected(null)} onSelect={setSelected} allProposals={proposals} />
+        <ProposalDetail proposal={selected} projectId={project.id} onClose={closeProposal} onSelect={openProposal} allProposals={proposals} />
       )}
     </>
   );

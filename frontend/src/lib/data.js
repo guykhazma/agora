@@ -3,12 +3,17 @@
  * All data lives in /data/ (static JSON files).
  */
 
-const BASE = import.meta.env.VITE_BASE_PATH?.replace(/\/$/, "") || "";
+export const BASE = import.meta.env.VITE_BASE_PATH?.replace(/\/$/, "") || "";
 
 async function fetchJSON(path) {
   const res = await fetch(`${BASE}${path}`, { cache: "no-store" });
   if (!res.ok) throw new Error(`Failed to fetch ${path}: ${res.status}`);
   return res.json();
+}
+
+/** Absolute URL to the per-project RSS feed (respects the deploy base path). */
+export function feedUrl(projectId) {
+  return `${BASE}/data/${projectId}/feed.xml`;
 }
 
 export async function fetchProjects() {
@@ -28,12 +33,21 @@ export async function fetchProposals(projectId) {
  * when the index is absent (e.g. local dev before running build_site_data.py),
  * so nothing breaks either way. Same shape: `{ proposals: [...] }`.
  */
-export async function fetchProjectIndex(projectId) {
-  try {
-    return await fetchJSON(`/data/${projectId}/index.json`);
-  } catch {
-    return fetchProposals(projectId);
+// Module-level per-project promise caches. Data is regenerated at deploy time, so
+// within a single session repeated calls for the same project can safely dedupe.
+// Keyed by projectId, so switching projects still fetches fresh data.
+const _indexCache = new Map();
+const _initiativesCache = new Map();
+const _eventsCache = new Map();
+
+export function fetchProjectIndex(projectId) {
+  if (!_indexCache.has(projectId)) {
+    _indexCache.set(
+      projectId,
+      fetchJSON(`/data/${projectId}/index.json`).catch(() => fetchProposals(projectId))
+    );
   }
+  return _indexCache.get(projectId);
 }
 
 // Lazy full-detail cache: the full proposals.json (with `body`) is fetched at most
@@ -62,22 +76,38 @@ export async function loadFullProposal(projectId, id) {
   return map.get(id) || null;
 }
 
-export async function fetchInitiatives(projectId) {
-  try {
-    const data = await fetchJSON(`/data/${projectId}/initiatives.json`);
-    return data;
-  } catch {
-    return { initiatives: [], total: 0 };
+export function fetchInitiatives(projectId) {
+  if (!_initiativesCache.has(projectId)) {
+    _initiativesCache.set(
+      projectId,
+      fetchJSON(`/data/${projectId}/initiatives.json`).catch(() => ({ initiatives: [], total: 0 }))
+    );
   }
+  return _initiativesCache.get(projectId);
 }
 
-export async function fetchEvents(projectId) {
-  try {
-    const data = await fetchJSON(`/data/${projectId}/events.json`);
-    return data;
-  } catch {
-    return { events: [], calendar_urls: [] };
+export function fetchEvents(projectId) {
+  if (!_eventsCache.has(projectId)) {
+    _eventsCache.set(
+      projectId,
+      fetchJSON(`/data/${projectId}/events.json`).catch(() => ({ events: [], calendar_urls: [] }))
+    );
   }
+  return _eventsCache.get(projectId);
+}
+
+// Per-source pipeline health lives in one top-level file. Fetched at most once
+// per session; absent file (404) yields null so the UI can render nothing.
+let _healthPromise;
+export async function fetchHealth(projectId) {
+  if (_healthPromise === undefined) {
+    _healthPromise = fetchJSON(`/data/health.json`).catch(() => null);
+  }
+  const data = await _healthPromise;
+  if (!data || !data.projects) return null;
+  const entry = data.projects[projectId];
+  if (!entry) return null;
+  return { ...entry, generated_at: data.generated_at || null };
 }
 
 /**
@@ -154,6 +184,7 @@ export const SOURCE_META = {
   mailing_list: { label: "Mailing List", color: "bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300" },
   youtube:      { label: "Video",        color: "bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-300" },
   google_doc:   { label: "Sync Notes",   color: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
+  jira:         { label: "JIRA",         color: "bg-sky-50 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300" },
 };
 
 export function getStatus(proposal) {
@@ -196,6 +227,8 @@ export function getItemType(proposal) {
   if (proposal.source === "google_doc") return "doc";
   if (proposal.kind === "pr") return "pr";
   if (proposal.kind === "discussion") return "discussion";
+  // JIRA is only crawled for SPIP-labelled issues, so every JIRA row is a proposal.
+  if (proposal.source === "jira") return "proposal";
   // Mailing list threads without a tag prefix are discussions
   if (proposal.source === "mailing_list") return "discussion";
   return "other";

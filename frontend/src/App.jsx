@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { fetchProjects } from "./lib/data";
+import { useHashRoute } from "./lib/useHashRoute";
 import Header from "./components/Header";
 import ProjectSelector from "./components/ProjectSelector";
 import Dashboard from "./components/Dashboard";
@@ -10,14 +11,13 @@ export function useTheme() { return useContext(ThemeContext); }
 
 export default function App() {
   const [projects, setProjects] = useState([]);
-  const [activeProjectId, setActiveProjectId] = useState(null);
-  const [view, setView] = useState("home");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [loadAttempt, setLoadAttempt] = useState(0);
   const [dark, setDark] = useState(
     () => localStorage.getItem("agora-theme") === "dark"
   );
+  const [route, setRoute] = useHashRoute();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
@@ -26,25 +26,29 @@ export default function App() {
 
   useEffect(() => {
     fetchProjects()
-      .then((ps) => {
-        setProjects(ps);
-        if (ps.length > 0) setActiveProjectId(ps[0].id);
-      })
+      .then((ps) => setProjects(ps))
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-  }, []);
+  }, [loadAttempt]);
 
-  // Reset to home when project changes
+  // The active project is whatever the hash points at, if it's a known project.
+  const activeProject = projects.find((p) => p.id === route.projectId) || null;
+  const activeProjectId = activeProject?.id || null;
+
+  // Normalize the URL to the first project when the hash names no/unknown project.
   useEffect(() => {
-    setView("home");
-  }, [activeProjectId]);
-
-  const activeProject = projects.find((p) => p.id === activeProjectId);
+    if (projects.length > 0 && !activeProject) {
+      setRoute(
+        { projectId: projects[0].id, tab: null, item: null, init: null },
+        { replace: true }
+      );
+    }
+  }, [projects, activeProject, setRoute]);
 
   return (
     <ThemeContext.Provider value={{ dark, toggle: () => setDark((d) => !d) }}>
       <div className="min-h-screen flex flex-col">
-        <Header onHome={() => setView("home")} />
+        <Header onHome={() => setRoute({ tab: "home", item: null, init: null })} />
 
         {loading && (
           <div className="flex-1 flex flex-col items-center justify-center gap-5 px-6 py-20 fade-in">
@@ -83,14 +87,12 @@ export default function App() {
             <ProjectSelector
               projects={projects}
               activeId={activeProjectId}
-              onChange={setActiveProjectId}
+              onChange={(id) => setRoute({ projectId: id, tab: null, item: null, init: null })}
             />
             {activeProject && (
               <Dashboard
                 project={activeProject}
                 key={activeProject.id}
-                view={view}
-                setView={setView}
               />
             )}
           </main>

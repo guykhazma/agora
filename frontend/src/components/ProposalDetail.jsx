@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef, useId } from "react";
 import { STATUS_META, SOURCE_META, getStatus, relativeTime, loadFullProposal } from "../lib/data";
 import { cleanTitle } from "../lib/utils";
+import { useFocusTrap } from "../lib/useFocusTrap";
 
 const LINK_META = {
   google_doc:   { label: "Design Doc",   group: "Design Documents" },
@@ -15,6 +16,9 @@ const GROUP_ORDER = ["Design Documents", "Related Work"];
 export default function ProposalDetail({ proposal: p, projectId, onClose, onSelect, allProposals = [] }) {
   // Index rows omit the heavy `body`; fetch the full text lazily on open.
   const [lazyBody, setLazyBody] = useState(null);
+  const panelRef = useRef(null);
+  const titleId = useId();
+  useFocusTrap(panelRef);
   useEffect(() => {
     const handler = (e) => {
       if (e.key === "Escape") onClose?.();
@@ -34,6 +38,18 @@ export default function ProposalDetail({ proposal: p, projectId, onClose, onSele
     return () => { alive = false; };
   }, [p?.id, projectId, p?.body]);
 
+  // LLM-free: find other proposals referencing the same docs. Computed before the
+  // early return so the hook order stays stable; guards against a null proposal.
+  const relatedByDoc = useMemo(() => {
+    const myLinks = p?.linked_resources || [];
+    if (!p || !myLinks.length || !allProposals.length) return [];
+    const myUrls = new Set(myLinks.map(l => l.url.split("?")[0]));
+    return allProposals.filter(other => {
+      if (other.id === p.id) return false;
+      return (other.linked_resources || []).some(l => myUrls.has(l.url.split("?")[0]));
+    }).slice(0, 5);
+  }, [p, allProposals]);
+
   if (!p) return null;
 
   // Full body when loaded, else the short preview from the index (so the panel
@@ -48,25 +64,23 @@ export default function ProposalDetail({ proposal: p, projectId, onClose, onSele
   const topics     = p.llm_topics || [];
   const isStale    = _isStale(p.updated_at);
 
-  // LLM-free: find other proposals referencing the same docs
-  const relatedByDoc = useMemo(() => {
-    if (!links.length || !allProposals.length) return [];
-    const myUrls = new Set(links.map(l => l.url.split("?")[0]));
-    return allProposals.filter(other => {
-      if (other.id === p.id) return false;
-      return (other.linked_resources || []).some(l => myUrls.has(l.url.split("?")[0]));
-    }).slice(0, 5);
-  }, [links, allProposals, p.id]);
-
   return (
     <>
       <div className="fixed inset-0 bg-gray-900/40 dark:bg-black/50 backdrop-blur-[2px] z-40 transition-opacity" onClick={onClose} aria-hidden />
 
-      <div className="fixed right-0 top-0 h-full w-full max-w-lg bg-white/95 dark:bg-gray-950/95 backdrop-blur-md border-l border-gray-200/90 dark:border-gray-800 z-50 flex flex-col shadow-2xl shadow-gray-900/10 dark:shadow-black/40 overflow-hidden slide-in-right rounded-l-2xl">
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
+        className="fixed right-0 top-0 h-full w-full max-w-lg bg-white/95 dark:bg-gray-950/95 backdrop-blur-md border-l border-gray-200/90 dark:border-gray-800 z-50 flex flex-col shadow-2xl shadow-gray-900/10 dark:shadow-black/40 overflow-hidden slide-in-right rounded-l-2xl focus:outline-none"
+      >
         {/* Header */}
         <div className="flex items-start gap-3 px-5 py-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex-1 min-w-0">
             <a
+              id={titleId}
               href={p.url}
               target="_blank"
               rel="noreferrer"
@@ -283,6 +297,24 @@ function _isStale(updatedAt) {
   return (Date.now() - new Date(updatedAt).getTime()) / 86400000 > 90;
 }
 
+function VoteCloses({ closesAt }) {
+  const ms = new Date(closesAt).getTime() - Date.now();
+  if (Number.isNaN(ms)) return null;
+  const closed = ms <= 0;
+  const hours = Math.round(ms / 3600000);
+  const soon = !closed && hours <= 24;
+  const label = closed
+    ? "voting window has passed"
+    : hours < 48
+    ? `closes in ~${hours}h`
+    : `closes in ~${Math.round(hours / 24)}d`;
+  return (
+    <p className={`text-xs mb-2 ${soon ? "font-semibold" : "opacity-80"}`}>
+      ⏳ {label} <span className="opacity-70">(approx, from the vote window)</span>
+    </p>
+  );
+}
+
 function VoteTally({ vote }) {
   const result = vote.result || "open";
   const resultColor = result === "passed"
@@ -308,6 +340,7 @@ function VoteTally({ vote }) {
           {result === "passed" ? "PASSED" : result === "vetoed" ? "VETOED" : "IN PROGRESS"}
         </span>
       </div>
+      {result === "open" && vote.closes_at && <VoteCloses closesAt={vote.closes_at} />}
       {vote.voters?.length > 0 && (
         <div className="text-xs opacity-75 space-y-0.5">
           {vote.voters.slice(0, 5).map((v, i) => (

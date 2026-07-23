@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { fetchInitiatives, fetchProjectIndex, STATUS_META, SOURCE_META, relativeTime, matchesGlobalSearch } from "../lib/data";
 import { cleanTitle } from "../lib/utils";
 import { GitHubIcon, MailIcon, YouTubeIcon } from "./Icons";
-import ProposalDetail from "./ProposalDetail";
+import StarButton from "./StarButton";
 
 // Source icon component
 function SourceIcon({ source, className = "w-3 h-3" }) {
@@ -96,12 +96,11 @@ function SourceGroup({ source, items, onSelect, sharedDocs }) {
   );
 }
 
-export default function InitiativesView({ project, searchQuery = "" }) {
+export default function InitiativesView({ project, searchQuery = "", onSelect }) {
   const [initiatives, setInitiatives] = useState([]);
   const [proposalsById, setProposalsById] = useState({});
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(null);
-  const [selected, setSelected] = useState(null);
   const [showArchived, setShowArchived] = useState(false);
 
   useEffect(() => {
@@ -139,7 +138,11 @@ export default function InitiativesView({ project, searchQuery = "" }) {
     });
   }, [sorted, searchQuery, showArchived, proposalsById]);
 
-  if (loading) return <div className="text-gray-400 py-12 text-center text-sm">Loading…</div>;
+  if (loading) return (
+    <div className="space-y-2 fade-in">
+      {[1, 2, 3, 4, 5].map((i) => <div key={i} className="skeleton h-20 w-full rounded-2xl" />)}
+    </div>
+  );
 
   if (initiatives.length === 0) {
     return (
@@ -196,10 +199,12 @@ export default function InitiativesView({ project, searchQuery = "" }) {
                   : "border border-gray-200/90 dark:border-gray-700 hover:border-gray-300/90 dark:hover:border-gray-600"
               }`}
             >
-              <button
-                type="button"
-                className="w-full text-left px-5 py-4 focus-ring rounded-2xl"
+              <div
+                role="button"
+                tabIndex={0}
+                className="w-full text-left px-5 py-4 focus-ring rounded-2xl cursor-pointer"
                 onClick={() => setExpanded(isExpanded ? null : initiative.id)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded(isExpanded ? null : initiative.id); } }}
               >
                 {/* Source bridge — the hero element */}
                 {isCrossSource && (
@@ -211,6 +216,7 @@ export default function InitiativesView({ project, searchQuery = "" }) {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
+                      <StarButton id={initiative.id} className="text-sm" label="watchlist" />
                       <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                         {initiative.title}
                       </span>
@@ -245,7 +251,7 @@ export default function InitiativesView({ project, searchQuery = "" }) {
                     <span className="text-gray-300 dark:text-gray-600">{isExpanded ? "↑" : "↓"}</span>
                   </div>
                 </div>
-              </button>
+              </div>
 
               {isExpanded && (
                 <div className="border-t border-gray-100 dark:border-gray-800 px-5 py-5 bg-gray-50 dark:bg-gray-950 space-y-5">
@@ -290,7 +296,7 @@ export default function InitiativesView({ project, searchQuery = "" }) {
                           key={src}
                           source={src}
                           items={items}
-                          onSelect={setSelected}
+                          onSelect={onSelect}
                           sharedDocs={src === Object.keys(bySource)[0] ? initiative.shared_docs : null}
                         />
                       ))}
@@ -321,16 +327,6 @@ export default function InitiativesView({ project, searchQuery = "" }) {
           );
         })}
       </div>
-
-      {selected && (
-        <ProposalDetail
-          proposal={selected}
-          projectId={project.id}
-          onClose={() => setSelected(null)}
-          onSelect={setSelected}
-          allProposals={Object.values(proposalsById)}
-        />
-      )}
     </>
   );
 }

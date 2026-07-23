@@ -1,24 +1,7 @@
 import { STATUS_META, SOURCE_META, TYPE_META, getStatus, getItemType, relativeTime, isHot } from "../lib/data";
 import { cleanTitle } from "../lib/utils";
 import { useWatchlist } from "../lib/prefs";
-
-/** Star toggle used on cards. Stops propagation so it never opens the detail panel. */
-function StarButton({ id, starred, toggle, className = "" }) {
-  return (
-    <button
-      type="button"
-      onClick={(e) => { e.stopPropagation(); toggle(id); }}
-      aria-pressed={starred}
-      aria-label={starred ? "Remove from watchlist" : "Add to watchlist"}
-      title={starred ? "Remove from watchlist" : "Add to watchlist"}
-      className={`flex-shrink-0 leading-none px-0.5 rounded focus-ring transition-colors ${
-        starred ? "text-amber-400" : "text-gray-300 dark:text-gray-600 hover:text-amber-400"
-      } ${className}`}
-    >
-      ★
-    </button>
-  );
-}
+import StarButton from "./StarButton";
 
 const TYPE_BORDER = {
   vote:         "border-l-amber-400",

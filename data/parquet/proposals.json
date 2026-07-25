@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-07-24T08:45:53.413602+00:00",
+  "generated_at": "2026-07-25T08:19:31.030647+00:00",
   "total": 264,
   "proposals": [
     {
@@ -2261,7 +2261,7 @@
       "author": "Divjot Arora via dev <de...@parquet.apache.org>",
       "state": "open",
       "created_at": "2026-07-21T11:19:22+00:00",
-      "updated_at": "2026-07-24T03:21:22+00:00",
+      "updated_at": "2026-07-24T17:46:43+00:00",
       "body": "Hi folks,\n\nThe parquet-java project currently declares a dependency on a pinned\nversion of parquet-format and dynamically pulls in the parquet.thrift file\nfor the pinned version.\nThis makes it impossible to validate and merge PRs to support new features\nthat have been merged into parquet-format but are not yet part of an\nofficial parquet-format\nrelease (https://github.com/apache/parquet-java/pull/3610 is an example).\nIn contrast, the arrow-rs and arrow-cpp projects have a vendored copy of\nparquet.thrift in their\nrepos, which allows them to bypass this problem. What do folks think about\nadopting this vendored approach in parquet-java?\n\n-- Div Arora\n",
       "labels": [],
       "linked_resources": [
@@ -2272,8 +2272,8 @@
       ],
       "llm_summary": "Le 21/07/2026 \u00e0 14:05, Andrew Lamb a \u00e9crit\u00a0: > As a maintainer of arrow-rs 's Parquet implementation, my experience has > been that our copy of parquet.thrift (rather than a dependency) has worked > great, and we have never had an issue with this scheme that I can remember > Le 21/07/2026 \u00e0 14:05, Andrew Lamb a \u00e9crit : > > As a maintainer of arrow-rs 's Parquet implementation, my experience has > > been that our copy of parquet.thrift (rather than a dependency) has > worked > > great, and we have > Le 21/07/2026 \u00e0 14:05, Andrew Lamb a \u00e9crit : > > As a maintainer of arrow-rs 's Parquet implementation, my experience has > > been that our copy of parquet.thrift (rather than a dependency) has > worked > > great, and we have",
       "llm_status": "discussion",
-      "comment_count": 4,
-      "participant_count": 4,
+      "comment_count": 9,
+      "participant_count": 7,
       "llm_key_points": [
         "As a maintainer of arrow-rs 's Parquet implementation, my experience has\nbeen that our copy of parquet.thrift (rather th",
         "Le 21/07/2026 \u00e0 14:05, Andrew Lamb a \u00e9crit\u00a0:\n> As a maintainer of arrow-rs 's Parquet implementation, my experience has\n",
@@ -2286,6 +2286,7 @@
         "parquet-thrift"
       ],
       "_content_hash": "f987941778fa",
+      "llm_title": "",
       "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-17-1"
     },
     {
@@ -2580,6 +2581,7 @@
         "apache-spark",
         "spark"
       ],
+      "llm_title": "",
       "_content_hash": "418abbbc1b0c",
       "initiative_id": "parquet-init-parquet-ml-sy0bfyl0kv7p330j01q64wlogxqdy8w6"
     },
@@ -2627,6 +2629,7 @@
         "parquet"
       ],
       "_content_hash": "c427416152dc",
+      "llm_title": "",
       "initiative_id": "parquet-init-parquet-ml-jffqzp1hoh8vypffdrbjhotkn06zrxmf"
     },
     {
@@ -2677,7 +2680,7 @@
       ],
       "llm_summary": "However, since releasing a new version of the Parquet format and reviewing the Java PoC still requires time, I'm fine with skipping it. On Fri, Jul 17, 2026 at 6:10\u202fAM Kevin Liu <ke...@apache.org> wrote: > > +1 to the new release, but I would like to include this > forward-compatibility fix [1]. > > On Thu, 16 Jul 2026 at 18:16, Fokko Driesprong <fo...@apache.org> wrote: > > > Hey everyone, > > > > I got multiple folks asking for a release for both features, fixes an",
       "llm_status": "discussion",
-      "comment_count": 16,
+      "comment_count": 22,
       "participant_count": 7,
       "llm_key_points": [
         "I don't have the github access to add it to the issue, but I would suggest\nthis PR (full disclosure, it's my PR).",
@@ -2851,7 +2854,7 @@
       ],
       "llm_summary": "The team is discussing the performance of the PFOR encoding for numeric compression in parquet files. Initial comparisons show that PFOR has better decompression speed and compression ratio than other methods like DELTABITPACK and RLEBITPACKHYBRID. The team plans to expand testing with more datasets and develop a prototype in early January.",
       "llm_status": "discussion",
-      "comment_count": 7,
+      "comment_count": 9,
       "participant_count": 2,
       "llm_key_points": [
         "PFOR shows superior decompression speed",
@@ -3135,7 +3138,7 @@
       ],
       "llm_summary": "Vote VETOED \u2014 1 veto(es) recorded",
       "llm_status": "abandoned",
-      "comment_count": 11,
+      "comment_count": 12,
       "participant_count": 7,
       "vote_data": {
         "binding_plus1": 4,

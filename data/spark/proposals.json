@@ -1,7 +1,7 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-07-26T08:22:07.457892+00:00",
-  "total": 627,
+  "generated_at": "2026-07-27T09:47:20.749985+00:00",
+  "total": 629,
   "proposals": [
     {
       "id": "spark-jira-SPARK-58240",
@@ -30,7 +30,7 @@
         "unified"
       ],
       "_content_hash": "b6589fc6ab0d",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-jira-SPARK-56599",
@@ -108,7 +108,7 @@
         "spark-connect"
       ],
       "_content_hash": "e92de83ca329",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-jira-SPARK-56249",
@@ -243,7 +243,7 @@
         "data-authors"
       ],
       "_content_hash": "e48742805904",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-jira-SPARK-35801",
@@ -383,7 +383,7 @@
         "geospatial"
       ],
       "_content_hash": "f13b0907c319",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-jira-SPARK-51162",
@@ -617,7 +617,7 @@
         "spark-dataframes"
       ],
       "_content_hash": "001ad555ca35",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-jira-SPARK-24918",
@@ -704,7 +704,7 @@
         "accelerator-aware-task"
       ],
       "_content_hash": "85e275672969",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-jira-SPARK-25501",
@@ -866,7 +866,7 @@
         "apache-spark"
       ],
       "_content_hash": "78b1e7ceaf5f",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-jira-SPARK-51207",
@@ -1132,7 +1132,7 @@
         "analyzer"
       ],
       "_content_hash": "017ad709fa51",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-jira-SPARK-42485",
@@ -1223,7 +1223,7 @@
         "pandas"
       ],
       "_content_hash": "29883ba4ffc6",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-jira-SPARK-45511",
@@ -1386,7 +1386,7 @@
         "performance-improvement"
       ],
       "_content_hash": "9d9f4fb1df66",
-      "initiative_id": "spark-init-spark-jira-SPARK-42256"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-jira-SPARK-27067",
@@ -1638,7 +1638,149 @@
         "spark-sub-project"
       ],
       "_content_hash": "e46e418f4ebe",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-56978"
+    },
+    {
+      "id": "spark-ml-02525gm3m2wkc23kvp96l4ztvnpgo9ys",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[ANNOUNCE] Apache Spark K8s Operator 1.0.0 released",
+      "url": "https://lists.apache.org/thread/02525gm3m2wkc23kvp96l4ztvnpgo9ys",
+      "author": "Dongjoon Hyun <do...@apache.org>",
+      "state": "open",
+      "created_at": "2026-07-26T22:46:43+00:00",
+      "updated_at": "2026-07-26T22:52:12+00:00",
+      "body": "Hi all,\n\nOn behalf of the Apache Spark PMC, I am proud to announce the release\nof Apache Spark K8s Operator 1.0.0!\n\nThis is the first stable release of the Apache Spark K8s Operator, an\nofficial subproject of Apache Spark. It marks a major milestone for the\nSpark community: for the first time, the Apache Spark project itself\nprovides a complete, community-driven, vendor-neutral standard for\nrunning Spark on Kubernetes via the Operator pattern.\n\nBuilt on the Java Operator SDK and the Fabric8 Kubernetes client, the\noperator manages the full lifecycle of Spark workloads through two\nKubernetes custom resources:\n\n  - SparkApplication: submit and manage individual Spark applications\n    (Java/Scala, PySpark, and SQL) with a rich state machine covering\n    submission, execution, failure handling, retries, and resource\n    cleanup.\n  - SparkCluster: provision and operate standalone Spark clusters,\n    including Spark Connect servers, Spark History Server, and\n    Spark Thrift Server deployments, with StatefulSet-based masters\n    and workers and Horizontal Pod Autoscaler support.\n\nHighlights of 1.0.0:\n\n  - Supports Apache Spark 4.0 and above and\n    recent Kubernetes versions (1.34+ recommended).\n  - First-class Spark Connect support for next-generation\n    client-server Spark workloads.\n  - Helm-chart based installation, published on Artifact Hub, with\n    namespace-scoped RBAC and multi-namespace watching.\n  - Gateway API (HTTPRoute/GRPCRoute) integration for exposing\n    driver UIs and Spark Connect endpoints.\n  - Production-grade operations: metrics, health probes, leader\n    election, and extensive end-to-end test coverage via Chainsaw.\n\nJust as importantly, 1.0.0 was designed and verified as the hub of the\nbroader Apache Spark ecosystem. Out of the box, it ships with working\nexamples and e2e coverage for:\n\n  - Apache Iceberg table format with Spark Connect\n  - Apache Hadoop-compatible storage and S3-compatible object stores\n  - Apache DataFusion Comet and Apache Glute",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "- SparkApplication: submit and manage individual Spark applications (Java/Scala, PySpark, and SQL) with a rich state machine covering submission, execution, failure handling, retries, and resource cleanup. - Helm-chart based installation, published on Artifact Hub, with namespace-scoped RBAC and multi-namespace watching. - Production-grade operations: metrics, health probes, leader election, and extensive end-to-end test coverage via Chainsaw.",
+      "llm_status": "released",
+      "comment_count": 2,
+      "participant_count": 3,
+      "llm_key_points": [
+        "Great to see the 1.0 release out!"
+      ],
+      "llm_topics": [
+        "apache-spark",
+        "spark",
+        "spark-pmc",
+        "spark-connect"
+      ],
+      "_content_hash": "74bce4d333c9",
+      "initiative_id": "spark-init-spark-ml-02525gm3m2wkc23kvp96l4ztvnpgo9ys"
+    },
+    {
+      "id": "spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE][RESULT] Release Apache Spark K8s Operator 1.0.0 (RC1)",
+      "url": "https://lists.apache.org/thread/b4tqz1bhxjc6yvjmboq34gp0w3lnthyz",
+      "author": "Dongjoon Hyun <do...@apache.org>",
+      "state": "open",
+      "created_at": "2026-07-26T21:09:19+00:00",
+      "updated_at": "2026-07-26T21:09:19+00:00",
+      "body": "The vote passes with 8 +1s (5 binding +1s).\nThanks to all who helped with the release!\n\n(* = binding)\n+1:\n- Rich Bowen\n- Zhou Jiang\n- Peter Toth *\n- Yang Jie *\n- Dongjoon Hyun *\n- Liang-Chi Hsieh *\n- Uro\u0161 Bojani\u0107\n- Kousuke Saruta *\n\n+0: None\n\n-1: None\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "Vote VETOED \u2014 1 veto(es) recorded",
+      "llm_status": "abandoned",
+      "comment_count": 0,
+      "participant_count": 1,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 0,
+        "vetoes": 1,
+        "result": "vetoed",
+        "voters": [
+          {
+            "voter": "Dongjoon Hyun <do...@apache.org>",
+            "vote": "-1"
+          }
+        ]
+      },
+      "llm_key_points": [
+        "The vote passes with 8 +1s (5 binding +1s).",
+        "Voters include: Dongjoon Hyun..."
+      ],
+      "llm_topics": [
+        "apache-spark",
+        "release-apache",
+        "result",
+        "operator"
+      ],
+      "_content_hash": "96ce19c5e980",
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
+    },
+    {
+      "id": "spark-ml-g8b6fz8pt0pytz756psvvvqvsmn45l2v",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] Release Apache Spark K8s Operator 1.0.0 (RC1)",
+      "url": "https://lists.apache.org/thread/g8b6fz8pt0pytz756psvvvqvsmn45l2v",
+      "author": "Dongjoon Hyun <do...@apache.org>",
+      "state": "open",
+      "created_at": "2026-07-23T10:15:07+00:00",
+      "updated_at": "2026-07-26T21:02:58+00:00",
+      "body": "Please vote on releasing the following candidate as Apache Spark K8s\nOperator 1.0.0.\nThis vote is open for the next 72 hours and passes if a majority +1 PMC\nvotes are cast, with a minimum of 3 +1 votes.\n\n[ ] +1 Release this package as Apache Spark K8s Operator 1.0.0\n[ ] -1 Do not release this package because ...\n\nTAG:\nhttps://github.com/apache/spark-kubernetes-operator/releases/tag/1.0.0-rc.1\n(commit: d8b19438bd96c6c2f52ee58425ec192b6cc825fc)\n\nRELEASE FILES:\nhttps://dist.apache.org/repos/dist/dev/spark/spark-kubernetes-operator-1.0.0-rc.1/\n\nLIST OF ISSUES:\nhttps://github.com/apache/spark-kubernetes-operator/milestone/3\nhttps://issues.apache.org/jira/projects/SPARK/versions/12357043\n\nThanks,\nDongjoon.\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "Vote in progress: 0 binding +1, 8 non-binding +1",
+      "llm_status": "proposal",
+      "comment_count": 9,
+      "participant_count": 8,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 8,
+        "vetoes": 0,
+        "result": "open",
+        "voters": [
+          {
+            "voter": "\"L. C. Hsieh\" <vi...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Dongjoon Hyun <do...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Kousuke Saruta <sa...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Peter Toth <pe...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Rich Bowen <rb...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Uro\u0161 Bojani\u0107 <ur...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Yang Jie <ya...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Zhou Jiang <zh...@gmail.com>",
+            "vote": "+1"
+          }
+        ],
+        "closes_at": "2026-07-26T10:15:07+00:00"
+      },
+      "llm_key_points": [
+        "Please vote on releasing the following candidate as Apache Spark K8s\nOperator 1.0.0.",
+        "Voters include: \"L. C. Hsieh\", Dongjoon Hyun, Kousuke Saruta..."
+      ],
+      "llm_topics": [
+        "apache-spark",
+        "operator",
+        "spark",
+        "apache"
+      ],
+      "_content_hash": "2d7d6c8e98a1",
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-bqgj78q6o86psotdt8dkh0jl9dplbq1j",
@@ -1664,6 +1806,7 @@
         "spark-connect",
         "apache-spark"
       ],
+      "llm_title": "",
       "_content_hash": "8568c68154b6",
       "initiative_id": "spark-init-spark-ml-bqgj78q6o86psotdt8dkh0jl9dplbq1j"
     },
@@ -1777,77 +1920,6 @@
       "initiative_id": "spark-init-spark-ml-bqgj78q6o86psotdt8dkh0jl9dplbq1j"
     },
     {
-      "id": "spark-ml-g8b6fz8pt0pytz756psvvvqvsmn45l2v",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[VOTE] Release Apache Spark K8s Operator 1.0.0 (RC1)",
-      "url": "https://lists.apache.org/thread/g8b6fz8pt0pytz756psvvvqvsmn45l2v",
-      "author": "Dongjoon Hyun <do...@apache.org>",
-      "state": "open",
-      "created_at": "2026-07-23T10:15:07+00:00",
-      "updated_at": "2026-07-25T08:22:56+00:00",
-      "body": "Please vote on releasing the following candidate as Apache Spark K8s\nOperator 1.0.0.\nThis vote is open for the next 72 hours and passes if a majority +1 PMC\nvotes are cast, with a minimum of 3 +1 votes.\n\n[ ] +1 Release this package as Apache Spark K8s Operator 1.0.0\n[ ] -1 Do not release this package because ...\n\nTAG:\nhttps://github.com/apache/spark-kubernetes-operator/releases/tag/1.0.0-rc.1\n(commit: d8b19438bd96c6c2f52ee58425ec192b6cc825fc)\n\nRELEASE FILES:\nhttps://dist.apache.org/repos/dist/dev/spark/spark-kubernetes-operator-1.0.0-rc.1/\n\nLIST OF ISSUES:\nhttps://github.com/apache/spark-kubernetes-operator/milestone/3\nhttps://issues.apache.org/jira/projects/SPARK/versions/12357043\n\nThanks,\nDongjoon.\n",
-      "labels": [],
-      "linked_resources": [],
-      "llm_summary": "Vote in progress: 0 binding +1, 8 non-binding +1",
-      "llm_status": "proposal",
-      "comment_count": 8,
-      "participant_count": 8,
-      "vote_data": {
-        "binding_plus1": 0,
-        "nonbinding_plus1": 8,
-        "vetoes": 0,
-        "result": "open",
-        "voters": [
-          {
-            "voter": "\"L. C. Hsieh\" <vi...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Dongjoon Hyun <do...@apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Kousuke Saruta <sa...@apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Peter Toth <pe...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Rich Bowen <rb...@apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Uro\u0161 Bojani\u0107 <ur...@apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Yang Jie <ya...@apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Zhou Jiang <zh...@gmail.com>",
-            "vote": "+1"
-          }
-        ],
-        "closes_at": "2026-07-26T10:15:07+00:00"
-      },
-      "llm_key_points": [
-        "Please vote on releasing the following candidate as Apache Spark K8s\nOperator 1.0.0.",
-        "Voters include: \"L. C. Hsieh\", Dongjoon Hyun, Kousuke Saruta..."
-      ],
-      "llm_topics": [
-        "apache-spark",
-        "operator",
-        "spark",
-        "apache"
-      ],
-      "_content_hash": "b402f8c975b4",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
-    },
-    {
       "id": "spark-ml-cw897hvjqlmrtdo7byr10b86wtls819l",
       "source": "mailing_list",
       "kind": "thread",
@@ -1928,7 +2000,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "56e5487627dc",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-0vdnpt0j9c4ptlhvl117b3w5moqxw8bc",
@@ -1964,7 +2036,7 @@
         "peter-toth"
       ],
       "_content_hash": "37899491df81",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-4qozg1rdvv2vvltp858sygj31jrpskx5",
@@ -2001,7 +2073,7 @@
       ],
       "llm_title": "",
       "_content_hash": "0f69235d488e",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-rwhj82w65y3rj7bypmbtynwl5pgwrbjw",
@@ -2037,7 +2109,7 @@
         "peter-toth"
       ],
       "_content_hash": "4bd9a17c90bd",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1",
@@ -2079,7 +2151,7 @@
         "huaxin-gao"
       ],
       "_content_hash": "3a69febab730",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-lzrnk0hxxqd7ldh1h3rv0k5gdddm3mgx",
@@ -2283,7 +2355,7 @@
         "binding"
       ],
       "_content_hash": "c33deb7fb5ee",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-rmfzkqb663pxcz4hxf36ovdkw0f2gk08",
@@ -2573,7 +2645,7 @@
       ],
       "llm_summary": "HADOOP-19668[1] partially solves the issue but does not fully meet Spark requirements, I proposed a simple approach HADOOP-19906[2][3] as an alternative, hoping to get reviews by folks who know UGI stuff well. > HADOOP-19668[1] partially solves the issue but does not fully meet Spark > requirements, I proposed a simple approach HADOOP-19906[2][3] as an > alternative, hoping to get reviews by folks who know UGI stuff well. Enable Spark's existing credential distribution mechanism (driver obtains tokens, pushes them to executors, refreshes before expiry) to work without Kerberos.",
       "llm_status": "discussion",
-      "comment_count": 32,
+      "comment_count": 37,
       "participant_count": 4,
       "llm_key_points": [
         "Hi Parth,\n\nThanks for the SPIP and for answering our questions.",
@@ -2731,7 +2803,7 @@
       ],
       "llm_summary": "Vote in progress: 0 binding +1, 8 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 12,
+      "comment_count": 13,
       "participant_count": 8,
       "vote_data": {
         "binding_plus1": 0,
@@ -3083,7 +3155,7 @@
         "announce"
       ],
       "_content_hash": "6d1e0cb11e41",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg",
@@ -3156,7 +3228,7 @@
         "binding"
       ],
       "_content_hash": "565145446967",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-92kjhnglm90z2n8v7hxn6d9nb2gzhq1z"
     },
     {
       "id": "spark-ml-g8wzrzpw7ypl0nvzom5g9go9t83c7ofp",
@@ -3272,7 +3344,7 @@
         "release"
       ],
       "_content_hash": "1993e7dd16ab",
-      "initiative_id": "spark-init-spark-ml-sd5vyg0pfvdyx4qb2q7mpokw7ds0w6zt"
+      "initiative_id": "spark-init-spark-ml-92kjhnglm90z2n8v7hxn6d9nb2gzhq1z"
     },
     {
       "id": "spark-ml-kfhrtdy0q4cwo62vc23xh0f2z9tv5mfb",
@@ -3303,7 +3375,7 @@
         "release-apache"
       ],
       "_content_hash": "88b44c9ee7a0",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-j382to15zgy8mr2pvrtcod9c02zj1org",
@@ -3648,7 +3720,7 @@
         "announce"
       ],
       "_content_hash": "90e3583d3164",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-40s5tn9228h8o3p8vdvt49l6dcbxlmoc",
@@ -3690,7 +3762,7 @@
         "binding"
       ],
       "_content_hash": "aaf2fafd1182",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-40s5tn9228h8o3p8vdvt49l6dcbxlmoc"
     },
     {
       "id": "spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58",
@@ -3721,7 +3793,7 @@
         "jira-tickets"
       ],
       "_content_hash": "619d99e41208",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-k5zfj6ym5695poqb21ryh7dgz6p8j49h",
@@ -4120,7 +4192,7 @@
         "pyspark"
       ],
       "_content_hash": "f1327ace7e23",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-2c5fpsz7f2mfwmc4bxy0q9442zl0tcgn",
@@ -4241,7 +4313,7 @@
         "release"
       ],
       "_content_hash": "5157cb765ec7",
-      "initiative_id": "spark-init-spark-ml-locxv3h4tkbsvcf8t600kyvx16xw6xl3"
+      "initiative_id": "spark-init-spark-ml-40s5tn9228h8o3p8vdvt49l6dcbxlmoc"
     },
     {
       "id": "spark-ml-o02o91p25d2ztdoyxh0l3n5dwywk617y",
@@ -4310,7 +4382,7 @@
         "operator"
       ],
       "_content_hash": "c2dfc9edaa22",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm",
@@ -4469,7 +4541,7 @@
         "spark-community"
       ],
       "_content_hash": "a33aeaa3db50",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-4gk7hqfwsz1s05hj47zyg8dqnqhcsmmr",
@@ -4660,7 +4732,7 @@
         "spark-community"
       ],
       "_content_hash": "6895e1ddb24b",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-v9qmqs2n15g5dp1gzv9jpc3qh6bg3w7c",
@@ -5450,7 +5522,7 @@
         "spark"
       ],
       "_content_hash": "34e97449307d",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-czlg2bbh3hc22810qdcptg04hzrtv424",
@@ -5496,7 +5568,7 @@
         "udf-execution"
       ],
       "_content_hash": "9e9bf7d58f3a",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-126jm29blxrbb4yfmddqbpl79q9q3xsj",
@@ -5608,7 +5680,7 @@
         "unified-udf"
       ],
       "_content_hash": "b9bff73a1df9",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-nnfd2k75w4cmbsj7480mtm7q2g1n9fcm",
@@ -5712,7 +5784,7 @@
         "language-agnostic-execution"
       ],
       "_content_hash": "cfcf40b082c6",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-psfyt2094xsvlp231kqyryqlk345vk3r",
@@ -5855,7 +5927,7 @@
         "operator"
       ],
       "_content_hash": "81ae34966ad7",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-k6k50ck0b7djlmnt8t45720jx2qov678",
@@ -5930,7 +6002,7 @@
         "apache"
       ],
       "_content_hash": "89d4d89686b1",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-wh7jh98xjw9bk8jzw2gr8rk0zn3o5jm9",
@@ -5972,7 +6044,7 @@
         "holden-karau"
       ],
       "_content_hash": "c7120b477f0b",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-vbl63fozv6d2cw3v6xn2xxxw7nlkg48c",
@@ -6677,7 +6749,7 @@
         "docker-official"
       ],
       "_content_hash": "f1487e6acb2b",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-hjfsbtgthpnwk285wdb500fnz3bd1mjx",
@@ -6958,7 +7030,7 @@
         "apache-spark"
       ],
       "_content_hash": "ac030e3bd291",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-x4pn230qw1rtcpv36o9530f3hkzllrck",
@@ -6985,7 +7057,7 @@
         "apache"
       ],
       "_content_hash": "c6025214cd89",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-ft6t2qtkn7sosf18t02pjlv86p631t5x",
@@ -7027,7 +7099,7 @@
         "vote-passes"
       ],
       "_content_hash": "3c1263cc306d",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-w2bltco3pjcyqxbywn94zozt303lvv22"
     },
     {
       "id": "spark-ml-g0n072703717odo7rp5f0o63rtqwb3sh",
@@ -7069,7 +7141,7 @@
         "binding"
       ],
       "_content_hash": "b38b6a6c289e",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-g0n072703717odo7rp5f0o63rtqwb3sh"
     },
     {
       "id": "spark-ml-nn8wc118pmwbkrbqf338j8xtr8rhn546",
@@ -7151,7 +7223,7 @@
         "github"
       ],
       "_content_hash": "7b6b1c05e36a",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-ny94y04qzjmddfo3q1qxn0cb921gz11f",
@@ -7199,7 +7271,7 @@
         "issues"
       ],
       "_content_hash": "c2d072b8423a",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-xs151g6qf3qrh5lcxw66o8b3cnm0bq46",
@@ -7235,7 +7307,7 @@
         "release"
       ],
       "_content_hash": "a1da0b2106b8",
-      "initiative_id": "spark-init-spark-ml-xs151g6qf3qrh5lcxw66o8b3cnm0bq46"
+      "initiative_id": "spark-init-spark-ml-g0n072703717odo7rp5f0o63rtqwb3sh"
     },
     {
       "id": "spark-ml-n6t46mp9x00cmb2csfgf8t76kchw2h1h",
@@ -7266,7 +7338,7 @@
         "apache"
       ],
       "_content_hash": "3e3df829f2cf",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-s1szvkkw7krshx8kht1bnzbq8h3cmyft",
@@ -7306,7 +7378,7 @@
         "release"
       ],
       "_content_hash": "4b0729a96783",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-4r6q8187b30p0ppclw0pyfjp8h8xs3rq",
@@ -7443,7 +7515,7 @@
         "improving-spark"
       ],
       "_content_hash": "e4c49f9190c0",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-d49b3w8s4t3ob6kgyrtxkc7p6qbl3ssd",
@@ -7694,7 +7766,7 @@
         "operator"
       ],
       "_content_hash": "9cf90230589e",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-9xdy16hzq067cmr2zf9bdptc7mpd300c",
@@ -7761,7 +7833,7 @@
         "apache"
       ],
       "_content_hash": "400dbafe9407",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-wdjnf3m207qwxs0motc27w5o92p73svf",
@@ -7803,7 +7875,7 @@
         "binding"
       ],
       "_content_hash": "1ec93d830b6f",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-wdjnf3m207qwxs0motc27w5o92p73svf"
     },
     {
       "id": "spark-ml-bxg0pxrwbxw733kjfdw5y5z6m93omwtt",
@@ -7839,7 +7911,7 @@
         "release"
       ],
       "_content_hash": "ec51f6e9c258",
-      "initiative_id": "spark-init-spark-ml-bxg0pxrwbxw733kjfdw5y5z6m93omwtt"
+      "initiative_id": "spark-init-spark-ml-wdjnf3m207qwxs0motc27w5o92p73svf"
     },
     {
       "id": "spark-ml-z8s9149z85898vjy7lxkyyysn25zwpsh",
@@ -7866,7 +7938,7 @@
         "release"
       ],
       "_content_hash": "e2fe6a545972",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-7t82jvvdy1c57vzm5drztygfb39mk1bz",
@@ -7897,7 +7969,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "6a5711920c44",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-tyopctz8r5r2omww9l0z5hrr1oysmwf3",
@@ -7933,7 +8005,7 @@
         "github-profile"
       ],
       "_content_hash": "9c19c2011a6a",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-6hpobr4np6c4vlxk88shl8rz65nytfs0",
@@ -7975,7 +8047,7 @@
         "spark"
       ],
       "_content_hash": "6056a1ad9089",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-w2bltco3pjcyqxbywn94zozt303lvv22"
     },
     {
       "id": "spark-ml-xj8qfqvo5f9o188984mwh2kcg0fnqs9c",
@@ -8017,7 +8089,7 @@
         "learning-spark"
       ],
       "_content_hash": "3ee7b6b3f5be",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-0rxbdzr0ngqx225nf31hvn336l4146nb",
@@ -8095,7 +8167,7 @@
         "spark"
       ],
       "_content_hash": "55902721776b",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-yo3z0r3msdtobndqb01lxd6dbs4qfwjx"
     },
     {
       "id": "spark-ml-qnlfgdoxgtp0q4cy38hjo006ghr0f38t",
@@ -8131,7 +8203,7 @@
         "release"
       ],
       "_content_hash": "530931ff6000",
-      "initiative_id": "spark-init-spark-ml-qnlfgdoxgtp0q4cy38hjo006ghr0f38t"
+      "initiative_id": "spark-init-spark-ml-yo3z0r3msdtobndqb01lxd6dbs4qfwjx"
     },
     {
       "id": "spark-ml-v6v94mw24xp81sbvoffzkwpks10wr54g",
@@ -8290,7 +8362,7 @@
         "discussion-thread"
       ],
       "_content_hash": "b48a91c6a396",
-      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-zzfcbv1jcv34s7kdgo3zp7q2k77zo3ld",
@@ -8515,7 +8587,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "b5de5bc714a0",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-pnotsqhs3xprw7rgjh1w858m12d7gz1w",
@@ -8702,7 +8774,7 @@
         "binding"
       ],
       "_content_hash": "e1e6eb6a2752",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-lqy2o29qstyz1knhfxvjodyzcvv5d3v2"
     },
     {
       "id": "spark-ml-lqy2o29qstyz1knhfxvjodyzcvv5d3v2",
@@ -8864,7 +8936,7 @@
         "apache"
       ],
       "_content_hash": "2862de796730",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-5fppyngm9gbw1dx9w67cht7hhrcbw08x",
@@ -8906,7 +8978,7 @@
         "binding"
       ],
       "_content_hash": "4f86f4020e0b",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-lqy2o29qstyz1knhfxvjodyzcvv5d3v2"
     },
     {
       "id": "spark-ml-0x1km3cjq28kfr9fmp3z89v7q5odxh70",
@@ -9334,7 +9406,7 @@
         "operator"
       ],
       "_content_hash": "71303b425460",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-jghnnqg2xzn5gvk7fqgj95vsx0oh8gcn",
@@ -9413,7 +9485,7 @@
         "apache"
       ],
       "_content_hash": "d7e21ea13e9c",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-kyogy86v07d5lsrkdgz4916j2x2pl1kk",
@@ -9498,7 +9570,7 @@
         "apache"
       ],
       "_content_hash": "6da8d9650cc2",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-wok5jwmzgm5jtg9dzdhq4von5mtg1897",
@@ -9544,7 +9616,7 @@
         "vote-passes"
       ],
       "_content_hash": "0beed807a935",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-lqy2o29qstyz1knhfxvjodyzcvv5d3v2"
     },
     {
       "id": "spark-ml-4f28ojdc84bsrcgltfh0z8vzs6ln4dwt",
@@ -9809,7 +9881,7 @@
         "operator"
       ],
       "_content_hash": "766a6f8a4d54",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-5octr5zt85h3pby3oy09h9fplwnyy1lb",
@@ -9872,7 +9944,7 @@
         "apache"
       ],
       "_content_hash": "e3ca32548f3b",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-9llf22wdsqftk3q4q6zg3mdg4w1ytgzf",
@@ -10031,7 +10103,7 @@
         "announce"
       ],
       "_content_hash": "c911229e0f39",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-9w2cgqy2xsr91p9jb9802l5monlw36bz",
@@ -10073,7 +10145,7 @@
         "binding"
       ],
       "_content_hash": "093699ba24ca",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-9w2cgqy2xsr91p9jb9802l5monlw36bz"
     },
     {
       "id": "spark-ml-7c1q1h998d4nt9trvcyjk8wwbzpd09rc",
@@ -10283,7 +10355,7 @@
         "binding"
       ],
       "_content_hash": "0cfb04e25f4e",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-dylmft4n6v7mqb4b47hvjxhoz6hkhqkb"
     },
     {
       "id": "spark-ml-rx5pqh01c86slpqv9161hqwgm5lwxxzq",
@@ -10361,7 +10433,7 @@
         "llms-txt-files"
       ],
       "_content_hash": "22b613cf87ce",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-zvq9qv00hcgrg49mz5t3dnv9tlqq2xks",
@@ -10443,7 +10515,7 @@
         "llms-txt-files"
       ],
       "_content_hash": "ba28583874e9",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-tydpbkpx6wopy38kxqz7q889gf0qo5wm",
@@ -10623,7 +10695,7 @@
         "allison-wang"
       ],
       "_content_hash": "568c9af2a118",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-vjngbkzvlwjsgxwhp1moqp7t20yggqgp",
@@ -10652,7 +10724,7 @@
         "release"
       ],
       "_content_hash": "f52fa49848aa",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-9tm9ggr64b5ykv9yp52vxd18dpknrrtg",
@@ -10679,7 +10751,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "0311dbb42d72",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-zzlr1g6g11qlpr8xrr3tpszoh52tf2m9",
@@ -10721,7 +10793,7 @@
         "binding"
       ],
       "_content_hash": "a63913733f90",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-zzlr1g6g11qlpr8xrr3tpszoh52tf2m9"
     },
     {
       "id": "spark-ml-plgzyh54hfjq4q7t5olzg497yv1cp9wp",
@@ -10757,7 +10829,7 @@
         "release"
       ],
       "_content_hash": "3e4bc0c004d5",
-      "initiative_id": "spark-init-spark-ml-plgzyh54hfjq4q7t5olzg497yv1cp9wp"
+      "initiative_id": "spark-init-spark-ml-zzlr1g6g11qlpr8xrr3tpszoh52tf2m9"
     },
     {
       "id": "spark-ml-h8g17bz86fss0wv50fz66ctfrtfzsn3r",
@@ -10839,7 +10911,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "98f789695745",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-rrn979v01kjqs4tqyj3lr4xj111h4z0v",
@@ -11104,7 +11176,7 @@
         "operator"
       ],
       "_content_hash": "08bc1c1d6539",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-qth0hr2bb73d9jmzwbw217m3w41wo5zl",
@@ -11179,7 +11251,7 @@
         "apache"
       ],
       "_content_hash": "5b993f7e84d1",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-1hmsb3g7lm5k2f9xnp6x2hmss8yrd5h8",
@@ -11512,7 +11584,7 @@
         "vote-passed"
       ],
       "_content_hash": "23f8728c3435",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-5jm5fqbyo0wzyr8bpcyysy41t87kwzo1",
@@ -11539,7 +11611,7 @@
         "sedona"
       ],
       "_content_hash": "7402c800001a",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-tvf0msobcg1s3v9x14xtbpb7dgvk3zzj",
@@ -11828,7 +11900,7 @@
         "operator"
       ],
       "_content_hash": "3d5adc6f922b",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-fj913of43cjoopdh5md6r05nqdc0cogs",
@@ -11915,7 +11987,7 @@
         "apache"
       ],
       "_content_hash": "784f5c9aebfe",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-qpkhkcqyrmrl0dcqhrw0f1nx8wlzx32m",
@@ -12179,7 +12251,7 @@
         "docker-hub"
       ],
       "_content_hash": "33a900be7810",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-l5ko8ggmlnz29s9m71dkv1pqq8rphqc3",
@@ -12208,7 +12280,7 @@
         "download-spark"
       ],
       "_content_hash": "0159eb8af124",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-r8nqo8pmdt01m9rdfmh8dlkbl3t51yyf",
@@ -12286,7 +12358,7 @@
         "result"
       ],
       "_content_hash": "a0f9d11faf49",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-dbzg7881cz9yxzszhht40tr4hoplkhko",
@@ -12490,7 +12562,7 @@
         "apache-spark"
       ],
       "_content_hash": "a1ae725bc4ed",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-qmnc7wytbdwdo10pryt7xz5wnfqrklrb",
@@ -12559,7 +12631,7 @@
         "operator"
       ],
       "_content_hash": "0ad7707aa6dd",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-4jrtwr1xvwmno0nqbxd9fmy8j15bv7r3",
@@ -12642,7 +12714,7 @@
         "apache"
       ],
       "_content_hash": "3409d0b04d24",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-4jrtwr1xvwmno0nqbxd9fmy8j15bv7r3"
     },
     {
       "id": "spark-ml-fq69cs3gjpqjk58884ozjdw4lzcwvpk0",
@@ -12778,7 +12850,7 @@
         "rust"
       ],
       "_content_hash": "b5ce565eccfd",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-76fm01bd68p9d81286orz2ohg9qzsrcm",
@@ -13141,7 +13213,7 @@
         "apache"
       ],
       "_content_hash": "ace6d952b2c1",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-yrbo7wz4y56ytxf448lsogh6rcp20lz8",
@@ -13183,7 +13255,7 @@
         "result"
       ],
       "_content_hash": "291ea3ef7454",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-zpzl5y75rjj52o5o19sj1r2ndvs48jkb",
@@ -13385,7 +13457,7 @@
         "operator"
       ],
       "_content_hash": "671c011fe048",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-77oov7s3mxql1yqz1z03j4jyc5rt806s",
@@ -13681,7 +13753,7 @@
         "spark"
       ],
       "_content_hash": "580d9b3c090b",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-0ro5yn6lbbpmvmqp2px3s2pf7cwljlc4",
@@ -13895,7 +13967,7 @@
         "formal-vote"
       ],
       "_content_hash": "60b92656906a",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-jqj2z8ff3lk6wp3603jdhcnshr8p3s96",
@@ -13937,7 +14009,7 @@
         "vote-passes"
       ],
       "_content_hash": "092061241efb",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-lsv8f829ps0bog41fjoqc45xk7m574ly",
@@ -13975,7 +14047,7 @@
         "jie-yang"
       ],
       "_content_hash": "a43d56afabb0",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-4r25lhtrg9cog956m2fldodt64dgt45j",
@@ -14158,7 +14230,7 @@
         "parquet-logical"
       ],
       "_content_hash": "582fe9396e9c",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-f9vn5l96ztth6mrb655zgvckfhmvq25b",
@@ -14436,7 +14508,7 @@
         "vote"
       ],
       "_content_hash": "8889f8660299",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-fz2tdzc0100m146mtrk76zv1wg1bdzfk",
@@ -14587,7 +14659,7 @@
         "result"
       ],
       "_content_hash": "168b07affc06",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-rt924d38oq37rvgd13g4p0n4nnzpv8h6",
@@ -14614,7 +14686,7 @@
         "released-apache"
       ],
       "_content_hash": "ba0a3406bf6d",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-0558xk1dqp5fyox4rw0kdsgj7v2700c3",
@@ -14949,7 +15021,7 @@
         "spark"
       ],
       "_content_hash": "27e908e53338",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-m1nkcpnnf9256ngh24v4kv1tjvfd9zpp",
@@ -14976,7 +15048,7 @@
         "announce"
       ],
       "_content_hash": "e930d40dece4",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-blb0sq2tnztw4pwfn9cxf5n67rcyvsqo",
@@ -15018,7 +15090,7 @@
         "result"
       ],
       "_content_hash": "9f779c7bb44c",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-blb0sq2tnztw4pwfn9cxf5n67rcyvsqo"
     },
     {
       "id": "spark-ml-jb9bj9pwb65ddg1who48klbox8vmpmyo",
@@ -15105,7 +15177,7 @@
         "release"
       ],
       "_content_hash": "5d16f790dbfc",
-      "initiative_id": "spark-init-spark-ml-jb9bj9pwb65ddg1who48klbox8vmpmyo"
+      "initiative_id": "spark-init-spark-ml-blb0sq2tnztw4pwfn9cxf5n67rcyvsqo"
     },
     {
       "id": "spark-ml-4v5o784syfmztcz89fsxk1f5t8dwoz7k",
@@ -15398,7 +15470,7 @@
         "vote-passes"
       ],
       "_content_hash": "229cce656ac9",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-6nn76olr65b8zfgzdcbtr9f6o98451o5",
@@ -15505,7 +15577,7 @@
         "spark"
       ],
       "_content_hash": "5b0ebc511365",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-ftob1f6wo6vyy0lyd7lkgm1q87jtb5qp",
@@ -15750,7 +15822,7 @@
         "github"
       ],
       "_content_hash": "5e89fccc4d17",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-loo1r84ovrzpskkn9cfmjfb0vwx4xnrq",
@@ -16423,7 +16495,7 @@
         "jira"
       ],
       "_content_hash": "66668887790f",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-gpsw7k5q4v4y4n8d25zoj47ck6pxldq5",
@@ -16450,7 +16522,7 @@
         "sedona"
       ],
       "_content_hash": "1be94736a18c",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-qrvo6xrt8zvp5ss73z5spt9q89r0htwo",
@@ -16559,7 +16631,7 @@
         "data-engineer"
       ],
       "_content_hash": "07a746e9ee0e",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-917g6cpb12fdg0cqn3212mb0y3s091w2",
@@ -16601,7 +16673,7 @@
         "binding"
       ],
       "_content_hash": "2ed7e5809bf4",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-917g6cpb12fdg0cqn3212mb0y3s091w2"
     },
     {
       "id": "spark-ml-ovyow2bhbjd3j2xwghwltcl67nbrg95l",
@@ -16683,7 +16755,7 @@
         "release"
       ],
       "_content_hash": "46e4f464f48f",
-      "initiative_id": "spark-init-spark-ml-ovyow2bhbjd3j2xwghwltcl67nbrg95l"
+      "initiative_id": "spark-init-spark-ml-917g6cpb12fdg0cqn3212mb0y3s091w2"
     },
     {
       "id": "spark-ml-fq9pg0hvjtvcvj8kl0vz9hhwpgv3hv8p",
@@ -16906,7 +16978,7 @@
         "catalyst-project"
       ],
       "_content_hash": "ea2cbf9c9ea5",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-408wkyyow602ty14llqlxdzxojcrqgkg",
@@ -16991,7 +17063,7 @@
         "announce"
       ],
       "_content_hash": "b950bf1685a7",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-gfmow613gnlbo475czv2qgxwsv6s13z1",
@@ -17159,7 +17231,7 @@
         "single-pass"
       ],
       "_content_hash": "21ebec960c9b",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-4ctj2mlgs4q2yb4hdw2jy4z34p5yw2b1",
@@ -17201,7 +17273,7 @@
         "binding"
       ],
       "_content_hash": "1fa4defcf735",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-rvq74skcyqqj1dmq43172y6y92j8oz28"
     },
     {
       "id": "spark-ml-os2233zqxfslcp0x3poo47sdgj2g475p",
@@ -17421,7 +17493,7 @@
         "github-pages"
       ],
       "_content_hash": "b7bf60c0fb7e",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-hxc97ws571wsfyf53wno90w0m371m4qp",
@@ -17463,7 +17535,7 @@
         "vote-passes"
       ],
       "_content_hash": "4ecb46b3b373",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-dffjtvogwjmdz1hmps5br0ovroc2x1hg",
@@ -17638,7 +17710,7 @@
         "felix-cheung"
       ],
       "_content_hash": "731c5e3d5fe9",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-gqy02x1r5dj73woj4l8r0xxkrztd5qos",
@@ -17745,7 +17817,7 @@
         "parquet"
       ],
       "_content_hash": "0e2b200ea6e4",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-bpdmnxt2p8vwkhss7kw2zo6bxwc6n8yd",
@@ -17833,7 +17905,7 @@
         "single-pass-resolution"
       ],
       "_content_hash": "20bec6c2182f",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-xojcdlw77pht9bs4mt4087ynq6k9sbqq",
@@ -17871,7 +17943,7 @@
         "pages"
       ],
       "_content_hash": "9772b733e093",
-      "initiative_id": "spark-init-spark-ml-xojcdlw77pht9bs4mt4087ynq6k9sbqq"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-rv0tv1j7cvfolrgh6rlcxpfl41dkkyhp",
@@ -17915,7 +17987,7 @@
         "discuss"
       ],
       "_content_hash": "70225d451d1a",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-3c8qxks26kqflsjh0gtjo3nldk686vtq",
@@ -18065,7 +18137,7 @@
         "variant-spec"
       ],
       "_content_hash": "62705c345c81",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-40l9zsqb8dvxfk46d6dxb106ly98tmcl",
@@ -18094,7 +18166,7 @@
         "good-idea"
       ],
       "_content_hash": "cf0f25e0c0a9",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-y2k6jjvqy7y1rq3l220okj7qqrtywycs",
@@ -18141,7 +18213,7 @@
         "holden-karau"
       ],
       "_content_hash": "9026e6d23266",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-qjgsgxklvpvyvbzsx1qr8o533j4zjlm5",
@@ -18214,7 +18286,7 @@
         "holden-karau"
       ],
       "_content_hash": "2eb3f51b89e2",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-q9p2nj5x0z9p6cy32c9vd9lo43v4qxls",
@@ -18289,7 +18361,7 @@
         "archives-archive"
       ],
       "_content_hash": "1c19076a1dd9",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-oyogozm8y642w0bc5h1cx2xst7fyz3ms",
@@ -18363,7 +18435,7 @@
         "vote"
       ],
       "_content_hash": "e9217da47bd9",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-l61pwb0zv0y09xb36hnjf7n2t591k08z",
@@ -18421,7 +18493,7 @@
         "release"
       ],
       "_content_hash": "b0c1dccdf643",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-z01s19z7qf1jm5xoxsmgp6734tbhcqxb",
@@ -18452,7 +18524,7 @@
         "spark"
       ],
       "_content_hash": "a37298269a55",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-chos58kswjg3x9cotp5rn0oc7hnfc6o4",
@@ -18542,7 +18614,7 @@
         "release"
       ],
       "_content_hash": "b1a212827551",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-1kr0hhx3c6ml132gqvy5424gz8qnnqd5",
@@ -18584,7 +18656,7 @@
         "spark"
       ],
       "_content_hash": "331ebde71fa5",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-9lj57fh3zbo2h4koh5hr7nhdky21p6zg",
@@ -18663,7 +18735,7 @@
         "release"
       ],
       "_content_hash": "984729e261a5",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-xqws8pbhhdtxg0s0s2g5q6mhxx2s80k5",
@@ -18743,7 +18815,7 @@
         "release"
       ],
       "_content_hash": "574d0aa54ae9",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-40d961d0yjnxkxfb4rnd7qjf45onxrxo",
@@ -18872,7 +18944,7 @@
         "release"
       ],
       "_content_hash": "bee538c767ff",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-ys7zsod8cs9c7qllmf0p0msk6z2mz2ym",
@@ -19057,7 +19129,7 @@
         "release"
       ],
       "_content_hash": "80a88ba1c22d",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-zctzq0gq22mdq7ycnfrxlypxtk537hwb",
@@ -19135,7 +19207,7 @@
         "jul"
       ],
       "_content_hash": "2c486f438b96",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-7pyfy90nbs8ltqyorpgzpl3cp24xrx8s",
@@ -19219,7 +19291,7 @@
         "binding"
       ],
       "_content_hash": "2c5236cf8f24",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-ycsdh1n85smdq5mm978v4l294jm8xv15",
@@ -19318,7 +19390,7 @@
         "allowing-github"
       ],
       "_content_hash": "3e8502eb2b08",
-      "initiative_id": "spark-init-spark-ml-ycsdh1n85smdq5mm978v4l294jm8xv15"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-tsqm0dv01f7jgkv5l4kyvtpw4tc6f420",
@@ -19349,7 +19421,7 @@
         "spark-connect"
       ],
       "_content_hash": "b1cf05cc89c8",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-qyopc94wncv5dv17n8gf2n2c06n08xfd",
@@ -19577,7 +19649,7 @@
         "spark"
       ],
       "_content_hash": "bb2e07d0a0dc",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-w3v4fjk9lvxvp3lr5tngg0hvhfrkl5b0",
@@ -19609,7 +19681,7 @@
         "semi-structured-data"
       ],
       "_content_hash": "b3b30d3ffc8d",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-3sb7xwy5t4gy7rrnjllo85m47hrqmqhv",
@@ -20317,7 +20389,7 @@
         "announce"
       ],
       "_content_hash": "e2b9cd3f1267",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-3y4p28s1qf4tgkgs45j4ho2z3xrqkqfm",
@@ -21211,7 +21283,7 @@
         "xinrong-meng"
       ],
       "_content_hash": "5c4d2d893ca1",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j",
@@ -21294,7 +21366,7 @@
         "disclaimer"
       ],
       "_content_hash": "5609edf4c0a9",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-hpkrbdwfrzq3r19z89zn4wd9gt0dhwvo",
@@ -21336,7 +21408,7 @@
         "vote-passes"
       ],
       "_content_hash": "c10fd1dc1e95",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-9n6k6c3no9chbv11hc6210tkx9oygnj2",
@@ -21367,7 +21439,7 @@
         "commits"
       ],
       "_content_hash": "9462da0713bc",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-ht21nokxqd40bsjjt2w79r9w6rxv512o",
@@ -21566,7 +21638,7 @@
         "announce"
       ],
       "_content_hash": "beda6a0798ba",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-pfp3mbso57m2ks7r928vjlgnljfd1n45",
@@ -21761,7 +21833,7 @@
         "release"
       ],
       "_content_hash": "9c29a985fa52",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-nlk9n25cznksqqf0j9wxdxg62x8vtj87",
@@ -22232,7 +22304,7 @@
         "result"
       ],
       "_content_hash": "5d7cd7c98203",
-      "initiative_id": "spark-init-spark-ml-9f5z5lw2tg0yfvhwxvqspyyh45bppkf1"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-7ohctj1gmqbhds56bntf4s2zst5qpll1",
@@ -22416,7 +22488,7 @@
         "apache"
       ],
       "_content_hash": "5749a8bad614",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-2x8nvb5sbzyld4l4c0r8jfftp5ygkh1c",
@@ -22499,7 +22571,7 @@
         "correct-documentation"
       ],
       "_content_hash": "79b78b3086f6",
-      "initiative_id": "spark-init-spark-ml-2x8nvb5sbzyld4l4c0r8jfftp5ygkh1c"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-ljronxf6bymvqjmlwpzy84gzgvnqrmoh",
@@ -22667,7 +22739,7 @@
         "vote-passes"
       ],
       "_content_hash": "78d43ab90628",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-gxncg0pbl5g41cchw3t0kd0dockfo2vn",
@@ -22910,7 +22982,7 @@
         "apache-spark"
       ],
       "_content_hash": "daf43ae537f9",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-7y38qd5cdzyo8v6qkwbl4k3zrb9k0gdg",
@@ -22992,7 +23064,7 @@
         "announce"
       ],
       "_content_hash": "411f3bc51134",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-d6yqo61nk9c7c0mcz14m4c1c1wml5jhc",
@@ -23655,7 +23727,7 @@
         "dongjoon"
       ],
       "_content_hash": "db37b4685b24",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-pyby097xs0m8t9t755pwrpr9zydm7bop",
@@ -24130,7 +24202,7 @@
         "apache"
       ],
       "_content_hash": "8c5b7b788790",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-o1o9n1t036rmfp45q1jrjs0zzzx0j156",
@@ -24161,7 +24233,7 @@
         "xinrong"
       ],
       "_content_hash": "49d9c3a18bc5",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-lr1h56rs88sdpt503swzp0rx4htfkf61",
@@ -24188,7 +24260,7 @@
         "announce"
       ],
       "_content_hash": "f3c5a8a9a19e",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-0o61jn9cmg6r0f22ljgjg5c31z8fn0zn",
@@ -24224,7 +24296,7 @@
         "vote-passes"
       ],
       "_content_hash": "d72b7988ae30",
-      "initiative_id": "spark-init-spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1"
+      "initiative_id": "spark-init-spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz"
     },
     {
       "id": "spark-ml-87wqcbpcg87o67bhf2sd68b2g1xfbvws",
@@ -24850,7 +24922,7 @@
         "download-spark"
       ],
       "_content_hash": "564abd9deefd",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-kylocl9zb6p686qwhypcx4wv2y4hv2h1",
@@ -24892,7 +24964,7 @@
         "performance-improvement"
       ],
       "_content_hash": "8b09357127ec",
-      "initiative_id": "spark-init-spark-jira-SPARK-42256"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-tdgf4gd4copzxjdoldkf1n2gn5m0kdkc",
@@ -24974,7 +25046,7 @@
         "performance-improvement"
       ],
       "_content_hash": "48429bc6df81",
-      "initiative_id": "spark-init-spark-jira-SPARK-42256"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-l6tprb580lrq1118c83kt9fst30jp8n3",
@@ -25168,7 +25240,7 @@
         "materialization"
       ],
       "_content_hash": "3306418cb616",
-      "initiative_id": "spark-init-spark-jira-SPARK-42256"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-342qnjxmnoydzxr0k8yq4roxdmqjhw9x",
@@ -25425,7 +25497,7 @@
         "maciej-szymkiewicz"
       ],
       "_content_hash": "85b3f677283f",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-gh2oktrndxopqnyxbsvp2p0k6jk1n9fs",
@@ -25695,7 +25767,7 @@
         "yuming-wang"
       ],
       "_content_hash": "a0cd2e254ca8",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-n5zb2hj3rl15g8wnlvl9xn4ghosxgj4p",
@@ -25729,7 +25801,7 @@
         "spark"
       ],
       "_content_hash": "033d720f0836",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-56978"
     },
     {
       "id": "spark-ml-zys6wylgmdq3gm47go306tsr0ovto0g3",
@@ -26006,7 +26078,7 @@
         "result"
       ],
       "_content_hash": "c6e5548b9d17",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-cpz2bvlvmng8h36o7d2wbh211jjqq0f5",
@@ -26151,7 +26223,7 @@
         "docker-images"
       ],
       "_content_hash": "5759fa56ff69",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-l1793y5224n8bqkp3s6ltgkykso4htb3",
@@ -26189,7 +26261,7 @@
         "docker"
       ],
       "_content_hash": "53424d08a946",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-lt20887byz07o15qwpk8mjb6nhjp7hoz",
@@ -26216,7 +26288,7 @@
         "pyspark"
       ],
       "_content_hash": "c62f327caf97",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-fyq8h9c7qd9y3jmm6kbo1n8ngdsh6f79",
@@ -26343,7 +26415,7 @@
         "announce"
       ],
       "_content_hash": "0ab406715a3d",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-pbkggpgjpwopjgsn80tcmgh9b87fc9p0",
@@ -26567,7 +26639,7 @@
         "apache"
       ],
       "_content_hash": "c6e02031c5de",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-smpwykpoqr0y5r5xgc9jpt1fjm72fvck",
@@ -26609,7 +26681,7 @@
         "spip"
       ],
       "_content_hash": "f3cf472da1c5",
-      "initiative_id": "spark-init-spark-jira-SPARK-42256"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-nbqj698v59skknrh7bp6ol0rrs9zsr6r",
@@ -27308,7 +27380,7 @@
         "api"
       ],
       "_content_hash": "2157e26a7e9e",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-yq6f5gv7gtdbk1ynwpd9hnc547bgz03m",
@@ -27370,7 +27442,7 @@
         "docker-images"
       ],
       "_content_hash": "0019b42af4f4",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-sjj6jpzv0l0ysj2nkn7jrnq5jqr2mz8h",
@@ -27616,7 +27688,7 @@
         "download-spark"
       ],
       "_content_hash": "52b312ebbcc6",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-z2qqpghwfznspr3n4ozopnpq9rp19k1d",
@@ -27890,7 +27962,7 @@
         "kent-yao"
       ],
       "_content_hash": "1dc3ff8c7b9b",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-cz3cpp8q4pgmh7h35h6lvkwf6g3lwhcd",
@@ -28243,7 +28315,7 @@
         "russell-spitzer"
       ],
       "_content_hash": "bdcd7e611a60",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-z3sdowgvw5652jg3rv3t40po1q022cto",
@@ -28387,7 +28459,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",
@@ -28959,7 +29031,7 @@
         "release"
       ],
       "_content_hash": "4ec947e6e0d8",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-yov8xsggo3g2qr2p1rrr2xtps25wkbvj",
@@ -29109,7 +29181,7 @@
         "release"
       ],
       "_content_hash": "0f9591a09142",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-z0ywwnqocc3vzmbm8y4cfw0fdcofvct4",
@@ -29285,7 +29357,7 @@
         "download-spark"
       ],
       "_content_hash": "c0f02131c02b",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-jmkpt7yohhmh2mzjvdd127hos2snx33k",
@@ -29326,7 +29398,7 @@
         "spark"
       ],
       "_content_hash": "b7018fa0cada",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-21v99v1hdr43bozmplbwwgg09g764k3q",
@@ -29835,7 +29907,7 @@
         "api"
       ],
       "_content_hash": "d05f73f56e42",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-c1j9zcycbwyh3hcdck7qlg7ppxpd68wc",
@@ -29957,7 +30029,7 @@
         "api"
       ],
       "_content_hash": "2cb82c94753c",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-7jjbhdz2njbk596rgckg1vvcsg07vksz",
@@ -30068,7 +30140,7 @@
         "functioncatalog"
       ],
       "_content_hash": "b518f6f58ee2",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-7wwgr7tk9k72mpb93gcls2knno17rbz9",
@@ -30112,7 +30184,7 @@
         "yamamuro-ryan"
       ],
       "_content_hash": "9cc3bb67bd81",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-3dld1gv718qrbrrl6k4zc6v4w3fwgmtc",
@@ -30143,7 +30215,7 @@
         "announce-spark"
       ],
       "_content_hash": "00193636e2bd",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-n936z3211rw8z9t9gz6d0n47opvcfjo9",
@@ -30185,7 +30257,7 @@
         "spip"
       ],
       "_content_hash": "a635de3013ae",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-flm7xwtml9dohj4j5jzbrtyysbxdkf9r",
@@ -30361,7 +30433,7 @@
         "announce"
       ],
       "_content_hash": "e25a6f6005fb",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-obcw512wvjdjkpf61wxj78tnc9jp71x2",

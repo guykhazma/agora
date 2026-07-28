@@ -1,7 +1,7 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-07-27T10:05:24.442568+00:00",
-  "total": 264,
+  "generated_at": "2026-07-28T08:51:01.262750+00:00",
+  "total": 265,
   "proposals": [
     {
       "id": "parquet-gh-m34",
@@ -12,7 +12,7 @@
       "author": "community",
       "state": "open",
       "created_at": "2026-04-28T19:26:03Z",
-      "updated_at": "2026-07-26T20:16:01Z",
+      "updated_at": "2026-07-27T20:07:02Z",
       "due_on": null,
       "body": "",
       "labels": [],
@@ -2254,6 +2254,84 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-04s1w3qwoqv3ww9bx982fxg7kyw5lmf2",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Add VECTOR repetition level for fixed-size-list serialization",
+      "url": "https://lists.apache.org/thread/04s1w3qwoqv3ww9bx982fxg7kyw5lmf2",
+      "author": "Rok Mihevc <ro...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-07-27T13:31:16+00:00",
+      "updated_at": "2026-07-27T13:31:16+00:00",
+      "body": "Hi all,\n\nThis thread proposes adding a new VECTOR repetition level as the long-term\nphysical representation for fixed-size-lists.\n\nThe existing thread has moved toward optimizing readers and writers for\nfixed-size-list data stored using LIST. Those optimizations provide a good\ncompatible short-term path, but LIST still models variable-size-list data,\nwrites redundant repetition levels, and imposes unnecessary writer and\nreader complexity and storage overhead.\n\nI propose extending the schema as follows:\n\n```thrift\nenum FieldRepetitionType {\n REQUIRED = 0,\n OPTIONAL = 1,\n REPEATED = 2,\n VECTOR   = 3\n}\n\nstruct SchemaElement {\n // Existing fields...\n\n // Required when repetition_type == VECTOR\n optional i32 vector_length;\n}\n```\n\nVECTOR would mean that a field occurs exactly vector_length times for each\nparent value. Unlike REPEATED, the VECTOR dimension would not increase\neither the maximum repetition level or the maximum definition\nlevel.\n\nFor example, a nullable 768-dimensional float vector could be represented\nas:\n\n```text\noptional group embedding {\n vector float element [768];\n}\n```\n\nThe optional group controls the nullability of the vector as a whole. The\nVECTOR child describes 768 dense, non-null float elements.\n\nThe main properties of this representation would be:\n\n- The VECTOR dimension produces no repetition levels.\n- Elements remain a normal Parquet column, so existing encodings such as\nPLAIN, BYTE_STREAM_SPLIT, dictionary encoding, and ALP can operate on the\nelement type.\n- Every present vector contains exactly vector_length contiguous elements.\n- A vector must not be split across data pages.\n- Nullable vectors use the existing definition-level mechanism. I propose\npadded definition-level semantics so that each parent row still occupies\nvector_length positions.\n- For an initial version, VECTOR elements would be non-null. VECTOR nesting\ncould be supported, while variable-length repeated descendants would be\nexcluded.\n- Statistics remain element-level; vector-l",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1nf30OqK_UqxA4YTEZQszmOBEG56m9M5mp9rIYC2SUWc/edit",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffFixed-size list type for Parquet"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/pull/592",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow-go/pull/854",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Those optimizations provide a good compatible short-term path, but LIST still models variable-size-list data, writes redundant repetition levels, and imposes unnecessary writer and reader complexity and storage overhead. Today, every such column round-trips through the three-level LIST encoding: each row pays for repetition and definition levels that describe a shape that is, by construction, already known. Arrow offers FixedSizeList type for this use case and it is widely used by query engines and ML frameworks to store embeddings, image tensors and similar fixed-shape arrays with",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [],
+      "llm_topics": [
+        "vector",
+        "add-vector",
+        "repetition-level",
+        "repetition"
+      ],
+      "_content_hash": "df99d10bfc8f",
+      "initiative_id": "parquet-init-parquet-ml-04s1w3qwoqv3ww9bx982fxg7kyw5lmf2"
+    },
+    {
+      "id": "parquet-ml-nkpkqz4fn9t9pcg7d16t8kwgmth86pn7",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Inline parquet.thrift into parquet-java",
+      "url": "https://lists.apache.org/thread/nkpkqz4fn9t9pcg7d16t8kwgmth86pn7",
+      "author": "Divjot Arora via dev <de...@parquet.apache.org>",
+      "state": "open",
+      "created_at": "2026-07-21T11:19:22+00:00",
+      "updated_at": "2026-07-27T10:25:07+00:00",
+      "body": "Hi folks,\n\nThe parquet-java project currently declares a dependency on a pinned\nversion of parquet-format and dynamically pulls in the parquet.thrift file\nfor the pinned version.\nThis makes it impossible to validate and merge PRs to support new features\nthat have been merged into parquet-format but are not yet part of an\nofficial parquet-format\nrelease (https://github.com/apache/parquet-java/pull/3610 is an example).\nIn contrast, the arrow-rs and arrow-cpp projects have a vendored copy of\nparquet.thrift in their\nrepos, which allows them to bypass this problem. What do folks think about\nadopting this vendored approach in parquet-java?\n\n-- Div Arora\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/parquet-java/pull/3610",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Le 21/07/2026 \u00e0 14:05, Andrew Lamb a \u00e9crit\u00a0: > As a maintainer of arrow-rs 's Parquet implementation, my experience has > been that our copy of parquet.thrift (rather than a dependency) has worked > great, and we have never had an issue with this scheme that I can remember > > Best, > Gang > > On Tue, Jul 21, 2026 at 8:46\u202fPM Antoine Pitrou <an...@python.org> wrote: > > > Le 21/07/2026 \u00e0 14:05, Andrew Lamb a \u00e9crit : > > > As a maintainer of arrow-rs 's Parquet implemen > > Best, > Gang > > On Tue, Jul 21, 2026 at 8:46\u202fPM Antoine Pitrou <an...@python.org> wrote: > > > Le 21/07/2026 \u00e0 14:05, Andrew Lamb a \u00e9crit : > > > As a maintainer of arrow-rs 's Parquet implemen",
+      "llm_status": "discussion",
+      "comment_count": 10,
+      "participant_count": 7,
+      "llm_key_points": [
+        "As a maintainer of arrow-rs 's Parquet implementation, my experience has\nbeen that our copy of parquet.thrift (rather th",
+        "Le 21/07/2026 \u00e0 14:05, Andrew Lamb a \u00e9crit\u00a0:\n> As a maintainer of arrow-rs 's Parquet implementation, my experience has\n",
+        "I'm in favor of this proposal."
+      ],
+      "llm_topics": [
+        "inline-parquet-thrift",
+        "divjot-arora",
+        "andrew-lamb",
+        "parquet-thrift"
+      ],
+      "_content_hash": "3e03e88b8204",
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-17-1"
+    },
+    {
       "id": "parquet-ml-hgmd58wrv9yoopcrf61m1bg211l65tbt",
       "source": "mailing_list",
       "kind": "thread",
@@ -2450,42 +2528,6 @@
       ],
       "_content_hash": "538df9f3c925",
       "initiative_id": "parquet-init-parquet-ml-fx96wnmkbmx7pcz2h89t592ztc8bcrn1"
-    },
-    {
-      "id": "parquet-ml-nkpkqz4fn9t9pcg7d16t8kwgmth86pn7",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Inline parquet.thrift into parquet-java",
-      "url": "https://lists.apache.org/thread/nkpkqz4fn9t9pcg7d16t8kwgmth86pn7",
-      "author": "Divjot Arora via dev <de...@parquet.apache.org>",
-      "state": "open",
-      "created_at": "2026-07-21T11:19:22+00:00",
-      "updated_at": "2026-07-24T17:46:43+00:00",
-      "body": "Hi folks,\n\nThe parquet-java project currently declares a dependency on a pinned\nversion of parquet-format and dynamically pulls in the parquet.thrift file\nfor the pinned version.\nThis makes it impossible to validate and merge PRs to support new features\nthat have been merged into parquet-format but are not yet part of an\nofficial parquet-format\nrelease (https://github.com/apache/parquet-java/pull/3610 is an example).\nIn contrast, the arrow-rs and arrow-cpp projects have a vendored copy of\nparquet.thrift in their\nrepos, which allows them to bypass this problem. What do folks think about\nadopting this vendored approach in parquet-java?\n\n-- Div Arora\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/parquet-java/pull/3610",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Le 21/07/2026 \u00e0 14:05, Andrew Lamb a \u00e9crit\u00a0: > As a maintainer of arrow-rs 's Parquet implementation, my experience has > been that our copy of parquet.thrift (rather than a dependency) has worked > great, and we have never had an issue with this scheme that I can remember > > Best, > Gang > > On Tue, Jul 21, 2026 at 8:46\u202fPM Antoine Pitrou <an...@python.org> wrote: > > > Le 21/07/2026 \u00e0 14:05, Andrew Lamb a \u00e9crit : > > > As a maintainer of arrow-rs 's Parquet implemen > > Best, > Gang > > On Tue, Jul 21, 2026 at 8:46\u202fPM Antoine Pitrou <an...@python.org> wrote: > > > Le 21/07/2026 \u00e0 14:05, Andrew Lamb a \u00e9crit : > > > As a maintainer of arrow-rs 's Parquet implemen",
-      "llm_status": "discussion",
-      "comment_count": 9,
-      "participant_count": 7,
-      "llm_key_points": [
-        "As a maintainer of arrow-rs 's Parquet implementation, my experience has\nbeen that our copy of parquet.thrift (rather th",
-        "Le 21/07/2026 \u00e0 14:05, Andrew Lamb a \u00e9crit\u00a0:\n> As a maintainer of arrow-rs 's Parquet implementation, my experience has\n",
-        "I'm in favor of this proposal."
-      ],
-      "llm_topics": [
-        "inline-parquet-thrift",
-        "divjot-arora",
-        "andrew-lamb",
-        "parquet-thrift"
-      ],
-      "_content_hash": "ca5e723cab8b",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-17-1"
     },
     {
       "id": "parquet-ml-ld025dzycrhm6dgh8p6157to7d9x8pon",
@@ -2700,7 +2742,7 @@
       ],
       "llm_summary": "However, since releasing a new version of the Parquet format and reviewing the Java PoC still requires time, I'm fine with skipping it. On Fri, Jul 17, 2026 at 6:10\u202fAM Kevin Liu <ke...@apache.org> wrote: > > +1 to the new release, but I would like to include this > forward-compatibility fix [1]. > > On Thu, 16 Jul 2026 at 18:16, Fokko Driesprong <fo...@apache.org> wrote: > > > Hey everyone, > > > > I got multiple folks asking for a release for both features, fixes an",
       "llm_status": "discussion",
-      "comment_count": 34,
+      "comment_count": 40,
       "participant_count": 7,
       "llm_key_points": [
         "I don't have the github access to add it to the issue, but I would suggest\nthis PR (full disclosure, it's my PR).",
@@ -2874,7 +2916,7 @@
       ],
       "llm_summary": "The team is discussing the performance of the PFOR encoding for numeric compression in parquet files. Initial comparisons show that PFOR has better decompression speed and compression ratio than other methods like DELTABITPACK and RLEBITPACKHYBRID. The team plans to expand testing with more datasets and develop a prototype in early January.",
       "llm_status": "discussion",
-      "comment_count": 13,
+      "comment_count": 15,
       "participant_count": 2,
       "llm_key_points": [
         "PFOR shows superior decompression speed",
@@ -3158,7 +3200,7 @@
       ],
       "llm_summary": "Vote VETOED \u2014 1 veto(es) recorded",
       "llm_status": "abandoned",
-      "comment_count": 14,
+      "comment_count": 15,
       "participant_count": 7,
       "vote_data": {
         "binding_plus1": 4,

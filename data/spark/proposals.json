@@ -1,8 +1,43 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-07-30T08:28:25.405945+00:00",
-  "total": 632,
+  "generated_at": "2026-07-31T08:38:40.200389+00:00",
+  "total": 634,
   "proposals": [
+    {
+      "id": "spark-jira-SPARK-58455",
+      "source": "jira",
+      "kind": "issue",
+      "title": "SPIP: Spark Connect Gateway \u2014 Session Affinity, Auth, and Multi-Tenancy for Spark Connect Servers",
+      "url": "https://issues.apache.org/jira/browse/SPARK-58455",
+      "author": "L. C. Hsieh",
+      "state": "open",
+      "created_at": "2026-07-30T22:30:24+00:00",
+      "updated_at": "2026-07-30T23:09:18+00:00",
+      "body": "This SPIP proposes an official gateway component for Spark Connect deployments.\r\n\r\nProblem:\r\n\r\n  A Spark Connect client has to know the address of one specific server and stay\r\n  with it for the lifetime of its session, because session state lives in that\r\n  server's driver. As soon as a deployment runs more than one Spark Connect\r\n  server \u2014 per-team servers, capacity, redundancy \u2014 there is no built-in way to\r\n  put a single address in front of the fleet. A generic load balancer cannot\r\n  do this: the routing key (session_id) lives inside the request protobuf, not\r\n  in headers. Today every team writes its own proxy glue.\r\n\r\nProposal: \r\n\r\n  The Spark Connect Gateway is a standalone, wire-compatible gRPC proxy in front\r\n  of a pool of Spark Connect servers.\r\n\r\n  Clients are untouched: the connection string points at the gateway and nothing\r\n  else changes. The proposal adds nothing to and changes nothing in the Spark\r\n  Connect protocol.\r\n\r\nSPIP document: https://docs.google.com/document/d/16RNnRJjSDBSlcgeBjVz_Mv-SkqvH33F9tIsR1Ii_P3c/edit?usp=sharing\r\n",
+      "labels": [
+        "SPIP"
+      ],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/16RNnRJjSDBSlcgeBjVz_Mv-SkqvH33F9tIsR1Ii_P3c/edit?usp=sharing",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: Spark Connect Gateway \u2014 Session Affinity, Auth, and Multi-Tenancy for Spark Connect Servers"
+        }
+      ],
+      "comment_count": 0,
+      "llm_summary": "This SPIP proposes an official gateway component for Spark Connect deployments. A generic load balancer cannot do this: the routing key (session_id) lives inside the request protobuf, not in headers. --- Google Doc --- \ufeffSPIP: Spark Connect Gateway \u2014 Session Affinity, Auth, and Multi-Tenancy for Spark Connect Servers Author: Liang-Chi Hsieh, Bo Yang, Jiale Tan Created: 2026-05-20 JIRA: SPARK-58455",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "spark-connect",
+        "spark",
+        "connect",
+        "connect-gateway"
+      ],
+      "_content_hash": "5197210c7946",
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+    },
     {
       "id": "spark-jira-SPARK-58240",
       "source": "jira",
@@ -30,7 +65,7 @@
         "unified"
       ],
       "_content_hash": "b6589fc6ab0d",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-jira-SPARK-56599",
@@ -108,7 +143,7 @@
         "spark-connect"
       ],
       "_content_hash": "e92de83ca329",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-jira-SPARK-56249",
@@ -349,7 +384,7 @@
         "motivation"
       ],
       "_content_hash": "fbd70c369786",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-jira-SPARK-51658",
@@ -617,7 +652,7 @@
         "spark-dataframes"
       ],
       "_content_hash": "001ad555ca35",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-jira-SPARK-24918",
@@ -704,7 +739,7 @@
         "accelerator-aware-task"
       ],
       "_content_hash": "85e275672969",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-jira-SPARK-25501",
@@ -1386,7 +1421,7 @@
         "performance-improvement"
       ],
       "_content_hash": "9d9f4fb1df66",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-jira-SPARK-27067",
@@ -1638,7 +1673,41 @@
         "spark-sub-project"
       ],
       "_content_hash": "e46e418f4ebe",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+    },
+    {
+      "id": "spark-ml-7s3vdw92vjo0sl72rbbwgo8fyck295z3",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] SPIP: Spark Connect Gateway \u2014 Session Affinity, Auth, and Multi-Tenancy for Spark Connect Servers",
+      "url": "https://lists.apache.org/thread/7s3vdw92vjo0sl72rbbwgo8fyck295z3",
+      "author": "\"L. C. Hsieh\" <vi...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-07-30T22:42:35+00:00",
+      "updated_at": "2026-07-30T22:42:35+00:00",
+      "body": "Hi all,\n\nI'd like to start a discussion on a SPIP proposing an official gateway\ncomponent for Spark Connect deployments.\n\nProblem: A Spark Connect client has to know the address of one specific\nserver and stay with it for the lifetime of its session, because session\nstate lives in that server's driver. As soon as a deployment runs more than\none Spark Connect server \u2014 per-team servers, capacity, redundancy \u2014 there\nis no built-in way to put a single address in front of the fleet. A generic\nload balancer can't do this either: the routing key (session_id) lives\ninside the request protobuf, not in headers. So today every team writes its\nown proxy glue, and everyone solves the same problem from scratch.\n\nProposal: The Spark Connect Gateway is a standalone, wire-compatible gRPC\nproxy that sits in front of a pool of Spark Connect servers.\n\nClients are untouched: the connection string points at the gateway and\neverything else is unchanged. The proposal adds nothing to and changes\nnothing in the Spark Connect protocol.\n\nSPIP doc:\nhttps://docs.google.com/document/d/16RNnRJjSDBSlcgeBjVz_Mv-SkqvH33F9tIsR1Ii_P3c/edit?tab=t.0#heading=h.221xxblzqzu\nJIRA: https://issues.apache.org/jira/browse/SPARK-58455\n\nFeedback is very welcome.\n\nThanks,\nLiang-Chi\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/16RNnRJjSDBSlcgeBjVz_Mv-SkqvH33F9tIsR1Ii_P3c/edit?tab=t.0#heading=h.221xxblzqzu",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: Spark Connect Gateway \u2014 Session Affinity, Auth, and Multi-Tenancy for Spark Connect Servers"
+        }
+      ],
+      "llm_summary": "I'd like to start a discussion on a SPIP proposing an official gateway component for Spark Connect deployments. A generic load balancer can't do this either: the routing key (session_id) lives inside the request protobuf, not in headers. --- Google Doc --- \ufeffSPIP: Spark Connect Gateway \u2014 Session Affinity, Auth, and Multi-Tenancy for Spark Connect Servers Author: Liang-Chi Hsieh, Bo Yang, Jiale Tan Created: 2026-05-20 JIRA: SPARK-58455",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [],
+      "llm_topics": [
+        "spark-connect",
+        "spark",
+        "connect",
+        "connect-gateway"
+      ],
+      "_content_hash": "2fa01c3f3035",
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8",
@@ -1649,23 +1718,25 @@
       "author": "Holden Karau <ho...@gmail.com>",
       "state": "open",
       "created_at": "2026-07-28T21:00:56+00:00",
-      "updated_at": "2026-07-28T21:00:56+00:00",
+      "updated_at": "2026-07-30T22:17:53+00:00",
       "body": "Hi All,\n\nWe are happy to announce the availability of Apache Spark 4.1.3!\n\nApache Spark 4.1.3 is a new patch release of the 4.1 line containing\nsecurity and correctness fixes based on the branch-4.1.\n\nTo download Spark 4.1.3, head over to the download page:\nhttps://spark.apache.org/downloads.html\n\nSpark 4.1.3 is also available on PyPI (pyspark, pyspark-connect,\npyspark-client) and the Maven Central Repository.\n\nDocker images are also available for convenience but contain additional\nnon-ASF code.\n\nTo view the release notes:\nhttps://spark.apache.org/releases/spark-release-4-1-3.html\n\nWe would like to acknowledge all community members for contributing to this\nrelease. This release would not have been possible without you.\n\n-- \nTwitter: https://twitter.com/holdenkarau\nFight Health Insurance: https://www.fighthealthinsurance.com/\n<https://www.fighthealthinsurance.com/?q=hk_email>\nBooks (Learning Spark, High Performance Spark, etc.):\nhttps://amzn.to/2MaRAG9  <https://amzn.to/2MaRAG9>\nYouTube Live Streams: https://www.youtube.com/user/holdenkarau\nPronouns: she/her\n",
       "labels": [],
       "linked_resources": [],
-      "llm_summary": "Apache Spark 4.1.3 is a new patch release of the 4.1 line containing security and correctness fixes based on the branch-4.1. Spark 4.1.3 is also available on PyPI (pyspark, pyspark-connect, pyspark-client) and the Maven Central Repository. Docker images are also available for convenience but contain additional non-ASF code.",
+      "llm_summary": "Apache Spark 4.1.3 is a new patch release of the 4.1 line containing security and correctness fixes based on the branch-4.1. Spark 4.1.3 is also available on PyPI (pyspark, pyspark-connect, pyspark-client) and the Maven Central Repository. > > Apache Spark 4.1.3 is a new patch release of the 4.1 line containing > security and correctness fixes based on the branch-4.1.",
       "llm_status": "released",
-      "comment_count": 0,
-      "participant_count": 1,
-      "llm_key_points": [],
+      "comment_count": 2,
+      "participant_count": 2,
+      "llm_key_points": [
+        "Thanks for that news, do you know when spark-core 4.1.3 will be published\nto Maven central?",
+        "I think the maven central website is having some difficulty, if you look at\nthe pom file directly it's there (\nhttps://r"
+      ],
       "llm_topics": [
         "apache-spark",
         "spark",
-        "apache",
-        "learning-spark"
+        "maven-central",
+        "apache"
       ],
-      "llm_title": "",
-      "_content_hash": "2399b3267e08",
+      "_content_hash": "afa33ecdedfe",
       "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
@@ -2043,7 +2114,7 @@
       ],
       "llm_title": "",
       "_content_hash": "a2daa5d57231",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-5ly13yr43dlbx088wj9bj99cglbv7572",
@@ -2730,7 +2801,7 @@
       ],
       "llm_summary": "HADOOP-19668[1] partially solves the issue but does not fully meet Spark requirements, I proposed a simple approach HADOOP-19906[2][3] as an alternative, hoping to get reviews by folks who know UGI stuff well. > HADOOP-19668[1] partially solves the issue but does not fully meet Spark > requirements, I proposed a simple approach HADOOP-19906[2][3] as an > alternative, hoping to get reviews by folks who know UGI stuff well. Enable Spark's existing credential distribution mechanism (driver obtains tokens, pushes them to executors, refreshes before expiry) to work without Kerberos.",
       "llm_status": "discussion",
-      "comment_count": 52,
+      "comment_count": 57,
       "participant_count": 4,
       "llm_key_points": [
         "Hi Parth,\n\nThanks for the SPIP and for answering our questions.",
@@ -2888,7 +2959,7 @@
       ],
       "llm_summary": "Vote in progress: 0 binding +1, 8 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 16,
+      "comment_count": 17,
       "participant_count": 8,
       "vote_data": {
         "binding_plus1": 0,
@@ -3500,7 +3571,7 @@
         "rdd-api"
       ],
       "_content_hash": "96f1c0db05a7",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-hk8oj6nz875xv8fd10t5n7qb0g30sb11",
@@ -3878,7 +3949,7 @@
         "jira-tickets"
       ],
       "_content_hash": "619d99e41208",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-k5zfj6ym5695poqb21ryh7dgz6p8j49h",
@@ -3920,7 +3991,7 @@
         "local-laptop"
       ],
       "_content_hash": "8e8c054aef0e",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-ml-ckpv8z0fqw42xkbrskqf3ggsl1yb81c4",
@@ -4131,7 +4202,7 @@
         "faster"
       ],
       "_content_hash": "234be0c22d25",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-ml-036j2fhgcs1kmshbo3r6pcmqp1ro5kyk",
@@ -4564,7 +4635,7 @@
         "spip"
       ],
       "_content_hash": "9faf2e9d1ba4",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-ml-3xojq1dhs72gvkxbxj2c2om5odzl16sx",
@@ -5343,7 +5414,7 @@
         "capability-discovery"
       ],
       "_content_hash": "30539113fd39",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-n9osxrmv7239sgj5qqo5qks17jd79vrj",
@@ -5653,7 +5724,7 @@
         "udf-execution"
       ],
       "_content_hash": "9e9bf7d58f3a",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-126jm29blxrbb4yfmddqbpl79q9q3xsj",
@@ -5765,7 +5836,7 @@
         "unified-udf"
       ],
       "_content_hash": "b9bff73a1df9",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-nnfd2k75w4cmbsj7480mtm7q2g1n9fcm",
@@ -5869,7 +5940,7 @@
         "language-agnostic-execution"
       ],
       "_content_hash": "cfcf40b082c6",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-psfyt2094xsvlp231kqyryqlk345vk3r",
@@ -7308,7 +7379,7 @@
         "github"
       ],
       "_content_hash": "7b6b1c05e36a",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-ny94y04qzjmddfo3q1qxn0cb921gz11f",
@@ -7356,7 +7427,7 @@
         "issues"
       ],
       "_content_hash": "c2d072b8423a",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-xs151g6qf3qrh5lcxw66o8b3cnm0bq46",
@@ -8090,7 +8161,7 @@
         "github-profile"
       ],
       "_content_hash": "9c19c2011a6a",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-6hpobr4np6c4vlxk88shl8rz65nytfs0",
@@ -10670,7 +10741,7 @@
         "typed-logical"
       ],
       "_content_hash": "f3cd5ba73311",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-gdm1gtko0856pjq3xw03gx68gt5hxl9m",
@@ -12443,7 +12514,7 @@
         "result"
       ],
       "_content_hash": "a0f9d11faf49",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-dbzg7881cz9yxzszhht40tr4hoplkhko",
@@ -12647,7 +12718,7 @@
         "apache-spark"
       ],
       "_content_hash": "a1ae725bc4ed",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-qmnc7wytbdwdo10pryt7xz5wnfqrklrb",
@@ -12935,7 +13006,7 @@
         "rust"
       ],
       "_content_hash": "b5ce565eccfd",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-76fm01bd68p9d81286orz2ohg9qzsrcm",
@@ -14052,7 +14123,7 @@
         "formal-vote"
       ],
       "_content_hash": "60b92656906a",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-jqj2z8ff3lk6wp3603jdhcnshr8p3s96",
@@ -14094,7 +14165,7 @@
         "vote-passes"
       ],
       "_content_hash": "092061241efb",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-lsv8f829ps0bog41fjoqc45xk7m574ly",
@@ -14132,7 +14203,7 @@
         "jie-yang"
       ],
       "_content_hash": "a43d56afabb0",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-4r25lhtrg9cog956m2fldodt64dgt45j",
@@ -15106,7 +15177,7 @@
         "spark"
       ],
       "_content_hash": "27e908e53338",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-m1nkcpnnf9256ngh24v4kv1tjvfd9zpp",
@@ -15735,7 +15806,7 @@
         "spark-distribution"
       ],
       "_content_hash": "53efcb22990d",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-ml-wbfwn2sgozh9v03hrd4rzxcrtxhqw88w"
     },
     {
       "id": "spark-ml-ob3x4s7opzyp31lvclmcf8z04scdk6l8",
@@ -15871,7 +15942,7 @@
         "spark-distribution"
       ],
       "_content_hash": "47543f34a9d7",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-ml-wbfwn2sgozh9v03hrd4rzxcrtxhqw88w"
     },
     {
       "id": "spark-ml-m6lrsrm9jckmmd7xgf42m2vpjygn1cbz",
@@ -15907,7 +15978,7 @@
         "github"
       ],
       "_content_hash": "5e89fccc4d17",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-loo1r84ovrzpskkn9cfmjfb0vwx4xnrq",
@@ -15943,7 +16014,7 @@
         "connect-enabled"
       ],
       "_content_hash": "f1d4e6d8d8a7",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-gqm6ow5vt4n7wszxkf1l7d0c2domox4p",
@@ -15983,7 +16054,7 @@
         "spark-connect"
       ],
       "_content_hash": "4a1884d9fd82",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-r5dzdr3w4ly0dr99k24mqvld06r4mzmq",
@@ -16058,7 +16129,7 @@
         "discuss"
       ],
       "_content_hash": "83b40955e8a3",
-      "initiative_id": "spark-init-spark-ml-wylpf83wq9998603z95qq424x2xsxwqw"
+      "initiative_id": "spark-init-spark-ml-wbfwn2sgozh9v03hrd4rzxcrtxhqw88w"
     },
     {
       "id": "spark-ml-xf39cp7vsgm65mjgbh1dh2dv88q2qll1",
@@ -18072,7 +18143,7 @@
         "discuss"
       ],
       "_content_hash": "70225d451d1a",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-3c8qxks26kqflsjh0gtjo3nldk686vtq",
@@ -18520,7 +18591,7 @@
         "vote"
       ],
       "_content_hash": "e9217da47bd9",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-l61pwb0zv0y09xb36hnjf7n2t591k08z",
@@ -18609,7 +18680,7 @@
         "spark"
       ],
       "_content_hash": "a37298269a55",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-chos58kswjg3x9cotp5rn0oc7hnfc6o4",
@@ -19334,7 +19405,7 @@
         "connect-server"
       ],
       "_content_hash": "47ee520e53b0",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-znn39lqfjjxxymsw98r4h22tw8vkqj39",
@@ -19376,7 +19447,7 @@
         "binding"
       ],
       "_content_hash": "2c5236cf8f24",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-ycsdh1n85smdq5mm978v4l294jm8xv15",
@@ -19475,7 +19546,7 @@
         "allowing-github"
       ],
       "_content_hash": "3e8502eb2b08",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-tsqm0dv01f7jgkv5l4kyvtpw4tc6f420",
@@ -19506,7 +19577,7 @@
         "spark-connect"
       ],
       "_content_hash": "b1cf05cc89c8",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-qyopc94wncv5dv17n8gf2n2c06n08xfd",
@@ -19629,7 +19700,7 @@
         "api-layer"
       ],
       "_content_hash": "a86a71581ca2",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-odlx9b552dp8yllhrdlp24pf9m9s4tmx",
@@ -19665,7 +19736,7 @@
         "connect-server"
       ],
       "_content_hash": "80a71bde4ee2",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-hymbcw9lhom8dmjcds1jm2tn53d2glyh",
@@ -21524,7 +21595,7 @@
         "commits"
       ],
       "_content_hash": "9462da0713bc",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-ht21nokxqd40bsjjt2w79r9w6rxv512o",
@@ -25049,7 +25120,7 @@
         "performance-improvement"
       ],
       "_content_hash": "8b09357127ec",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-tdgf4gd4copzxjdoldkf1n2gn5m0kdkc",
@@ -25131,7 +25202,7 @@
         "performance-improvement"
       ],
       "_content_hash": "48429bc6df81",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-l6tprb580lrq1118c83kt9fst30jp8n3",
@@ -25325,7 +25396,7 @@
         "materialization"
       ],
       "_content_hash": "3306418cb616",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-342qnjxmnoydzxr0k8yq4roxdmqjhw9x",
@@ -25498,7 +25569,7 @@
         "release"
       ],
       "_content_hash": "11ef119282b3",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt"
     },
     {
       "id": "spark-ml-y6hby3k9nqds4fgx0b1w5yhhlqb2f7gb",
@@ -25582,7 +25653,7 @@
         "maciej-szymkiewicz"
       ],
       "_content_hash": "85b3f677283f",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-gh2oktrndxopqnyxbsvp2p0k6jk1n9fs",
@@ -25852,7 +25923,7 @@
         "yuming-wang"
       ],
       "_content_hash": "a0cd2e254ca8",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-n5zb2hj3rl15g8wnlvl9xn4ghosxgj4p",
@@ -25886,7 +25957,7 @@
         "spark"
       ],
       "_content_hash": "033d720f0836",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-ml-zys6wylgmdq3gm47go306tsr0ovto0g3",
@@ -26766,7 +26837,7 @@
         "spip"
       ],
       "_content_hash": "f3cf472da1c5",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-nbqj698v59skknrh7bp6ol0rrs9zsr6r",

@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-08-01T08:09:11.809322+00:00",
+  "generated_at": "2026-08-02T08:08:27.514007+00:00",
   "total": 267,
   "proposals": [
     {
@@ -397,7 +397,7 @@
         "support-java"
       ],
       "_content_hash": "dd3b1222a7a9",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-gh-rel-apache-parquet-1-17-0-rc0",
@@ -484,7 +484,7 @@
         "add-comprehensive"
       ],
       "_content_hash": "c46f29b7069b",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-gh-m31",
@@ -2254,16 +2254,16 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
-      "id": "parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc",
+      "id": "parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq",
       "source": "mailing_list",
       "kind": "thread",
-      "title": "[VOTE] Use versions to release forward-incompatible changes (take 2)",
-      "url": "https://lists.apache.org/thread/rd271soqncrskd11kcr174gchd1vzpkc",
-      "author": "Julien Le Dem <ju...@apache.org>",
+      "title": "Re: [VOTE] Use versions to release forward-incompatible changes (take 2)",
+      "url": "https://lists.apache.org/thread/xzjyk2050xyf48971ffzffvowrh7c2mq",
+      "author": "Andrew Lamb <an...@gmail.com>",
       "state": "open",
-      "created_at": "2026-07-31T21:06:52+00:00",
-      "updated_at": "2026-08-01T07:41:14+00:00",
-      "body": "Hello everyone,\n\nFollowing questions on the the previous vote\n<https://lists.apache.org/thread/o8bwmqdy1wf0z459h65x43lnsrldrvhq> thread,\nhere is a new vote essentially proposing the same thing but clarifying the\nspecific points raised then. This is the result of our discussions over the\nlast two weeks. With the direction set, we'll work on the linked design to\nfinalize the implementation details. We decided to start a fresh vote to\nremove ambiguity of clarifying while voting is happening. See below.\n\nJulien\n\nThis vote is to formalize our intent to use major version numbers to bundle\ngroups of new features in Parquet. This is especially important to enable\nthe safe roll-out of forward incompatible features (examples: new\nencodings). We will separately iron out the implementation details in\nthe Parquet\nVersioning doc\n<https://docs.google.com/document/d/19bOTy1WcLs9NP88DrysG4wG50pM6gmIFaSEWzkxUeJw/edit?tab=t.0#heading=h.qlhnuhge8ke2>\nbased on the principles below.\n\nGoals:\n\n   -\n\n   Have a clear definition of what is forward compatible or not.\n   -\n\n   Have a clear definition of what supporting a specific Parquet version\n   means (for write and for read).\n   -\n\n   Have clear version numbers for the ecosystem to coordinate on what\u2019s\n   coming in the next version. Pragmatism will prevail by making them not too\n   frequent but not too far apart.\n   -\n\n   Ensure new features become mainstream in a reasonable amount of time.\n\n\nSpecifically,\n\n   -\n\n   We will accumulate forward-incompatible changes targeted at the next\n   major version of the Parquet spec (for example Version 3). These\nare called \u201cIn\n   preview\u201d\n   -\n\n   The same bar applies as before (two implementations, cross-testing, \u2026\n   <https://github.com/apache/parquet-format/blob/master/CONTRIBUTING.md#additionschanges-to-the-format>)\n   to add these features in preview in the spec.\n   -\n\n   While in preview they can be used for writing with a feature flag, in\n   particular to allow integration testing. All implement",
+      "created_at": "2026-08-01T07:41:14+00:00",
+      "updated_at": "2026-08-01T21:43:58+00:00",
+      "body": "+1\n\nI agree with Neelesh, I believe this will be a major step forward for\ncommunicating compatibility across the ecosystem\n\nOn Fri, Jul 31, 2026 at 5:13\u202fPM Neelesh Salian <ne...@gmail.com>\nwrote:\n\n> +1 (non-binding)\n>\n> Thank you for all the work that went into getting this to a good place.\n> This is a great next step for the community.\n>\n> On Fri, Jul 31, 2026 at 14:07 Julien Le Dem <ju...@apache.org> wrote:\n>\n> > Hello everyone,\n> >\n> > Following questions on the the previous vote\n> > <https://lists.apache.org/thread/o8bwmqdy1wf0z459h65x43lnsrldrvhq>\n> thread,\n> > here is a new vote essentially proposing the same thing but clarifying\n> the\n> > specific points raised then. This is the result of our discussions over\n> the\n> > last two weeks. With the direction set, we'll work on the linked design\n> to\n> > finalize the implementation details. We decided to start a fresh vote to\n> > remove ambiguity of clarifying while voting is happening. See below.\n> >\n> > Julien\n> >\n> > This vote is to formalize our intent to use major version numbers to\n> bundle\n> > groups of new features in Parquet. This is especially important to enable\n> > the safe roll-out of forward incompatible features (examples: new\n> > encodings). We will separately iron out the implementation details in\n> > the Parquet\n> > Versioning doc\n> > <\n> >\n> https://docs.google.com/document/d/19bOTy1WcLs9NP88DrysG4wG50pM6gmIFaSEWzkxUeJw/edit?tab=t.0#heading=h.qlhnuhge8ke2\n> > >\n> > based on the principles below.\n> >\n> > Goals:\n> >\n> >    -\n> >\n> >    Have a clear definition of what is forward compatible or not.\n> >    -\n> >\n> >    Have a clear definition of what supporting a specific Parquet version\n> >    means (for write and for read).\n> >    -\n> >\n> >    Have clear version numbers for the ecosystem to coordinate on what\u2019s\n> >    coming in the next version. Pragmatism will prevail by making them not\n> > too\n> >    frequent but not too far apart.\n> >    -\n> >\n> >    Ensure new features become mainstream in a rea",
       "labels": [],
       "linked_resources": [
         {
@@ -2273,39 +2273,43 @@
           "title": "\ufeffParquet Versioning proposal"
         }
       ],
-      "llm_summary": "Vote in progress: 0 binding +1, 2 non-binding +1",
+      "llm_summary": "Vote in progress: 0 binding +1, 3 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 2,
+      "comment_count": 4,
       "participant_count": 3,
       "vote_data": {
         "binding_plus1": 0,
-        "nonbinding_plus1": 2,
+        "nonbinding_plus1": 3,
         "vetoes": 0,
         "result": "open",
         "voters": [
+          {
+            "voter": "Alkis Evlogimenos via dev <de...@parquet.apache.org>",
+            "vote": "+1"
+          },
           {
             "voter": "Andrew Lamb <an...@gmail.com>",
             "vote": "+1"
           },
           {
-            "voter": "Neelesh Salian <ne...@gmail.com>",
+            "voter": "Divjot Arora via dev <de...@parquet.apache.org>",
             "vote": "+1"
           }
         ],
-        "closes_at": "2026-08-03T21:06:52+00:00"
+        "closes_at": "2026-08-04T07:41:14+00:00"
       },
       "llm_key_points": [
-        "Hello everyone,\n\nFollowing questions on the the previous vote\n<https://lists.apache.org/thread/o8bwmqdy1wf0z459h65x43lnsrldrvhq> thread,\nhere is a new",
-        "Voters include: Andrew Lamb, Neelesh Salian..."
+        "+1\n\nI agree with Neelesh, I believe this will be a major step forward for\ncommunicating compatibility across the ecosystem\n\nOn Fri, Jul 31, 2026 at 5:",
+        "Voters include: Alkis Evlogimenos via dev, Andrew Lamb, Divjot Arora via dev..."
       ],
       "llm_topics": [
+        "neelesh-salian",
+        "good-place",
         "release-forward-incompatible",
-        "essentially-proposing",
-        "specific-points",
-        "points-raised"
+        "communicating-compatibility"
       ],
-      "_content_hash": "b24c87335fd3",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "_content_hash": "a24911329a6c",
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-qlf8lg90gqq41lllyy9mk2f0skqvftqj",
@@ -2358,7 +2362,7 @@
         "versioning-ad-hoc"
       ],
       "_content_hash": "d993fb44e629",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-o8bwmqdy1wf0z459h65x43lnsrldrvhq",
@@ -2424,7 +2428,7 @@
         "version"
       ],
       "_content_hash": "a626d4254ef3",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-zrzc7t9fccg92rx3h4fw3ndw3bdo5xr7",
@@ -3147,7 +3151,7 @@
         "proposal"
       ],
       "_content_hash": "1b3bcdefdf20",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-q6wbom1q9pndv2nj6wcynxjcjxxkc1hm",
@@ -3199,7 +3203,7 @@
         "discuss"
       ],
       "_content_hash": "4762e0d84d23",
-      "initiative_id": "parquet-init-parquet-ml-q6wbom1q9pndv2nj6wcynxjcjxxkc1hm"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-st8l40z5n4cx5c22rcog50ws4pkzdc3s",
@@ -3269,7 +3273,7 @@
         "parquet-community"
       ],
       "_content_hash": "14ac086b9447",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5",
@@ -3720,7 +3724,7 @@
         "parquet"
       ],
       "_content_hash": "f684d1c1eb36",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-7kjqsz7n8cwqpgfo2h9c5q0csml77d86",
@@ -4339,7 +4343,7 @@
         "parquet"
       ],
       "_content_hash": "d7847a7e3ca8",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-d38j3xc3x7zpfdldj7qz136qk9dgp3d9",
@@ -4504,7 +4508,7 @@
       ],
       "_content_hash": "8b885a936178",
       "llm_title": "Proposal for AGENTS.md in Parquet Repo",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-6nm94o4wmvwfgdpg1kxd5wlw5tlzng28",
@@ -5173,7 +5177,7 @@
         "parquet"
       ],
       "_content_hash": "b3ef471b070c",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-st0w1c6txzmrwwbdsqdh7xm2br5b2js3",
@@ -5321,7 +5325,7 @@
       ],
       "_content_hash": "6518e83b27ec",
       "llm_title": "Release of Parquet-Java 1.17.0",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-xlmp7cq638ht7n6c9f1vqlc6qgs4j4y4",
@@ -5448,7 +5452,7 @@
         "clarify"
       ],
       "_content_hash": "dace230d68c3",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-61hhzqr4cr5zb4kymhxwj1vb0ozd47q2",
@@ -5480,7 +5484,7 @@
         "micah-kornfield"
       ],
       "_content_hash": "2a9d2df4f4db",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-y553jl3byk1s7bgkoht9nt46ky2vrzf0",
@@ -5518,7 +5522,7 @@
       ],
       "_content_hash": "c224df0daae0",
       "llm_title": "Refactor Implementation Status Page to YAML",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-yjlod93mo7sfzb7t74qbotdr9txjr2qs",
@@ -5599,7 +5603,7 @@
       ],
       "_content_hash": "2f829c188e0e",
       "llm_title": "Discussion on Parquet 2.0 Closure",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-01k7z2lg9qh3cj4p7gk95z6cphssk85d",
@@ -5826,7 +5830,7 @@
       ],
       "_content_hash": "7345b8314cbd",
       "llm_title": "Improving Versioning Communication for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-djnbbcnft0fqm9ldby2q96nbtrwqz477",
@@ -5889,7 +5893,7 @@
       ],
       "_content_hash": "e8388865309e",
       "llm_title": "Improving Parquet Documentation and Cookbook",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-hms38c0807r3qpst7ykf4b42xwpb23g7",
@@ -5986,7 +5990,7 @@
         "parquet"
       ],
       "_content_hash": "cd282f758c44",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-nf0m7z256gtq16m3by78mf4w6tpffdqh",
@@ -6152,7 +6156,7 @@
         "java"
       ],
       "_content_hash": "8f99f4131daf",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-fdtt4o4cp5thntwwhzbzm00n5070g9hz",
@@ -6245,7 +6249,7 @@
         "parquet"
       ],
       "_content_hash": "880a8568f56f",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-mw7fg76kyoootmntw5fk539423g9vqkr",
@@ -6549,7 +6553,7 @@
         "parquet"
       ],
       "_content_hash": "bb374d22b689",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-htrzl1ytd9x3dfhszbyrozhxw733n3cj",
@@ -6742,7 +6746,7 @@
         "parquet"
       ],
       "_content_hash": "5289b722ef48",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-fvjly206d7qvmo41f6f1h32sq1o42zhm",
@@ -6824,7 +6828,7 @@
         "parquet"
       ],
       "_content_hash": "8561e3b3ec63",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-qx7m2oljrzt69bz38sk2xfpbtqmmck5c",
@@ -7761,7 +7765,7 @@
       ],
       "_content_hash": "a33cf297101f",
       "llm_title": "Parquet 1.14.4 Release Discussion",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-s6b25j3x26009v054yqjov0f1z49ctqj",
@@ -7830,7 +7834,7 @@
         "parquet-java"
       ],
       "_content_hash": "d1a18b94df8f",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm",
@@ -9259,7 +9263,7 @@
         "parquet-java"
       ],
       "_content_hash": "7e0c45b52703",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-5wm7pwyd3khtbxqs2rrzpby4sd50n349",
@@ -9390,7 +9394,7 @@
       ],
       "_content_hash": "48cbc9c83c2b",
       "llm_title": "Unify Record and Row Terminology",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-h589zkwnpo592gc9n17v0y7qvd9jv1z4",
@@ -9419,7 +9423,7 @@
       ],
       "_content_hash": "74fa9464f266",
       "llm_title": "Patch release for parquet-java 1.14.1",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-8xmxc76nd00624qqps6s1qw6lhv1qwv5",
@@ -9718,7 +9722,7 @@
       ],
       "_content_hash": "13aaf457d8d2",
       "llm_title": "Improve Bloom Filter Documentation",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-999bzrst48mbkgtzplq1bv7711jff7mg",
@@ -9974,7 +9978,7 @@
       ],
       "_content_hash": "7c5da8af2e3d",
       "llm_title": "Rename parquet-mr to parquet-java",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-97g4zqlvobr9knntvsbghjs6v3gr63x2",
@@ -10050,7 +10054,7 @@
       ],
       "_content_hash": "5ffbdcc3cd14",
       "llm_title": "Repo documentation improvements proposal",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-f9379yx0lf5gtpkgyv922pvowtzy4kmm",
@@ -10096,7 +10100,7 @@
       ],
       "_content_hash": "c45d3b6caaaf",
       "llm_title": "Discussion on Parquet Reference Implementation",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-128wv5cwv51scm8vdfn1g9gskw717qyt",
@@ -10134,7 +10138,7 @@
       ],
       "_content_hash": "08f21075a213",
       "llm_title": "Parquet C++ Governance Discussion",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-2gggm938z0x9fx3wtwctfm5htsxlf3z4",
@@ -10169,7 +10173,7 @@
         "parquet"
       ],
       "_content_hash": "647b08af7a48",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-fwk38klnvkmxqgtq3blkdncrww07ht7x",
@@ -10660,7 +10664,7 @@
         "parquet"
       ],
       "_content_hash": "8745c126def3",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-35h21l1dylcg9gd31w87xg1ww1xgy7mv",
@@ -10760,7 +10764,7 @@
         "parquet"
       ],
       "_content_hash": "d3040b011771",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-wgobz41mfldbhqpg9q4mdwypghg2cxg2",
@@ -10901,7 +10905,7 @@
       ],
       "_content_hash": "ccc71f2d9b82",
       "llm_title": "Discussion on Parquet Format 2.10.0 Release",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-gyvqcx9ssxkjlrwogqwy7n4z6ofdm871",
@@ -11055,7 +11059,7 @@
         "release"
       ],
       "_content_hash": "dabe273c7b56",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-0yokbmfcbhz76ftjbxktwxfo5vrt57od",
@@ -11119,7 +11123,7 @@
         "parquet"
       ],
       "_content_hash": "37bc680bbe82",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-1mjvdcmwqjcblmfkfgpd9ob2yodx7tom",
@@ -11173,7 +11177,7 @@
       ],
       "_content_hash": "b5c03aefd7ef",
       "llm_title": "Discussion on Apache Parquet 1.13.1 Release",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-21f6xotkqstk81jcsk1t3r94g718jbzc",
@@ -11234,7 +11238,7 @@
         "parquet"
       ],
       "_content_hash": "0d01621fadd6",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-hlqr2p77cmhg5ws3n7jy07c1f4lcdkds",
@@ -11801,7 +11805,7 @@
         "parquet"
       ],
       "_content_hash": "da1ef3f14f2d",
-      "initiative_id": "parquet-init-parquet-ml-rd271soqncrskd11kcr174gchd1vzpkc"
+      "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
       "id": "parquet-ml-hczpx4tgsyzkoys3rkgs26grdlfypjtm",

@@ -1,7 +1,7 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-08-02T08:08:27.514007+00:00",
-  "total": 267,
+  "generated_at": "2026-08-03T09:26:06.640693+00:00",
+  "total": 268,
   "proposals": [
     {
       "id": "parquet-gh-m34",
@@ -12,7 +12,7 @@
       "author": "community",
       "state": "open",
       "created_at": "2026-04-28T19:26:03Z",
-      "updated_at": "2026-07-27T20:07:02Z",
+      "updated_at": "2026-08-02T20:05:00Z",
       "due_on": null,
       "body": "",
       "labels": [],
@@ -2254,6 +2254,82 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-hfoltdl6o6txc3zp4680nns1mh29h0r8",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[Discuss] Onpair : String Encoding",
+      "url": "https://lists.apache.org/thread/hfoltdl6o6txc3zp4680nns1mh29h0r8",
+      "author": "PRATEEK GAUR <pr...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-08-03T06:12:09+00:00",
+      "updated_at": "2026-08-03T06:12:09+00:00",
+      "body": "Hi team,\n\nI came across a recent string compression algorithm called OnPair and spent\nsome time experimenting with it as a Parquet encoding, benchmarked against\nFSST, DELTA_LENGTH_BYTE_ARRAY, dictionary encoding, and the usual\nzstd/lz4/snappy page compression across 30 string corpora.\n\n Report\n<https://docs.google.com/document/d/1cctFqNVh_Ul6huiXyMeFWNaGhZba0fMJ/edit>\n\nShort version: it trades encode speed for ratio and decode speed \u2014 it\ndecodes faster than every compressed alternative measured and wins ratio on\nmost text-heavy columns, but its training pass makes encode substantially\nslower.\n\nApologies in advance for slow replies \u2014 I'm travelling.\n\nBest\nPrateek\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1cctFqNVh_Ul6huiXyMeFWNaGhZba0fMJ/edit",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffOnPair: A Viable String Encoding for Apache Parquet"
+        }
+      ],
+      "llm_summary": "Short version: it trades encode speed for ratio and decode speed \u2014 it decodes faster than every compressed alternative measured and wins ratio on most text-heavy columns, but its training pass makes encode substantially slower. Author: Prateek Gaur Suggested by :  Julien Le Dem, Russell Spitzer, Andrew Lamb Other file formats that support it : Vortex, anyone else? We measure it head-to-head against FSST (the string encoding currently proposed for Parquet), and against the general-purpose block compressors zstd -1 and lz4, on the three axes that matter for a columnar format: compression ratio, decompression speed (with per-row random access), and compression speed.",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [],
+      "llm_topics": [
+        "string-encoding",
+        "apache-parquet",
+        "algorithm-called",
+        "time-experimenting"
+      ],
+      "_content_hash": "006e09cfd237",
+      "initiative_id": "parquet-init-parquet-ml-hfoltdl6o6txc3zp4680nns1mh29h0r8"
+    },
+    {
+      "id": "parquet-ml-3d7mf3l749r7d77f3lsr4jjqk10gjm92",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] Add VECTOR repetition level for fixed-size-list serialization",
+      "url": "https://lists.apache.org/thread/3d7mf3l749r7d77f3lsr4jjqk10gjm92",
+      "author": "Adam Reeve <ad...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-08-03T05:18:09+00:00",
+      "updated_at": "2026-08-03T05:18:09+00:00",
+      "body": "Hi Rok\n\nThanks for continuing to push this proposal forward.\n\n> 1. Are the proposed level and null-vector semantics appropriate?\n\nThis proposal makes sense to me. One thing I'm not sure about is the use of\npadded definition levels. This could be required to support element\nnullability cleanly with something like the three-level schema structure of\nthe existing list logical type. But maybe only one definition level per\nvector should be used if the child schema nodes all contribute no\ndefinition levels?\n\n> 2. What nesting should be supported initially?\n\nIn theory, it seems like it should be possible to nest a vector type within\nanother repeated type, or have a repeated type within a vector type. But I\ncan imagine that handling these scenarios would get quite complex. Only\nsupporting a single level of nesting within an optional group like in your\nembedding example might be a reasonable limitation to start with, and would\nlikely cover the majority of use cases.\n\n> 3. How should num_values, page indexes, offset indexes, and null counts be\n> defined?\n\nnum_values is defined in both ColumnMetaData and the data page headers. I\nthink in both cases, num_values should be the total number of element\nvalues, for consistency with repetition=repeated. Then for consistency with\nnum_values, a null vector should probably contribute vector_length values\nto the null_count.\n\n> 4. How should unsupported readers detect and reject this representation?\n\nI'd hope that the presence of an unrecognized repetition type would cause\nany existing library to return an error, but this is something that should\nbe verified.\n\nCheers,\nAdam\n\n\nOn Tue, 28 Jul 2026 at 01:32, Rok Mihevc <ro...@gmail.com> wrote:\n\n> Hi all,\n>\n> This thread proposes adding a new VECTOR repetition level as the long-term\n> physical representation for fixed-size-lists.\n>\n> The existing thread has moved toward optimizing readers and writers for\n> fixed-size-list data stored using LIST. Those optimizations provide a good\n> compatible ",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1nf30OqK_UqxA4YTEZQszmOBEG56m9M5mp9rIYC2SUWc/edit",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffFixed-size list type for Parquet"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/pull/592",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow-go/pull/854",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Only supporting a single level of nesting within an optional group like in your embedding example might be a reasonable limitation to start with, and would likely cover the majority of use cases. Today, every such column round-trips through the three-level LIST encoding: each row pays for repetition and definition levels that describe a shape that is, by construction, already known. Arrow offers FixedSizeList type for this use case and it is widely used by query engines and ML frameworks to store embeddings, image tensors and similar fixed-shape arrays with",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [],
+      "llm_topics": [
+        "add-vector",
+        "vector",
+        "discuss",
+        "add"
+      ],
+      "_content_hash": "24860a81d3e5",
+      "initiative_id": "parquet-init-parquet-ml-3d7mf3l749r7d77f3lsr4jjqk10gjm92"
+    },
+    {
       "id": "parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq",
       "source": "mailing_list",
       "kind": "thread",
@@ -2275,7 +2351,7 @@
       ],
       "llm_summary": "Vote in progress: 0 binding +1, 3 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 4,
+      "comment_count": 2,
       "participant_count": 3,
       "vote_data": {
         "binding_plus1": 0,
@@ -2558,48 +2634,6 @@
       ],
       "_content_hash": "5ca80e1b948a",
       "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-17-1"
-    },
-    {
-      "id": "parquet-ml-04s1w3qwoqv3ww9bx982fxg7kyw5lmf2",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Add VECTOR repetition level for fixed-size-list serialization",
-      "url": "https://lists.apache.org/thread/04s1w3qwoqv3ww9bx982fxg7kyw5lmf2",
-      "author": "Rok Mihevc <ro...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-07-27T13:31:16+00:00",
-      "updated_at": "2026-07-27T13:31:16+00:00",
-      "body": "Hi all,\n\nThis thread proposes adding a new VECTOR repetition level as the long-term\nphysical representation for fixed-size-lists.\n\nThe existing thread has moved toward optimizing readers and writers for\nfixed-size-list data stored using LIST. Those optimizations provide a good\ncompatible short-term path, but LIST still models variable-size-list data,\nwrites redundant repetition levels, and imposes unnecessary writer and\nreader complexity and storage overhead.\n\nI propose extending the schema as follows:\n\n```thrift\nenum FieldRepetitionType {\n REQUIRED = 0,\n OPTIONAL = 1,\n REPEATED = 2,\n VECTOR   = 3\n}\n\nstruct SchemaElement {\n // Existing fields...\n\n // Required when repetition_type == VECTOR\n optional i32 vector_length;\n}\n```\n\nVECTOR would mean that a field occurs exactly vector_length times for each\nparent value. Unlike REPEATED, the VECTOR dimension would not increase\neither the maximum repetition level or the maximum definition\nlevel.\n\nFor example, a nullable 768-dimensional float vector could be represented\nas:\n\n```text\noptional group embedding {\n vector float element [768];\n}\n```\n\nThe optional group controls the nullability of the vector as a whole. The\nVECTOR child describes 768 dense, non-null float elements.\n\nThe main properties of this representation would be:\n\n- The VECTOR dimension produces no repetition levels.\n- Elements remain a normal Parquet column, so existing encodings such as\nPLAIN, BYTE_STREAM_SPLIT, dictionary encoding, and ALP can operate on the\nelement type.\n- Every present vector contains exactly vector_length contiguous elements.\n- A vector must not be split across data pages.\n- Nullable vectors use the existing definition-level mechanism. I propose\npadded definition-level semantics so that each parent row still occupies\nvector_length positions.\n- For an initial version, VECTOR elements would be non-null. VECTOR nesting\ncould be supported, while variable-length repeated descendants would be\nexcluded.\n- Statistics remain element-level; vector-l",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1nf30OqK_UqxA4YTEZQszmOBEG56m9M5mp9rIYC2SUWc/edit",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffFixed-size list type for Parquet"
-        },
-        {
-          "url": "https://github.com/apache/parquet-format/pull/592",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow-go/pull/854",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Those optimizations provide a good compatible short-term path, but LIST still models variable-size-list data, writes redundant repetition levels, and imposes unnecessary writer and reader complexity and storage overhead. Today, every such column round-trips through the three-level LIST encoding: each row pays for repetition and definition levels that describe a shape that is, by construction, already known. Arrow offers FixedSizeList type for this use case and it is widely used by query engines and ML frameworks to store embeddings, image tensors and similar fixed-shape arrays with",
-      "llm_status": "discussion",
-      "comment_count": 0,
-      "participant_count": 1,
-      "llm_key_points": [],
-      "llm_topics": [
-        "vector",
-        "add-vector",
-        "repetition-level",
-        "repetition"
-      ],
-      "_content_hash": "df99d10bfc8f",
-      "initiative_id": "parquet-init-parquet-ml-04s1w3qwoqv3ww9bx982fxg7kyw5lmf2"
     },
     {
       "id": "parquet-ml-nkpkqz4fn9t9pcg7d16t8kwgmth86pn7",
@@ -5150,7 +5184,7 @@
       ],
       "_content_hash": "41514225ff19",
       "llm_title": "Deprecate file_path field in column chunk",
-      "initiative_id": "parquet-init-parquet-ml-jffqzp1hoh8vypffdrbjhotkn06zrxmf"
+      "initiative_id": "parquet-init-parquet-ml-ygs245qdd2d2d91qk801t3pdf47tgn75"
     },
     {
       "id": "parquet-ml-7xq85j6rd8som3y6cqxtk6n6ddhdy3wm",
@@ -6933,7 +6967,7 @@
       ],
       "_content_hash": "735a1326fdb5",
       "llm_title": "Merge Implementation Status PR for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-jffqzp1hoh8vypffdrbjhotkn06zrxmf"
     },
     {
       "id": "parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",

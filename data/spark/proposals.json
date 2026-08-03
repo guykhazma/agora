@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-08-02T08:08:06.198825+00:00",
+  "generated_at": "2026-08-03T09:25:39.511705+00:00",
   "total": 634,
   "proposals": [
     {
@@ -1685,7 +1685,7 @@
       "author": "Dongjoon Hyun <do...@apache.org>",
       "state": "open",
       "created_at": "2026-08-01T03:41:18+00:00",
-      "updated_at": "2026-08-01T23:31:19+00:00",
+      "updated_at": "2026-08-02T18:57:58+00:00",
       "body": "Thank you, Liang-Chi.\n\nSince it's written in Rust like \"apache/spark-connect-rust\", \"apache/spark-connect-gateway\" proposal sounds good to me.\n\nWhere is the reference implementation? I didn't find any GitHub link in SPARK-58455 and SPIP.\n\nDongjoon.\n\nOn 2026/07/31 22:49:44 Chao Sun wrote:\n> +1\n> \n> On Fri, Jul 31, 2026 at 1:26\u202fPM DB Tsai <db...@dbtsai.com> wrote:\n> \n> > +1\n> >\n> > An open-source reference gateway that makes it easier to run Spark Connect\n> > at scale with session affinity, authentication, high availability,\n> > multi-tenancy, rate limiting, and audit logging built in is great for\n> > production adoption of Spark Connect.\n> >\n> >\n> > DB Tsai  |  https://www.dbtsai.com/  |  PGP 0x9FB9FAA3\n> >\n> > On Thursday, July 30th, 2026 at 3:43 PM, L. C. Hsieh <vi...@gmail.com>\n> > wrote:\n> >\n> > Hi all,\n> >\n> > I'd like to start a discussion on a SPIP proposing an official gateway\n> > component for Spark Connect deployments.\n> >\n> > Problem: A Spark Connect client has to know the address of one specific\n> > server and stay with it for the lifetime of its session, because session\n> > state lives in that server's driver. As soon as a deployment runs more than\n> > one Spark Connect server \u2014 per-team servers, capacity, redundancy \u2014 there\n> > is no built-in way to put a single address in front of the fleet. A generic\n> > load balancer can't do this either: the routing key (session_id) lives\n> > inside the request protobuf, not in headers. So today every team writes its\n> > own proxy glue, and everyone solves the same problem from scratch.\n> >\n> > Proposal: The Spark Connect Gateway is a standalone, wire-compatible gRPC\n> > proxy that sits in front of a pool of Spark Connect servers.\n> >\n> > Clients are untouched: the connection string points at the gateway and\n> > everything else is unchanged. The proposal adds nothing to and changes\n> > nothing in the Spark Connect protocol.\n> >\n> > SPIP doc:\n> > https://docs.google.com/document/d/16RNnRJjSDBSlcgeBjVz_Mv-SkqvH33F9tIs",
       "labels": [],
       "linked_resources": [
@@ -1698,7 +1698,7 @@
       ],
       "llm_summary": "On 2026/07/31 22:49:44 Chao Sun wrote: > +1 > > On Fri, Jul 31, 2026 at 1:26\u202fPM DB Tsai <db...@dbtsai.com> wrote: > > > +1 > > > > An open-source reference gateway that makes it easier to run Spark Connect > > at scale with session affinity, authentication, high availability, > > multi-tenancy, rate limiting, and audit logging built in is great for > > production adoption of Spark Connect. > > > > > > DB Tsai  |  https://www.dbtsai.com/  |  PGP 0x9FB9FAA3 > > > > On Thursday, July 30th, 2026 at 3:43 PM, L. C. Hsieh <vi...@gmail.com> > > wrote: > > > > Hi all, > > > > I'd like to start a discussion on a SPIP proposing an official gateway > > component for Spark Connect deployments. A generic > > load balancer can't do this either: the routing key (session_id) lives > > inside the request protobuf, not in headers.",
       "llm_status": "discussion",
-      "comment_count": 18,
+      "comment_count": 11,
       "participant_count": 7,
       "llm_key_points": [
         "Thank you for the additional information and clarification, Liang-Chi.",
@@ -1712,6 +1712,7 @@
         "connect-gateway"
       ],
       "_content_hash": "7b2294bccf6a",
+      "llm_title": "",
       "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
@@ -3348,7 +3349,7 @@
         "uro-bojani"
       ],
       "_content_hash": "011b99573a32",
-      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-92kjhnglm90z2n8v7hxn6d9nb2gzhq1z",
@@ -3635,7 +3636,7 @@
         "apache-spark"
       ],
       "_content_hash": "ec8146319b15",
-      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv",
@@ -3666,7 +3667,7 @@
         "spark-project"
       ],
       "_content_hash": "af074b2503b6",
-      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-c3sjlfos8d4o2859bjpltpgsf33wfnfh",
@@ -6278,7 +6279,7 @@
         "tian-gao"
       ],
       "_content_hash": "dacca48c4fa0",
-      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-mqfysmjmkdnw0fxy9t5dp7bxpvo36jrv",
@@ -19811,7 +19812,7 @@
         "spark"
       ],
       "_content_hash": "bb2e07d0a0dc",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-ml-87bj968jyjvjs9bd2c8rycmtfypvv8gb"
     },
     {
       "id": "spark-ml-w3v4fjk9lvxvp3lr5tngg0hvhfrkl5b0",

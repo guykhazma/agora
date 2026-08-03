@@ -1,8 +1,71 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-08-02T08:08:27.525882+00:00",
-  "total": 60,
+  "generated_at": "2026-08-03T09:26:06.653246+00:00",
+  "total": 62,
   "initiatives": [
+    {
+      "id": "parquet-init-parquet-ml-hfoltdl6o6txc3zp4680nns1mh29h0r8",
+      "title": "Onpair : String Encoding",
+      "summary": "Short version: it trades encode speed for ratio and decode speed \u2014 it decodes faster than every compressed alternative measured and wins ratio on most text-heavy columns, but its training pass makes encode substantially slower. Author: Prateek Gaur Suggested by :  Julien Le Dem, Russell Spitzer, Andrew Lamb Other file formats that support it : Vortex, anyone else? We measure it head-to-head against FSST (the string encoding currently proposed for Parquet), and against the general-purpose block compressors zstd -1 and lz4, on the three axes that matter for a columnar format: compression ratio, decompression speed (with per-row random access), and compression speed.",
+      "status": "discussion",
+      "key_points": [],
+      "proposal_ids": [
+        "parquet-ml-hfoltdl6o6txc3zp4680nns1mh29h0r8"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [
+        {
+          "url": "https://docs.google.com/document/d/1cctFqNVh_Ul6huiXyMeFWNaGhZba0fMJ/edit",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffOnPair: A Viable String Encoding for Apache Parquet"
+        }
+      ],
+      "last_activity": "2026-08-03T06:12:09+00:00",
+      "signals": [
+        "shared_doc"
+      ],
+      "archived": false
+    },
+    {
+      "id": "parquet-init-parquet-ml-3d7mf3l749r7d77f3lsr4jjqk10gjm92",
+      "title": "Add VECTOR repetition level for fixed-size-list serializatio",
+      "summary": "Only supporting a single level of nesting within an optional group like in your embedding example might be a reasonable limitation to start with, and would likely cover the majority of use cases. Today, every such column round-trips through the three-level LIST encoding: each row pays for repetition and definition levels that describe a shape that is, by construction, already known. Arrow offers FixedSizeList type for this use case and it is widely used by query engines and ML frameworks to store embeddings, image tensors and similar fixed-shape arrays with",
+      "status": "discussion",
+      "key_points": [],
+      "proposal_ids": [
+        "parquet-ml-3d7mf3l749r7d77f3lsr4jjqk10gjm92"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [
+        {
+          "url": "https://docs.google.com/document/d/1nf30OqK_UqxA4YTEZQszmOBEG56m9M5mp9rIYC2SUWc/edit",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffFixed-size list type for Parquet"
+        }
+      ],
+      "last_activity": "2026-08-03T05:18:09+00:00",
+      "signals": [
+        "shared_doc"
+      ],
+      "archived": false
+    },
+    {
+      "id": "parquet-init-parquet-gh-m34",
+      "title": "1.18.0",
+      "summary": "1.18.0",
+      "status": "discussion",
+      "key_points": [],
+      "proposal_ids": [
+        "parquet-gh-m34"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-08-02T20:05:00Z",
+      "signals": [],
+      "archived": false
+    },
     {
       "id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq",
       "title": "Parquet Versioning vote",
@@ -180,45 +243,6 @@
       "archived": false
     },
     {
-      "id": "parquet-init-parquet-gh-m34",
-      "title": "1.18.0",
-      "summary": "1.18.0",
-      "status": "discussion",
-      "key_points": [],
-      "proposal_ids": [
-        "parquet-gh-m34"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2026-07-27T20:07:02Z",
-      "signals": [],
-      "archived": false
-    },
-    {
-      "id": "parquet-init-parquet-ml-04s1w3qwoqv3ww9bx982fxg7kyw5lmf2",
-      "title": "Add VECTOR repetition level for fixed-size-list serializatio",
-      "summary": "Those optimizations provide a good compatible short-term path, but LIST still models variable-size-list data, writes redundant repetition levels, and imposes unnecessary writer and reader complexity and storage overhead. Today, every such column round-trips through the three-level LIST encoding: each row pays for repetition and definition levels that describe a shape that is, by construction, already known. Arrow offers FixedSizeList type for this use case and it is widely used by query engines and ML frameworks to store embeddings, image tensors and similar fixed-shape arrays with",
-      "status": "discussion",
-      "key_points": [],
-      "proposal_ids": [
-        "parquet-ml-04s1w3qwoqv3ww9bx982fxg7kyw5lmf2"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [
-        {
-          "url": "https://docs.google.com/document/d/1nf30OqK_UqxA4YTEZQszmOBEG56m9M5mp9rIYC2SUWc/edit",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffFixed-size list type for Parquet"
-        }
-      ],
-      "last_activity": "2026-07-27T13:31:16+00:00",
-      "signals": [
-        "shared_doc"
-      ],
-      "archived": false
-    },
-    {
       "id": "parquet-init-parquet-ml-hgmd58wrv9yoopcrf61m1bg211l65tbt",
       "title": "Add ALP encoding to the Parquet format",
       "summary": "Vote PASSED with 5 binding +1 votes and 7 non-binding +1",
@@ -317,13 +341,13 @@
         "parquet-ml-lwrzqhfnm1dm5j3v5nr284o4tqmsnp05",
         "parquet-ml-j9qv5vyg0r4jk6tbm6sqthltly4oztd3",
         "parquet-ml-81117c1bpfsf366sm90wr00ltw842kj3",
-        "parquet-ml-ygs245qdd2d2d91qk801t3pdf47tgn75",
         "parquet-ml-w63ol39dob2jh2cmomh9plz8tt5ctnol",
         "parquet-ml-nbksq32cs8h1ldj8762y6wh9zzp8gqx6",
         "parquet-ml-85712vy5cn170gh9g9r00g98gzjtjxj9",
         "parquet-ml-8tlhnk2rrqo72onsr45on1zs1mhmcytj",
         "parquet-ml-djnbbcnft0fqm9ldby2q96nbtrwqz477",
         "parquet-ml-7zfwc3o53btd2xbdb8bqf8lxsrk76cxr",
+        "parquet-ml-kd3k4q691lp5c4q3r767zb8jltrm9z33",
         "parquet-ml-k9q8nctkmoh0mwd7r470ytqr64f33w9g",
         "parquet-ml-zhpm9m7wgr2szmb1vlh3yqh04wctww89",
         "parquet-ml-x3472kldrq5kjnld9ztj1jozz25f40hg",
@@ -586,7 +610,6 @@
         "parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q",
         "parquet-ml-22dvcnm7v5d30slzc3hp8d9qq8syj1dq",
         "parquet-ml-dy22njos6c0wbo82s377wvbobbd7y6lx",
-        "parquet-ml-kd3k4q691lp5c4q3r767zb8jltrm9z33",
         "parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",
         "parquet-ml-bvyg48ysp3rkh4ls0lnn597ygpyf6goj",
         "parquet-ml-xwd3mqjr9bdpg3jcnlprbyb4x09c9ymj",
@@ -599,7 +622,7 @@
         "parquet-ml-kttwbl5l7opz6nwb5bck2gghc2y3td0o",
         "parquet-ml-wgobz41mfldbhqpg9q4mdwypghg2cxg2"
       ],
-      "proposal_count": 18,
+      "proposal_count": 17,
       "shared_docs": [
         {
           "url": "https://docs.google.com/document/d/1guEzBQjzOEEZvvibeZjNraKmZHWtxQR95O_DvtZU0xw/edit?usp=sharing",
@@ -684,6 +707,24 @@
       "proposal_count": 1,
       "shared_docs": [],
       "last_activity": "2026-02-04T12:26:35+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
+      "id": "parquet-init-parquet-ml-ygs245qdd2d2d91qk801t3pdf47tgn75",
+      "title": "Deprecate file_path field in column chunk",
+      "summary": "The discussion revolves around the potential deprecation of the file_path field in the parquet footer, which has seen limited use outside of specific cases. Participants are weighing the implications of removing this field versus simply documenting its deprecation while considering emerging use cases that may still benefit from it.",
+      "status": "discussion",
+      "key_points": [
+        "Concerns about the impact of deprecation",
+        "Emerging use cases for file_path"
+      ],
+      "proposal_ids": [
+        "parquet-ml-ygs245qdd2d2d91qk801t3pdf47tgn75"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-01-31T05:47:56+00:00",
       "signals": [],
       "archived": false
     },

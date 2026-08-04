@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-08-03T09:26:06.640693+00:00",
+  "generated_at": "2026-08-04T08:24:00.494310+00:00",
   "total": 268,
   "proposals": [
     {
@@ -2262,7 +2262,7 @@
       "author": "PRATEEK GAUR <pr...@gmail.com>",
       "state": "open",
       "created_at": "2026-08-03T06:12:09+00:00",
-      "updated_at": "2026-08-03T06:12:09+00:00",
+      "updated_at": "2026-08-03T09:25:17+00:00",
       "body": "Hi team,\n\nI came across a recent string compression algorithm called OnPair and spent\nsome time experimenting with it as a Parquet encoding, benchmarked against\nFSST, DELTA_LENGTH_BYTE_ARRAY, dictionary encoding, and the usual\nzstd/lz4/snappy page compression across 30 string corpora.\n\n Report\n<https://docs.google.com/document/d/1cctFqNVh_Ul6huiXyMeFWNaGhZba0fMJ/edit>\n\nShort version: it trades encode speed for ratio and decode speed \u2014 it\ndecodes faster than every compressed alternative measured and wins ratio on\nmost text-heavy columns, but its training pass makes encode substantially\nslower.\n\nApologies in advance for slow replies \u2014 I'm travelling.\n\nBest\nPrateek\n",
       "labels": [],
       "linked_resources": [
@@ -2275,16 +2275,18 @@
       ],
       "llm_summary": "Short version: it trades encode speed for ratio and decode speed \u2014 it decodes faster than every compressed alternative measured and wins ratio on most text-heavy columns, but its training pass makes encode substantially slower. Author: Prateek Gaur Suggested by :  Julien Le Dem, Russell Spitzer, Andrew Lamb Other file formats that support it : Vortex, anyone else? We measure it head-to-head against FSST (the string encoding currently proposed for Parquet), and against the general-purpose block compressors zstd -1 and lz4, on the three axes that matter for a columnar format: compression ratio, decompression speed (with per-row random access), and compression speed.",
       "llm_status": "discussion",
-      "comment_count": 0,
-      "participant_count": 1,
-      "llm_key_points": [],
+      "comment_count": 1,
+      "participant_count": 2,
+      "llm_key_points": [
+        "Thanks Prateek,\n\nI also wanted to explicitly mention here on the mailing list again how\nsimilar I think FSST and OnPair "
+      ],
       "llm_topics": [
         "string-encoding",
-        "apache-parquet",
-        "algorithm-called",
-        "time-experimenting"
+        "snappy-page",
+        "time-experimenting",
+        "string"
       ],
-      "_content_hash": "006e09cfd237",
+      "_content_hash": "0b4c006c648c",
       "initiative_id": "parquet-init-parquet-ml-hfoltdl6o6txc3zp4680nns1mh29h0r8"
     },
     {
@@ -2327,6 +2329,7 @@
         "add"
       ],
       "_content_hash": "24860a81d3e5",
+      "llm_title": "",
       "initiative_id": "parquet-init-parquet-ml-3d7mf3l749r7d77f3lsr4jjqk10gjm92"
     },
     {

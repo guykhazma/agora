@@ -1,8 +1,37 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-08-06T08:18:10.233677+00:00",
-  "total": 635,
+  "generated_at": "2026-08-07T07:02:29.562265+00:00",
+  "total": 637,
   "proposals": [
+    {
+      "id": "spark-jira-SPARK-57487",
+      "source": "jira",
+      "kind": "issue",
+      "title": "Support distributed map join for medium-sized build tables via SQL hint",
+      "url": "https://issues.apache.org/jira/browse/SPARK-57487",
+      "author": "Yu Gan",
+      "state": "open",
+      "created_at": "2026-06-16T08:53:59+00:00",
+      "updated_at": "2026-08-06T08:50:04+00:00",
+      "body": "Broadcast hash join is limited by driver memory and executor broadcast threshold \u2014 tables between ~200MB and 2GB often fall back to expensive shuffle joins, causing unnecessary data movement on\u00a0the probe side.\r\n\r\n\u00a0 This PR introduces {*}Distributed Map Join (DMJ){*}, a new join strategy that avoids full shuffle by:\r\n\u00a0 1. Hash-partitioning the build side into a fixed number of shards across executors\r\n\u00a0 2. Building a HashedRelation per shard with replica placement for fault tolerance\r\n\u00a0 3. Probe side performs batched RPC lookups (with bloom filter pre-filtering) instead of shuffling\r\n\r\n\u00a0 The strategy is triggered explicitly via SQL hint:\r\n{code:java}\r\n  SELECT /*+ DISTMAPJOIN(build_table(shard_count=5, replica_count=3)) */ ...\r\n\u00a0 FROM probe_table JOIN build_table ON ... {code}\r\nh3. \u00a0 Production benchmark\r\n\r\n\u00a0 A LEFT JOIN workload in our production environment (16k cores, 120TB memory, DRA enabled):\r\n\u00a0 - Probe side: ~5PB\r\n\u00a0 - Build side: ~2GB\r\n\u00a0 - Before (shuffle hash join): probe-side shuffle write + join stages took *~5 hours*\r\n\u00a0 - After (distributed map join): single probe-side join stage took *~2 hours*\r\n\u00a0 - *~60% wall-time reduction* by eliminating the probe-side shuffle entirely\r\nh3. \u00a0 Supported join types\r\n\r\n\u00a0 Inner, LeftOuter, RightOuter, LeftSemi, LeftAnti, ExistenceJoin.\r\nh3. \u00a0 Key components\r\n\r\n\u00a0 - *ShardManager / ShardManagerMaster* (core): manages shard lifecycle, location tracking, and\u00a0replica placement\r\n\u00a0 - {*}ShardExchangeExec{*}: physical exchange operator that partitions build side into shards\r\n\u00a0 - {*}DistributedMapJoinExec{*}: physical join operator with async batched RPC lookups\r\n\u00a0 - {*}ShardLookupService{*}: Netty-based RPC layer for shard data transfer (pluggable via {{{}spark.shard.service{}}})\r\n\u00a0 - Full AQE integration via ShardQueryStageExec\r\n\r\n\u00a0 This is similar in spirit to Hive's map join but distributed \u2014 no single-node bottleneck.",
+      "labels": [
+        "SPIP",
+        "pull-request-available"
+      ],
+      "linked_resources": [],
+      "comment_count": 1,
+      "llm_summary": "Broadcast hash join is limited by driver memory and executor broadcast threshold \u2014 tables between ~200MB and 2GB often fall back to expensive shuffle joins, causing unnecessary data movement on\u00a0the probe side. Probe side performs batched RPC lookups (with bloom filter pre-filtering) instead of shuffling - *ShardManager / ShardManagerMaster* (core): manages shard lifecycle, location tracking, and\u00a0replica placement - {*}ShardExchangeExec{*}: physical exchange operator that partitions build side into shards - {*}DistributedMapJoinExec{*}: physical join operator with async batched RPC lookups - {*}ShardLookupService{*}: Netty-based RPC layer for shard data transfer (pluggable via {{{}spark.shard.service{}}}) - Full AQE integration via ShardQueryStageExec",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "broadcast-threshold",
+        "join",
+        "executor-broadcast",
+        "map-join"
+      ],
+      "_content_hash": "c09cf2d9e12f",
+      "initiative_id": "spark-init-spark-jira-SPARK-57487"
+    },
     {
       "id": "spark-jira-SPARK-55278",
       "source": "jira",
@@ -109,7 +138,7 @@
         "unified"
       ],
       "_content_hash": "b6589fc6ab0d",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-jira-SPARK-56599",
@@ -386,7 +415,7 @@
         "motivation"
       ],
       "_content_hash": "fbd70c369786",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-jira-SPARK-51658",
@@ -654,7 +683,7 @@
         "spark-dataframes"
       ],
       "_content_hash": "001ad555ca35",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-jira-SPARK-24918",
@@ -741,7 +770,7 @@
         "accelerator-aware-task"
       ],
       "_content_hash": "85e275672969",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-jira-SPARK-25501",
@@ -1423,7 +1452,7 @@
         "performance-improvement"
       ],
       "_content_hash": "9d9f4fb1df66",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-jira-SPARK-27067",
@@ -1675,7 +1704,7 @@
         "spark-sub-project"
       ],
       "_content_hash": "e46e418f4ebe",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-ml-cr0kbnz2mqsoodwyx5m2vy34x2tdg4ft",
@@ -1686,7 +1715,7 @@
       "author": "\"L. C. Hsieh\" <vi...@gmail.com>",
       "state": "open",
       "created_at": "2026-08-06T02:57:50+00:00",
-      "updated_at": "2026-08-06T06:10:55+00:00",
+      "updated_at": "2026-08-06T23:42:30+00:00",
       "body": "Hi all,\n\n  I'd like to start the vote for the SPIP \"Spark Connect Gateway\".\n\n  The SPIP proposes an official Spark Connect Gateway \u2014 a standalone,\nwire-compatible gRPC proxy that sits in front of a pool of Spark Connect\nservers.\n\n  The SPIP document has been updated along the way to address the feedback\nraised in the discussion thread, including protocol coupling,\n  session-loss semantics, the trust boundary between the gateway and the\nbackends, etc.\n\n  - JIRA: https://issues.apache.org/jira/browse/SPARK-58455\n  - SPIP doc:\nhttps://docs.google.com/document/d/16RNnRJjSDBSlcgeBjVz_Mv-SkqvH33F9tIsR1Ii_P3c/edit?tab=t.0#heading=h.221xxblzqzu\n\n  Please vote on the SPIP:\n\n  [ ] +1 Accept the proposal\n  [ ] +0\n  [ ] -1 I don't think this is a good idea because \u2026\n\n  The vote will be open for at least 72 hours.\n\n  Thanks!\n  Liang-Chi\n",
       "labels": [],
       "linked_resources": [
@@ -1707,16 +1736,20 @@
           "fetched": false
         }
       ],
-      "llm_summary": "Vote in progress: 0 binding +1, 7 non-binding +1",
+      "llm_summary": "Vote in progress: 0 binding +1, 14 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 7,
-      "participant_count": 8,
+      "comment_count": 14,
+      "participant_count": 15,
       "vote_data": {
         "binding_plus1": 0,
-        "nonbinding_plus1": 7,
+        "nonbinding_plus1": 14,
         "vetoes": 0,
         "result": "open",
         "voters": [
+          {
+            "voter": "Bobby Wang <wb...@gmail.com>",
+            "vote": "+1"
+          },
           {
             "voter": "DB Tsai <db...@dbtsai.com>",
             "vote": "+1"
@@ -1738,11 +1771,35 @@
             "vote": "+1"
           },
           {
+            "voter": "Qiegang Long <ql...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Ruifeng Zheng <ru...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Szehon Ho <sz...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Xiao Li <ga...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Yicong Huang <yi...@apache.org>",
+            "vote": "+1"
+          },
+          {
             "voter": "Zhou Jiang <zh...@gmail.com>",
             "vote": "+1"
           },
           {
             "voter": "bo yang <bo...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "vaquar khan <va...@gmail.com>",
             "vote": "+1"
           }
         ],
@@ -1750,7 +1807,7 @@
       },
       "llm_key_points": [
         "Hi all,\n\n  I'd like to start the vote for the SPIP \"Spark Connect Gateway\".",
-        "Voters include: DB Tsai, Dongjoon Hyun, Felix Cheung..."
+        "Voters include: Bobby Wang, DB Tsai, Dongjoon Hyun..."
       ],
       "llm_topics": [
         "spark-connect",
@@ -1758,8 +1815,50 @@
         "session-affinity",
         "connect-servers"
       ],
-      "_content_hash": "9f49e59a1143",
+      "_content_hash": "e344503f7dc5",
       "initiative_id": "spark-init-spark-jira-SPARK-58455"
+    },
+    {
+      "id": "spark-ml-qb71ldsjt9wllvc3jzst4v4zhhsq6tdb",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] SPIP: Distributed Map Join for Medium-Sized Build Tables",
+      "url": "https://lists.apache.org/thread/qb71ldsjt9wllvc3jzst4v4zhhsq6tdb",
+      "author": "Yu Gan <gy...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-08-06T08:43:59+00:00",
+      "updated_at": "2026-08-06T17:43:08+00:00",
+      "body": "Hi all,\n\nI'd like to start a discussion on a SPIP for a new opt-in join\nstrategy: Distributed Map Join (DMJ).\n\n- Design doc (SPIP format, open for comments):\n  https://docs.google.com/document/d/1ioj2vaY1-kgvGX-FCCVA95ybBYjlnc20KePS1GNPbSM\n- JIRA: https://issues.apache.org/jira/browse/SPARK-57487\n- PR (reference implementation): https://github.com/apache/spark/pull/56542\n- Shepherd: Chao Sun (sunchao)\n\nProblem. There's a gap between broadcast join and shuffle join. When\nthe build side is medium-sized -- too large to broadcast (roughly\nhundreds of MB up to ~10 GB) -- but the probe side is very large\n(PB-scale in our production case), Spark falls back to a shuffle join,\nand shuffling the probe side becomes the dominant cost of the query.\n\nProposal. DMJ avoids the probe-side shuffle. The build side is\nhash-partitioned into N remotely-queryable shards held in-memory on\nexecutors; probe tasks send batched RPC lookups to the shard-holding\nexecutors, pre-filtered by a Bloom filter, and stream matched rows\nback. No probe-side shuffle.\n\nScope / safety. The feature is double-gated and off by default:\n- spark.shard.enabled=true starts the shard infrastructure at\napplication launch (inlined in the executor process -- an additional\nNetty server + RPC endpoints in SparkEnv, no separate process or\ndeployment step).\n- An explicit per-query SQL hint /*+ DISTMAPJOIN(table) */ activates\nthe strategy.\n\nThere is no cost-based selection; the planner never chooses DMJ\nautomatically. When disabled, no code paths are initialized and there\nis zero overhead.\n\nProduction status. Running stably in our 16k-core production\nenvironment for 2+ months on PB-scale workloads (~60% wall-time\nreduction on qualifying fact-dimension joins).\n\nThe design doc covers architecture, data flow, the key design\ndecisions, risks, and rejected alternatives. I'd appreciate feedback\non the overall approach and on the specific design questions raised on\nthe PR (e.g. whether the shard infrastructure should remain opt-in",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1ioj2vaY1-kgvGX-FCCVA95ybBYjlnc20KePS1GNPbSM",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: Distributed Map Join for Medium-Sized Build Tables"
+        },
+        {
+          "url": "https://github.com/apache/spark/pull/56542",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Running stably in our 16k-core production environment for 2+ months on PB-scale workloads (~60% wall-time reduction on qualifying fact-dimension joins). The probe side sends batched RPC lookups to the shard-holding executors and streams matched rows back, instead of shuffling. The strategy is fully opt-in: users activate it per query via a SQL hint (/*+ DISTMAPJOIN(table) */), and the shard infrastructure must be explicitly enabled at application launch (spark.shard.enabled=true).",
+      "llm_status": "discussion",
+      "comment_count": 5,
+      "participant_count": 2,
+      "llm_key_points": [
+        "Just went through the doc..",
+        "Also another clarification requested\nIn the worst case scenario of all partioned keys are required by all the\nprobing no",
+        "Hi Asif,\n\nThanks for the careful read -- these are exactly the right questions."
+      ],
+      "llm_topics": [
+        "distributed-map",
+        "map-join",
+        "distributed",
+        "map"
+      ],
+      "_content_hash": "45c295998dc1",
+      "initiative_id": "spark-init-spark-jira-SPARK-57487"
     },
     {
       "id": "spark-ml-72dhvf0qmw4l8gzgogfth7v0cn5gcb6d",
@@ -4083,7 +4182,7 @@
         "local-laptop"
       ],
       "_content_hash": "8e8c054aef0e",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-ml-ckpv8z0fqw42xkbrskqf3ggsl1yb81c4",
@@ -4294,7 +4393,7 @@
         "faster"
       ],
       "_content_hash": "234be0c22d25",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-ml-036j2fhgcs1kmshbo3r6pcmqp1ro5kyk",
@@ -4727,7 +4826,7 @@
         "spip"
       ],
       "_content_hash": "9faf2e9d1ba4",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-ml-3xojq1dhs72gvkxbxj2c2om5odzl16sx",
@@ -14215,7 +14314,7 @@
         "formal-vote"
       ],
       "_content_hash": "60b92656906a",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-jqj2z8ff3lk6wp3603jdhcnshr8p3s96",
@@ -14257,7 +14356,7 @@
         "vote-passes"
       ],
       "_content_hash": "092061241efb",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-lsv8f829ps0bog41fjoqc45xk7m574ly",
@@ -14295,7 +14394,7 @@
         "jie-yang"
       ],
       "_content_hash": "a43d56afabb0",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-4r25lhtrg9cog956m2fldodt64dgt45j",
@@ -18235,7 +18334,7 @@
         "discuss"
       ],
       "_content_hash": "70225d451d1a",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-3c8qxks26kqflsjh0gtjo3nldk686vtq",
@@ -25212,7 +25311,7 @@
         "performance-improvement"
       ],
       "_content_hash": "8b09357127ec",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-tdgf4gd4copzxjdoldkf1n2gn5m0kdkc",
@@ -25294,7 +25393,7 @@
         "performance-improvement"
       ],
       "_content_hash": "48429bc6df81",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-l6tprb580lrq1118c83kt9fst30jp8n3",
@@ -25488,7 +25587,7 @@
         "materialization"
       ],
       "_content_hash": "3306418cb616",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-342qnjxmnoydzxr0k8yq4roxdmqjhw9x",
@@ -25661,7 +25760,7 @@
         "release"
       ],
       "_content_hash": "11ef119282b3",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt"
     },
     {
       "id": "spark-ml-y6hby3k9nqds4fgx0b1w5yhhlqb2f7gb",
@@ -25745,7 +25844,7 @@
         "maciej-szymkiewicz"
       ],
       "_content_hash": "85b3f677283f",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-gh2oktrndxopqnyxbsvp2p0k6jk1n9fs",
@@ -26015,7 +26114,7 @@
         "yuming-wang"
       ],
       "_content_hash": "a0cd2e254ca8",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-n5zb2hj3rl15g8wnlvl9xn4ghosxgj4p",
@@ -26049,7 +26148,7 @@
         "spark"
       ],
       "_content_hash": "033d720f0836",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-ml-zys6wylgmdq3gm47go306tsr0ovto0g3",
@@ -26929,7 +27028,7 @@
         "spip"
       ],
       "_content_hash": "f3cf472da1c5",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-nbqj698v59skknrh7bp6ol0rrs9zsr6r",
@@ -28707,7 +28806,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",

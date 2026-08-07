@@ -1,7 +1,7 @@
 {
   "project_id": "iceberg",
-  "generated_at": "2026-08-06T08:17:21.079010+00:00",
-  "total": 1150,
+  "generated_at": "2026-08-07T07:01:44.511436+00:00",
+  "total": 1152,
   "proposals": [
     {
       "id": "iceberg-doc-19nno1RoPznb",
@@ -12,7 +12,7 @@
       "author": "community",
       "state": "open",
       "created_at": "",
-      "updated_at": "2026-08-06T08:16:25.116332+00:00",
+      "updated_at": "2026-08-07T07:00:49.466012+00:00",
       "body": "\ufeffIceberg - Spark Community Sync Notes\r\n\r\n\r\n* This doc has notes from Iceberg Spark integration work, it will include all past discussions in this area.\r\n* Everyone is welcome to join the Iceberg spark syncs to discuss Spark related topics.\r\n* The general community sync notes can be found here.\r\n* Join the \u201cIceberg Dev Events\u201d calendar to see the calendar event!\r\nIceberg - Spark Community Sync\r\nTuesday, January 20\u22c510:00 \u2013 11:00am (recurring Monthly on the third Tuesday) \r\nmeet.google.com/aqg-mdpq-myf\r\n\r\n\r\n\r\n\r\nJul 21, 2026\r\nHighlights\r\n* Spark: Add vectorized Parquet reads for variant columns (#16292) \u2014 Major variant read perf; unblocks shredded extraction\r\n* Spark 4.1: Geo Types ( End-to-end geo type support in Spark)\r\n   * Map geo Spark types (#16851) \r\n   * Read and write geometry and geography values in Parquet (#17073)\r\n   * Spark 4.1: Test geometry and geography DML and fall back from vectorized reads (#17149)\r\n* Spark 4.1: Implement listTableSummaries (#16891) - Detect table vs views without doing load table\r\n* Spark: Add session-level split size override (#16154) + Backport to 3.5/4.0 (#17199)\r\n* Spark 4.1: Add REST_CATALOG_PURGE property (#17186) + Spark 4.0 (#17185)\r\n   * Delegate DROP TABLE PURGE to REST catalogs\r\n* Core, Spark: Ensure correct delete file sizes in rewrite table action (#15470) + 1.10.x backport (#17215)\r\nDiscussion points\r\n* Spark Versioning\r\n   * Add support for Spark 4.2.0 (#14984) - 4.2 released so this is up for review\r\n   * Spark 4.3 plans\r\n   * Deprecation of 4.0         \r\n* Spark CI improvements \r\n   * Reduce TestRewriteDataFilesAction data volume (#16565)\r\n   * CI: Select Spark PR matrix by changed version (#16946)\r\n   * CI: Select Flink PR matrix by changed version (#16947)\r\nReview Requests\r\nSort Order / K-way Merge\r\n* Spark 4.1: Add MergingSortedRowDataReader (#14948) \r\n* Spark 4.1: Implement SupportsReportOrdering (#16750) \u2014 DRAFT, blocked on #14948. No reviewers.\r\n* K-way merge rewrite strategy (#16305) \u2014 Depends on #14948. Unch",
       "labels": [],
       "linked_resources": [],
@@ -43,7 +43,7 @@
       "author": "community",
       "state": "open",
       "created_at": "2025-09-19T16:14:21Z",
-      "updated_at": "2026-08-05T20:50:23Z",
+      "updated_at": "2026-08-06T08:24:10Z",
       "due_on": null,
       "body": "",
       "labels": [],
@@ -562,7 +562,7 @@
       ],
       "_content_hash": "2ef8c3045f3a",
       "llm_title": "Iceberg Variant Community Sync Summary",
-      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb"
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs"
     },
     {
       "id": "iceberg-yt-OaeTob3lM1Q",
@@ -1929,7 +1929,7 @@
       ],
       "llm_title": "",
       "_content_hash": "fe720eed6e2f",
-      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on"
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq"
     },
     {
       "id": "iceberg-yt-VYkkMvZkJ-k",
@@ -2980,7 +2980,7 @@
         }
       ],
       "comment_count": 9,
-      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb",
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
       "llm_summary": "Proposes a spec change to differentiate array fields from primitive fields in Variant column metadata. Currently, array elements and primitive values use the same field path representation (e.g., $['tags']), preventing engines from pruning files effectively. Two solutions are suggested: using $['tags'][0] notation or storing as $['tags']: [\"action\"] to explicitly indicate array types.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -5389,6 +5389,175 @@
       "_content_hash": "7f727f0a61b8"
     },
     {
+      "id": "iceberg-ml-zh25o2msbjw3skd577qzsyrcorobcthz",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Read Restrictions: overlapping column projections on nested types",
+      "url": "https://lists.apache.org/thread/zh25o2msbjw3skd577qzsyrcorobcthz",
+      "author": "Prashant Singh <pr...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-08-04T23:25:40+00:00",
+      "updated_at": "2026-08-07T00:00:55+00:00",
+      "body": "Hi all,\n\nOne open thread on the Read Restrictions spec PR [1] is the last item I'd\nlike to settle before calling a vote [2]. The last sync leaned towards the\nrestrictive option, but there was an ask by Dan that the alternative be\nexplored properly first, so I'm bringing it here.\n\nThe question\n\nrequired-column-projections binds an action to a field-id, and a nested\ntype has a field-id for the container and separate ones beneath it (struct\nsubfields; list element; map key and value).\n\nConcretely, with 2: address struct<3: street string, 4: city string>:\n\n    - field-id: 2   action: mask-to-fixed-value\n\n    - field-id: 4   action: replace-with-null\n\nmask-to-fixed-value overwrites everything beneath the container, so it\nyields \"XXXXXXXX\" for each string leaf. Outer-most-wins therefore\nreturns {\"street\":\n\"XXXXXXXX\", \"city\": \"XXXXXXXX\"}; inner-most-wins returns {\"street\": null,\n\"city\": \"XXXXXXXX\"}, though the catalog asked for the whole struct to be\nmasked.\n\nif a catalog returns two projections (one on the outer container and one on\na field-id below it), how should clients handle it?\n\n  (A) forbid the overlap; the existing fail-closed rule then makes a reader\n\n      that receives one fail the query. The spec PR currently says:\n\nIf a projection targets a nested-typed field (struct, list, or map), other\nprojections in the same  ReadRestrictions must not target any nested\nfield-id (struct subfields, list elements, or\n\nmap keys/values) at any depth. This specification does not define how such\nactions combine.\n\nA reader that receives such a response must fail the query.\n\n  (B) define precedence (e.g. outer-most wins) and allow it\n\nWhy current spec PR choose option A\n\nNo semantics to borrow. There are different behaviors in the current\nindustry practice\n\n   -\n\n   BigQuery:\n   -\n\n      \"Policy tags can't be applied to columns that use the STRUCT data\n      type\" [3];\n      -\n\n   Redshift both experience based on data-types:\n   -\n\n      \"You can only apply masking policies to sca",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1iGNydKY7XT1N5Nz056vDPM0P8v0MFymGqNtOlUGUp-c/edit?tab=t.0#heading=h.h3v6cqyijrx",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffIceberg Read Restrictions: Community Syncs"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/13879",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/trinodb/trino/issues/16964",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "One open thread on the Read Restrictions spec PR [1] is the last item I'd like to settle before calling a vote [2]. Defining a standard is a highly sensitive design decision that deserves its own focused, long-term community discussion rather than being rushed. I am only discussing main question of this thread: failing the query *vs* resolving precedence rules at *client/reader-side *for nested fields with conflicting policies?",
+      "llm_status": "discussion",
+      "comment_count": 6,
+      "participant_count": 5,
+      "llm_key_points": [
+        "Thanks Prashant for doing such extensive research on this topic.",
+        "I'd like to clarify the point on backward compatibility claims here first\nas it indicates a dangerous misunderstanding o",
+        ">  Changing that in the future would break older clients that validate and\nresult in an unpredictable changes in behior "
+      ],
+      "llm_topics": [
+        "read-restrictions",
+        "restrictions-spec",
+        "read",
+        "restrictions"
+      ],
+      "_content_hash": "eaf89edcceef",
+      "initiative_id": "iceberg-init-iceberg-gh-p13879"
+    },
+    {
+      "id": "iceberg-ml-sxfwxovmywmf17fmcwkqlf33r9wcf14f",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Support for derived columns in Iceberg.",
+      "url": "https://lists.apache.org/thread/sxfwxovmywmf17fmcwkqlf33r9wcf14f",
+      "author": "Prashant Sharma <sc...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-08-06T10:27:19+00:00",
+      "updated_at": "2026-08-06T18:08:01+00:00",
+      "body": "Hello All,\n\nRecently, I have been involved in bringing derived columns(aka generated\ncolumns) for the Iceberg connector in Presto Link:\nhttps://github.com/prestodb/rfcs/pull/61. We currently use table properties\nto store the extra metadata for derived columns. However, we cannot achieve\nthe following:\n\n1. Cross engine compatibility: How do we know if the derived columns\nmetadata is in sync i.e. if other engines unaware of derived columns write\nto the table/alter the columns etc...\n2. UDF portability and versioning: which is already addressed by (Iceberg\nUDF spec)\n3. VIRTUAL columns: We store all the column metadata/metrics/stats\nincluding a bloom filter but not the actual data. A poor man's index.\n\nWe are considering a Iceberg spec level support to address all of the\nabove. Just wondering, is there work already happening in this direction\nelsewhere?\n\nIf not, I have started an issue:\nhttps://github.com/apache/iceberg/issues/15923 , will be adding more\ndetails soon.\n\nThanks,\nPrashant\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/prestodb/rfcs/pull/61",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/16652",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/16961",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/issues/15923",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "On your question: no, there's no active work on a format-level derived/computed column concept in Iceberg, and as far as I can tell from the archives none has been proposed before -- so you're not duplicating anything. We'd love for someone to create a formal proposal to expand upon these existing proposals/features as it's a pretty natural extension from what we have in progress already. I found the determinism problem to be deeper than it seemed at first glance, a lot of popular generation expressions in Delta, Spark are in fact dependent on engine configs like timezone, which makes data skipping a bit tricky, we've only recently started thinking about this issue.",
+      "llm_status": "discussion",
+      "comment_count": 3,
+      "participant_count": 4,
+      "llm_key_points": [
+        "Thanks for bringing this to the list, Prashant.",
+        "What Andrei captured is a great summary of related proposals and ongoing\nwork.",
+        "Hi, nice, I have also been looking at implementing this from the Spark DSV2\nside, would love to collaborate on this as w"
+      ],
+      "llm_topics": [
+        "derived-columns",
+        "columns",
+        "presto-link",
+        "derived"
+      ],
+      "_content_hash": "6cb1bce90063",
+      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on"
+    },
+    {
+      "id": "iceberg-ml-m1cqo8b7qzgxw3j2s7mdfodt9ly364dg",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Need a reviewer for PR #17152 please",
+      "url": "https://lists.apache.org/thread/m1cqo8b7qzgxw3j2s7mdfodt9ly364dg",
+      "author": "Rainer Schamm <ra...@lsdopen.io>",
+      "state": "open",
+      "created_at": "2026-08-06T10:48:56+00:00",
+      "updated_at": "2026-08-06T10:48:56+00:00",
+      "body": "Hi all\n\nNot sure if this is best channel to ask, but I need another approver for\nthis small PR (1 line diff)\n\nhttps://github.com/apache/iceberg/pull/17152\n\nThanks all!\n\n-- \n\n[image: photo]\n\nRainer Schamm\nSouth Africa\n\n[image: icon] +27741358098  [image: icon] lsdopen.io\n<https://lsdopen.io?utm_campaign=general&utm_source=email&utm_medium=signature>\n  [image: icon] rainer@lsdopen.io\n\n[image: youtube] <ht...@lsdopen>\n\n[image: facebook] <https://facebook.com/lsdopen>\n\n[image: instagram] <https://instagram.com/lsdopen>\n\n[image: linkedin] <https://www.linkedin.com/company/lsdopen>\n\n[image: __tpx__]\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/iceberg/pull/17152",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Not sure if this is best channel to ask, but I need another approver for this small PR (1 line diff) Rainer Schamm South Africa [image: youtube] <ht...@lsdopen>",
+      "llm_status": "implementation",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [],
+      "llm_topics": [
+        "image",
+        "line-diff",
+        "rainer-schamm",
+        "south-africa"
+      ],
+      "_content_hash": "7505b845c0ff",
+      "initiative_id": "iceberg-init-iceberg-ml-m1cqo8b7qzgxw3j2s7mdfodt9ly364dg"
+    },
+    {
+      "id": "iceberg-ml-cvn448s85v2g835dfwxpz2z1j2hczok9",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] Apache Iceberg 1.12.0 release",
+      "url": "https://lists.apache.org/thread/cvn448s85v2g835dfwxpz2z1j2hczok9",
+      "author": "Neelesh Salian <ne...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-08-05T20:03:27+00:00",
+      "updated_at": "2026-08-06T08:18:36+00:00",
+      "body": "Hi folks,\n\nAs mentioned during the community sync this morning, the release is on\ntrack.\nA few updates:\n\n   - I plan to cut the branch / RC on or after August 26, 2026 (after the\n   community sync that morning). I'll be working with Amogh to help with the\n   branching + artifacts.\n   - There are still active items needing reviews. Please take a look at\n   the 1.12.0 milestone\n   <https://github.com/apache/iceberg/issues?q=milestone%3A%22Iceberg%201.12.0%22>\n   .\n   - Calling out the Spark 4.2.0 PR:\n   https://github.com/apache/iceberg/pull/14984 - it needs more eyes and\n   review time to make this release.\n   - I'll keep watching for blockers and bugs that should be part of the\n   release and surface them as needed, including any forward-porting to Spark\n   4.2.\n\nIf you have a feature(s), fix(es), or breaking change(s) you want\nconsidered for 1.12.0, please let me know.\n\nThanks,\nNeelesh\n\nOn Fri, Jun 5, 2026 at 3:54\u202fPM Steven Wu <st...@gmail.com> wrote:\n\n> If we develop good habit of regular releases, we normally won't need to\n> hold the release train to get things in (except for critical security and\n> correctness issues) as the next one is 2-3 months away.\n>\n> On Fri, Jun 5, 2026 at 3:42\u202fPM Neelesh Salian <ne...@gmail.com>\n> wrote:\n>\n>> Hi folks,\n>>\n>> With 1.11.0 out the door, I want to open up the planning around 1.12.0.\n>> As Steven noted on the dev list (thread for 1.11), 1.11.0 took roughly 8\n>> months from 1.10.0. This is longer than the 3-4 month cadence we have\n>> previously discussed.\n>> For 1.12.0 I'd like us to aim closer to that target.\n>>\n>> I'll be acting as the release manager for this release. Here are a few\n>> notes to kick things off:\n>>\n>>    - *Tentative release target: *late August / early September 2026 (~3\n>>    months from 1.11.0).\n>>    - *Curation: *We'll use the June 24 community sync as the formal\n>>    kickoff to surface in-flight work and call out anything that should land in\n>>    this release.\n>>    - *Cadence reminder:* If something",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/iceberg/pull/14984",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/16507",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/15989",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "> > On Fri, Jun 5, 2026 at 3:42\u202fPM Neelesh Salian <ne...@gmail.com> > wrote: > >> Hi folks, >> >> With 1.11.0 out the door, I want to open up the planning around 1.12.0. >>    - *Curation: *We'll use the June 24 community sync as the formal >>    kickoff to surface in-flight work and call out anything that should land in >>    this release. On Wed, Aug 5, 2026 at 10:37\u202fPM O\u011fuzhan \u00dcnl\u00fc <ce...@gmail.com> wrote: > > Hi Neelesh, > > I'd like to get https://github.com/apache/iceberg/pull/16507 included in the milestone if possible.",
+      "llm_status": "discussion",
+      "comment_count": 2,
+      "participant_count": 3,
+      "llm_key_points": [
+        "Hi Neelesh,\n\nI'd like to get https://github.com/apache/iceberg/pull/16507 included in\nthe milestone if possible.",
+        "Hi Neelesh,\n\nIf possible, I'd like to have this PR included:\n\nhttps://github.com/apache/iceberg/pull/15989\n\nIt's the fix"
+      ],
+      "llm_topics": [
+        "apache-iceberg",
+        "community-sync",
+        "release",
+        "discuss"
+      ],
+      "_content_hash": "00e305670e6d",
+      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb"
+    },
+    {
       "id": "iceberg-ml-5qhn33k5kr0t9g3vvqqxc893bs11jxlc",
       "source": "mailing_list",
       "kind": "thread",
@@ -5512,44 +5681,6 @@
       "initiative_id": "iceberg-init-iceberg-ml-29sl2x4mh1j99d74g230129qq3yqm2rm"
     },
     {
-      "id": "iceberg-ml-cvn448s85v2g835dfwxpz2z1j2hczok9",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "Re: [DISCUSS] Apache Iceberg 1.12.0 release",
-      "url": "https://lists.apache.org/thread/cvn448s85v2g835dfwxpz2z1j2hczok9",
-      "author": "Neelesh Salian <ne...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-08-05T20:03:27+00:00",
-      "updated_at": "2026-08-05T20:36:48+00:00",
-      "body": "Hi folks,\n\nAs mentioned during the community sync this morning, the release is on\ntrack.\nA few updates:\n\n   - I plan to cut the branch / RC on or after August 26, 2026 (after the\n   community sync that morning). I'll be working with Amogh to help with the\n   branching + artifacts.\n   - There are still active items needing reviews. Please take a look at\n   the 1.12.0 milestone\n   <https://github.com/apache/iceberg/issues?q=milestone%3A%22Iceberg%201.12.0%22>\n   .\n   - Calling out the Spark 4.2.0 PR:\n   https://github.com/apache/iceberg/pull/14984 - it needs more eyes and\n   review time to make this release.\n   - I'll keep watching for blockers and bugs that should be part of the\n   release and surface them as needed, including any forward-porting to Spark\n   4.2.\n\nIf you have a feature(s), fix(es), or breaking change(s) you want\nconsidered for 1.12.0, please let me know.\n\nThanks,\nNeelesh\n\nOn Fri, Jun 5, 2026 at 3:54\u202fPM Steven Wu <st...@gmail.com> wrote:\n\n> If we develop good habit of regular releases, we normally won't need to\n> hold the release train to get things in (except for critical security and\n> correctness issues) as the next one is 2-3 months away.\n>\n> On Fri, Jun 5, 2026 at 3:42\u202fPM Neelesh Salian <ne...@gmail.com>\n> wrote:\n>\n>> Hi folks,\n>>\n>> With 1.11.0 out the door, I want to open up the planning around 1.12.0.\n>> As Steven noted on the dev list (thread for 1.11), 1.11.0 took roughly 8\n>> months from 1.10.0. This is longer than the 3-4 month cadence we have\n>> previously discussed.\n>> For 1.12.0 I'd like us to aim closer to that target.\n>>\n>> I'll be acting as the release manager for this release. Here are a few\n>> notes to kick things off:\n>>\n>>    - *Tentative release target: *late August / early September 2026 (~3\n>>    months from 1.11.0).\n>>    - *Curation: *We'll use the June 24 community sync as the formal\n>>    kickoff to surface in-flight work and call out anything that should land in\n>>    this release.\n>>    - *Cadence reminder:* If something",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/iceberg/pull/14984",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/iceberg/pull/16507",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "> > On Fri, Jun 5, 2026 at 3:42\u202fPM Neelesh Salian <ne...@gmail.com> > wrote: > >> Hi folks, >> >> With 1.11.0 out the door, I want to open up the planning around 1.12.0. Here are a few >> notes to kick things off: >> >>    - *Tentative release target: *late August / early September 2026 (~3 >>    months from 1.11.0). >>    - *Curation: *We'll use the June 24 community sync as the formal >>    kickoff to surface in-flight work and call out anything that should land in >>    this release.",
-      "llm_status": "discussion",
-      "comment_count": 2,
-      "participant_count": 2,
-      "llm_key_points": [
-        "Hi Neelesh,\n\nI'd like to get https://github.com/apache/iceberg/pull/16507 included in\nthe milestone if possible."
-      ],
-      "llm_topics": [
-        "apache-iceberg",
-        "community-sync",
-        "release",
-        "discuss"
-      ],
-      "_content_hash": "0d6daaa97058",
-      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb"
-    },
-    {
       "id": "iceberg-ml-57jwnhmzttq6t37hoo5ld8yx0htpg4bm",
       "source": "mailing_list",
       "kind": "thread",
@@ -5626,48 +5757,6 @@
       "llm_title": "",
       "_content_hash": "c4323e0daead",
       "initiative_id": "iceberg-init-iceberg-ml-29sl2x4mh1j99d74g230129qq3yqm2rm"
-    },
-    {
-      "id": "iceberg-ml-zh25o2msbjw3skd577qzsyrcorobcthz",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Read Restrictions: overlapping column projections on nested types",
-      "url": "https://lists.apache.org/thread/zh25o2msbjw3skd577qzsyrcorobcthz",
-      "author": "Prashant Singh <pr...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-08-04T23:25:40+00:00",
-      "updated_at": "2026-08-04T23:25:40+00:00",
-      "body": "Hi all,\n\nOne open thread on the Read Restrictions spec PR [1] is the last item I'd\nlike to settle before calling a vote [2]. The last sync leaned towards the\nrestrictive option, but there was an ask by Dan that the alternative be\nexplored properly first, so I'm bringing it here.\n\nThe question\n\nrequired-column-projections binds an action to a field-id, and a nested\ntype has a field-id for the container and separate ones beneath it (struct\nsubfields; list element; map key and value).\n\nConcretely, with 2: address struct<3: street string, 4: city string>:\n\n    - field-id: 2   action: mask-to-fixed-value\n\n    - field-id: 4   action: replace-with-null\n\nmask-to-fixed-value overwrites everything beneath the container, so it\nyields \"XXXXXXXX\" for each string leaf. Outer-most-wins therefore\nreturns {\"street\":\n\"XXXXXXXX\", \"city\": \"XXXXXXXX\"}; inner-most-wins returns {\"street\": null,\n\"city\": \"XXXXXXXX\"}, though the catalog asked for the whole struct to be\nmasked.\n\nif a catalog returns two projections (one on the outer container and one on\na field-id below it), how should clients handle it?\n\n  (A) forbid the overlap; the existing fail-closed rule then makes a reader\n\n      that receives one fail the query. The spec PR currently says:\n\nIf a projection targets a nested-typed field (struct, list, or map), other\nprojections in the same  ReadRestrictions must not target any nested\nfield-id (struct subfields, list elements, or\n\nmap keys/values) at any depth. This specification does not define how such\nactions combine.\n\nA reader that receives such a response must fail the query.\n\n  (B) define precedence (e.g. outer-most wins) and allow it\n\nWhy current spec PR choose option A\n\nNo semantics to borrow. There are different behaviors in the current\nindustry practice\n\n   -\n\n   BigQuery:\n   -\n\n      \"Policy tags can't be applied to columns that use the STRUCT data\n      type\" [3];\n      -\n\n   Redshift both experience based on data-types:\n   -\n\n      \"You can only apply masking policies to sca",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1iGNydKY7XT1N5Nz056vDPM0P8v0MFymGqNtOlUGUp-c/edit?tab=t.0#heading=h.h3v6cqyijrx",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffIceberg Read Restrictions: Community Syncs"
-        },
-        {
-          "url": "https://github.com/apache/iceberg/pull/13879",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/trinodb/trino/issues/16964",
-          "kind": "github_issue"
-        }
-      ],
-      "llm_summary": "One open thread on the Read Restrictions spec PR [1] is the last item I'd like to settle before calling a vote [2]. The last sync leaned towards the restrictive option, but there was an ask by Dan that the alternative be explored properly first, so I'm bringing it here. * This doc has notes from Iceberg Read Restrictions work, it will include all past discussions in this area.",
-      "llm_status": "discussion",
-      "comment_count": 0,
-      "participant_count": 1,
-      "llm_key_points": [],
-      "llm_topics": [
-        "read-restrictions",
-        "restrictions-spec",
-        "read",
-        "restrictions"
-      ],
-      "_content_hash": "f973d865ebb4",
-      "initiative_id": "iceberg-init-iceberg-gh-p13879"
     },
     {
       "id": "iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
@@ -6002,7 +6091,7 @@
         "rest-catalog"
       ],
       "_content_hash": "f9f254da6aec",
-      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on"
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq"
     },
     {
       "id": "iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
@@ -6030,7 +6119,7 @@
       ],
       "llm_title": "",
       "_content_hash": "782d7d3156ad",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-bg80qn7v5v13s7tqxps9w6kwg4mdt91v",
@@ -6066,7 +6155,7 @@
         "release-apache"
       ],
       "_content_hash": "4ec5ef68d358",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-j9d118xxpmkgpl9cblfv766wczgfrdzk",
@@ -6342,7 +6431,7 @@
         "rust-version"
       ],
       "_content_hash": "1a752f56e5c0",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-5px7r0103bpxjvtzf9q75jp5klm5mj0q",
@@ -6728,7 +6817,7 @@
         "ryan-blue"
       ],
       "_content_hash": "7c6005ee9ed0",
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8"
+      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on"
     },
     {
       "id": "iceberg-ml-krophr3htb39xhxr3ldbcn7ghqm82ohj",
@@ -6883,7 +6972,7 @@
         "rest-catalog"
       ],
       "_content_hash": "975b35704474",
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8"
+      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on"
     },
     {
       "id": "iceberg-ml-7jkblrlvx9qoc0dt4cj9gvmvyvqjjfs8",
@@ -6990,7 +7079,7 @@
         "variant"
       ],
       "_content_hash": "98b92912fe1d",
-      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb"
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs"
     },
     {
       "id": "iceberg-ml-ks01jpv40qjlvz4yop5tlqv4x5oxbwy6",
@@ -7199,7 +7288,7 @@
       ],
       "llm_title": "",
       "_content_hash": "3bcdee28fe4f",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-odof6m2npvktwd51cz8qnrxjv95ws4wm",
@@ -7274,7 +7363,7 @@
         "release-apache"
       ],
       "_content_hash": "25a6d7da4f14",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-221q2qconm1zyxtor0fs86yt3st0xmo6",
@@ -7353,7 +7442,7 @@
         "rust-version"
       ],
       "_content_hash": "1808930beb49",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
@@ -7395,7 +7484,7 @@
       ],
       "llm_title": "Enable GitHub Copilot Code Review for Iceberg",
       "_content_hash": "9da88cba7109",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny"
     },
     {
       "id": "iceberg-ml-qrr6hwzy70slxz24s3gr5dz68mxys9ls",
@@ -8003,7 +8092,7 @@
         "release-apache"
       ],
       "_content_hash": "450b697ccd91",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-h8ohxh44g1zc32clg3sgxr80xjc4nnr9",
@@ -8087,7 +8176,7 @@
         "rust-version"
       ],
       "_content_hash": "b14ad51139a7",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-8wsvnhktw27h0tqnxljzmnsogwd52tjj",
@@ -8877,7 +8966,7 @@
         "rust-version"
       ],
       "_content_hash": "a097a34fa742",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-z9wfmvjfc7c3x5j4rqjvp4hmy1qjxy8l",
@@ -8927,7 +9016,7 @@
         "notes"
       ],
       "_content_hash": "0175d470ec5f",
-      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb"
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs"
     },
     {
       "id": "iceberg-ml-bj0sgk79yx0yt0wnr8jww2dsjsjc5tqj",
@@ -9009,7 +9098,7 @@
         "spec-adding"
       ],
       "_content_hash": "d25add00b3fe",
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8"
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs"
     },
     {
       "id": "iceberg-ml-mhyx8g420qtq3rc57m84xgcnqfl0dp15",
@@ -9506,7 +9595,7 @@
         "rust-version"
       ],
       "_content_hash": "ca6b7f02156b",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-964630c6q0jovs579x1jzb1t0o19jgjg",
@@ -10227,7 +10316,7 @@
       ],
       "llm_title": "Add UDF Specific Name Proposal",
       "_content_hash": "53890c32ca09",
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8"
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs"
     },
     {
       "id": "iceberg-ml-vsxpk5glhf38nnm7yx8llh5p1wn5yc20",
@@ -12189,7 +12278,7 @@
       ],
       "llm_title": "Kafka Connector Iceberg Version Update",
       "_content_hash": "993da7ad3b56",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny"
     },
     {
       "id": "iceberg-ml-n1fowdv252t327hqbok8rxt2dcy7tchw",
@@ -13895,7 +13984,7 @@
       ],
       "llm_title": "Unblocking Releases 1.11 and 1.12",
       "_content_hash": "7a080674623d",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny"
     },
     {
       "id": "iceberg-ml-yw5ggc33j30dzvxwo6sj597gtvoqxg2s",
@@ -14015,7 +14104,7 @@
       ],
       "llm_title": "Iceberg 1.11.0 Release Progress",
       "_content_hash": "0d179d4c8786",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny"
     },
     {
       "id": "iceberg-ml-c5k8x59dm0vqr5p6tn7ybr0kk061c296",
@@ -14205,7 +14294,7 @@
       ],
       "llm_title": "Populating total_record_count in partition statistics",
       "_content_hash": "e7c0ac6c5158",
-      "initiative_id": "iceberg-init-iceberg-ml-gs0tswlp5hx3jsjgbppdfr7ll48gy9o9"
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq"
     },
     {
       "id": "iceberg-ml-9lsmhmssvmcxkm6dgx3bmrwhmzjvztzz",
@@ -14634,7 +14723,7 @@
         "rust-version"
       ],
       "_content_hash": "eb56f71f9405",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-xbrlxofcfrv87wqxmr6lqxnx2zg0oddh",
@@ -14842,7 +14931,7 @@
         "rust-version"
       ],
       "_content_hash": "1f9776764c5d",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-5442q5bddyoss9mw27r0zbnobysfpn0t",
@@ -16634,7 +16723,7 @@
       ],
       "llm_title": "Enforcing AI contribution guidelines and consequences",
       "_content_hash": "53364b22e6d3",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny"
     },
     {
       "id": "iceberg-ml-sl882srzsjz0xvy881tlc4hjq5kqmpyf",
@@ -16662,7 +16751,7 @@
       ],
       "llm_title": "",
       "_content_hash": "cdc068f2e413",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-k6xz5pzn50p8s2xqs6xt8dqcdmglkh0q",
@@ -16698,7 +16787,7 @@
         "release-apache"
       ],
       "_content_hash": "d521464d12f0",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-fm3ly9q3xlwwtqgcfqxhrblot665rf6c",
@@ -16837,7 +16926,7 @@
         "rust-version"
       ],
       "_content_hash": "e8d703b25a8e",
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9"
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo"
     },
     {
       "id": "iceberg-ml-441bhlb37xo5hn2pl5mhfq3f288s4nwp",
@@ -18489,7 +18578,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Vote in progress: 0 binding +1, 5 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -19122,7 +19211,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
       "llm_summary": "Vote PASSED with 5 binding +1 votes and 2 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -19295,7 +19384,7 @@
       ],
       "comment_count": 1,
       "participant_count": 2,
-      "initiative_id": "iceberg-init-iceberg-ml-gs0tswlp5hx3jsjgbppdfr7ll48gy9o9",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Discussion about merging a correction to the REST specification to include partition stats update types in TableUpdate. The spec already defined these types but forgot to reference them in TableUpdate, causing issues for generated clients. This is treated as a spec correction oversight rather than a new feature.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -19975,7 +20064,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Vote PASSED with 4 binding +1 votes and 3 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -20286,7 +20375,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Vote PASSED with 3 binding +1 votes and 2 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -21819,7 +21908,7 @@
       ],
       "comment_count": 8,
       "participant_count": 8,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Discussion on upgrading Iceberg's minimum Java version to JDK17, driven by Gradle 9.x upgrade requirements. All modules support JDK17 except for a known JMH benchmark issue in Flink 1.20 module due to serialization compatibility, which is acceptable as a known limitation.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -22200,7 +22289,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Vote in progress: 0 binding +1, 8 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -22670,7 +22759,7 @@
       ],
       "comment_count": 25,
       "participant_count": 2,
-      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Discussion on whether an idempotency-key-timestamp field is necessary for the Iceberg REST Catalog. Participants debate the value of a custom timestamp format versus standard identifiers like UUIDv7, and clarify that server-side key expiration is independent of client timestamps.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -22996,7 +23085,7 @@
       "linked_resources": [],
       "comment_count": 1,
       "participant_count": 2,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-4kp9th9y1n2kdsc9zv1z120ytr6wg2w2",
       "llm_summary": "Hi all,\n\nThe Apache Iceberg Rust community is pleased to announce that Apache\nIceberg Rust 0.7.0 has been released! Iceberg is a data access layer that allows users to easily and efficiently\nretrieve data from various storage services in a unified way. Notable updates in version 0.7.0 include:\n1.",
       "llm_status": "released",
       "llm_key_points": [],
@@ -23557,7 +23646,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Vote PASSED with 5 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -24341,7 +24430,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -24382,7 +24471,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -24423,7 +24512,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -25603,7 +25692,7 @@
       ],
       "comment_count": 0,
       "participant_count": 1,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "A contributor is requesting community review for PR #13301, which they believe addresses an important improvement. The PR has been pending feedback for some time and the contributor is seeking comments and suggestions from the community.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -25805,7 +25894,7 @@
       ],
       "comment_count": 4,
       "participant_count": 4,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Release build for 1.10.0 has conflicting Java version requirements: deploy.gradle requires Java 11 but Spark 4.0 dependency requires JDK 17 or 21. The maintainer is seeking guidance on resolving this incompatibility, potentially by upgrading the minimum Java version to 17.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -26621,7 +26710,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -26780,7 +26869,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Vote PASSED with 4 binding +1 votes and 2 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -28325,7 +28414,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Vote PASSED with 3 binding +1 votes and 4 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -28507,7 +28596,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Vote in progress: 2 binding +1, 3 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -29105,7 +29194,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
       "llm_summary": "Vote PASSED with 5 binding +1 votes",
       "llm_status": "released",
       "llm_key_points": [
@@ -29147,7 +29236,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -29201,7 +29290,7 @@
       ],
       "comment_count": 16,
       "participant_count": 6,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "The team discusses the process for finalizing the v3 specification, with consensus that a release candidate should be created to test implementations and compatibility before official adoption. The discussion focuses on identifying remaining validation needs and blockers, with agreement that the spec changes have been sufficiently vetted through implementation work and prior voting.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -29279,7 +29368,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Vote PASSED with 6 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -29353,7 +29442,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-gs0tswlp5hx3jsjgbppdfr7ll48gy9o9",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -29403,7 +29492,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
       "llm_summary": "Vote in progress: 2 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -29444,7 +29533,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [],
@@ -29610,7 +29699,7 @@
       ],
       "comment_count": 5,
       "participant_count": 5,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Proposal to maintain a release notes highlights file updated with each PR to reduce manual effort in preparing release notes. This approach would enable committers to remind authors to update the file and facilitate more automated releases in the future.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -30196,7 +30285,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb",
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
       "llm_summary": "Vote PASSED with 7 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -30330,7 +30419,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-vnqw4rnlzs1zrjnp8tr2lmmjm3yrc3k1",
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
       "llm_summary": "Vote PASSED with 5 binding +1 votes and 3 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -31189,7 +31278,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Vote VETOED \u2014 1 veto(es) recorded",
       "llm_status": "abandoned",
       "llm_key_points": [
@@ -31298,7 +31387,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Vote in progress: 0 binding +1, 6 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -31486,7 +31575,7 @@
         "result": "cancelled",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -31722,7 +31811,7 @@
         "result": "cancelled",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -32315,7 +32404,7 @@
         "result": "cancelled",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -32880,7 +32969,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Vote in progress: 0 binding +1, 8 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -33346,7 +33435,7 @@
       ],
       "comment_count": 4,
       "participant_count": 4,
-      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Proposal to add RemoveSchemasUpdate as a new update type to the Iceberg REST specification, following a similar pattern to the recently merged RemovePartitionSpecsUpdate. This enhancement would allow dropping unused schemas from tables.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -33609,7 +33698,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Vote PASSED with 6 binding +1 votes and 2 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -34426,7 +34515,7 @@
       ],
       "comment_count": 5,
       "participant_count": 6,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Hi all,\n\nThe Apache Iceberg Rust community is pleased to announce that Apache\nIceberg Rust v0.4.0 has been released! The notable changes since v0.3.0 include:\n- Caching parsed Manifests and ManifestLists for performance\n- Support projection pushdown in Datafusion Iceberg\n- Utilize row group and row selection filtering when reading parquet\nfile backed tables\n- Support for GCP OAuth\n- Introduce list, load, rename, drop, create table operations in SQLCatalog\n- TableMetadataBuilder that enables building modifications to TableMetadata\n- Datafusion Iceberg table provider for reading a table at a given snapshot\n- New Puffin crate and compression codec\n- Support for reading tables with schema evolution\n- Support for reading Decimal type columns\n- Support for StatisticsFile and PartitionsStatisticsFile in TableMetadata\n- Enable conversion of Datafusion expression filters to Iceberg predicates\n- Publish Transforms as Python bindings in pyiceberg_core\n\nPlease refer to the change log for the complete list of changes:\nhttps://github.com/apache/iceberg-rust/releases/tag/v0.4.0\n\nApache Iceberg Rust website: https://rust.iceberg.apache.org/\n\nDownload Links: https://rust.iceberg.apache.org/download\n\nIceberg Resources:\n- Issue: https://github.com/apache/iceberg-rust/issues\n- Mailing list: dev@iceberg.apache.org\n\nThank you\nOn behalf of Apache Iceberg Community",
       "llm_status": "released",
       "llm_key_points": [],
@@ -34469,7 +34558,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Vote in progress: 2 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -34569,7 +34658,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Vote in progress: 2 binding +1, 2 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -34692,7 +34781,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -34730,7 +34819,7 @@
       ],
       "comment_count": 0,
       "participant_count": 1,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "The original Auth Manager PR was too large for review, so it's being split into six smaller PRs to be merged incrementally. The first PR covering HTTPRequest and HTTPHeader prerequisites has been opened, with the remaining five dependent PRs ready to follow once each predecessor merges.",
       "llm_status": "implementation",
       "llm_key_points": [
@@ -34907,7 +34996,7 @@
       "linked_resources": [],
       "comment_count": 13,
       "participant_count": 6,
-      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
+      "initiative_id": "iceberg-init-iceberg-ml-zq5ljj03cvgg3b88omz4d6brf31b23d3",
       "llm_summary": "Community members are volunteering to join the selection committee for Apache Iceberg Summit 2025, which will be responsible for choosing talks and guiding the event process. The PMC will select the final committee from volunteers by December 10th, 2024.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -36950,7 +37039,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Vote PASSED with 4 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -37052,7 +37141,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Vote in progress: 1 binding +1, 6 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -37970,7 +38059,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Vote VETOED \u2014 1 veto(es) recorded",
       "llm_status": "abandoned",
       "llm_key_points": [
@@ -38451,7 +38540,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-44s6vkd9ky6x4ty2fyn9j7r7ylry6lgh",
       "llm_summary": "Vote PASSED with 5 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -38599,7 +38688,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Vote in progress: 2 binding +1, 6 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -38667,7 +38756,7 @@
       ],
       "comment_count": 5,
       "participant_count": 4,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Discussion on releasing the first version of pyiceberg_core Python bindings from iceberg-rust. Proposes exposing Transforms as the initial feature, aligning package versioning with iceberg-rust crate (0.3.0), and establishing a unified release process via GitHub workflows for all language bindings.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -38782,7 +38871,7 @@
       ],
       "comment_count": 6,
       "participant_count": 6,
-      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Proposal to add a new RemovePartitionSpecsUpdate metadata update type to the REST specification to enable removal of historical partition specs not referenced in manifests as a metadata cleanup operation. The change includes REST spec modifications and follows the existing pattern where unknown update types trigger 400 responses.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -38819,7 +38908,7 @@
       ],
       "comment_count": 7,
       "participant_count": 5,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Discussion about whether the release verification process adequately covers source tarball integrity (matching git repo state) and binary reproducibility (repeatable builds from source). The proposer questions if these verification steps are missing or intentionally omitted from the current release validation procedures.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -39158,7 +39247,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-gs0tswlp5hx3jsjgbppdfr7ll48gy9o9",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Vote in progress: 0 binding +1, 8 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -39195,7 +39284,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -39265,7 +39354,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Vote PASSED with 4 binding +1 votes and 2 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -39390,7 +39479,7 @@
       ],
       "comment_count": 0,
       "participant_count": 1,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Hi everyone, I'm pleased to announce the release of Apache PyIceberg 0.7.1! Again, this patch release includes the following important bug fixes:\n\n* Fix `delete` to trace existing manifests when a data file is partially\nrewritten <https://github.com/apache/iceberg-python/pull/1046>\n* Fix 'to_arrow_batch_reader' to respect the limit input arg\n<https://github.com/apache/iceberg-python/pull/1042>\n* Fix correctness of applying positional deletes on Merge-On-Read tables\n<https://github.com/apache/iceberg-python/pull/1026>\n* Fix overwrite when filtering data\n<https://github.com/apache/iceberg-python/pull/1023>\n* Bug fix for deletes across multiple partition specs on partition evolution\n<https://github.com/apache/iceberg-python/pull/984>\n* Fix evolving the table and writing in the same transaction\n<https://github.com/apache/iceberg-python/pull/985>\n* Fix scans when result is empty\n<https://github.com/apache/iceberg-python/pull/997>\n* Fix ListNamespace response in REST Catalog\n<https://github.com/apache/iceberg-python/pull/995>\n* Exclude Python 3.9.7 from list of supported versions\n<https://github.com/apache/iceberg-python/pull/526>\n* Allow setting write.parquet.row-group-limit\n<https://github.com/apache/iceberg-python/pull/1016>\n* Allow setting write.parquet.page-row-limit\n<https://github.com/apache/iceberg-python/pull/1017>\n<https://github.com/apache/iceberg-python/pull/1023>\n* Fix pydantic warning during commit\n<https://github.com/apache/iceberg-python/pull/972>\n\nThis release can be downloaded from:\nhttps://pypi.org/project/pyiceberg/0.7.1/\n\nThanks to everyone for reporting the issues and contributing! Sung",
       "llm_status": "abandoned",
       "llm_key_points": [],
@@ -39569,7 +39658,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-33vyko8qtsmpdp75f25kx6rjrmgr5kwq",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Vote in progress: 0 binding +1, 7 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -39612,7 +39701,7 @@
       ],
       "comment_count": 16,
       "participant_count": 5,
-      "initiative_id": "iceberg-init-iceberg-ml-gs0tswlp5hx3jsjgbppdfr7ll48gy9o9",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Discussion on whether to finalize format version 3 specification now or adopt a regular release cadence (quarterly/semi-annually). Proposes that specifications should be released regularly with features included in next release rather than waiting for all features to complete, requiring at least one complete reference implementation and potentially two implementations for complex features like Variant and Geography types.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -39743,7 +39832,7 @@
       "linked_resources": [],
       "comment_count": 8,
       "participant_count": 8,
-      "initiative_id": "iceberg-init-iceberg-ml-gs0tswlp5hx3jsjgbppdfr7ll48gy9o9",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Discussion on moving Variant and Shredding specifications from Spark into Iceberg repository. The proposal argues for copying specs into Iceberg to avoid hard Spark dependency, maintain engine-neutral governance, and accommodate type divergences (Iceberg's Time type vs Spark's Interval types) while keeping specifications versioned with the rest of the Iceberg spec.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -40168,7 +40257,7 @@
       ],
       "comment_count": 16,
       "participant_count": 5,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Micah proposes moving forward with a vote to merge PR guidelines for committing, noting community support and preference for votes on spec changes to reduce reviewer judgment calls. Discussion centers on balancing written guidelines with committer judgment and clarifying when votes are needed for non-functional changes.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -40487,7 +40576,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-44s6vkd9ky6x4ty2fyn9j7r7ylry6lgh",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -40581,7 +40670,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-44s6vkd9ky6x4ty2fyn9j7r7ylry6lgh",
       "llm_summary": "Vote PASSED with 3 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -40664,7 +40753,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-44s6vkd9ky6x4ty2fyn9j7r7ylry6lgh",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -40811,7 +40900,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-44s6vkd9ky6x4ty2fyn9j7r7ylry6lgh",
       "llm_summary": "Vote PASSED with 6 binding +1 votes and 2 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -40914,7 +41003,7 @@
       ],
       "comment_count": 6,
       "participant_count": 7,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "I'm pleased to announce the release of Apache PyIceberg 0.7.0! Once again, this large release includes the following features on a high\nlevel:\n\n* Write support to partitioned tables with IdentityTransform and\nTimeTransform partitions\n* Support for deletes using predicates. It will drop whole files when it is\nable to based on the Iceberg statistics, otherwise it will perform a\ncopy-on-write.",
       "llm_status": "abandoned",
       "llm_key_points": [],
@@ -41743,7 +41832,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-gs0tswlp5hx3jsjgbppdfr7ll48gy9o9",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Vote PASSED with 3 binding +1 votes and 5 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -41863,7 +41952,7 @@
       ],
       "comment_count": 8,
       "participant_count": 6,
-      "initiative_id": "iceberg-init-iceberg-ml-gs0tswlp5hx3jsjgbppdfr7ll48gy9o9",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Hey everyone,\n\nI've opened #10662 <https://github.com/apache/iceberg/pull/10662> to fix\nproperty names for statistics / partition statistics in the REST spec. I\ncan start a separate VOTE thread if there is agreement around the proposed\nSpec change. Thanks\nEduard",
       "llm_status": "discussion",
       "llm_key_points": [],
@@ -43357,7 +43446,7 @@
       ],
       "comment_count": 7,
       "participant_count": 6,
-      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
+      "initiative_id": "iceberg-init-iceberg-ml-zq5ljj03cvgg3b88omz4d6brf31b23d3",
       "llm_summary": "The Iceberg Summit proposal has been updated with the PMC-selected committee and is ready for community review before submission to the ASF for trademark approval. The proposal document is available for feedback, with the understanding that associated websites cannot be launched until Apache Iceberg brand approval is granted.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -43576,7 +43665,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-mxnsnjjkjyhs706db60jqtfnl1xr52wo",
       "llm_summary": "Vote PASSED with 6 binding +1 votes",
       "llm_status": "released",
       "llm_key_points": [
@@ -44195,7 +44284,7 @@
       "linked_resources": [],
       "comment_count": 8,
       "participant_count": 9,
-      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
+      "initiative_id": "iceberg-init-iceberg-ml-zq5ljj03cvgg3b88omz4d6brf31b23d3",
       "llm_summary": "The community is organizing an Iceberg conference/summit for the year and seeking volunteers for a selection committee to choose talks and guide the process. The PMC will select the final committee from volunteers, with a one-week window for people to express interest.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -45568,7 +45657,7 @@
       ],
       "comment_count": 19,
       "participant_count": 3,
-      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
+      "initiative_id": "iceberg-init-iceberg-ml-zq5ljj03cvgg3b88omz4d6brf31b23d3",
       "llm_summary": "Jean-Baptiste Onofr\u00e9 has prepared a formal proposal document for organizing the first Apache Iceberg Summit, a virtual event featuring developer talks on architecture and features alongside user talks on use cases and best practices. The document is open for community review and editing, with interest from contributors willing to speak and participate.",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -46279,7 +46368,7 @@
       ],
       "comment_count": 0,
       "participant_count": 1,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Hi everyone! I'm pleased to announce the release of Apache PyIceberg 0.4.0! Apache Iceberg is an open table format for huge analytic datasets.",
       "llm_status": "abandoned",
       "llm_key_points": [],
@@ -46379,7 +46468,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Vote VETOED \u2014 1 veto(es) recorded",
       "llm_status": "abandoned",
       "llm_key_points": [
@@ -46470,7 +46559,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Vote in progress: 0 binding +1, 2 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -49557,7 +49646,7 @@
       ],
       "comment_count": 10,
       "participant_count": 3,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
       "llm_summary": "Discussion on Iceberg's Spark version support strategy, with preference for option 3: keeping all code in main repository but building one module at a time by default. This approach enables better testing of common module changes across Spark versions while avoiding CI failures from unrelated changes that would occur with separate repositories.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -49727,7 +49816,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-gs0tswlp5hx3jsjgbppdfr7ll48gy9o9",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Vote in progress: 2 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -49835,7 +49924,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-gs0tswlp5hx3jsjgbppdfr7ll48gy9o9",
+      "initiative_id": "iceberg-init-iceberg-ml-ybo8xst7h2p8vt6nctxf4nxfc0jbc6rq",
       "llm_summary": "Vote PASSED with 3 binding +1 votes and 3 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -50519,7 +50608,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-70gjtgkfnc6jvxl2k672gxl8omh6w976",
       "llm_summary": "Vote in progress: 1 binding +1, 7 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -50582,7 +50671,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-70gjtgkfnc6jvxl2k672gxl8omh6w976",
       "llm_summary": "Vote in progress: 0 binding +1, 5 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -50644,7 +50733,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-70gjtgkfnc6jvxl2k672gxl8omh6w976",
       "llm_summary": "Vote PASSED with 5 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -50822,7 +50911,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-70gjtgkfnc6jvxl2k672gxl8omh6w976",
       "llm_summary": "Vote PASSED with 7 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -51027,7 +51116,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-70gjtgkfnc6jvxl2k672gxl8omh6w976",
       "llm_summary": "Vote in progress: 1 binding +1, 5 non-binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -51064,7 +51153,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-70gjtgkfnc6jvxl2k672gxl8omh6w976",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -51109,7 +51198,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-70gjtgkfnc6jvxl2k672gxl8omh6w976",
       "llm_summary": "Vote VETOED \u2014 1 veto(es) recorded",
       "llm_status": "abandoned",
       "llm_key_points": [
@@ -51146,7 +51235,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -51182,7 +51271,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -51218,7 +51307,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -51349,7 +51438,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -51423,7 +51512,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+      "initiative_id": "iceberg-init-iceberg-ml-70gjtgkfnc6jvxl2k672gxl8omh6w976",
       "llm_summary": "Vote PASSED with 4 binding +1 votes and 2 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [

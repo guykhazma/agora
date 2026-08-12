@@ -1,6 +1,6 @@
 {
   "project_id": "iceberg",
-  "generated_at": "2026-08-11T06:51:02.150487+00:00",
+  "generated_at": "2026-08-12T07:10:40.885220+00:00",
   "total": 312,
   "initiatives": [
     {
@@ -73,7 +73,7 @@
           "title": "\ufeffIceberg Python Library Sync Agenda and Meeting Notes"
         }
       ],
-      "last_activity": "2026-08-11T06:49:49.178501+00:00",
+      "last_activity": "2026-08-12T07:09:31.201031+00:00",
       "signals": [
         "shared_doc",
         "cross_source",
@@ -84,17 +84,54 @@
       "archived": false
     },
     {
+      "id": "iceberg-init-iceberg-ml-wy7j0prj8b2fgzggprnl8t21hoqfv61y",
+      "title": "V3 to V4 upgrade expectations and migration practices",
+      "summary": "As V4 takes better shape daily, I think some items regarding the upgrade path remain unclear. For example, is the expectation that an upgraded table may indefinitely retain the structure below, until the user explicitly runs a manifest rewrite/maintenance job? Indeed, tables with older manifests don't get the performance benefits of v4, but they produce the correct results and are no worse in per",
+      "status": "discussion",
+      "key_points": [
+        "Hi, Shawn -\n\nThanks for starting the discussion on this.",
+        "Hi Shawn & Anoop,\n\n  \n\nThank you Shawn for the clear write up."
+      ],
+      "proposal_ids": [
+        "iceberg-ml-wy7j0prj8b2fgzggprnl8t21hoqfv61y"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-08-12T06:02:50+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
+      "id": "iceberg-init-iceberg-ml-ko8cs3tgol97f0m20yozchpxlotzl1mj",
+      "title": "Iceberg v4 Spec Scope and Priorities",
+      "summary": "At the last Iceberg Community Sync, I raised the topic of opening a discussion on how we want to scope v4 to arrive at a shared understanding of what we want to land in the next table spec version. Anyone who regularly attends conferences, meetups, or syncs is likely familiar with specific efforts currently in flight, but as a community, we haven't defined what we believe constitutes a cohesive set of capabilities to target for the next release. It's early enough at this point to start a discussion and still have time to include critical features not yet identified or push back anything that may either be underdeveloped or poorly understood.",
+      "status": "discussion",
+      "key_points": [
+        "I would like to add one item to the \"Table features\" that we previously\ndiscussed and agreed upon [1].",
+        "Hi Dan,\n\nThanks for the summary.",
+        "Hi Daniel,\n\n  \n\nThank you for starting the thread and laying out current work in consideration\nfor V4."
+      ],
+      "proposal_ids": [
+        "iceberg-ml-ko8cs3tgol97f0m20yozchpxlotzl1mj"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-08-12T05:37:32+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
       "id": "iceberg-init-iceberg-ml-rx0tcnqkq0nzj1phwo64ng79pp51hzf9",
-      "title": "[SPEC] Add key-id to table and partition statistics and depr",
-      "summary": "I would like to get feedback on the design direction for exposing Puffin file references through Iceberg metadata tables. Motivation: Iceberg stores multiple kinds of auxiliary metadata in Puffin file",
+      "title": "should V4 manifests be Parquet-only?",
+      "summary": "The initial inclination was to keep it because it already exists, even though Avro won\u2019t support projection reads on manifest files (including column stats). This also aligns with Iceberg\u2019s usual prio",
       "status": "released",
       "key_points": [],
       "proposal_ids": [
         "iceberg-gh-i13855",
+        "iceberg-ml-fym02576n5sqy298fjxl0xmsv9z5rb7y",
         "iceberg-ml-rx0tcnqkq0nzj1phwo64ng79pp51hzf9",
         "iceberg-ml-nchw2wvl47o1qrrpv8wn3h710q1gx379",
         "iceberg-ml-qk86lyqylgfg52qn99hlz7h711mbl0on",
-        "iceberg-ml-dmf60fs64swkcy8cpdgkxn2nldx836xo",
         "iceberg-ml-yftsdrtdlv7n7jb1qt7yxn4wtycoftgw",
         "iceberg-ml-pdb9c7yw9w2tfs7cfv847xqp7nl7tsx5",
         "iceberg-ml-6ob6xkov6p1f1c8smhbxyzf33s4m0jlo",
@@ -130,7 +167,7 @@
           "title": "\ufeffThe suggested changes are to improve performance of queries that include column to column predicates.  The implementati"
         }
       ],
-      "last_activity": "2026-08-11T06:41:38+00:00",
+      "last_activity": "2026-08-12T03:20:11+00:00",
       "signals": [
         "shared_doc",
         "cross_source",
@@ -138,6 +175,77 @@
         "topic:statistics",
         "topic:partition-statistics"
       ],
+      "archived": false
+    },
+    {
+      "id": "iceberg-init-iceberg-ml-6fhnlrm2jxbn187txglmf31ydwhzp8fc",
+      "title": "Integrate EagerInputFile into the manifest reader",
+      "summary": "We have ready to run benchmark [1] and two independent sets of results showing similar benefits ~25 - 55% reduction in reading Parquet manifest depending on machine and file. > > On Tue, Jul 28, 2026 at 4:58\u202fPM Varun Lakhyani <la...@ce.iitr.ac.in> > wrote: > >> I think we can flag property to enable this as default true, It would be >> a great improvement for v4 parquet manifest. >> >> On Mon, Jul 20, 2026 at 10:02\u202fPM Varun Lakhyani < >> lakhyani_vg@ce.iitr.ac.in> wrote: >> >>> Hello Everyone, >>> >>> I evaluated using EagerInputFile in v4 manifest reader path (parquet) >>> using ManifestBenchmark and S3 as object store and EC2 machine for jmh >>> benchmarking.",
+      "status": "discussion",
+      "key_points": [
+        "Thanks for the great work, this is super exciting."
+      ],
+      "proposal_ids": [
+        "iceberg-ml-6fhnlrm2jxbn187txglmf31ydwhzp8fc"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-08-11T21:38:05+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
+      "id": "iceberg-init-iceberg-ml-xwqz0j6g2fcvq4hf5xs63ll4137ch0n6",
+      "title": "[Terraform] Release Apache Iceberg Terraform Provider v0.1.0",
+      "summary": "> > Document: [Proposal > <https://docs.google.com/document/d/1Qr82hccxJhWxKRT7B-3ylhOLSaJTYfc7hU51-mhzK6Y/edit?usp=sharing> > ] > > The plan: start with the smallest primitives (type strings, transfo",
+      "status": "released",
+      "key_points": [],
+      "proposal_ids": [
+        "iceberg-yt-KckCjeP-4DM",
+        "iceberg-yt-QKiwibLh_cg",
+        "iceberg-yt-NRSlundcwvc",
+        "iceberg-yt-o_lHTe9yACc",
+        "iceberg-ml-xwqz0j6g2fcvq4hf5xs63ll4137ch0n6",
+        "iceberg-ml-dh3c9dhpdr13gsk1r777k55q0j69h08p",
+        "iceberg-ml-krophr3htb39xhxr3ldbcn7ghqm82ohj",
+        "iceberg-ml-q9qzhs9t6wx86kl35wjv0nxz48hwcvs8",
+        "iceberg-ml-lfr1kb253m99dg0mbdzpm6g1k3nbd6fc",
+        "iceberg-ml-mhyx8g420qtq3rc57m84xgcnqfl0dp15",
+        "iceberg-ml-87cvl9gk0cjk1of7jh3nvm4lzvzxnc8m",
+        "iceberg-ml-8xckb3h2rr421yswd2x53yb2zds8vmks",
+        "iceberg-ml-kr9x53nknh0wc9r0wvbcgs6fk915noxy",
+        "iceberg-ml-z0xs3lgs18s8ybxpzlf4yslom4khsdfv",
+        "iceberg-ml-93dfx9rg75l4gdhw7l0lm5p19z9d6okr",
+        "iceberg-ml-7hp9gyjc4pfnl34tcymvyztkpp05h4xy",
+        "iceberg-ml-wsy33whf9bn3n5fop8m82lj2lq7dqtvz",
+        "iceberg-ml-g889dzv4ofp0o66b22q1qtjtvo0q58c8",
+        "iceberg-ml-9bbkr8w3sd3y4bgcv0vt2pl1jxrwsxff",
+        "iceberg-ml-v4odz4p7h8wzbjnvt9boylx031jorn93"
+      ],
+      "proposal_count": 20,
+      "shared_docs": [],
+      "last_activity": "2026-08-11T20:00:04+00:00",
+      "signals": [
+        "cross_source",
+        "vote_thread",
+        "topic:apache-iceberg",
+        "topic:terraform-provider"
+      ],
+      "archived": false
+    },
+    {
+      "id": "iceberg-init-iceberg-gh-m60",
+      "title": "Iceberg 1.12.0",
+      "summary": "Iceberg 1.12.0",
+      "status": "discussion",
+      "key_points": [],
+      "proposal_ids": [
+        "iceberg-gh-m60"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-08-11T17:15:37Z",
+      "signals": [],
       "archived": false
     },
     {
@@ -197,21 +305,6 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-gh-m60",
-      "title": "Iceberg 1.12.0",
-      "summary": "Iceberg 1.12.0",
-      "status": "discussion",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-gh-m60"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2026-08-10T21:56:25Z",
-      "signals": [],
-      "archived": false
-    },
-    {
       "id": "iceberg-init-iceberg-ml-93c86nsm4k4zz3yv86mxrjnzw1blogb0",
       "title": "null_value_count is only for optional field?",
       "summary": "I view it a bit differently though:  what matters is *effective* nullability along the whole path from the root, not the leaf field's own *required* flag. Each field in the tuple is named and has an integer id that is unique in the table schema. And I agree we should remove the \"optional null_value_count\" comment, and writer should record the null count whenever possible for neste",
@@ -227,44 +320,6 @@
       "shared_docs": [],
       "last_activity": "2026-08-10T21:41:51+00:00",
       "signals": [],
-      "archived": false
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-q9qzhs9t6wx86kl35wjv0nxz48hwcvs8",
-      "title": "[Terraform] Release Apache Iceberg Terraform provider v0.1.0",
-      "summary": "> > Document: [Proposal > <https://docs.google.com/document/d/1Qr82hccxJhWxKRT7B-3ylhOLSaJTYfc7hU51-mhzK6Y/edit?usp=sharing> > ] > > The plan: start with the smallest primitives (type strings, transfo",
-      "status": "released",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-yt-KckCjeP-4DM",
-        "iceberg-yt-QKiwibLh_cg",
-        "iceberg-yt-NRSlundcwvc",
-        "iceberg-yt-o_lHTe9yACc",
-        "iceberg-ml-dh3c9dhpdr13gsk1r777k55q0j69h08p",
-        "iceberg-ml-krophr3htb39xhxr3ldbcn7ghqm82ohj",
-        "iceberg-ml-q9qzhs9t6wx86kl35wjv0nxz48hwcvs8",
-        "iceberg-ml-lfr1kb253m99dg0mbdzpm6g1k3nbd6fc",
-        "iceberg-ml-mhyx8g420qtq3rc57m84xgcnqfl0dp15",
-        "iceberg-ml-87cvl9gk0cjk1of7jh3nvm4lzvzxnc8m",
-        "iceberg-ml-8xckb3h2rr421yswd2x53yb2zds8vmks",
-        "iceberg-ml-kr9x53nknh0wc9r0wvbcgs6fk915noxy",
-        "iceberg-ml-z0xs3lgs18s8ybxpzlf4yslom4khsdfv",
-        "iceberg-ml-93dfx9rg75l4gdhw7l0lm5p19z9d6okr",
-        "iceberg-ml-7hp9gyjc4pfnl34tcymvyztkpp05h4xy",
-        "iceberg-ml-wsy33whf9bn3n5fop8m82lj2lq7dqtvz",
-        "iceberg-ml-g889dzv4ofp0o66b22q1qtjtvo0q58c8",
-        "iceberg-ml-9bbkr8w3sd3y4bgcv0vt2pl1jxrwsxff",
-        "iceberg-ml-v4odz4p7h8wzbjnvt9boylx031jorn93"
-      ],
-      "proposal_count": 19,
-      "shared_docs": [],
-      "last_activity": "2026-08-10T21:19:20+00:00",
-      "signals": [
-        "cross_source",
-        "vote_thread",
-        "topic:apache-iceberg",
-        "topic:security"
-      ],
       "archived": false
     },
     {
@@ -385,10 +440,16 @@
         "iceberg-gh-rel-apache-iceberg-1-7-2",
         "iceberg-gh-m36",
         "iceberg-ml-5qhn33k5kr0t9g3vvqqxc893bs11jxlc",
+        "iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
+        "iceberg-ml-rvp2wh1m91h5lvz5zvxqp96f7pdxrzqr",
         "iceberg-ml-ldczvlskldz8qr7tfflxjdh95rkf892n",
+        "iceberg-ml-qhtxrbrttp4zc7sn1qj05yq70z9vzzqb",
+        "iceberg-ml-z6krfw87qft21rt7nfrdh09qg2h03ryf",
+        "iceberg-ml-129f3n8zgdck3nc5hmdf63sntzcy9tjg",
         "iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
         "iceberg-ml-coprdjoc7l4wzn3kohb5tm7xrs7d4xdb",
         "iceberg-ml-17o809rhxj61rllgskm500m56bkyno8l",
+        "iceberg-ml-4b8dbpfwjjzyg4rcc5w6koc9brhyk6w7",
         "iceberg-ml-k357qokqrd30z2pd4rwb03lgmyry951d",
         "iceberg-ml-vkrxod2fb1b3s6q64gom79t51j1m880w",
         "iceberg-ml-ldnx814y1g0nj10wqvlhjf2stfjtd9qo",
@@ -396,25 +457,39 @@
         "iceberg-ml-s2tqf2yrfxft837yz86sxqhz57rg17ym",
         "iceberg-ml-h19v97yw8yjsyj8v4nol1j8o883dw1g0",
         "iceberg-ml-br416j8vgvccvqvm7m6vnvs68zsypcp3",
+        "iceberg-ml-4fxzlnmg7xbnkwdgclz5lqwpdp6okkcf",
         "iceberg-ml-9dnnfr19plyzbd0bq22b9y46vgn0pkbd",
         "iceberg-ml-77wxvr6qk24hy9s78lfxkcjnl37v2hy1",
+        "iceberg-ml-jkv8w224x6b0bdgnp2kfv3lcb0s73h59",
         "iceberg-ml-5q8lm7svnc2ksw57vc83xd83wjcqw6rl",
         "iceberg-ml-wh0l9z5s9dn5gozg23q38knbx4myl3z8",
         "iceberg-ml-blk78z75pmywzpz8qb54mvo91zcnzfbl",
         "iceberg-ml-0j6sfpxtcx371ht4yfoh46wx2shjwml0",
+        "iceberg-ml-9twoxvrsmj7dcj091r4xc930gx6mp71l",
         "iceberg-ml-9dstoqkmtto7np0v0mw6vx8h74wgz8jc",
         "iceberg-ml-wvvj9v0y00yvz5nnvpg7fl4dtql4437q",
+        "iceberg-ml-n2j1hvt0r8q6ll7zvtw9k389lmmgy6xb",
         "iceberg-ml-65y93cbdqf211nhpf03qrw1wtq77s2b3",
+        "iceberg-ml-yhgl0184drx23578rd8wzbm41fps52hg",
+        "iceberg-ml-x0tgxw2qcqrh8ljln315777nqlkbr72z",
         "iceberg-ml-fcd10zcmsk9zv7nq7ls2qc9ry25osntn",
         "iceberg-ml-3wr1m4g6qy8s233rql4wwnm43xqdndg5",
+        "iceberg-ml-7o5p8p2b0jbqdyp97f7nnogdsz7xgdv7",
+        "iceberg-ml-g7rz2kt12ytd5j2xnbdlk696cxm0d3s2",
         "iceberg-ml-tbr90g0kx201dj5323hwqyd6rbkjtjyc",
+        "iceberg-ml-wocqnmz1w9xsy7w5t7wxommlkty0y5m1",
         "iceberg-ml-o9qr4ttwsc94sck2z1km5z1dhlmskkqz",
         "iceberg-ml-5q2x1n0hcx3d0v2vnc6zxjhl3jml1r9r",
+        "iceberg-ml-yc08r6gzjf4fw0l39ctqszcnyp8hqdcj",
+        "iceberg-ml-btpy177d2p7grkond8c9515w6ntrr24h",
         "iceberg-ml-jgrcd4st4xko793jnjnr2jmmngmlqpxg",
+        "iceberg-ml-f2k158xsqgp1my7fkdzryvttok42r31d",
         "iceberg-ml-bk9o3css4bknvdjddsxb5bw9kzqqmyxp",
         "iceberg-ml-9v38dntmbt91gfyq372j6fy12yn0ojfj",
+        "iceberg-ml-9jkrr5orrlxlzz8oklxszj3n2t77sjfr",
         "iceberg-ml-w403yzmpy9n9swcpwl2dcj2skdc0dskg",
         "iceberg-ml-4njo7dmxmc50pmj9fw972bvo91r0bl8s",
+        "iceberg-ml-9rjwz422mzf1mqdn5ss5slvldxl8lsx3",
         "iceberg-ml-q0z95yoxso8s4nogcxt7pypv5yt54s9b",
         "iceberg-ml-tws9z188ws1hv6ntdbk8os3b5173dbyq",
         "iceberg-ml-yd92h88jznyyvjztzwzx2zlo83g3x4nd",
@@ -422,9 +497,17 @@
         "iceberg-ml-rxszwx895kmfdos6l66j5w54dcftkjjq",
         "iceberg-ml-0xcw56z1bpldypm7pv92h70fhhq0qgfq",
         "iceberg-ml-bsvfp28ph4xyp84ldzylyq0f1hy3tqnq",
+        "iceberg-ml-jkpy0zhf5ppjbrxfz5q8gzdsxbg6xrdx",
+        "iceberg-ml-trvnplkbx9kkdxn3m6owwrm8dsc31dhf",
         "iceberg-ml-ff4rn0lsgx3dzwns895wo8l2ppfptlrx",
+        "iceberg-ml-d9r91hgq4wr30c2qm5y2zbkqb1nhjngh",
+        "iceberg-ml-j22o7yktrlddrgkcy7gl88o23nyrgooc",
+        "iceberg-ml-24c0xhfbb2680nrqyd2jrngxtg6qoz8c",
+        "iceberg-ml-2wo7j44979mvs9583xk4rgjnjdn5rvqt",
         "iceberg-ml-gh7wk8vc4cvmmob0yx0f1dx7gf7yprkg",
         "iceberg-ml-40mrpqd2vtvdfj6mrdh7cyn3bb86hn8g",
+        "iceberg-ml-00tbjsw9g4o97ldt8289yt3stzkjtyty",
+        "iceberg-ml-93p74trcg8wh0qwhdcc120v10wfnwpb1",
         "iceberg-ml-4mdy5fxt6cd21lyvj67bpgg6nkwyzpbc",
         "iceberg-ml-8tltdzpvyrpbhxjqdwr7m28jcncsxrgp",
         "iceberg-ml-q3d3ldh9z3wdwzxz1l21jskq7rk9zjoz",
@@ -443,6 +526,9 @@
         "iceberg-ml-kmory4kvmn0v3bw7hl59qrxvojpo1l4t",
         "iceberg-ml-kk80mlpcp3mrmkmn83xq1x02s13vfl1h",
         "iceberg-ml-1jnx171kbnf0xwhb835jsnf2ozfcdbxr",
+        "iceberg-ml-27870jm7wvgs0xg2pxp5z32wg9dm6fd3",
+        "iceberg-ml-ccj4kb7hvgcgoym7wo276jrhywovl44p",
+        "iceberg-ml-jozhcltofc7t6bdnnmk9h3924df9wdjr",
         "iceberg-ml-bbs622mc1g16gfmns8m9zhv0gf0qk75t",
         "iceberg-ml-vtz0dh6gt4on0q2p9bw0r4vt9bz091ob",
         "iceberg-ml-vxwoxn3djjndtjd2slo4cmmtf4p287hg",
@@ -455,6 +541,7 @@
         "iceberg-ml-hg0s0vvkd1vjkpbqtvghyt3kjnc35ptw",
         "iceberg-ml-7qysthvj0byvnwlyv8n3p628goln3ffj",
         "iceberg-ml-n6xp0snqjfsqd41cld472dvlgfyoy3cs",
+        "iceberg-ml-fpw1xnf2fdxl404y6pnpxyw1rs610xp3",
         "iceberg-ml-no8hqztvjrtxzfsqgdyz6z6l1wv0q0k8",
         "iceberg-ml-qhg9q2mzyy4816dd7mbb4z36n7n7fd7t",
         "iceberg-ml-40mcfb77y8k9fz2lmtvvrjmt79vfp7dg",
@@ -462,32 +549,15 @@
         "iceberg-ml-h38t4gfk2m76ftf3dy2ko5m3xygmsbx9",
         "iceberg-ml-sl5kcqpl6bm57x6z6vnvkhvobmx1mvkz"
       ],
-      "proposal_count": 80,
+      "proposal_count": 112,
       "shared_docs": [],
       "last_activity": "2026-08-10T19:43:06+00:00",
       "signals": [
         "cross_source",
         "vote_thread",
         "topic:announce",
-        "topic:apache"
+        "topic:apache-iceberg"
       ],
-      "archived": false
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-6fhnlrm2jxbn187txglmf31ydwhzp8fc",
-      "title": "Integrate EagerInputFile into the manifest reader",
-      "summary": "We have ready to run benchmark [1] and two independent sets of results showing similar benefits ~25 - 55% reduction in reading Parquet manifest depending on machine and file. > > On Tue, Jul 28, 2026 at 4:58\u202fPM Varun Lakhyani <la...@ce.iitr.ac.in> > wrote: > >> I think we can flag property to enable this as default true, It would be >> a great improvement for v4 parquet manifest. >> >> On Mon, Jul 20, 2026 at 10:02\u202fPM Varun Lakhyani < >> lakhyani_vg@ce.iitr.ac.in> wrote: >> >>> Hello Everyone, >>> >>> I evaluated using EagerInputFile in v4 manifest reader path (parquet) >>> using ManifestBenchmark and S3 as object store and EC2 machine for jmh >>> benchmarking.",
-      "status": "discussion",
-      "key_points": [
-        "Thanks for the great work, this is super exciting."
-      ],
-      "proposal_ids": [
-        "iceberg-ml-6fhnlrm2jxbn187txglmf31ydwhzp8fc"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2026-08-10T14:53:23+00:00",
-      "signals": [],
       "archived": false
     },
     {
@@ -544,14 +614,31 @@
       "archived": false
     },
     {
+      "id": "iceberg-init-iceberg-ml-57jwnhmzttq6t37hoo5ld8yx0htpg4bm",
+      "title": "Equality delete file application scales with O(data rows \u00d7 a",
+      "summary": "There is already a PR aiming to fix the scaling issue by implementing a similar approach to Java, but the original authors' organization (@t3hw) has since moved away from iceberg-rust. Both are approved by @viirya, so hoping those PRs will land soon I'd rather rebase my changes on top of those, but I was thinking to file the PR for review anyways. It's not uncommon to have a 500+ LOC PR if the feature or fix absolutely needs to touch a lot of code.",
+      "status": "discussion",
+      "key_points": [
+        "Hey Stephan,\n\nThanks for raising this!"
+      ],
+      "proposal_ids": [
+        "iceberg-ml-57jwnhmzttq6t37hoo5ld8yx0htpg4bm"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-08-05T12:49:22+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
       "id": "iceberg-init-iceberg-ml-29sl2x4mh1j99d74g230129qq3yqm2rm",
       "title": "Virtual Community Meetups and Showcases",
       "summary": "Hi all,\n\nOn behalf of the Iceberg Summit 2026 Selection Committee, I'm excited to\nannounce that we have settled on the keynote speakers for this year's event:\n\n   - Russell Spitzer, \"From Batch to Str",
       "status": "released",
       "key_points": [],
       "proposal_ids": [
-        "iceberg-ml-29sl2x4mh1j99d74g230129qq3yqm2rm",
         "iceberg-ml-509p763jx8kvy46lo9tqvnyv2d34hqzk",
+        "iceberg-ml-29sl2x4mh1j99d74g230129qq3yqm2rm",
         "iceberg-ml-2plrmco4k7vvb1jd8ythvjvko6nk6q9w",
         "iceberg-ml-589byrnmfwfovbpl7ohko9b75jf3y3v3",
         "iceberg-ml-or2tlng8t6bo8xbcv3o4rbcstofk2wg2",
@@ -583,29 +670,12 @@
       ],
       "proposal_count": 30,
       "shared_docs": [],
-      "last_activity": "2026-08-06T00:11:10+00:00",
+      "last_activity": "2026-08-05T04:56:22+00:00",
       "signals": [
         "vote_thread",
         "topic:apache-iceberg",
         "topic:result"
       ],
-      "archived": false
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-57jwnhmzttq6t37hoo5ld8yx0htpg4bm",
-      "title": "Equality delete file application scales with O(data rows \u00d7 a",
-      "summary": "There is already a PR aiming to fix the scaling issue by implementing a similar approach to Java, but the original authors' organization (@t3hw) has since moved away from iceberg-rust. Both are approved by @viirya, so hoping those PRs will land soon I'd rather rebase my changes on top of those, but I was thinking to file the PR for review anyways. It's not uncommon to have a 500+ LOC PR if the feature or fix absolutely needs to touch a lot of code.",
-      "status": "discussion",
-      "key_points": [
-        "Hey Stephan,\n\nThanks for raising this!"
-      ],
-      "proposal_ids": [
-        "iceberg-ml-57jwnhmzttq6t37hoo5ld8yx0htpg4bm"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2026-08-05T12:49:22+00:00",
-      "signals": [],
       "archived": false
     },
     {
@@ -698,7 +768,7 @@
           "title": "\ufeffRow Lineage Proposal"
         }
       ],
-      "last_activity": "2026-08-04T16:57:04+00:00",
+      "last_activity": "2026-08-04T08:52:28+00:00",
       "signals": [
         "shared_doc",
         "cross_source",
@@ -790,7 +860,7 @@
       ],
       "proposal_count": 1,
       "shared_docs": [],
-      "last_activity": "2026-08-03T13:26:27+00:00",
+      "last_activity": "2026-08-03T07:20:00+00:00",
       "signals": [],
       "archived": false
     },
@@ -1066,6 +1136,24 @@
       "archived": false
     },
     {
+      "id": "iceberg-init-iceberg-ml-dmf60fs64swkcy8cpdgkxn2nldx836xo",
+      "title": "Table-level Filtering for MetricsReporter",
+      "summary": "A discussion is underway regarding the design of table-level filtering for the MetricsReporter in Iceberg. The proposal aims to allow users to restrict which tables' metrics are reported, addressing concerns raised about the current lack of filtering options.",
+      "status": "discussion",
+      "key_points": [
+        "Proposal introduces regex-based filtering for tables",
+        "Concerns about unintended table captures with regex"
+      ],
+      "proposal_ids": [
+        "iceberg-ml-dmf60fs64swkcy8cpdgkxn2nldx836xo"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-07-28T04:18:20+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
       "id": "iceberg-init-iceberg-ml-7jkblrlvx9qoc0dt4cj9gvmvyvqjjfs8",
       "title": "Review request for PR #17296 ( memory leak on V3 spark)",
       "summary": "Hi Iceberg devs, I would like to ask for a review of PR #17296 as I have discovered a memory leak on V3 (Spark) while testing, the code is tested and the changes are small. Thanks in advance for your time and review.",
@@ -1156,54 +1244,6 @@
       "shared_docs": [],
       "last_activity": "2026-07-21T17:40:38+00:00",
       "signals": [],
-      "archived": false
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
-      "title": "Enable GitHub Copilot Code Review for Iceberg",
-      "summary": "Hi everyone, I'm pleased to announce the release of Apache PyIceberg 0.7.1! Again, this patch release includes the following important bug fixes:\n\n* Fix `delete` to trace existing manifests when a dat",
-      "status": "released",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
-        "iceberg-ml-rvp2wh1m91h5lvz5zvxqp96f7pdxrzqr",
-        "iceberg-ml-qhtxrbrttp4zc7sn1qj05yq70z9vzzqb",
-        "iceberg-ml-z6krfw87qft21rt7nfrdh09qg2h03ryf",
-        "iceberg-ml-129f3n8zgdck3nc5hmdf63sntzcy9tjg",
-        "iceberg-ml-4b8dbpfwjjzyg4rcc5w6koc9brhyk6w7",
-        "iceberg-ml-4fxzlnmg7xbnkwdgclz5lqwpdp6okkcf",
-        "iceberg-ml-jkv8w224x6b0bdgnp2kfv3lcb0s73h59",
-        "iceberg-ml-9twoxvrsmj7dcj091r4xc930gx6mp71l",
-        "iceberg-ml-n2j1hvt0r8q6ll7zvtw9k389lmmgy6xb",
-        "iceberg-ml-7o5p8p2b0jbqdyp97f7nnogdsz7xgdv7",
-        "iceberg-ml-g7rz2kt12ytd5j2xnbdlk696cxm0d3s2",
-        "iceberg-ml-wocqnmz1w9xsy7w5t7wxommlkty0y5m1",
-        "iceberg-ml-yc08r6gzjf4fw0l39ctqszcnyp8hqdcj",
-        "iceberg-ml-btpy177d2p7grkond8c9515w6ntrr24h",
-        "iceberg-ml-f2k158xsqgp1my7fkdzryvttok42r31d",
-        "iceberg-ml-9jkrr5orrlxlzz8oklxszj3n2t77sjfr",
-        "iceberg-ml-9rjwz422mzf1mqdn5ss5slvldxl8lsx3",
-        "iceberg-ml-jkpy0zhf5ppjbrxfz5q8gzdsxbg6xrdx",
-        "iceberg-ml-trvnplkbx9kkdxn3m6owwrm8dsc31dhf",
-        "iceberg-ml-d9r91hgq4wr30c2qm5y2zbkqb1nhjngh",
-        "iceberg-ml-j22o7yktrlddrgkcy7gl88o23nyrgooc",
-        "iceberg-ml-24c0xhfbb2680nrqyd2jrngxtg6qoz8c",
-        "iceberg-ml-2wo7j44979mvs9583xk4rgjnjdn5rvqt",
-        "iceberg-ml-00tbjsw9g4o97ldt8289yt3stzkjtyty",
-        "iceberg-ml-93p74trcg8wh0qwhdcc120v10wfnwpb1",
-        "iceberg-ml-27870jm7wvgs0xg2pxp5z32wg9dm6fd3",
-        "iceberg-ml-ccj4kb7hvgcgoym7wo276jrhywovl44p",
-        "iceberg-ml-jozhcltofc7t6bdnnmk9h3924df9wdjr",
-        "iceberg-ml-fpw1xnf2fdxl404y6pnpxyw1rs610xp3"
-      ],
-      "proposal_count": 30,
-      "shared_docs": [],
-      "last_activity": "2026-07-20T02:42:24+00:00",
-      "signals": [
-        "vote_thread",
-        "topic:release-process",
-        "topic:pyiceberg-release"
-      ],
       "archived": false
     },
     {
@@ -4332,21 +4372,6 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-yhgl0184drx23578rd8wzbm41fps52hg",
-      "title": "Release Apache Iceberg Rust 0.5.1",
-      "summary": "Hi all,\n\nThe Apache Iceberg Rust community is pleased to announce that Apache\nIceberg Rust 0.5.1 has been released! This also includes the release of\npyiceberg-core 0.5.1, which is the rust bindings for python. Apache Iceberg is an open table format for huge analytic datasets.",
-      "status": "released",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-ml-yhgl0184drx23578rd8wzbm41fps52hg"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2025-06-05T09:16:59+00:00",
-      "signals": [],
-      "archived": false
-    },
-    {
       "id": "iceberg-init-iceberg-ml-v8br2tqhfb1grwqg6z25vpp16yzjt6b4",
       "title": "Make Identity Partition Transform Constructor Public",
       "summary": "Discussion about making the Identity Partition Transform builder's constructor public to allow in-memory TableMetadata construction with different source and target column names. Currently, Identity Transform is the only builder that doesn't support this flexibility, preventing users from building metadata that matches existing tables where identity source columns have been renamed.",
@@ -4363,21 +4388,6 @@
       "proposal_count": 1,
       "shared_docs": [],
       "last_activity": "2025-05-29T19:25:27+00:00",
-      "signals": [],
-      "archived": false
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-x0tgxw2qcqrh8ljln315777nqlkbr72z",
-      "title": "Apache Iceberg Go Release v0.3.0",
-      "summary": "Hello everyone,\n\nI'm pleased to announce the release of Apache Iceberg Go v0.3.0! Apache Iceberg is an open table format for huge analytic datasets,\nIceberg delivers high query performance for tables with tens of\npetabytes of data, along with atomic commits, concurrent writes, and\nSQL-compatible table evolution. This release contains 50 commits from 15 unique contributors.",
-      "status": "abandoned",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-ml-x0tgxw2qcqrh8ljln315777nqlkbr72z"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2025-05-29T18:01:05+00:00",
       "signals": [],
       "archived": false
     },

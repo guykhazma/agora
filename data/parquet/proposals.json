@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-08-12T07:12:00.775615+00:00",
+  "generated_at": "2026-08-13T07:16:17.332969+00:00",
   "total": 273,
   "proposals": [
     {
@@ -2410,7 +2410,7 @@
       "author": "Arnav Balyan <ar...@gmail.com>",
       "state": "open",
       "created_at": "2026-08-12T06:45:31+00:00",
-      "updated_at": "2026-08-12T06:45:31+00:00",
+      "updated_at": "2026-08-13T00:55:15+00:00",
       "body": "Hello everyone,\n\nI wanted to provide a quick update on the FSST encoding proposal for\nParquet.\n\nOver the last several months, we have incorporated the feedback received\nfrom the community and finalized the design. Thank you to everyone who\nreviewed the proposal and helped resolve the open questions.\n\nAt this point, we are planning to move the proposal from the Design/Draft\nphase to the Implementation phase. Before doing so, I would like to ask for\none final round of feedback and ensure that everyone who wanted to review\nthe specification has had an opportunity to do so.\n\nImplementation work is also underway:\n- Devan Benz has started an Arrow Rust\n<https://github.com/apache/arrow-rs/pull/10153> implementation.\n- I have an existing Arrow C++ <https://github.com/apache/arrow/pull/48232>\nPoC for FSST.\n\nFor the initial interoperability work, it would be particularly helpful to\nhave implementations in Parquet Java and Arrow Go as well.\n\nIf anyone is interested in owning or contributing to the Parquet Java or\nArrow Go implementation, please let us know. Contributions to the existing\nRust and C++ implementations and to cross language interoperability testing\nwould also be greatly appreciated.\n\nArtifacts:\n\n- FSST specification:\n\nhttps://docs.google.com/document/d/1Xg2b8HR19QnI3nhtQUDWZJhCLwJzW6y9tU1ziiLFZrM/edit\n\n- Tracking issue:\n  https://github.com/apache/parquet-format/issues/531\n\n- Original FSST mailing-list discussion:\n  https://lists.apache.org/thread/15w66hvm516641btrljmtqhb4m38wn3s\n\n- FSST and OnPair discussion:\n  https://lists.apache.org/thread/hfoltdl6o6txc3zp4680nns1mh29h0r8\n\n- Arrow C++ PoC:\n  https://github.com/apache/arrow/pull/48232\n\n- Arrow Rust implementation:\n  https://github.com/apache/arrow-rs/pull/10153\n\nBased on any new comments/questions, the next steps will be to:\n1. Address any feedback from this final review.\n2. Open a PR updating the proposal status from Draft/PoC to Implementation.\n3. Continue the java/go implementations and establish cross langu",
       "labels": [],
       "linked_resources": [
@@ -2435,8 +2435,8 @@
       ],
       "llm_summary": "Created: 2026-01-17 Proposal: Parquet Format (tracking active proposal)[a][b][c][d] Mailing List: Discussion See also: FSST Support in Parquet - Fast Static Symbol Table See also: Draft Arrow PR for PoC See also: FSST Paper See also: Byte Type Improvements Stakeholders: julien@apache.orgemkornfield@gmail.com andrewlamb11@gmail.com @antoine@python.org 1. 1.1 Scope: This specification defines FSST encoding support for Apache Parquet column chunks. FSST is a lossless substring based compression method designed for high throughput and random access.",
       "llm_status": "discussion",
-      "comment_count": 0,
-      "participant_count": 1,
+      "comment_count": 2,
+      "participant_count": 2,
       "llm_key_points": [],
       "llm_topics": [
         "arrow",
@@ -2445,6 +2445,60 @@
         "implementation"
       ],
       "_content_hash": "9cdf67927ff5",
+      "llm_title": "",
+      "initiative_id": "parquet-init-parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj"
+    },
+    {
+      "id": "parquet-ml-hfoltdl6o6txc3zp4680nns1mh29h0r8",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[Discuss] Onpair : String Encoding",
+      "url": "https://lists.apache.org/thread/hfoltdl6o6txc3zp4680nns1mh29h0r8",
+      "author": "PRATEEK GAUR <pr...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-08-03T06:12:09+00:00",
+      "updated_at": "2026-08-12T17:14:15+00:00",
+      "body": "Hi team,\n\nI came across a recent string compression algorithm called OnPair and spent\nsome time experimenting with it as a Parquet encoding, benchmarked against\nFSST, DELTA_LENGTH_BYTE_ARRAY, dictionary encoding, and the usual\nzstd/lz4/snappy page compression across 30 string corpora.\n\n Report\n<https://docs.google.com/document/d/1cctFqNVh_Ul6huiXyMeFWNaGhZba0fMJ/edit>\n\nShort version: it trades encode speed for ratio and decode speed \u2014 it\ndecodes faster than every compressed alternative measured and wins ratio on\nmost text-heavy columns, but its training pass makes encode substantially\nslower.\n\nApologies in advance for slow replies \u2014 I'm travelling.\n\nBest\nPrateek\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1cctFqNVh_Ul6huiXyMeFWNaGhZba0fMJ/edit",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffOnPair: A Viable String Encoding for Apache Parquet"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1-rRJHFbZcF5ljqzOUXwzclj4sVfT8tzi/edit",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffFSST vs OnPair: one mechanism, and a case for combining them"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1Xg2b8HR19QnI3nhtQUDWZJhCLwJzW6y9tU1ziiLFZrM/edit?tab=t.0#heading=h.52l8mh2dqmg8",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffParquet: Specification for FSST Encoding"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/50791",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Short version: it trades encode speed for ratio and decode speed \u2014 it decodes faster than every compressed alternative measured and wins ratio on most text-heavy columns, but its training pass makes encode substantially slower. Author: Prateek Gaur Suggested by :  Julien Le Dem, Russell Spitzer, Andrew Lamb Other file formats that support it : Vortex, anyone else? We measure it head-to-head against FSST (the string encoding currently proposed for Parquet), and against the general-purpose block compressors zstd -1 and lz4, on the three axes that matter for a columnar format: compression ratio, decompression speed (with per-row random access), and compression speed.",
+      "llm_status": "discussion",
+      "comment_count": 5,
+      "participant_count": 3,
+      "llm_key_points": [
+        "Thanks Prateek,\n\nI also wanted to explicitly mention here on the mailing list again how\nsimilar I think FSST and OnPair "
+      ],
+      "llm_topics": [
+        "string-encoding",
+        "snappy-page",
+        "time-experimenting",
+        "string"
+      ],
+      "_content_hash": "0b4c006c648c",
+      "llm_title": "",
       "initiative_id": "parquet-init-parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj"
     },
     {
@@ -2460,15 +2514,15 @@
       "body": "Hi everyone,\n\nI propose the following RC for release as the official Apache Parquet 1.18.0 release.\n\nThe commit ID is 0209dfb48d153f2f3e49a9f12addebe15c0f1d77\n\n- This corresponds to the tag: apache-parquet-1.18.0-rc2\n- https://github.com/apache/parquet-java/tree/0209dfb48d153f2f3e49a9f12addebe15c0f1d77\n\nThe release tarball, signature, and checksums are here:\n\n- https://dist.apache.org/repos/dist/dev/parquet/apache-parquet-1.18.0-rc2\n\nYou can find the KEYS file here:\n\n- https://downloads.apache.org/parquet/KEYS\n\nYou can find the changelog here:\n\n- https://github.com/apache/parquet-java/releases/tag/apache-parquet-1.18.0-rc2\n\nBinary artifacts are staged in Nexus here:\n\n- https://repository.apache.org/content/groups/staging/org/apache/parquet/\n\nPlease download, verify, and test.\n\nPlease vote in the next 72 hours.\n\n[ ] +1 Release this as Apache Parquet 1.18.0\n[ ] +0[ ] -1 Do not release this because...\n\nKind regards,\nFokko\n\nSent with [Proton Mail](https://proton.me/mail/home) secure email.",
       "labels": [],
       "linked_resources": [],
-      "llm_summary": "Vote in progress: 2 binding +1, 4 non-binding +1",
-      "llm_status": "proposal",
-      "comment_count": 8,
-      "participant_count": 8,
+      "llm_summary": "Vote PASSED with 3 binding +1 votes and 4 non-binding +1",
+      "llm_status": "released",
+      "comment_count": 9,
+      "participant_count": 9,
       "vote_data": {
-        "binding_plus1": 2,
+        "binding_plus1": 3,
         "nonbinding_plus1": 4,
         "vetoes": 0,
-        "result": "open",
+        "result": "passed",
         "voters": [
           {
             "voter": "Divjot Arora via dev <de...@parquet.apache.org>",
@@ -2480,6 +2534,10 @@
           },
           {
             "voter": "Gang Wu <ga...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "G\u00e1bor Sz\u00e1dovszky <ga...@apache.org>",
             "vote": "+1 (binding)"
           },
           {
@@ -2507,7 +2565,7 @@
         "release",
         "parquet"
       ],
-      "_content_hash": "3bf324da960f",
+      "_content_hash": "94d5ca5afc35",
       "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
@@ -2534,6 +2592,7 @@
         "announce",
         "parquet"
       ],
+      "llm_title": "",
       "_content_hash": "32a2b629b1a8",
       "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
@@ -2557,13 +2616,13 @@
           "title": "\ufeffParquet Versioning proposal"
         }
       ],
-      "llm_summary": "Vote in progress: 2 binding +1, 9 non-binding +1",
+      "llm_summary": "Vote in progress: 2 binding +1, 10 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 13,
-      "participant_count": 14,
+      "comment_count": 14,
+      "participant_count": 15,
       "vote_data": {
         "binding_plus1": 2,
-        "nonbinding_plus1": 9,
+        "nonbinding_plus1": 10,
         "vetoes": 0,
         "result": "open",
         "voters": [
@@ -2585,6 +2644,10 @@
           },
           {
             "voter": "Divjot Arora via dev <de...@parquet.apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Ed Seidl <et...@apache.org>",
             "vote": "+1"
           },
           {
@@ -2624,7 +2687,7 @@
         "release-forward-incompatible",
         "communicating-compatibility"
       ],
-      "_content_hash": "62ebffa2ec7d",
+      "_content_hash": "17ea39d1d355",
       "initiative_id": "parquet-init-parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq"
     },
     {
@@ -2663,59 +2726,6 @@
       "llm_title": "",
       "_content_hash": "da38b9c21e6b",
       "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
-    },
-    {
-      "id": "parquet-ml-hfoltdl6o6txc3zp4680nns1mh29h0r8",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[Discuss] Onpair : String Encoding",
-      "url": "https://lists.apache.org/thread/hfoltdl6o6txc3zp4680nns1mh29h0r8",
-      "author": "PRATEEK GAUR <pr...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-08-03T06:12:09+00:00",
-      "updated_at": "2026-08-05T10:30:24+00:00",
-      "body": "Hi team,\n\nI came across a recent string compression algorithm called OnPair and spent\nsome time experimenting with it as a Parquet encoding, benchmarked against\nFSST, DELTA_LENGTH_BYTE_ARRAY, dictionary encoding, and the usual\nzstd/lz4/snappy page compression across 30 string corpora.\n\n Report\n<https://docs.google.com/document/d/1cctFqNVh_Ul6huiXyMeFWNaGhZba0fMJ/edit>\n\nShort version: it trades encode speed for ratio and decode speed \u2014 it\ndecodes faster than every compressed alternative measured and wins ratio on\nmost text-heavy columns, but its training pass makes encode substantially\nslower.\n\nApologies in advance for slow replies \u2014 I'm travelling.\n\nBest\nPrateek\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1cctFqNVh_Ul6huiXyMeFWNaGhZba0fMJ/edit",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffOnPair: A Viable String Encoding for Apache Parquet"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1-rRJHFbZcF5ljqzOUXwzclj4sVfT8tzi/edit",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffFSST vs OnPair: one mechanism, and a case for combining them"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1Xg2b8HR19QnI3nhtQUDWZJhCLwJzW6y9tU1ziiLFZrM/edit?tab=t.0#heading=h.52l8mh2dqmg8",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffParquet: Specification for FSST Encoding"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/50791",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Short version: it trades encode speed for ratio and decode speed \u2014 it decodes faster than every compressed alternative measured and wins ratio on most text-heavy columns, but its training pass makes encode substantially slower. Author: Prateek Gaur Suggested by :  Julien Le Dem, Russell Spitzer, Andrew Lamb Other file formats that support it : Vortex, anyone else? We measure it head-to-head against FSST (the string encoding currently proposed for Parquet), and against the general-purpose block compressors zstd -1 and lz4, on the three axes that matter for a columnar format: compression ratio, decompression speed (with per-row random access), and compression speed.",
-      "llm_status": "discussion",
-      "comment_count": 4,
-      "participant_count": 3,
-      "llm_key_points": [
-        "Thanks Prateek,\n\nI also wanted to explicitly mention here on the mailing list again how\nsimilar I think FSST and OnPair "
-      ],
-      "llm_topics": [
-        "string-encoding",
-        "snappy-page",
-        "time-experimenting",
-        "string"
-      ],
-      "_content_hash": "0b4c006c648c",
-      "llm_title": "",
-      "initiative_id": "parquet-init-parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj"
     },
     {
       "id": "parquet-ml-3d7mf3l749r7d77f3lsr4jjqk10gjm92",
@@ -5520,7 +5530,7 @@
       ],
       "_content_hash": "41514225ff19",
       "llm_title": "Deprecate file_path field in column chunk",
-      "initiative_id": "parquet-init-parquet-ml-jffqzp1hoh8vypffdrbjhotkn06zrxmf"
+      "initiative_id": "parquet-init-parquet-ml-ygs245qdd2d2d91qk801t3pdf47tgn75"
     },
     {
       "id": "parquet-ml-7xq85j6rd8som3y6cqxtk6n6ddhdy3wm",
@@ -7303,7 +7313,7 @@
       ],
       "_content_hash": "735a1326fdb5",
       "llm_title": "Merge Implementation Status PR for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-jffqzp1hoh8vypffdrbjhotkn06zrxmf"
     },
     {
       "id": "parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",

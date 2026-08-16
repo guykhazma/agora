@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-08-15T06:22:36.766649+00:00",
+  "generated_at": "2026-08-16T06:24:38.240839+00:00",
   "total": 274,
   "proposals": [
     {
@@ -2402,6 +2402,61 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] FSST proposal final design review and move to implementation",
+      "url": "https://lists.apache.org/thread/yhv0vp5w1cy08n5n6q2vry98hmw00gnj",
+      "author": "Arnav Balyan <ar...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-08-12T06:45:31+00:00",
+      "updated_at": "2026-08-15T14:45:01+00:00",
+      "body": "Hello everyone,\n\nI wanted to provide a quick update on the FSST encoding proposal for\nParquet.\n\nOver the last several months, we have incorporated the feedback received\nfrom the community and finalized the design. Thank you to everyone who\nreviewed the proposal and helped resolve the open questions.\n\nAt this point, we are planning to move the proposal from the Design/Draft\nphase to the Implementation phase. Before doing so, I would like to ask for\none final round of feedback and ensure that everyone who wanted to review\nthe specification has had an opportunity to do so.\n\nImplementation work is also underway:\n- Devan Benz has started an Arrow Rust\n<https://github.com/apache/arrow-rs/pull/10153> implementation.\n- I have an existing Arrow C++ <https://github.com/apache/arrow/pull/48232>\nPoC for FSST.\n\nFor the initial interoperability work, it would be particularly helpful to\nhave implementations in Parquet Java and Arrow Go as well.\n\nIf anyone is interested in owning or contributing to the Parquet Java or\nArrow Go implementation, please let us know. Contributions to the existing\nRust and C++ implementations and to cross language interoperability testing\nwould also be greatly appreciated.\n\nArtifacts:\n\n- FSST specification:\n\nhttps://docs.google.com/document/d/1Xg2b8HR19QnI3nhtQUDWZJhCLwJzW6y9tU1ziiLFZrM/edit\n\n- Tracking issue:\n  https://github.com/apache/parquet-format/issues/531\n\n- Original FSST mailing-list discussion:\n  https://lists.apache.org/thread/15w66hvm516641btrljmtqhb4m38wn3s\n\n- FSST and OnPair discussion:\n  https://lists.apache.org/thread/hfoltdl6o6txc3zp4680nns1mh29h0r8\n\n- Arrow C++ PoC:\n  https://github.com/apache/arrow/pull/48232\n\n- Arrow Rust implementation:\n  https://github.com/apache/arrow-rs/pull/10153\n\nBased on any new comments/questions, the next steps will be to:\n1. Address any feedback from this final review.\n2. Open a PR updating the proposal status from Draft/PoC to Implementation.\n3. Continue the java/go implementations and establish cross langu",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1Xg2b8HR19QnI3nhtQUDWZJhCLwJzW6y9tU1ziiLFZrM/edit",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffParquet: Specification for FSST Encoding"
+        },
+        {
+          "url": "https://github.com/apache/arrow-rs/pull/10153",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/48232",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-testing/pull/121",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/50872",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/issues/531",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "Created: 2026-01-17 Proposal: Parquet Format (tracking active proposal)[a][b][c][d] Mailing List: Discussion See also: FSST Support in Parquet - Fast Static Symbol Table See also: Draft Arrow PR for PoC See also: FSST Paper See also: Byte Type Improvements Stakeholders: julien@apache.orgemkornfield@gmail.com andrewlamb11@gmail.com @antoine@python.org 1. 1.1 Scope: This specification defines FSST encoding support for Apache Parquet column chunks. FSST is a lossless substring based compression method designed for high throughput and random access.",
+      "llm_status": "discussion",
+      "comment_count": 7,
+      "participant_count": 4,
+      "llm_key_points": [],
+      "llm_topics": [
+        "arrow",
+        "fsst",
+        "arrow-rust",
+        "implementation"
+      ],
+      "_content_hash": "9cdf67927ff5",
+      "llm_title": "",
+      "initiative_id": "parquet-init-parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj"
+    },
+    {
       "id": "parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn",
       "source": "mailing_list",
       "kind": "thread",
@@ -2433,58 +2488,8 @@
         "remaining-decision"
       ],
       "_content_hash": "af9d596e61f4",
-      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
-    },
-    {
-      "id": "parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] FSST proposal final design review and move to implementation",
-      "url": "https://lists.apache.org/thread/yhv0vp5w1cy08n5n6q2vry98hmw00gnj",
-      "author": "Arnav Balyan <ar...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-08-12T06:45:31+00:00",
-      "updated_at": "2026-08-13T20:44:30+00:00",
-      "body": "Hello everyone,\n\nI wanted to provide a quick update on the FSST encoding proposal for\nParquet.\n\nOver the last several months, we have incorporated the feedback received\nfrom the community and finalized the design. Thank you to everyone who\nreviewed the proposal and helped resolve the open questions.\n\nAt this point, we are planning to move the proposal from the Design/Draft\nphase to the Implementation phase. Before doing so, I would like to ask for\none final round of feedback and ensure that everyone who wanted to review\nthe specification has had an opportunity to do so.\n\nImplementation work is also underway:\n- Devan Benz has started an Arrow Rust\n<https://github.com/apache/arrow-rs/pull/10153> implementation.\n- I have an existing Arrow C++ <https://github.com/apache/arrow/pull/48232>\nPoC for FSST.\n\nFor the initial interoperability work, it would be particularly helpful to\nhave implementations in Parquet Java and Arrow Go as well.\n\nIf anyone is interested in owning or contributing to the Parquet Java or\nArrow Go implementation, please let us know. Contributions to the existing\nRust and C++ implementations and to cross language interoperability testing\nwould also be greatly appreciated.\n\nArtifacts:\n\n- FSST specification:\n\nhttps://docs.google.com/document/d/1Xg2b8HR19QnI3nhtQUDWZJhCLwJzW6y9tU1ziiLFZrM/edit\n\n- Tracking issue:\n  https://github.com/apache/parquet-format/issues/531\n\n- Original FSST mailing-list discussion:\n  https://lists.apache.org/thread/15w66hvm516641btrljmtqhb4m38wn3s\n\n- FSST and OnPair discussion:\n  https://lists.apache.org/thread/hfoltdl6o6txc3zp4680nns1mh29h0r8\n\n- Arrow C++ PoC:\n  https://github.com/apache/arrow/pull/48232\n\n- Arrow Rust implementation:\n  https://github.com/apache/arrow-rs/pull/10153\n\nBased on any new comments/questions, the next steps will be to:\n1. Address any feedback from this final review.\n2. Open a PR updating the proposal status from Draft/PoC to Implementation.\n3. Continue the java/go implementations and establish cross langu",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1Xg2b8HR19QnI3nhtQUDWZJhCLwJzW6y9tU1ziiLFZrM/edit",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffParquet: Specification for FSST Encoding"
-        },
-        {
-          "url": "https://github.com/apache/arrow-rs/pull/10153",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/48232",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-testing/pull/121",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-format/issues/531",
-          "kind": "github_issue"
-        }
-      ],
-      "llm_summary": "Created: 2026-01-17 Proposal: Parquet Format (tracking active proposal)[a][b][c][d] Mailing List: Discussion See also: FSST Support in Parquet - Fast Static Symbol Table See also: Draft Arrow PR for PoC See also: FSST Paper See also: Byte Type Improvements Stakeholders: julien@apache.orgemkornfield@gmail.com andrewlamb11@gmail.com @antoine@python.org 1. 1.1 Scope: This specification defines FSST encoding support for Apache Parquet column chunks. FSST is a lossless substring based compression method designed for high throughput and random access.",
-      "llm_status": "discussion",
-      "comment_count": 6,
-      "participant_count": 4,
-      "llm_key_points": [],
-      "llm_topics": [
-        "arrow",
-        "fsst",
-        "arrow-rust",
-        "implementation"
-      ],
-      "_content_hash": "9cdf67927ff5",
       "llm_title": "",
-      "initiative_id": "parquet-init-parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-hfoltdl6o6txc3zp4680nns1mh29h0r8",

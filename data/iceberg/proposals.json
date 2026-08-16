@@ -1,7 +1,7 @@
 {
   "project_id": "iceberg",
-  "generated_at": "2026-08-15T06:24:21.052826+00:00",
-  "total": 1170,
+  "generated_at": "2026-08-16T06:26:27.814404+00:00",
+  "total": 1171,
   "proposals": [
     {
       "id": "iceberg-doc-19nno1RoPznb",
@@ -12,7 +12,7 @@
       "author": "community",
       "state": "open",
       "created_at": "",
-      "updated_at": "2026-08-15T06:23:09.601224+00:00",
+      "updated_at": "2026-08-16T06:25:13.781482+00:00",
       "body": "\ufeffIceberg - Spark Community Sync Notes\r\n\r\n\r\n* This doc has notes from Iceberg Spark integration work, it will include all past discussions in this area.\r\n* Everyone is welcome to join the Iceberg spark syncs to discuss Spark related topics.\r\n* The general community sync notes can be found here.\r\n* Join the \u201cIceberg Dev Events\u201d calendar to see the calendar event!\r\nIceberg - Spark Community Sync\r\nTuesday, January 20\u22c510:00 \u2013 11:00am (recurring Monthly on the third Tuesday) \r\nmeet.google.com/aqg-mdpq-myf\r\n\r\n\r\n\r\n\r\nJul 21, 2026\r\nHighlights\r\n* Spark: Add vectorized Parquet reads for variant columns (#16292) \u2014 Major variant read perf; unblocks shredded extraction\r\n* Spark 4.1: Geo Types ( End-to-end geo type support in Spark)\r\n   * Map geo Spark types (#16851) \r\n   * Read and write geometry and geography values in Parquet (#17073)\r\n   * Spark 4.1: Test geometry and geography DML and fall back from vectorized reads (#17149)\r\n* Spark 4.1: Implement listTableSummaries (#16891) - Detect table vs views without doing load table\r\n* Spark: Add session-level split size override (#16154) + Backport to 3.5/4.0 (#17199)\r\n* Spark 4.1: Add REST_CATALOG_PURGE property (#17186) + Spark 4.0 (#17185)\r\n   * Delegate DROP TABLE PURGE to REST catalogs\r\n* Core, Spark: Ensure correct delete file sizes in rewrite table action (#15470) + 1.10.x backport (#17215)\r\nDiscussion points\r\n* Spark Versioning\r\n   * Add support for Spark 4.2.0 (#14984) - 4.2 released so this is up for review\r\n   * Spark 4.3 plans\r\n   * Deprecation of 4.0         \r\n* Spark CI improvements \r\n   * Reduce TestRewriteDataFilesAction data volume (#16565)\r\n   * CI: Select Spark PR matrix by changed version (#16946)\r\n   * CI: Select Flink PR matrix by changed version (#16947)\r\nReview Requests\r\nSort Order / K-way Merge\r\n* Spark 4.1: Add MergingSortedRowDataReader (#14948) \r\n* Spark 4.1: Implement SupportsReportOrdering (#16750) \u2014 DRAFT, blocked on #14948. No reviewers.\r\n* K-way merge rewrite strategy (#16305) \u2014 Depends on #14948. Unch",
       "labels": [],
       "linked_resources": [],
@@ -683,7 +683,7 @@
       ],
       "_content_hash": "2ef8c3045f3a",
       "llm_title": "Iceberg Variant Community Sync Summary",
-      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb"
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs"
     },
     {
       "id": "iceberg-yt-OaeTob3lM1Q",
@@ -3101,7 +3101,7 @@
         }
       ],
       "comment_count": 9,
-      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb",
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
       "llm_summary": "Proposes a spec change to differentiate array fields from primitive fields in Variant column metadata. Currently, array elements and primitive values use the same field path representation (e.g., $['tags']), preventing engines from pruning files effectively. Two solutions are suggested: using $['tags'][0] notation or storing as $['tags']: [\"action\"] to explicitly indicate array types.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -5478,6 +5478,264 @@
       "_content_hash": "7f727f0a61b8"
     },
     {
+      "id": "iceberg-ml-orwny91fqyfmzx7w7p6wj7cgmndvd8r3",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] Clarify content file uniqueness in the table spec",
+      "url": "https://lists.apache.org/thread/orwny91fqyfmzx7w7p6wj7cgmndvd8r3",
+      "author": "Russell Spitzer <ru...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-08-14T17:39:55+00:00",
+      "updated_at": "2026-08-16T01:37:48+00:00",
+      "body": "Hi y'all,\n\nIt's been a while, and I think we already have consensus here\nbut I wanted to raise this vote for awareness/consensus before merging.\n\n\n\n*Scan planning has stated since #4272\n<https://github.com/apache/iceberg/pull/4272> that duplicate live file\npaths in a snapshot produce undefined scan results. This PR makes that\nexpectation explicit as a snapshot invariant in the main body of the spec.*\n\nPlease vote in the next 72 hours:\n\n[ ] +1 Approve the spec clarification in 17198\n<https://github.com/apache/iceberg/pull/17198>\n[ ] +0\n[ ] -1 Do not approve (please provide reasons)\n\nThanks for your time,\nRuss\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/iceberg/pull/4272",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/17198",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Vote in progress: 2 binding +1, 8 non-binding +1",
+      "llm_status": "proposal",
+      "comment_count": 10,
+      "participant_count": 11,
+      "vote_data": {
+        "binding_plus1": 2,
+        "nonbinding_plus1": 8,
+        "vetoes": 0,
+        "result": "open",
+        "voters": [
+          {
+            "voter": "Anoop Johnson <an...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Anurag Mantripragada <an...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Hongyue Zhang <ho...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Junwang Zhao <zh...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Maninder Parmar <pa...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Matt Butrovich <mb...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Neelesh Salian <ne...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "P\u00e9ter V\u00e1ry <pe...@gmail.com>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Steven Wu <st...@gmail.com>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "vaquar khan <va...@gmail.com>",
+            "vote": "+1"
+          }
+        ],
+        "closes_at": "2026-08-17T17:39:55+00:00"
+      },
+      "llm_key_points": [
+        "Hi y'all,\n\nIt's been a while, and I think we already have consensus here\nbut I wanted to raise this vote for awareness/consensus before merging.",
+        "Voters include: Anoop Johnson, Anurag Mantripragada, Hongyue Zhang..."
+      ],
+      "llm_topics": [
+        "clarify-content",
+        "content-file",
+        "file-uniqueness",
+        "clarify"
+      ],
+      "_content_hash": "a8c7b39086fe",
+      "initiative_id": "iceberg-init-iceberg-ml-33vyko8qtsmpdp75f25kx6rjrmgr5kwq"
+    },
+    {
+      "id": "iceberg-ml-y93010hlq2m59jjw9lsjbrs38xw8nkdb",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] AI Review comments",
+      "url": "https://lists.apache.org/thread/y93010hlq2m59jjw9lsjbrs38xw8nkdb",
+      "author": "Manu Zhang <ow...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-08-15T15:11:20+00:00",
+      "updated_at": "2026-08-15T17:57:21+00:00",
+      "body": "Hi all,\n\nI believe most of us are now using AI to author and review PRs. While it is\nfast and efficient, I have a few concerns regarding how we use it for code\nreviews.\n\nRecently, I have noticed increasingly lengthy AI-generated comments.\nDissecting these comments to find the root issue takes significant time.\nWhy not hand over the job to AI? Yes, I do this all the time but I still\nhave to review its proposed action plan. If that plan doesn't make sense, I\nmust trace back to the original review. Furthermore, conflicting comments\nfrom different AI reviewers can cause an inefficient loop, as each tool\noperates on different context. I'm not sure human reviewers ever review\nthese AI comments before posting them. I'm also unsure this process remains\ncost-effective given the token expenses.\n\nWhen I use AI to review a PR, I prefer to read its findings (you feel the\npain immediately), rephrase the valid points in my own words, and post them\nmanually.\n\nWould this approach be a better way for us to utilize AI reviewers? I would\nappreciate your thoughts.\n\n\n*Disclosure: This email was polished by AI.*\nBest regards,\nManu\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/iceberg/pull/17671",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/issues/17670",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "When I use AI to review a PR, I prefer to read its findings (you feel the pain immediately), rephrase the valid points in my own words, and post them manually. On Sat, Aug 15, 2026 at 11:12\u202fPM Manu Zhang <ow...@gmail.com> wrote: > > Hi all, > > I believe most of us are now using AI to author and review PRs. The long unreviewed AI comments are a real time sink, and your approach of reading the findings, keeping what's valid, and posting in your own words is basically the right rule.",
+      "llm_status": "discussion",
+      "comment_count": 2,
+      "participant_count": 3,
+      "llm_key_points": [
+        "On Sat, Aug 15, 2026 at 11:12\u202fPM Manu Zhang <ow...@gmail.com> wrote:\n>\n> Hi all,\n>\n> I believe most of us are now using ",
+        "Hi everyone,\n\nAgreed, everyone using AI agents and coding tools, valid point."
+      ],
+      "llm_topics": [
+        "review",
+        "comments",
+        "discuss",
+        "time"
+      ],
+      "_content_hash": "c5b802b65fa7",
+      "initiative_id": "iceberg-init-iceberg-ml-y93010hlq2m59jjw9lsjbrs38xw8nkdb"
+    },
+    {
+      "id": "iceberg-ml-5x8ovvz3ppf4krqs543sqjcy3dqdhthm",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] Deprecate equality deletes in Iceberg V4 (forbid new writes)",
+      "url": "https://lists.apache.org/thread/5x8ovvz3ppf4krqs543sqjcy3dqdhthm",
+      "author": "huaxin gao <hu...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-08-13T02:07:17+00:00",
+      "updated_at": "2026-08-15T16:05:42+00:00",
+      "body": "Hi all,\n\nFollowing the discussion thread \"[DISCUSS] Deprecate Equality Deletes in\nIceberg V4\" [1], I'd like to call a vote on the following proposal for the\nV4 table spec.\n\nProposal\n--------\n1. Writing new equality deletes is forbidden for V4 tables: the V4 metadata\n   will not define equality deletes as an allowed entry type.\n\n2. Reading equality deletes remains supported in the reference\n   implementation for backward compatibility, both for existing V2/V3\n   tables and for equality deletes carried over into upgraded V4 tables.\n\n3. Upgrading a V2/V3 table to V4 is metadata-only (no synchronous rewrite\n   of data or delete files). Existing equality deletes remain in carried-\n   over V2/V3 delete manifests; converting them to deletion vectors is a\n   separate, optional maintenance action.\n\nRationale\n---------\nEquality deletes impose an asymmetric cost paid on every read, complicate\nthe format, and block features such as CDC, row lineage, and incremental\nindex/materialized-view maintenance. Deletion vectors make deletion a flat,\none-time cost, and the Flink ConvertEqualityDeletes work demonstrates a\nviable replacement path, so we do not need the full replacement completed\nbefore forbidding new equality deletes in V4.\n\nThe vote will be open for at least 72 hours.\n\n[ ] +1 Forbid writing equality deletes in V4\n[ ] +0\n[ ] -1 Do not forbid (please explain)\n\n[1] https://lists.apache.org/thread/ks01jpv40qjlvz4yop5tlqv4x5oxbwy6\n\nThanks,\nHuaxin\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "Vote PASSED with 5 binding +1 votes and 18 non-binding +1",
+      "llm_status": "released",
+      "comment_count": 25,
+      "participant_count": 24,
+      "vote_data": {
+        "binding_plus1": 5,
+        "nonbinding_plus1": 18,
+        "vetoes": 0,
+        "result": "passed",
+        "voters": [
+          {
+            "voter": "Alex Stephen via dev <de...@iceberg.apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Amogh Jahagirdar <2a...@gmail.com>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Andrei Tserakhau via dev <de...@iceberg.apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Anoop Johnson <an...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Anurag Mantripragada <an...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Bryan Keller <br...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Gang Wu <us...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Gianluca Graziadei <gr...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Hongyue Zhang <ho...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Junwang Zhao <zh...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Manu Zhang <ow...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Matt Butrovich <mb...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Maximilian Michels <mx...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Neelesh Salian <ne...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Russell Spitzer <ru...@gmail.com>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Ryan Blue <bl...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Shawn Chang <ye...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Steven Wu <st...@gmail.com>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Szehon Ho <sz...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Talat Uyarer via dev <de...@iceberg.apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Xin Huang via dev <de...@iceberg.apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Yufei Gu <fl...@gmail.com>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "vaquar khan <va...@gmail.com>",
+            "vote": "+1"
+          }
+        ],
+        "closes_at": "2026-08-16T02:07:17+00:00"
+      },
+      "llm_key_points": [
+        "Hi all,\n\nFollowing the discussion thread \"[DISCUSS] Deprecate Equality Deletes in\nIceberg V4\" [1], I'd like to call a vote on the following proposal f",
+        "Voters include: Alex Stephen via dev, Amogh Jahagirdar, Andrei Tserakhau via dev..."
+      ],
+      "llm_topics": [
+        "deprecate-equality",
+        "equality-deletes",
+        "deprecate",
+        "iceberg"
+      ],
+      "_content_hash": "ee2198d0ac82",
+      "initiative_id": "iceberg-init-iceberg-ml-9psvzs9tv7z245wwgcswksnzwbqr6rnr"
+    },
+    {
       "id": "iceberg-ml-rx0tcnqkq0nzj1phwo64ng79pp51hzf9",
       "source": "mailing_list",
       "kind": "thread",
@@ -5568,7 +5826,7 @@
       ],
       "llm_summary": "On 2026/07/21 20:01:16 William Hyun wrote: > Hi All, > > Following up on the ongoing discussion thread regarding the file-level access delegation modes in the Iceberg REST spec, I wanted to share some findings from a cross-cloud perspective of how the major Cloud Service Providers handle these protocols. > > When evaluating remote signing as an access mode, two major operational hurdles emerge: strict 15-minute Time-To-Live constraints and a lack of native support across all CSPs, particularly Azure. > > In Azure Storage, a Shared Access Signature (SAS) is strictly a token designed to be appended to the resource URI as query parameters.",
       "llm_status": "discussion",
-      "comment_count": 4,
+      "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [],
       "llm_topics": [
@@ -5577,131 +5835,9 @@
         "access-delegation",
         "file-level-access"
       ],
+      "llm_title": "",
       "_content_hash": "1b8b7907ff5c",
       "initiative_id": "iceberg-init-iceberg-gh-p13879"
-    },
-    {
-      "id": "iceberg-ml-5x8ovvz3ppf4krqs543sqjcy3dqdhthm",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[VOTE] Deprecate equality deletes in Iceberg V4 (forbid new writes)",
-      "url": "https://lists.apache.org/thread/5x8ovvz3ppf4krqs543sqjcy3dqdhthm",
-      "author": "huaxin gao <hu...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-08-13T02:07:17+00:00",
-      "updated_at": "2026-08-14T20:05:56+00:00",
-      "body": "Hi all,\n\nFollowing the discussion thread \"[DISCUSS] Deprecate Equality Deletes in\nIceberg V4\" [1], I'd like to call a vote on the following proposal for the\nV4 table spec.\n\nProposal\n--------\n1. Writing new equality deletes is forbidden for V4 tables: the V4 metadata\n   will not define equality deletes as an allowed entry type.\n\n2. Reading equality deletes remains supported in the reference\n   implementation for backward compatibility, both for existing V2/V3\n   tables and for equality deletes carried over into upgraded V4 tables.\n\n3. Upgrading a V2/V3 table to V4 is metadata-only (no synchronous rewrite\n   of data or delete files). Existing equality deletes remain in carried-\n   over V2/V3 delete manifests; converting them to deletion vectors is a\n   separate, optional maintenance action.\n\nRationale\n---------\nEquality deletes impose an asymmetric cost paid on every read, complicate\nthe format, and block features such as CDC, row lineage, and incremental\nindex/materialized-view maintenance. Deletion vectors make deletion a flat,\none-time cost, and the Flink ConvertEqualityDeletes work demonstrates a\nviable replacement path, so we do not need the full replacement completed\nbefore forbidding new equality deletes in V4.\n\nThe vote will be open for at least 72 hours.\n\n[ ] +1 Forbid writing equality deletes in V4\n[ ] +0\n[ ] -1 Do not forbid (please explain)\n\n[1] https://lists.apache.org/thread/ks01jpv40qjlvz4yop5tlqv4x5oxbwy6\n\nThanks,\nHuaxin\n",
-      "labels": [],
-      "linked_resources": [],
-      "llm_summary": "Vote PASSED with 5 binding +1 votes and 16 non-binding +1",
-      "llm_status": "released",
-      "comment_count": 23,
-      "participant_count": 22,
-      "vote_data": {
-        "binding_plus1": 5,
-        "nonbinding_plus1": 16,
-        "vetoes": 0,
-        "result": "passed",
-        "voters": [
-          {
-            "voter": "Alex Stephen via dev <de...@iceberg.apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Amogh Jahagirdar <2a...@gmail.com>",
-            "vote": "+1 (binding)"
-          },
-          {
-            "voter": "Andrei Tserakhau via dev <de...@iceberg.apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Anoop Johnson <an...@apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Anurag Mantripragada <an...@apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Bryan Keller <br...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Gang Wu <us...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Gianluca Graziadei <gr...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Hongyue Zhang <ho...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Manu Zhang <ow...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Matt Butrovich <mb...@apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Neelesh Salian <ne...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Russell Spitzer <ru...@gmail.com>",
-            "vote": "+1 (binding)"
-          },
-          {
-            "voter": "Ryan Blue <bl...@apache.org>",
-            "vote": "+1 (binding)"
-          },
-          {
-            "voter": "Shawn Chang <ye...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Steven Wu <st...@gmail.com>",
-            "vote": "+1 (binding)"
-          },
-          {
-            "voter": "Szehon Ho <sz...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Talat Uyarer via dev <de...@iceberg.apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Xin Huang via dev <de...@iceberg.apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Yufei Gu <fl...@gmail.com>",
-            "vote": "+1 (binding)"
-          },
-          {
-            "voter": "vaquar khan <va...@gmail.com>",
-            "vote": "+1"
-          }
-        ],
-        "closes_at": "2026-08-16T02:07:17+00:00"
-      },
-      "llm_key_points": [
-        "Hi all,\n\nFollowing the discussion thread \"[DISCUSS] Deprecate Equality Deletes in\nIceberg V4\" [1], I'd like to call a vote on the following proposal f",
-        "Voters include: Alex Stephen via dev, Amogh Jahagirdar, Andrei Tserakhau via dev..."
-      ],
-      "llm_topics": [
-        "deprecate-equality",
-        "equality-deletes",
-        "deprecate",
-        "iceberg"
-      ],
-      "_content_hash": "cfb76ac021f8",
-      "initiative_id": "iceberg-init-iceberg-ml-9psvzs9tv7z245wwgcswksnzwbqr6rnr"
     },
     {
       "id": "iceberg-ml-pdky6c2tnrqtf2l3fqmfgsyto0lzm96o",
@@ -5727,80 +5863,9 @@
         "bay-area",
         "meetup-bay"
       ],
+      "llm_title": "",
       "_content_hash": "02076c474140",
       "initiative_id": "iceberg-init-iceberg-ml-pdky6c2tnrqtf2l3fqmfgsyto0lzm96o"
-    },
-    {
-      "id": "iceberg-ml-orwny91fqyfmzx7w7p6wj7cgmndvd8r3",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[VOTE] Clarify content file uniqueness in the table spec",
-      "url": "https://lists.apache.org/thread/orwny91fqyfmzx7w7p6wj7cgmndvd8r3",
-      "author": "Russell Spitzer <ru...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-08-14T17:39:55+00:00",
-      "updated_at": "2026-08-14T18:53:02+00:00",
-      "body": "Hi y'all,\n\nIt's been a while, and I think we already have consensus here\nbut I wanted to raise this vote for awareness/consensus before merging.\n\n\n\n*Scan planning has stated since #4272\n<https://github.com/apache/iceberg/pull/4272> that duplicate live file\npaths in a snapshot produce undefined scan results. This PR makes that\nexpectation explicit as a snapshot invariant in the main body of the spec.*\n\nPlease vote in the next 72 hours:\n\n[ ] +1 Approve the spec clarification in 17198\n<https://github.com/apache/iceberg/pull/17198>\n[ ] +0\n[ ] -1 Do not approve (please provide reasons)\n\nThanks for your time,\nRuss\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/iceberg/pull/4272",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/iceberg/pull/17198",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Vote in progress: 1 binding +1, 5 non-binding +1",
-      "llm_status": "proposal",
-      "comment_count": 6,
-      "participant_count": 7,
-      "vote_data": {
-        "binding_plus1": 1,
-        "nonbinding_plus1": 5,
-        "vetoes": 0,
-        "result": "open",
-        "voters": [
-          {
-            "voter": "Anoop Johnson <an...@apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Anurag Mantripragada <an...@apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Hongyue Zhang <ho...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Matt Butrovich <mb...@apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Neelesh Salian <ne...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Steven Wu <st...@gmail.com>",
-            "vote": "+1 (binding)"
-          }
-        ],
-        "closes_at": "2026-08-17T17:39:55+00:00"
-      },
-      "llm_key_points": [
-        "Hi y'all,\n\nIt's been a while, and I think we already have consensus here\nbut I wanted to raise this vote for awareness/consensus before merging.",
-        "Voters include: Anoop Johnson, Anurag Mantripragada, Hongyue Zhang..."
-      ],
-      "llm_topics": [
-        "clarify-content",
-        "content-file",
-        "file-uniqueness",
-        "clarify"
-      ],
-      "_content_hash": "c63e9bb0bbed",
-      "initiative_id": "iceberg-init-iceberg-ml-33vyko8qtsmpdp75f25kx6rjrmgr5kwq"
     },
     {
       "id": "iceberg-ml-ktmz3k8mjg2kzmlo54zz7jx4n4vwpbx6",
@@ -6528,7 +6593,7 @@
           "kind": "github_issue"
         }
       ],
-      "llm_summary": "I am only discussing main question of this thread: failing the query *vs* resolving precedence rules at *client/reader-side *for nested fields with conflicting policies? I actually think we already have precedent for how to handle situations like this in the spec (TLDR; (1 - Disallow Ambiguous States)) from our earlier discussions with default values. For those who remember <https://github.com/apache/iceberg/pull/12841>, we spent a lot of time discussing how parent and child defaults should interact when both could supply a value for the same leaf.",
+      "llm_summary": "Defining a standard is a highly sensitive design decision that deserves its own focused, long-term community discussion rather than being rushed. I am only discussing main question of this thread: failing the query *vs* resolving precedence rules at *client/reader-side *for nested fields with conflicting policies? For those who remember <https://github.com/apache/iceberg/pull/12841>, we spent a lot of time discussing how parent and child defaults should interact when both could supply a value for the same leaf.",
       "llm_status": "discussion",
       "comment_count": 8,
       "participant_count": 6,
@@ -6730,7 +6795,7 @@
         "neelesh-salian"
       ],
       "_content_hash": "ec5f05be6b61",
-      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb"
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs"
     },
     {
       "id": "iceberg-ml-29sl2x4mh1j99d74g230129qq3yqm2rm",
@@ -7780,7 +7845,7 @@
       ],
       "llm_title": "Table-level Filtering for MetricsReporter",
       "_content_hash": "84d49f0e54dd",
-      "initiative_id": "iceberg-init-iceberg-ml-dmf60fs64swkcy8cpdgkxn2nldx836xo"
+      "initiative_id": "iceberg-init-iceberg-ml-rx0tcnqkq0nzj1phwo64ng79pp51hzf9"
     },
     {
       "id": "iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
@@ -8093,7 +8158,7 @@
         "variant"
       ],
       "_content_hash": "98b92912fe1d",
-      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb"
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs"
     },
     {
       "id": "iceberg-ml-ks01jpv40qjlvz4yop5tlqv4x5oxbwy6",
@@ -18061,7 +18126,7 @@
       ],
       "llm_title": "V3 type promotion from date to timestamp missing in Java API",
       "_content_hash": "49b041a2636d",
-      "initiative_id": "iceberg-init-iceberg-ml-vnqw4rnlzs1zrjnp8tr2lmmjm3yrc3k1"
+      "initiative_id": "iceberg-init-iceberg-ml-25k9cy51bl57wwqwx656yk7ly41bz4jt"
     },
     {
       "id": "iceberg-ml-tssbptlm2ft8sbch7r2r192znw54r1y7",
@@ -20205,7 +20270,7 @@
       ],
       "comment_count": 1,
       "participant_count": 2,
-      "initiative_id": "iceberg-init-iceberg-ml-dly4g6wp5c83czvxyl6fhhncb7kc85dk",
+      "initiative_id": "iceberg-init-iceberg-ml-rx0tcnqkq0nzj1phwo64ng79pp51hzf9",
       "llm_summary": "Discussion about merging a correction to the REST specification to include partition stats update types in TableUpdate. The spec already defined these types but forgot to reference them in TableUpdate, causing issues for generated clients. This is treated as a spec correction oversight rather than a new feature.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -25614,7 +25679,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-33vyko8qtsmpdp75f25kx6rjrmgr5kwq",
+      "initiative_id": "iceberg-init-iceberg-ml-5gff76hvqy7r1lksrt9ld9h3pdp03nb5",
       "llm_summary": "Vote PASSED with 6 binding +1 votes and 2 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -31106,7 +31171,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb",
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
       "llm_summary": "Vote PASSED with 7 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -31240,7 +31305,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-vnqw4rnlzs1zrjnp8tr2lmmjm3yrc3k1",
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
       "llm_summary": "Vote PASSED with 5 binding +1 votes and 3 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -33939,7 +34004,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-vnqw4rnlzs1zrjnp8tr2lmmjm3yrc3k1",
+      "initiative_id": "iceberg-init-iceberg-ml-25k9cy51bl57wwqwx656yk7ly41bz4jt",
       "llm_summary": "Vote PASSED with 6 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -35817,7 +35882,7 @@
       "linked_resources": [],
       "comment_count": 13,
       "participant_count": 6,
-      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
+      "initiative_id": "iceberg-init-iceberg-ml-zq5ljj03cvgg3b88omz4d6brf31b23d3",
       "llm_summary": "Community members are volunteering to join the selection committee for Apache Iceberg Summit 2025, which will be responsible for choosing talks and guiding the event process. The PMC will select the final committee from volunteers by December 10th, 2024.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -38622,7 +38687,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-vnqw4rnlzs1zrjnp8tr2lmmjm3yrc3k1",
+      "initiative_id": "iceberg-init-iceberg-ml-25k9cy51bl57wwqwx656yk7ly41bz4jt",
       "llm_summary": "Vote PASSED with 5 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -40838,7 +40903,7 @@
       ],
       "comment_count": 5,
       "participant_count": 4,
-      "initiative_id": "iceberg-init-iceberg-ml-33vyko8qtsmpdp75f25kx6rjrmgr5kwq",
+      "initiative_id": "iceberg-init-iceberg-ml-ko4bstd6rk4w4xhboh1ynbfmhlhj01rc",
       "llm_summary": "Discussion on establishing a standard filesystem interface for PyIceberg to handle file listing operations across different FileIO implementations (Fsspec, PyArrow, and future OpenDAL-based rust-iceberg). The author seeks community input on whether to create a custom interface, adopt an existing standard (Fsspec/Arrow/OpenDAL), or pursue alternative approaches.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -41574,7 +41639,7 @@
         "result": "open",
         "voters": []
       },
-      "initiative_id": "iceberg-init-iceberg-ml-rx0tcnqkq0nzj1phwo64ng79pp51hzf9",
+      "initiative_id": "iceberg-init-iceberg-ml-33vyko8qtsmpdp75f25kx6rjrmgr5kwq",
       "llm_summary": "Vote in progress: 0 binding +1",
       "llm_status": "proposal",
       "llm_key_points": [
@@ -41721,7 +41786,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-rx0tcnqkq0nzj1phwo64ng79pp51hzf9",
+      "initiative_id": "iceberg-init-iceberg-ml-33vyko8qtsmpdp75f25kx6rjrmgr5kwq",
       "llm_summary": "Vote PASSED with 6 binding +1 votes and 2 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -44267,7 +44332,7 @@
       ],
       "comment_count": 7,
       "participant_count": 6,
-      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
+      "initiative_id": "iceberg-init-iceberg-ml-zq5ljj03cvgg3b88omz4d6brf31b23d3",
       "llm_summary": "The Iceberg Summit proposal has been updated with the PMC-selected committee and is ready for community review before submission to the ASF for trademark approval. The proposal document is available for feedback, with the understanding that associated websites cannot be launched until Apache Iceberg brand approval is granted.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -45105,7 +45170,7 @@
       "linked_resources": [],
       "comment_count": 8,
       "participant_count": 9,
-      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
+      "initiative_id": "iceberg-init-iceberg-ml-zq5ljj03cvgg3b88omz4d6brf31b23d3",
       "llm_summary": "The community is organizing an Iceberg conference/summit for the year and seeking volunteers for a selection committee to choose talks and guide the process. The PMC will select the final committee from volunteers, with a one-week window for people to express interest.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -46478,7 +46543,7 @@
       ],
       "comment_count": 19,
       "participant_count": 3,
-      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
+      "initiative_id": "iceberg-init-iceberg-ml-zq5ljj03cvgg3b88omz4d6brf31b23d3",
       "llm_summary": "Jean-Baptiste Onofr\u00e9 has prepared a formal proposal document for organizing the first Apache Iceberg Summit, a virtual event featuring developer talks on architecture and features alongside user talks on use cases and best practices. The document is open for community review and editing, with interest from contributors willing to speak and participate.",
       "llm_status": "proposal",
       "llm_key_points": [

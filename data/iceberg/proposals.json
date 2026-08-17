@@ -1,6 +1,6 @@
 {
   "project_id": "iceberg",
-  "generated_at": "2026-08-16T06:26:27.814404+00:00",
+  "generated_at": "2026-08-17T06:37:52.817983+00:00",
   "total": 1171,
   "proposals": [
     {
@@ -12,7 +12,7 @@
       "author": "community",
       "state": "open",
       "created_at": "",
-      "updated_at": "2026-08-16T06:25:13.781482+00:00",
+      "updated_at": "2026-08-17T06:36:49.044361+00:00",
       "body": "\ufeffIceberg - Spark Community Sync Notes\r\n\r\n\r\n* This doc has notes from Iceberg Spark integration work, it will include all past discussions in this area.\r\n* Everyone is welcome to join the Iceberg spark syncs to discuss Spark related topics.\r\n* The general community sync notes can be found here.\r\n* Join the \u201cIceberg Dev Events\u201d calendar to see the calendar event!\r\nIceberg - Spark Community Sync\r\nTuesday, January 20\u22c510:00 \u2013 11:00am (recurring Monthly on the third Tuesday) \r\nmeet.google.com/aqg-mdpq-myf\r\n\r\n\r\n\r\n\r\nJul 21, 2026\r\nHighlights\r\n* Spark: Add vectorized Parquet reads for variant columns (#16292) \u2014 Major variant read perf; unblocks shredded extraction\r\n* Spark 4.1: Geo Types ( End-to-end geo type support in Spark)\r\n   * Map geo Spark types (#16851) \r\n   * Read and write geometry and geography values in Parquet (#17073)\r\n   * Spark 4.1: Test geometry and geography DML and fall back from vectorized reads (#17149)\r\n* Spark 4.1: Implement listTableSummaries (#16891) - Detect table vs views without doing load table\r\n* Spark: Add session-level split size override (#16154) + Backport to 3.5/4.0 (#17199)\r\n* Spark 4.1: Add REST_CATALOG_PURGE property (#17186) + Spark 4.0 (#17185)\r\n   * Delegate DROP TABLE PURGE to REST catalogs\r\n* Core, Spark: Ensure correct delete file sizes in rewrite table action (#15470) + 1.10.x backport (#17215)\r\nDiscussion points\r\n* Spark Versioning\r\n   * Add support for Spark 4.2.0 (#14984) - 4.2 released so this is up for review\r\n   * Spark 4.3 plans\r\n   * Deprecation of 4.0         \r\n* Spark CI improvements \r\n   * Reduce TestRewriteDataFilesAction data volume (#16565)\r\n   * CI: Select Spark PR matrix by changed version (#16946)\r\n   * CI: Select Flink PR matrix by changed version (#16947)\r\nReview Requests\r\nSort Order / K-way Merge\r\n* Spark 4.1: Add MergingSortedRowDataReader (#14948) \r\n* Spark 4.1: Implement SupportsReportOrdering (#16750) \u2014 DRAFT, blocked on #14948. No reviewers.\r\n* K-way merge rewrite strategy (#16305) \u2014 Depends on #14948. Unch",
       "labels": [],
       "linked_resources": [],
@@ -43,7 +43,7 @@
       "author": "community",
       "state": "open",
       "created_at": "2025-09-19T16:14:21Z",
-      "updated_at": "2026-08-15T01:47:11Z",
+      "updated_at": "2026-08-17T06:03:18Z",
       "due_on": null,
       "body": "",
       "labels": [],
@@ -683,7 +683,7 @@
       ],
       "_content_hash": "2ef8c3045f3a",
       "llm_title": "Iceberg Variant Community Sync Summary",
-      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs"
+      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb"
     },
     {
       "id": "iceberg-yt-OaeTob3lM1Q",
@@ -3101,7 +3101,7 @@
         }
       ],
       "comment_count": 9,
-      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
+      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb",
       "llm_summary": "Proposes a spec change to differentiate array fields from primitive fields in Variant column metadata. Currently, array elements and primitive values use the same field path representation (e.g., $['tags']), preventing engines from pruning files effectively. Two solutions are suggested: using $['tags'][0] notation or storing as $['tags']: [\"action\"] to explicitly indicate array types.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -3564,7 +3564,7 @@
           "kind": "github_pr"
         }
       ],
-      "initiative_id": "iceberg-init-iceberg-ml-dqlgo3rmz1tnshx0bgk2cv4qm1h06k2n",
+      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-9-2",
       "llm_summary": "## What's Changed\r\n* Build: Bump software.amazon.awssdk:bom from 2.30.11 to 2.30.16 by @dependabot in https://github.com/apache/iceberg/pull/12208\r\n* Build: Bump com.google.cloud:libraries-bom from 26.53.0 to 26.54.0 by @dependabot in https://github.com/apache/iceberg/pull/12207\r\n* Build: Bump org.xerial:sqlite-jdbc from 3.48.0.0 to 3.49.0.0 by @dependabot in https://github.com/apache/iceberg/pull/12206\r\n* Build: Bump org.apache.httpcomponents.client5:httpclient5 from 5.4.1 to 5.4.2 by @dependabot in https://github.com/apache/iceberg/pull/12209\r\n* Docs: Fix expire_snapshots output by @manuzhang in https://github.com/apache/iceberg/pull/12213\r\n* Update LICENSE/NOTICE files with last dependency updates by @jbonofre in https://github.com/apache/iceberg/pull/12214\r\n* Doc: update note about notebook in spark-quickstart by @xxchan in https://github.com/apache/iceberg/pull/11996\r\n* Spec: Support geo type by @szehon-ho in https://github.com/apache/iceberg/pull/10981\r\n* Build: skip scheduled docker image publish workflows on forks by @dramaticlly in https://github.com/apache/iceberg/pull/12218\r\n* Docs: Add missing types to the spec v3 summary by @wgtmac in https://github.com/apache/iceberg/pull/12219\r\n* Spec: Typo - missing be by @RussellSpitzer in https://github.com/apache/iceberg/pull/12229\r\n* Docs: Site update for 1.8.0 release by @amogh-jahagirdar in https://github.com/apache/iceberg/pull/12242\r\n* spec: Remove `source-ids` for `V{1,2}` tables by @Fokko in https://github.com/apache/iceberg/pull/12161\r\n* Build: Update revAPI to compare against 1.8.0 by @amogh-jahagirdar in https://github.com/apache/iceberg/pull/12244\r\n* Update release version to 1.8.0 in doap.rdf by @amogh-jahagirdar in https://github.com/apache/iceberg/pull/12247\r\n* Infra: Update Iceberg bug report template for 1.8.0 by @amogh-jahagirdar in https://github.com/apache/iceberg/pull/12248\r\n* Docs: Fix formatting of 1.8.0 release notes by @amogh-jahagirdar in https://github.com/apache/iceberg/pull/12249\r\n* Cor",
       "llm_status": "discussion",
       "llm_key_points": [],
@@ -5341,7 +5341,7 @@
       "body": "Apache Iceberg 0.14.0",
       "labels": [],
       "linked_resources": [],
-      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-9-2",
+      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-0-14-0",
       "llm_summary": "Apache Iceberg 0.14.0",
       "llm_status": "discussion",
       "llm_key_points": [],
@@ -5366,7 +5366,7 @@
       "body": "Apache Iceberg 0.13.2",
       "labels": [],
       "linked_resources": [],
-      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-0-13-2",
+      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-9-2",
       "llm_summary": "Apache Iceberg 0.13.2",
       "llm_status": "discussion",
       "llm_key_points": [],
@@ -5391,7 +5391,7 @@
       "body": "Apache Iceberg 0.13.1",
       "labels": [],
       "linked_resources": [],
-      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-9-2",
+      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-0-13-1",
       "llm_summary": "Apache Iceberg 0.13.1",
       "llm_status": "discussion",
       "llm_key_points": [],
@@ -5416,7 +5416,7 @@
       "body": "Apache Iceberg 0.13.0",
       "labels": [],
       "linked_resources": [],
-      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-9-2",
+      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-0-13-0",
       "llm_summary": "Apache Iceberg 0.13.0",
       "llm_status": "discussion",
       "llm_key_points": [],
@@ -5478,6 +5478,82 @@
       "_content_hash": "7f727f0a61b8"
     },
     {
+      "id": "iceberg-ml-cvn448s85v2g835dfwxpz2z1j2hczok9",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] Apache Iceberg 1.12.0 release",
+      "url": "https://lists.apache.org/thread/cvn448s85v2g835dfwxpz2z1j2hczok9",
+      "author": "Neelesh Salian <ne...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-08-05T20:03:27+00:00",
+      "updated_at": "2026-08-17T01:54:37+00:00",
+      "body": "Hi folks,\n\nAs mentioned during the community sync this morning, the release is on\ntrack.\nA few updates:\n\n   - I plan to cut the branch / RC on or after August 26, 2026 (after the\n   community sync that morning). I'll be working with Amogh to help with the\n   branching + artifacts.\n   - There are still active items needing reviews. Please take a look at\n   the 1.12.0 milestone\n   <https://github.com/apache/iceberg/issues?q=milestone%3A%22Iceberg%201.12.0%22>\n   .\n   - Calling out the Spark 4.2.0 PR:\n   https://github.com/apache/iceberg/pull/14984 - it needs more eyes and\n   review time to make this release.\n   - I'll keep watching for blockers and bugs that should be part of the\n   release and surface them as needed, including any forward-porting to Spark\n   4.2.\n\nIf you have a feature(s), fix(es), or breaking change(s) you want\nconsidered for 1.12.0, please let me know.\n\nThanks,\nNeelesh\n\nOn Fri, Jun 5, 2026 at 3:54\u202fPM Steven Wu <st...@gmail.com> wrote:\n\n> If we develop good habit of regular releases, we normally won't need to\n> hold the release train to get things in (except for critical security and\n> correctness issues) as the next one is 2-3 months away.\n>\n> On Fri, Jun 5, 2026 at 3:42\u202fPM Neelesh Salian <ne...@gmail.com>\n> wrote:\n>\n>> Hi folks,\n>>\n>> With 1.11.0 out the door, I want to open up the planning around 1.12.0.\n>> As Steven noted on the dev list (thread for 1.11), 1.11.0 took roughly 8\n>> months from 1.10.0. This is longer than the 3-4 month cadence we have\n>> previously discussed.\n>> For 1.12.0 I'd like us to aim closer to that target.\n>>\n>> I'll be acting as the release manager for this release. Here are a few\n>> notes to kick things off:\n>>\n>>    - *Tentative release target: *late August / early September 2026 (~3\n>>    months from 1.11.0).\n>>    - *Curation: *We'll use the June 24 community sync as the formal\n>>    kickoff to surface in-flight work and call out anything that should land in\n>>    this release.\n>>    - *Cadence reminder:* If something",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/iceberg/pull/14984",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/16507",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/15989",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/16543",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/16449",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/17638",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/17627",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/17557",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/16750",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/16305",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/17520",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "> > On Fri, Jun 5, 2026 at 3:42\u202fPM Neelesh Salian <ne...@gmail.com> > wrote: > >> Hi folks, >> >> With 1.11.0 out the door, I want to open up the planning around 1.12.0. Here are a few >> notes to kick things off: >> >>    - *Tentative release target: *late August / early September 2026 (~3 >>    months from 1.11.0). >>    - *Curation: *We'll use the June 24 community sync as the formal >>    kickoff to surface in-flight work and call out anything that should land in >>    this release.",
+      "llm_status": "discussion",
+      "comment_count": 8,
+      "participant_count": 7,
+      "llm_key_points": [
+        "Hi Neelesh,\n\nI'd like to get https://github.com/apache/iceberg/pull/16507 included in\nthe milestone if possible.",
+        "Hi Neelesh,\n\nIf possible, I'd like to have this PR included:\n\nhttps://github.com/apache/iceberg/pull/15989\n\nIt's the fix",
+        "I assume the Iceberg Java already includes a full implementation of the Table Spec V3 features."
+      ],
+      "llm_topics": [
+        "apache-iceberg",
+        "community-sync",
+        "release",
+        "discuss"
+      ],
+      "_content_hash": "b9dc7e3b462e",
+      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb"
+    },
+    {
       "id": "iceberg-ml-orwny91fqyfmzx7w7p6wj7cgmndvd8r3",
       "source": "mailing_list",
       "kind": "thread",
@@ -5486,7 +5562,7 @@
       "author": "Russell Spitzer <ru...@gmail.com>",
       "state": "open",
       "created_at": "2026-08-14T17:39:55+00:00",
-      "updated_at": "2026-08-16T01:37:48+00:00",
+      "updated_at": "2026-08-16T08:37:55+00:00",
       "body": "Hi y'all,\n\nIt's been a while, and I think we already have consensus here\nbut I wanted to raise this vote for awareness/consensus before merging.\n\n\n\n*Scan planning has stated since #4272\n<https://github.com/apache/iceberg/pull/4272> that duplicate live file\npaths in a snapshot produce undefined scan results. This PR makes that\nexpectation explicit as a snapshot invariant in the main body of the spec.*\n\nPlease vote in the next 72 hours:\n\n[ ] +1 Approve the spec clarification in 17198\n<https://github.com/apache/iceberg/pull/17198>\n[ ] +0\n[ ] -1 Do not approve (please provide reasons)\n\nThanks for your time,\nRuss\n",
       "labels": [],
       "linked_resources": [
@@ -5499,13 +5575,13 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "Vote in progress: 2 binding +1, 8 non-binding +1",
+      "llm_summary": "Vote in progress: 2 binding +1, 9 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 10,
-      "participant_count": 11,
+      "comment_count": 11,
+      "participant_count": 12,
       "vote_data": {
         "binding_plus1": 2,
-        "nonbinding_plus1": 8,
+        "nonbinding_plus1": 9,
         "vetoes": 0,
         "result": "open",
         "voters": [
@@ -5546,6 +5622,10 @@
             "vote": "+1 (binding)"
           },
           {
+            "voter": "huaxin gao <hu...@gmail.com>",
+            "vote": "+1"
+          },
+          {
             "voter": "vaquar khan <va...@gmail.com>",
             "vote": "+1"
           }
@@ -5562,7 +5642,7 @@
         "file-uniqueness",
         "clarify"
       ],
-      "_content_hash": "a8c7b39086fe",
+      "_content_hash": "b8c5f8ec177c",
       "initiative_id": "iceberg-init-iceberg-ml-33vyko8qtsmpdp75f25kx6rjrmgr5kwq"
     },
     {
@@ -5601,6 +5681,7 @@
         "discuss",
         "time"
       ],
+      "llm_title": "",
       "_content_hash": "c5b802b65fa7",
       "initiative_id": "iceberg-init-iceberg-ml-y93010hlq2m59jjw9lsjbrs38xw8nkdb"
     },
@@ -6039,7 +6120,7 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "> > Document: [Proposal > <https://docs.google.com/document/d/1Qr82hccxJhWxKRT7B-3ylhOLSaJTYfc7hU51-mhzK6Y/edit?usp=sharing> > ] > > The plan: start with the smallest primitives (type strings, transforms), > grow outward > to binary fixtures; no harness and no central gate - each implementation > pins the repo > and asserts in its own suite; Java and Go first, covering v2 and v3. --- Google Doc --- \ufeffapache/iceberg-testing Shared test fixtures for Apache Iceberg implementations Authors: Neelesh Salian, Sung Yun, Andrei Tserakhau Status: In Review Dev List Email Thread: https://lists.apache.org/thread/8wsvnhktw27h0tqnxljzmnsogwd52tjj Per-repo tests cannot catch this - each repo checks its own reading of the spec against itself, so a shared misreading stays green and surfaces as a post-release bug report.",
+      "llm_summary": "> > Document: [Proposal > <https://docs.google.com/document/d/1Qr82hccxJhWxKRT7B-3ylhOLSaJTYfc7hU51-mhzK6Y/edit?usp=sharing> > ] > > The plan: start with the smallest primitives (type strings, transforms), > grow outward > to binary fixtures; no harness and no central gate - each implementation > pins the repo > and asserts in its own suite; Java and Go first, covering v2 and v3. --- Google Doc --- \ufeffapache/iceberg-testing Shared test fixtures for Apache Iceberg implementations Authors: Neelesh Salian, Sung Yun, Andrei Tserakhau Status: In Review Dev List Email Thread: https://lists.apache.org/thread/8wsvnhktw27h0tqnxljzmnsogwd52tjj A standalone, language-neutral repository of conformance fixtures that every Iceberg implementation checks itself against, starting with static inputs paired with the expected value the spec fixes.",
       "llm_status": "discussion",
       "comment_count": 3,
       "participant_count": 3,
@@ -6055,7 +6136,7 @@
         "sung"
       ],
       "_content_hash": "61869c31b563",
-      "initiative_id": "iceberg-init-iceberg-ml-xwqz0j6g2fcvq4hf5xs63ll4137ch0n6"
+      "initiative_id": "iceberg-init-iceberg-ml-dqlgo3rmz1tnshx0bgk2cv4qm1h06k2n"
     },
     {
       "id": "iceberg-ml-p9r3c8dz2dts34mgpogh1qjsf3ywd9ss",
@@ -6202,51 +6283,6 @@
       "llm_title": "",
       "_content_hash": "31c8bedbdb18",
       "initiative_id": "iceberg-init-iceberg-ml-wy7j0prj8b2fgzggprnl8t21hoqfv61y"
-    },
-    {
-      "id": "iceberg-ml-cvn448s85v2g835dfwxpz2z1j2hczok9",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "Re: [DISCUSS] Apache Iceberg 1.12.0 release",
-      "url": "https://lists.apache.org/thread/cvn448s85v2g835dfwxpz2z1j2hczok9",
-      "author": "Neelesh Salian <ne...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-08-05T20:03:27+00:00",
-      "updated_at": "2026-08-13T09:26:13+00:00",
-      "body": "Hi folks,\n\nAs mentioned during the community sync this morning, the release is on\ntrack.\nA few updates:\n\n   - I plan to cut the branch / RC on or after August 26, 2026 (after the\n   community sync that morning). I'll be working with Amogh to help with the\n   branching + artifacts.\n   - There are still active items needing reviews. Please take a look at\n   the 1.12.0 milestone\n   <https://github.com/apache/iceberg/issues?q=milestone%3A%22Iceberg%201.12.0%22>\n   .\n   - Calling out the Spark 4.2.0 PR:\n   https://github.com/apache/iceberg/pull/14984 - it needs more eyes and\n   review time to make this release.\n   - I'll keep watching for blockers and bugs that should be part of the\n   release and surface them as needed, including any forward-porting to Spark\n   4.2.\n\nIf you have a feature(s), fix(es), or breaking change(s) you want\nconsidered for 1.12.0, please let me know.\n\nThanks,\nNeelesh\n\nOn Fri, Jun 5, 2026 at 3:54\u202fPM Steven Wu <st...@gmail.com> wrote:\n\n> If we develop good habit of regular releases, we normally won't need to\n> hold the release train to get things in (except for critical security and\n> correctness issues) as the next one is 2-3 months away.\n>\n> On Fri, Jun 5, 2026 at 3:42\u202fPM Neelesh Salian <ne...@gmail.com>\n> wrote:\n>\n>> Hi folks,\n>>\n>> With 1.11.0 out the door, I want to open up the planning around 1.12.0.\n>> As Steven noted on the dev list (thread for 1.11), 1.11.0 took roughly 8\n>> months from 1.10.0. This is longer than the 3-4 month cadence we have\n>> previously discussed.\n>> For 1.12.0 I'd like us to aim closer to that target.\n>>\n>> I'll be acting as the release manager for this release. Here are a few\n>> notes to kick things off:\n>>\n>>    - *Tentative release target: *late August / early September 2026 (~3\n>>    months from 1.11.0).\n>>    - *Curation: *We'll use the June 24 community sync as the formal\n>>    kickoff to surface in-flight work and call out anything that should land in\n>>    this release.\n>>    - *Cadence reminder:* If something",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/iceberg/pull/14984",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/iceberg/pull/16507",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/iceberg/pull/15989",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "> > On Fri, Jun 5, 2026 at 3:42\u202fPM Neelesh Salian <ne...@gmail.com> > wrote: > >> Hi folks, >> >> With 1.11.0 out the door, I want to open up the planning around 1.12.0. Here are a few >> notes to kick things off: >> >>    - *Tentative release target: *late August / early September 2026 (~3 >>    months from 1.11.0). >>    - *Curation: *We'll use the June 24 community sync as the formal >>    kickoff to surface in-flight work and call out anything that should land in >>    this release.",
-      "llm_status": "discussion",
-      "comment_count": 7,
-      "participant_count": 7,
-      "llm_key_points": [
-        "Hi Neelesh,\n\nI'd like to get https://github.com/apache/iceberg/pull/16507 included in\nthe milestone if possible.",
-        "Hi Neelesh,\n\nIf possible, I'd like to have this PR included:\n\nhttps://github.com/apache/iceberg/pull/15989\n\nIt's the fix",
-        "I assume the Iceberg Java already includes a full implementation of the Table Spec V3 features."
-      ],
-      "llm_topics": [
-        "apache-iceberg",
-        "community-sync",
-        "release",
-        "discuss"
-      ],
-      "llm_title": "",
-      "_content_hash": "a9492b87147d",
-      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb"
     },
     {
       "id": "iceberg-ml-fym02576n5sqy298fjxl0xmsv9z5rb7y",
@@ -6795,7 +6831,7 @@
         "neelesh-salian"
       ],
       "_content_hash": "ec5f05be6b61",
-      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs"
+      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb"
     },
     {
       "id": "iceberg-ml-29sl2x4mh1j99d74g230129qq3yqm2rm",
@@ -8158,7 +8194,7 @@
         "variant"
       ],
       "_content_hash": "98b92912fe1d",
-      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs"
+      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb"
     },
     {
       "id": "iceberg-ml-ks01jpv40qjlvz4yop5tlqv4x5oxbwy6",
@@ -23971,7 +24007,7 @@
       "linked_resources": [],
       "comment_count": 1,
       "participant_count": 2,
-      "initiative_id": "iceberg-init-iceberg-ml-4kp9th9y1n2kdsc9zv1z120ytr6wg2w2",
+      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
       "llm_summary": "Hi all,\n\nThe Apache Iceberg Rust community is pleased to announce that Apache\nIceberg Rust 0.7.0 has been released! Iceberg is a data access layer that allows users to easily and efficiently\nretrieve data from various storage services in a unified way. Notable updates in version 0.7.0 include:\n1.",
       "llm_status": "released",
       "llm_key_points": [],
@@ -28558,7 +28594,7 @@
       "linked_resources": [],
       "comment_count": 1,
       "participant_count": 2,
-      "initiative_id": "iceberg-init-iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
+      "initiative_id": "iceberg-init-iceberg-ml-yhgl0184drx23578rd8wzbm41fps52hg",
       "llm_summary": "Hi all,\n\nThe Apache Iceberg Rust community is pleased to announce that Apache\nIceberg Rust 0.5.1 has been released! This also includes the release of\npyiceberg-core 0.5.1, which is the rust bindings for python. Apache Iceberg is an open table format for huge analytic datasets.",
       "llm_status": "released",
       "llm_key_points": [],
@@ -31171,7 +31207,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
+      "initiative_id": "iceberg-init-iceberg-doc-19nno1RoPznb",
       "llm_summary": "Vote PASSED with 7 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -31305,7 +31341,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
+      "initiative_id": "iceberg-init-iceberg-ml-vnqw4rnlzs1zrjnp8tr2lmmjm3yrc3k1",
       "llm_summary": "Vote PASSED with 5 binding +1 votes and 3 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -34004,7 +34040,7 @@
           }
         ]
       },
-      "initiative_id": "iceberg-init-iceberg-ml-25k9cy51bl57wwqwx656yk7ly41bz4jt",
+      "initiative_id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-9-2",
       "llm_summary": "Vote PASSED with 6 binding +1 votes and 1 non-binding +1",
       "llm_status": "released",
       "llm_key_points": [
@@ -35882,7 +35918,7 @@
       "linked_resources": [],
       "comment_count": 13,
       "participant_count": 6,
-      "initiative_id": "iceberg-init-iceberg-ml-zq5ljj03cvgg3b88omz4d6brf31b23d3",
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
       "llm_summary": "Community members are volunteering to join the selection committee for Apache Iceberg Summit 2025, which will be responsible for choosing talks and guiding the event process. The PMC will select the final committee from volunteers by December 10th, 2024.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -44332,7 +44368,7 @@
       ],
       "comment_count": 7,
       "participant_count": 6,
-      "initiative_id": "iceberg-init-iceberg-ml-zq5ljj03cvgg3b88omz4d6brf31b23d3",
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
       "llm_summary": "The Iceberg Summit proposal has been updated with the PMC-selected committee and is ready for community review before submission to the ASF for trademark approval. The proposal document is available for feedback, with the understanding that associated websites cannot be launched until Apache Iceberg brand approval is granted.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -45170,7 +45206,7 @@
       "linked_resources": [],
       "comment_count": 8,
       "participant_count": 9,
-      "initiative_id": "iceberg-init-iceberg-ml-zq5ljj03cvgg3b88omz4d6brf31b23d3",
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
       "llm_summary": "The community is organizing an Iceberg conference/summit for the year and seeking volunteers for a selection committee to choose talks and guide the process. The PMC will select the final committee from volunteers, with a one-week window for people to express interest.",
       "llm_status": "discussion",
       "llm_key_points": [
@@ -46543,7 +46579,7 @@
       ],
       "comment_count": 19,
       "participant_count": 3,
-      "initiative_id": "iceberg-init-iceberg-ml-zq5ljj03cvgg3b88omz4d6brf31b23d3",
+      "initiative_id": "iceberg-init-iceberg-yt-Ez7ukCESBbs",
       "llm_summary": "Jean-Baptiste Onofr\u00e9 has prepared a formal proposal document for organizing the first Apache Iceberg Summit, a virtual event featuring developer talks on architecture and features alongside user talks on use cases and best practices. The document is open for community review and editing, with interest from contributors willing to speak and participate.",
       "llm_status": "proposal",
       "llm_key_points": [

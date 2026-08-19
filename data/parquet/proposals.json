@@ -1,8 +1,35 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-08-18T06:28:50.889003+00:00",
-  "total": 274,
+  "generated_at": "2026-08-19T06:30:41.782952+00:00",
+  "total": 275,
   "proposals": [
+    {
+      "id": "parquet-gh-m36",
+      "source": "github",
+      "kind": "milestone",
+      "title": "1.18.1",
+      "url": "https://github.com/apache/parquet-java/milestone/36",
+      "author": "community",
+      "state": "open",
+      "created_at": "2026-08-18T06:55:42Z",
+      "updated_at": "2026-08-18T06:59:40Z",
+      "due_on": "2026-08-22T00:00:00Z",
+      "body": "",
+      "labels": [],
+      "linked_resources": [],
+      "comment_count": 0,
+      "milestone_progress": {
+        "total": 0,
+        "closed": 0,
+        "pct": 0
+      },
+      "llm_summary": "1.18.1",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [],
+      "_content_hash": "b6589fc6ab0d",
+      "initiative_id": "parquet-init-parquet-gh-m36"
+    },
     {
       "id": "parquet-gh-m35",
       "source": "github",
@@ -1459,7 +1486,7 @@
         "throw-exception"
       ],
       "_content_hash": "f7519d5674e8",
-      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
     },
     {
       "id": "parquet-gh-rel-apache-parquet-1-14-4-rc2",
@@ -1498,7 +1525,7 @@
         "throw-exception"
       ],
       "_content_hash": "2d3d9339fcee",
-      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
     },
     {
       "id": "parquet-gh-rel-apache-parquet-1-14-4-rc1",
@@ -1533,7 +1560,7 @@
         "size-exceeds"
       ],
       "_content_hash": "a904ccde2f90",
-      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
     },
     {
       "id": "parquet-gh-m29",
@@ -1599,7 +1626,7 @@
         "apache-parquet"
       ],
       "_content_hash": "5e7686b452da",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0-rc2"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
     },
     {
       "id": "parquet-gh-rel-apache-parquet-1-14-3-rc2",
@@ -1638,7 +1665,7 @@
         "apache-parquet"
       ],
       "_content_hash": "5e7686b452da",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0-rc2"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
     },
     {
       "id": "parquet-gh-m28",
@@ -2402,6 +2429,42 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-ott9f9rtdtwpr2pxfhrnb8g27ksnxmsl",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] Self-references in FILE should inherit the inline codec",
+      "url": "https://lists.apache.org/thread/ott9f9rtdtwpr2pxfhrnb8g27ksnxmsl",
+      "author": "Alkis Evlogimenos via dev <de...@parquet.apache.org>",
+      "state": "open",
+      "created_at": "2026-08-19T03:22:38+00:00",
+      "updated_at": "2026-08-19T03:22:38+00:00",
+      "body": "I am withdrawing this. PR 603 [1] now removes self-references from FILE\ninstead of specifying compression and encryption for them.\n\nThrough extensive discussion with folks we think that a non-contiguous page\nmechanism belongs to the non-contiguous page proposal and not as a special\nway to do FILE. This means we should disallow self-references in FILE and\nlet the non-contiguous pages proposal to allow storing outside values of\nthe `inline` column elsewhere in the file. If those values are in pages\nthey naturally get al the fields: `is_compressed`, `encryption`,\n`uncompressed_page_size` etc. As such non-contiguous pages composes with\nFILE instead of competing with it.\n\nWe will send the non-contiguous pages proposal in a separate thread.\n\nCheers,\n\n[1] https://github.com/apache/parquet-format/pull/603\n\n\nOn Thu, Jul 30, 2026 at 9:55\u202fAM Alkis Evlogimenos <\nalkis.evlogimenos@databricks.com> wrote:\n\n> Great!\n>\n> I have updated the PR [1] with precise semantics and added encryption\n> rules.\n>\n> The remaining question is the uncompressed size. I did a deeper analysis\n> of the codecs. Snappy includes it in its compressed representation, but\n> several other Parquet codecs either omit it or do not guarantee it. The\n> current proposal requires readers to support dynamically sized\n> decompression output. I think that's an acceptable tradeoff but I am open\n> to alternatives if there is strong need to know the uncompressed size\n> before decompression.\n>\n> [1] https://github.com/apache/parquet-format/pull/603\n>\n> On Thu, Jul 30, 2026 at 3:45\u202fAM Russell Spitzer <ru...@gmail.com>\n> wrote:\n>\n>> I think that's pretty accurate. We should probably also establish\n>> encryption rules concurrently with any compression rules we add.\n>>\n>> If I can summarize the pro argument:\n>>\n>> \"A Parquet writer is already writing these bytes; had they been inlined\n>> they would have had compression applied. Therefore, if a writer is writing\n>> a blob into non-columnar space, it should use the same compress",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/parquet-format/pull/603",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/pull/585",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "The > current proposal requires readers to support dynamically sized > decompression output. > > [1] https://github.com/apache/parquet-format/pull/603 > > On Thu, Jul 30, 2026 at 3:45\u202fAM Russell Spitzer <ru...@gmail.com> > wrote: > >> I think that's pretty accurate. >> >> If I can summarize the pro argument: >> >> \"A Parquet writer is already writing these bytes; had they been inlined >> they would have had compression applied.",
+      "llm_status": "discussion",
+      "comment_count": 12,
+      "participant_count": 1,
+      "llm_key_points": [],
+      "llm_topics": [
+        "file",
+        "non-contiguous-pages",
+        "non-contiguous-page",
+        "discuss"
+      ],
+      "_content_hash": "5b450bd7e9f6",
+      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+    },
+    {
       "id": "parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj",
       "source": "mailing_list",
       "kind": "thread",
@@ -2609,7 +2672,7 @@
         "parquet"
       ],
       "_content_hash": "94d5ca5afc35",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms",
@@ -2637,7 +2700,7 @@
       ],
       "llm_title": "",
       "_content_hash": "32a2b629b1a8",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq",
@@ -2768,7 +2831,7 @@
       ],
       "llm_title": "",
       "_content_hash": "da38b9c21e6b",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0-rc2"
     },
     {
       "id": "parquet-ml-3d7mf3l749r7d77f3lsr4jjqk10gjm92",
@@ -2931,47 +2994,6 @@
       ],
       "_content_hash": "a626d4254ef3",
       "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
-    },
-    {
-      "id": "parquet-ml-zrzc7t9fccg92rx3h4fw3ndw3bdo5xr7",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Self-references in FILE should inherit the inline codec",
-      "url": "https://lists.apache.org/thread/zrzc7t9fccg92rx3h4fw3ndw3bdo5xr7",
-      "author": "Alkis Evlogimenos via dev <de...@parquet.apache.org>",
-      "state": "open",
-      "created_at": "2026-07-29T14:10:44+00:00",
-      "updated_at": "2026-07-30T06:55:23+00:00",
-      "body": "Hello,\n\nNow that FILE [1] is merged I'd like to reopen one point from the original\nproposal that got dropped before merge: the bytes of a self-reference\nshould use the same CompressionCodec as the column's inline field. Removing\nit was a mistake, and it's cheap to fix while FILE hasn't shipped in a\nrelease.\n\nAs merged, a self-reference can only be stored uncompressed. That's ok for\ndata like images and video, but it makes self-references useless for text\nblobs (html, json, logs). Values too big to be inline yet small enough to\nwant as self-references are exactly where PLAIN blows up the storage cost.\nA self-reference is the Parquet writer's decision to store a large value\nout-of-band, so it should be compressed consistently with the inline values\nit came from.\n\nTo the objections from the PR:\n\n1. Apply it uniformly to external refs too.\n\nThe asymmetry is the point. An external s3://\u2026 can be referenced by many\nfiles and systems, including ones that know nothing of Parquet; its\nencoding is decided above Parquet, sometimes outside any engine. A\nself-reference lives inside Parquet and is written by the Parquet writer.\nParquet owns those bytes, so Parquet compresses them.\n\n2. Let the engine own it.\n\nThe engine already owns the blob's own compression via content_type and can\npass the writer pre-compressed bytes. The inline codec is a different\nthing: the storage compression Parquet applies to the column. A\nself-reference is the same bytes spilled out-of-band, so it belongs to the\nsame storage and codec.\n\n3. Force-compressing images wastes CPU.\n\nIt doesn't. The writer picks the codec per column chunk (and per page in\nv2), same as it already does for inline. Inheritance just propagates that\nchoice. A column chunk written uncompressed stays uncompressed.\n\n4. Compaction would force decompress/recompress.\n\nOnly an issue for external refs. Compaction rewrites the whole file, so\nself-referenced bytes re-encode in the same pass, exactly like inline\nvalues.\n\nProposed wording:\n\n> Th",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/parquet-format/pull/585",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-format/pull/603",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "That's ok for data like images and video, but it makes self-references useless for text blobs (html, json, logs). Uncompressed is always an option if there are concerns about efficiency, but the impact of not having compression for common cases (like large text blocks), would be much worse. Le 29/07/2026 \u00e0 19:17, Russell Spitzer a \u00e9crit\u00a0: >> >> This is equivalent to any data written in parquet and compressed as a >> page, so I don't see the issue there.",
-      "llm_status": "discussion",
-      "comment_count": 12,
-      "participant_count": 4,
-      "llm_key_points": [
-        "I agree with the points above and specifically for self-reference/in-file,\nthe output stream is practically owned by the",
-        "I'm a little worried about adding this in,\n\nSelf-references are already specified as [offset, offset+size) ranges: the\nr",
-        "Russell, I'm not sure I follow your points here."
-      ],
-      "llm_topics": [
-        "parquet",
-        "original-proposal",
-        "self-reference",
-        "inline"
-      ],
-      "llm_title": "",
-      "_content_hash": "510c015b0737",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
     },
     {
       "id": "parquet-ml-fx96wnmkbmx7pcz2h89t592ztc8bcrn1",
@@ -3784,7 +3806,7 @@
         "timestamps"
       ],
       "_content_hash": "b69e89adc479",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0-rc2"
     },
     {
       "id": "parquet-ml-4kq2gfgx3cmow26h8ofd93653z9zhs2t",
@@ -3842,7 +3864,7 @@
         "final-result"
       ],
       "_content_hash": "2441805bb8ca",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0-rc2"
     },
     {
       "id": "parquet-ml-f930pg123w86wpqhthhsx603g27obgo2",
@@ -4001,7 +4023,7 @@
       ],
       "_content_hash": "a930bc752794",
       "llm_title": "Support Non-Contiguous Pages in Parquet",
-      "initiative_id": "parquet-init-parquet-ml-jffqzp1hoh8vypffdrbjhotkn06zrxmf"
+      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
     },
     {
       "id": "parquet-ml-m6j8lzc09ytyd45wt6pdcyn5qy95f0vt",
@@ -4120,7 +4142,7 @@
       ],
       "_content_hash": "6842e800f9ac",
       "llm_title": "INT96 Statistics Discussion",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0-rc2"
     },
     {
       "id": "parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr",
@@ -4147,7 +4169,7 @@
         "parquet"
       ],
       "_content_hash": "f684d1c1eb36",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-7kjqsz7n8cwqpgfo2h9c5q0csml77d86",
@@ -4622,7 +4644,7 @@
         "encountering-future"
       ],
       "_content_hash": "6c4edbae8b4b",
-      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
+      "initiative_id": "parquet-init-parquet-ml-jffqzp1hoh8vypffdrbjhotkn06zrxmf"
     },
     {
       "id": "parquet-ml-sssbt86dxbo2tn7nfr2gvy71hfg1rqyw",
@@ -4689,7 +4711,7 @@
       ],
       "_content_hash": "0108bd3e371f",
       "llm_title": "Add nan_count for NaN handling in statistics",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0-rc2"
     },
     {
       "id": "parquet-ml-srjg9c58f5lb4d7r9773p9sml08bw6np",
@@ -4766,7 +4788,7 @@
         "parquet"
       ],
       "_content_hash": "d7847a7e3ca8",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-d38j3xc3x7zpfdldj7qz136qk9dgp3d9",
@@ -5236,7 +5258,7 @@
       ],
       "_content_hash": "bbe830a8556f",
       "llm_title": "Configuring Parquet for Vector Embeddings",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0-rc2"
+      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
     },
     {
       "id": "parquet-ml-m6p5shlt1hfk1b3h5y1pbqg8tpkwpcgz",
@@ -5336,7 +5358,7 @@
       ],
       "_content_hash": "3da80b3b5bcb",
       "llm_title": "Deterministic Column Metadata Encoding in Parquet",
-      "initiative_id": "parquet-init-parquet-ml-lwrzqhfnm1dm5j3v5nr284o4tqmsnp05"
+      "initiative_id": "parquet-init-parquet-ml-jffqzp1hoh8vypffdrbjhotkn06zrxmf"
     },
     {
       "id": "parquet-ml-75050877rf16bolg39cyvg7lw71927nc",
@@ -5600,7 +5622,7 @@
         "parquet"
       ],
       "_content_hash": "b3ef471b070c",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-st0w1c6txzmrwwbdsqdh7xm2br5b2js3",
@@ -5803,7 +5825,7 @@
         "format"
       ],
       "_content_hash": "103a0dcb619d",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-xlmp7cq638ht7n6c9f1vqlc6qgs4j4y4"
     },
     {
       "id": "parquet-ml-1nf596dq7fpc0zp35bt17zy7srvo5wt8",
@@ -6413,7 +6435,7 @@
         "parquet"
       ],
       "_content_hash": "cd282f758c44",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-nf0m7z256gtq16m3by78mf4w6tpffdqh",
@@ -6672,7 +6694,7 @@
         "parquet"
       ],
       "_content_hash": "880a8568f56f",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-mw7fg76kyoootmntw5fk539423g9vqkr",
@@ -6976,7 +6998,7 @@
         "parquet"
       ],
       "_content_hash": "bb374d22b689",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-htrzl1ytd9x3dfhszbyrozhxw733n3cj",
@@ -7169,7 +7191,7 @@
         "parquet"
       ],
       "_content_hash": "5289b722ef48",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-fvjly206d7qvmo41f6f1h32sq1o42zhm",
@@ -7251,7 +7273,7 @@
         "parquet"
       ],
       "_content_hash": "8561e3b3ec63",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-qx7m2oljrzt69bz38sk2xfpbtqmmck5c",
@@ -7981,7 +8003,7 @@
       ],
       "_content_hash": "3bd182542327",
       "llm_title": "Deprecate or Drop Parquet-Scala Module",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0-rc2"
+      "initiative_id": "parquet-init-parquet-ml-scdq9t2gvvs4glhq0qx4qcvfp62j793s"
     },
     {
       "id": "parquet-ml-bvyg48ysp3rkh4ls0lnn597ygpyf6goj",
@@ -8257,7 +8279,7 @@
         "parquet-java"
       ],
       "_content_hash": "d1a18b94df8f",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm",
@@ -8406,7 +8428,7 @@
         "release"
       ],
       "_content_hash": "2195b545214f",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0-rc2"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
     },
     {
       "id": "parquet-ml-xwd3mqjr9bdpg3jcnlprbyb4x09c9ymj",
@@ -9686,7 +9708,7 @@
         "parquet-java"
       ],
       "_content_hash": "7e0c45b52703",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-5wm7pwyd3khtbxqs2rrzpby4sd50n349",
@@ -10401,7 +10423,7 @@
       ],
       "_content_hash": "7c5da8af2e3d",
       "llm_title": "Rename parquet-mr to parquet-java",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-97g4zqlvobr9knntvsbghjs6v3gr63x2",
@@ -10523,7 +10545,7 @@
       ],
       "_content_hash": "c45d3b6caaaf",
       "llm_title": "Discussion on Parquet Reference Implementation",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-128wv5cwv51scm8vdfn1g9gskw717qyt",
@@ -10596,7 +10618,7 @@
         "parquet"
       ],
       "_content_hash": "647b08af7a48",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-fwk38klnvkmxqgtq3blkdncrww07ht7x",
@@ -11087,7 +11109,7 @@
         "parquet"
       ],
       "_content_hash": "8745c126def3",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-35h21l1dylcg9gd31w87xg1ww1xgy7mv",
@@ -11187,7 +11209,7 @@
         "parquet"
       ],
       "_content_hash": "d3040b011771",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-wgobz41mfldbhqpg9q4mdwypghg2cxg2",
@@ -11482,7 +11504,7 @@
         "release"
       ],
       "_content_hash": "dabe273c7b56",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-0yokbmfcbhz76ftjbxktwxfo5vrt57od",
@@ -11546,7 +11568,7 @@
         "parquet"
       ],
       "_content_hash": "37bc680bbe82",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-1mjvdcmwqjcblmfkfgpd9ob2yodx7tom",
@@ -11661,7 +11683,7 @@
         "parquet"
       ],
       "_content_hash": "0d01621fadd6",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-hlqr2p77cmhg5ws3n7jy07c1f4lcdkds",
@@ -12228,7 +12250,7 @@
         "parquet"
       ],
       "_content_hash": "da1ef3f14f2d",
-      "initiative_id": "parquet-init-parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms"
+      "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
     {
       "id": "parquet-ml-hczpx4tgsyzkoys3rkgs26grdlfypjtm",
@@ -12292,7 +12314,7 @@
         "parquet-bloom"
       ],
       "_content_hash": "0174cef2d1f7",
-      "initiative_id": "parquet-init-parquet-ml-l1tz6kvq0dw6j9txb10sghnwnb9xgp21"
+      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
     },
     {
       "id": "parquet-ml-hz4z6o3c923b6mmpz03xl3cqwq85d75l",
@@ -12335,7 +12357,7 @@
         "apache"
       ],
       "_content_hash": "c8cf120a0100",
-      "initiative_id": "parquet-init-parquet-ml-l1tz6kvq0dw6j9txb10sghnwnb9xgp21"
+      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
     },
     {
       "id": "parquet-ml-t2h4m9mnpo71otqo6c4rrt7msbd73hdz",
@@ -12387,7 +12409,7 @@
         "parquet-bloom"
       ],
       "_content_hash": "3df1442da7b5",
-      "initiative_id": "parquet-init-parquet-ml-l1tz6kvq0dw6j9txb10sghnwnb9xgp21"
+      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
     },
     {
       "id": "parquet-ml-ywg8n060kdr9m2c4x2ssrdk3mx4w2n5l",
@@ -12542,7 +12564,7 @@
         "parquet-bloom"
       ],
       "_content_hash": "58418d00df17",
-      "initiative_id": "parquet-init-parquet-ml-l1tz6kvq0dw6j9txb10sghnwnb9xgp21"
+      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
     },
     {
       "id": "parquet-ml-kqdk6mv60dpy3t5nx41wtwnxtm2qpb6o",

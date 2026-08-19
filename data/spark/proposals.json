@@ -1,8 +1,37 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-08-18T06:28:00.190147+00:00",
-  "total": 642,
+  "generated_at": "2026-08-19T06:29:30.379315+00:00",
+  "total": 644,
   "proposals": [
+    {
+      "id": "spark-jira-SPARK-58820",
+      "source": "jira",
+      "kind": "issue",
+      "title": "SPIP: Add the DECFLOAT data type",
+      "url": "https://issues.apache.org/jira/browse/SPARK-58820",
+      "author": "Uro\u0161 Bojani\u0107",
+      "state": "open",
+      "created_at": "2026-08-17T09:05:32+00:00",
+      "updated_at": "2026-08-18T15:33:59+00:00",
+      "body": "*Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.*\r\n\r\nAdd a new Spark SQL data type *DECFLOAT* that stores decimal numbers with a flexible decimal point (floating point decimal numbers). Each value keeps up to a fixed number of significant decimal digits and its own exponent, so one column can hold both very large integers and very small fractions without picking a single fixed scale for the whole column.\r\n\r\nThe type follows the IEEE 754 decimal floating-point formats:\r\n||*SQL type*||*IEEE format*||*Significant digits*||*Storage width*||\r\n|DECFLOAT(16)|decimal64|16|8 bytes|\r\n|DECFLOAT(34)|decimal128|34|16 bytes|\r\n\r\nBare DECFLOAT means DECFLOAT(34).\r\n\r\nUnlike DECIMAL(p,s), there is no column-wide scale. Unlike FLOAT / DOUBLE, arithmetic is done in base 10, so values such as 0.1 are exact.\r\n\r\nBecause each value carries at most 16 or 34 significant digits, a result needing more digits is rounded to the format's precision. Rounding is decimal (base 10), unlike binary rounding in FLOAT/DOUBLE. The v1 fixed default is IEEE roundTiesToEven / HALF_EVEN (banker's rounding), which differs from Spark's existing DECIMAL arithmetic (rounds HALF_UP). This can be configurable in future iterations.\r\n\r\nThe type also supports IEEE special values: signed zero, +/-Infinity, and quiet NaN.\r\n\r\n*Q2. What problem is this proposal NOT designed to solve?*\r\n * *Arbitrary-precision / unbounded decimals.* Extending Spark's fixed-point DECIMAL beyond 38 digits, or adding a PostgreSQL-style unbounded NUMERIC, is out of scope. Those needs are different from IEEE decimal floating point.\r\n * *Wider-than-IEEE formats in v1.* Formats such as a 70-digit / 256-bit decimal float (sometimes discussed as DECFLOAT(70) / decimal256) are out of scope for the first delivery. The type and storage designs should not preclude them later.\r\n * *Replacing* DECIMAL *or* DOUBLE{*}.{*} Existing fixed-point and binary-float types remain unchanged. DECFLOAT is additive.\r\n * *Non-IEEE ",
+      "labels": [
+        "SPIP"
+      ],
+      "linked_resources": [],
+      "comment_count": 1,
+      "llm_summary": "Each value keeps up to a fixed number of significant decimal digits and its own exponent, so one column can hold both very large integers and very small fractions without picking a single fixed scale for the whole column. The type also supports IEEE special values: signed zero, +/-Infinity, and quiet NaN. * Extending Spark's fixed-point DECIMAL beyond 38 digits, or adding a PostgreSQL-style unbounded NUMERIC, is out of scope.",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "decfloat",
+        "decimal",
+        "spip",
+        "ieee"
+      ],
+      "_content_hash": "c07df12478eb",
+      "llm_title": "",
+      "initiative_id": "spark-init-spark-jira-SPARK-58820"
+    },
     {
       "id": "spark-jira-SPARK-56822",
       "source": "jira",
@@ -12,7 +41,7 @@
       "author": "Max Gekk",
       "state": "open",
       "created_at": "2026-05-11T15:13:30+00:00",
-      "updated_at": "2026-08-17T22:38:09+00:00",
+      "updated_at": "2026-08-18T06:59:54+00:00",
       "body": "h1. Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.\r\n\r\nAdd nanosecond-capable timestamps with an explicit fractional precision *n* in SQL and APIs, while keeping a simple binary value: epoch microseconds (64-bit) + nanoseconds within that microsecond (0\u2013999, stored in 16 bits).\r\nh3. SQL surface\r\n\r\nSupport TIMESTAMP_NTZ\\(n\\), TIMESTAMP_LTZ\\(n\\), and TIMESTAMP\\(n\\) in the parser (including equivalent spellings: WITHOUT TIME ZONE, WITH LOCAL TIME ZONE, etc.) so precision is first-class in the grammar, not a side convention. The parameter n is optional, and its valid range is [0, 9]. It defines how many decimal digits of the fractional second are part of the type. For example: n = 6 -> microseconds, n = 9 -> nanoseconds.\r\nh3. Scala / Java APIs\r\n\r\nIntroduce parameterized catalyst types, e.g. TimestampNTZNanosType\\(n\\) for TIMESTAMP_NTZ\\(n\\) and TimestampNanosType\\(n\\) for TIMESTAMP_LTZ\\(n\\).\r\nh3. In-memory value\r\n\r\nThe internal representation of both types is long micros since the epoch + short (or 16-bit) nanos-in-micro in [0, 999]. Both NTZ and LTZ have the same representation; time zone only affects interpretation for LTZ, not the pair layout.\r\n\u00a0\r\nh1. Q2. What problem is this proposal NOT designed to solve?\r\n * *Precision below nanosecond-target range.* This SPIP only covers high-precision parameterized timestamps where 7 <= n <= 9. Support/changes for n < 7 are explicitly out of scope for this proposal.\r\n\r\n * *Subtraction of timestamps.* The result should be a day-time interval but the data type has microsecond precision at the moment.\r\n\r\n * *Changing existing time zone semantics.* It does not redefine NTZ/LTZ semantics, session time zone behavior, or SQL time zone rules.\r\n\r\n * *A full rework of all connectors/storage formats.* It does not promise end-to-end nanosecond support in every external system; connector-specific follow-ups may still be needed.\r\n\r\nh1. Q3. How is it done today, and what are the limits of current practice?\r",
       "labels": [
         "SPIP",
@@ -32,34 +61,6 @@
       "llm_title": "",
       "_content_hash": "c08c56ea7b2c",
       "initiative_id": "spark-init-spark-jira-SPARK-57703"
-    },
-    {
-      "id": "spark-jira-SPARK-58820",
-      "source": "jira",
-      "kind": "issue",
-      "title": "SPIP: Add the DECFLOAT data type",
-      "url": "https://issues.apache.org/jira/browse/SPARK-58820",
-      "author": "Uro\u0161 Bojani\u0107",
-      "state": "open",
-      "created_at": "2026-08-17T09:05:32+00:00",
-      "updated_at": "2026-08-17T12:00:55+00:00",
-      "body": "*Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.*\r\n\r\nAdd a new Spark SQL data type *DECFLOAT* that stores decimal numbers with a flexible decimal point (floating point decimal numbers). Each value keeps up to a fixed number of significant decimal digits and its own exponent, so one column can hold both very large integers and very small fractions without picking a single fixed scale for the whole column.\r\n\r\nThe type follows the IEEE 754 decimal floating-point formats:\r\n||*SQL type*||*IEEE format*||*Significant digits*||*Storage width*||\r\n|DECFLOAT(16)|decimal64|16|8 bytes|\r\n|DECFLOAT(34)|decimal128|34|16 bytes|\r\n\r\nBare DECFLOAT means DECFLOAT(34).\r\n\r\nUnlike DECIMAL(p,s), there is no column-wide scale. Unlike FLOAT / DOUBLE, arithmetic is done in base 10, so values such as 0.1 are exact.\r\n\r\nBecause each value carries at most 16 or 34 significant digits, a result needing more digits is rounded to the format's precision. Rounding is decimal (base 10), unlike binary rounding in FLOAT/DOUBLE. The default is IEEE roundTiesToEven / HALF_EVEN (banker's rounding), which differs from Spark's existing DECIMAL arithmetic (rounds HALF_UP).\r\n\r\nThe type also supports IEEE special values: signed zero, +/-Infinity, and quiet NaN.\r\n\r\n*Q2. What problem is this proposal NOT designed to solve?*\r\n * *Arbitrary-precision / unbounded decimals.* Extending Spark's fixed-point DECIMAL beyond 38 digits, or adding a PostgreSQL-style unbounded NUMERIC, is out of scope. Those needs are different from IEEE decimal floating point.\r\n * *Wider-than-IEEE formats in v1.* Formats such as a 70-digit / 256-bit decimal float (sometimes discussed as DECFLOAT(70) / decimal256) are out of scope for the first delivery. The type and storage designs should not preclude them later.\r\n * *Replacing* DECIMAL *or* DOUBLE{*}.{*} Existing fixed-point and binary-float types remain unchanged. DECFLOAT is additive.\r\n * *Non-IEEE decimal-float dialects as the native type.* Engines such",
-      "labels": [
-        "SPIP"
-      ],
-      "linked_resources": [],
-      "comment_count": 1,
-      "llm_summary": "Each value keeps up to a fixed number of significant decimal digits and its own exponent, so one column can hold both very large integers and very small fractions without picking a single fixed scale for the whole column. The type also supports IEEE special values: signed zero, +/-Infinity, and quiet NaN. * Extending Spark's fixed-point DECIMAL beyond 38 digits, or adding a PostgreSQL-style unbounded NUMERIC, is out of scope.",
-      "llm_status": "discussion",
-      "llm_key_points": [],
-      "llm_topics": [
-        "decfloat",
-        "decimal",
-        "spip",
-        "ieee"
-      ],
-      "_content_hash": "c07df12478eb",
-      "initiative_id": "spark-init-spark-jira-SPARK-58820"
     },
     {
       "id": "spark-jira-SPARK-58787",
@@ -88,7 +89,7 @@
         "type"
       ],
       "_content_hash": "ba4301289695",
-      "initiative_id": "spark-init-spark-jira-SPARK-58787"
+      "initiative_id": "spark-init-spark-jira-SPARK-58820"
     },
     {
       "id": "spark-jira-SPARK-57487",
@@ -1764,6 +1765,71 @@
       ],
       "_content_hash": "e46e418f4ebe",
       "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+    },
+    {
+      "id": "spark-ml-0yqzbr8pzfnfomqq1zdgzcqltnrc6s1o",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] New Apache Spark repository for community-contributed Python Data Sources",
+      "url": "https://lists.apache.org/thread/0yqzbr8pzfnfomqq1zdgzcqltnrc6s1o",
+      "author": "Allison Wang <al...@apache.org>",
+      "state": "open",
+      "created_at": "2026-08-18T23:45:47+00:00",
+      "updated_at": "2026-08-19T03:01:36+00:00",
+      "body": "Hi all,\n\nI would like to discuss whether Apache Spark should provide an experimental,\ncommunity-maintained home for the ecosystem around the PySpark Data Source\nAPI\n<https://spark.apache.org/docs/latest/api/python/tutorial/sql/python_data_source.html>\n:\n\n\nProposed repository: apache/spark-python-datasources\n\nExisting implementation: allisonwang-db/pyspark-data-sources\n<https://github.com/allisonwang-db/pyspark-data-sources>\n\nThe intent would not be to make these data sources part of Spark core.\nInstead, the repository would provide an Apache-governed place where the\ncommunity can collaborate on reusable implementations of the public Python\nData Source API, share practical examples, and grow the ecosystem around\nthe API without expanding Spark core itself.\n\nThe existing project can serve as the initial contribution. It contains\nbatch and streaming readers and writers built with the public PySpark Data\nSource API, covering a range of external systems and use cases.\n\nI propose starting with a deliberately lightweight model:\n\n   -\n\n   The repository would be experimental and community-supported.\n   -\n\n   It would focus specifically on implementations built on the public PySpark\n   Data Source API.\n   <https://spark.apache.org/docs/latest/api/python/tutorial/sql/python_data_source.html>\n   -\n\n   Code in this repository would remain separate from Spark core and would\n   not carry the same compatibility or support guarantees as Spark itself.\n   -\n\n   New contributions would go through community review, with\n   maintainability, dependencies, licensing, testing, and security taken into\n   consideration.\n   -\n\n   Implementations that become unmaintained or no longer meet the\n   repository's requirements could be deprecated or removed through the normal\n   community process.\n   -\n\n   The repository would be governed by the Apache Spark community and\n   follow ASF policies.\n\nThe existing project is currently published on PyPI as pyspark-data-sources\nusing the pyspark_datasource",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "It contains batch and streaming readers and writers built with the public PySpark Data Source API, covering a range of external systems and use cases. > Hi all, > > I would like to discuss whether Apache Spark should provide an experimental, > community-maintained home for the ecosystem around the PySpark Data > Source API > <https://spark.apache.org/docs/latest/api/python/tutorial/sql/python_data_source.html> > : > > > Proposed repository: apache/spark-python-dat > On Aug 18, 2026, at 10:51\u202fPM, Nicholas Chammas <ni...@gmail.com> wrote: > > We had something broadly similar from ~10 years ago, but not limited to data sources: https://spark-packages.org/ > > My impression of Spark Packages is that it is inactive and unm",
+      "llm_status": "discussion",
+      "comment_count": 4,
+      "participant_count": 4,
+      "llm_key_points": [
+        "I actually support this.",
+        "Nice, wondering if we envision hosting higher performance java/scala data\nsource like DSV2 connectors here as well?",
+        "We had something broadly similar from ~10 years ago, but not limited to data sources: https://spark-packages.org/\n\nMy im"
+      ],
+      "llm_topics": [
+        "data-source",
+        "source-api",
+        "python-data",
+        "data-sources"
+      ],
+      "_content_hash": "a58dd9f64865",
+      "initiative_id": "spark-init-spark-jira-SPARK-15689"
+    },
+    {
+      "id": "spark-ml-wyfnsj45s3cn95thrgw4oho74zbcc5vm",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] SPIP: Add the DECFLOAT data type",
+      "url": "https://lists.apache.org/thread/wyfnsj45s3cn95thrgw4oho74zbcc5vm",
+      "author": "Uro\u0161 Bojani\u0107 <ur...@apache.org>",
+      "state": "open",
+      "created_at": "2026-08-18T16:00:13+00:00",
+      "updated_at": "2026-08-18T18:53:05+00:00",
+      "body": "Hi all,\n\nI would like to start a discussion on the SPIP to add a new Spark SQL data type: DECFLOAT (IEEE 754 decimal64 / decimal128), for base-10 floating-point decimals with per-value exponents.\n\nJIRA ID: https://issues.apache.org/jira/browse/SPARK-58820\n\nBrief summary: DECFLOAT is a new IEEE 754 decimal floating-point type (decimal64 / decimal128, i.e. DECFLOAT(16) / DECFLOAT(34)) that closes the gap between DECIMAL, which caps at precision 38 with a fixed per-column scale, and DOUBLE, whose binary rounding makes fractions like 0.1 inexact: each value keeps its own exponent, arithmetic is decimal, and it supports signed zero, Inf, and NaN. It is additive, round-trips through a proposed Parquet logical type for cross-engine interop, and would ship config-gated during incubation like TIME, leaving existing DECIMAL / DOUBLE behavior unchanged.\n\nAdditional information is available in the SPIP document:\nhttps://docs.google.com/document/d/1qnLXm0ldHSwPSJs_Q5SzGyyTKMMEqeX5rm8Fh4rvV3E\n\nPlease provide your feedback on the approach, scope, and the proposal described in the document.\n\nThank you!\n\nBest,\nUro\u0161\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1qnLXm0ldHSwPSJs_Q5SzGyyTKMMEqeX5rm8Fh4rvV3E",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: Add the DECFLOAT data type"
+        }
+      ],
+      "llm_summary": "I would like to start a discussion on the SPIP to add a new Spark SQL data type: DECFLOAT (IEEE 754 decimal64 / decimal128), for base-10 floating-point decimals with per-value exponents. It is additive, round-trips through a proposed Parquet logical type for cross-engine interop, and would ship config-gated during incubation like TIME, leaving existing DECIMAL / DOUBLE behavior unchanged. The IEEE 754 alignment, the config-gated incubation pattern, and the explicit type table are really helpful - excited to see this move forward.",
+      "llm_status": "discussion",
+      "comment_count": 1,
+      "participant_count": 2,
+      "llm_key_points": [],
+      "llm_topics": [
+        "decfloat",
+        "decfloat-data",
+        "spark-sql",
+        "decimal-floating-point"
+      ],
+      "_content_hash": "c1b3b5543848",
+      "initiative_id": "spark-init-spark-jira-SPARK-58820"
     },
     {
       "id": "spark-ml-vgg3omvqqmyo2c8w5rnnhl78k1rzp2qg",
@@ -15248,7 +15314,7 @@
         "result"
       ],
       "_content_hash": "1a321a68a087",
-      "initiative_id": "spark-init-spark-jira-SPARK-15689"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-nm3p1zjcybdl0p0mc56t2rl92hb9837n",
@@ -28970,7 +29036,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-vl23g4k9o9ck9f02ljx7xw7px6y1gt58"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",

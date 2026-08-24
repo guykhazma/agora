@@ -26,7 +26,8 @@ Usage:
 Environment variables:
   GITHUB_TOKEN        required for GitHub crawling
   YOUTUBE_API_KEY     required for YouTube crawling (optional)
-  LLM_PROVIDER        openai | anthropic | google | groq | github_models | ollama | local
+  LLM_PROVIDER        openai | anthropic | google | groq | ollama | local
+                      (github_models retired 2026-07-30 — ignored / falls back to local)
   LLM_MODEL           model override
   LLM_API_KEY         provider API key (or set OPENAI_API_KEY etc.)
 """
@@ -204,8 +205,6 @@ def _default_delay(provider: str) -> float:
         return 10.0
     if provider in ("ollama", "llama_cpp"):
         return 0.0   # local — no rate limit
-    if provider == "github_models":
-        return 1.0   # 150 req/hr → ~24s safe, but incremental runs are small
     return 0.5
 
 
@@ -239,8 +238,8 @@ def _wants_llm_stage2(p: dict, source: str, reply_count: int, doc_content: str, 
     """
     True when we should run stage-2 summarization via an API-capable LLMClient.
 
-    This is not tied to any single vendor: OpenAI, Anthropic, GitHub Models (GITHUB_TOKEN
-    in Actions), Groq, Ollama, etc. LocalNLPClient is excluded — it only does stage 1.
+    This is not tied to any single vendor: OpenAI, Anthropic, Groq, Ollama, etc.
+    LocalNLPClient is excluded — it only does stage 1.
     Skipped when stage2_client is None (--no-llm) or for vote threads (stage 1 is exact).
     """
     if stage2_client is None:

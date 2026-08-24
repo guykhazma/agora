@@ -1,9 +1,11 @@
 """
 LLM provider abstraction.
-Supports: openai, anthropic, google, ollama, llama_cpp, groq, github_models
-Set via LLM_PROVIDER env var (default: openai)
+Supports: openai, anthropic, google, ollama, llama_cpp, groq
+Set via LLM_PROVIDER env var (or auto-detect from API keys).
 llama_cpp: points to llama-server OpenAI-compatible API (default: http://localhost:8080/v1)
-github_models: free inference via GitHub Models API using GITHUB_TOKEN (great for CI)
+
+GitHub Models (`github_models` / models.inference.ai.azure.com) was retired on 2026-07-30.
+It is no longer auto-selected from GITHUB_TOKEN; use a vendor key or local NLP instead.
 """
 
 from __future__ import annotations
@@ -22,11 +24,11 @@ def get_client():
     """
     Return an LLMClient (cloud) or LocalNLPClient (local extractive NLP).
 
-    Priority: explicit LLM_PROVIDER env > anthropic > groq > openai > google > github_models > local
+    Priority: explicit LLM_PROVIDER env > anthropic > groq > openai > google > local
     When no API key is available, falls back to local NLP (sumy + yake) at zero cost.
-    github_models uses GITHUB_TOKEN (always present in GitHub Actions) — free for public repos.
+    GITHUB_TOKEN alone is not enough for stage-2 enrichment (GitHub Models is retired).
     """
-    provider = os.environ.get("LLM_PROVIDER", "").lower()
+    provider = os.environ.get("LLM_PROVIDER", "").lower().strip()
     if not provider:
         if os.environ.get("ANTHROPIC_API_KEY"):
             provider = "anthropic"
@@ -36,10 +38,16 @@ def get_client():
             provider = "openai"
         elif os.environ.get("GOOGLE_API_KEY"):
             provider = "google"
-        elif os.environ.get("GITHUB_TOKEN"):
-            provider = "github_models"
         else:
             provider = "local"
+
+    if provider == "github_models":
+        logger.error(
+            "LLM_PROVIDER=github_models is no longer available — GitHub Models retired "
+            "on 2026-07-30. Set OPENAI_API_KEY / ANTHROPIC_API_KEY / GROQ_API_KEY / "
+            "GOOGLE_API_KEY, or omit LLM_PROVIDER to use local extractive NLP."
+        )
+        provider = "local"
 
     if provider == "local":
         from llm.local_nlp import LocalNLPClient
@@ -63,8 +71,9 @@ class LLMClient:
         "google":         "gemini-2.0-flash",
         "ollama":         "llama3",
         "llama_cpp":      "local",   # model is loaded server-side; any string works
-        "groq":           "llama-3.3-70b-versatile",    # best free model; 6k TPM → use 10s delay
-        "github_models":  "gpt-4o-mini",                # free via GitHub token; 150 req/hr for public repos
+        "groq":           "llama-3.3-70b-versatile",    # free tier; 6k TPM → use 10s delay
+        # Retained only so an explicit misconfig fails clearly in _ensure_client.
+        "github_models":  "gpt-4o-mini",
     }
 
     def __init__(self, provider: str, model: Optional[str] = None, api_key: Optional[str] = None):
@@ -106,15 +115,15 @@ class LLMClient:
                 base_url="https://api.groq.com/openai/v1",
             )
         elif p == "github_models":
-            import openai
-            self._client = openai.OpenAI(
-                api_key=self.api_key or os.environ.get("GITHUB_TOKEN"),
-                base_url="https://models.inference.ai.azure.com",
+            raise ValueError(
+                "GitHub Models was retired on 2026-07-30 and is no longer available. "
+                "Set LLM_PROVIDER to openai, anthropic, google, groq, or ollama "
+                "(or leave unset / use local NLP)."
             )
         else:
             raise ValueError(
                 f"Unknown LLM provider: {self.provider!r}. "
-                "Set LLM_PROVIDER to one of: openai, anthropic, google, ollama, groq, github_models"
+                "Set LLM_PROVIDER to one of: openai, anthropic, google, ollama, groq"
             )
 
     def complete(self, system: str, user: str, max_tokens: int = 512,
@@ -125,7 +134,7 @@ class LLMClient:
 
         for attempt in range(_retries):
             try:
-                if p in ("openai", "ollama", "llama_cpp", "groq", "github_models"):
+                if p in ("openai", "ollama", "llama_cpp", "groq"):
                     resp = self._client.chat.completions.create(
                         model=self.model,
                         messages=[{"role": "system", "content": system},

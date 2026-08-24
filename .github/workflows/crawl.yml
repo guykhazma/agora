@@ -33,7 +33,6 @@ on:
 
 permissions:
   contents: write  # needed to commit updated data/
-  models: read     # needed to access github_models
 
 # Never let two crawls race on the same branch push (cron + manual dispatch overlap).
 concurrency:
@@ -77,8 +76,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # LLM provider is auto-detected from whichever key is set (priority order):
-          #   anthropic > groq > openai > google > github_models > local
-          # If no secrets are set, github_models is used automatically (free, uses GITHUB_TOKEN).
+          #   anthropic > groq > openai > google > local
+          # With no vendor key, stage-2 uses local extractive NLP (GitHub Models retired 2026-07-30).
           # Set LLM_PROVIDER secret only if you want to force a specific provider.
           LLM_PROVIDER: ${{ secrets.LLM_PROVIDER }}
           LLM_MODEL: ${{ secrets.LLM_MODEL }}
@@ -87,7 +86,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          # Rate limit delay — auto-set per provider (10s Groq, 1s github_models, 0.5s cloud).
+          # Rate limit delay — auto-set per provider (10s Groq, 0.5s cloud).
           # Override with LLM_REQUEST_DELAY secret if needed.
           LLM_REQUEST_DELAY: ${{ secrets.LLM_REQUEST_DELAY }}
         run: |

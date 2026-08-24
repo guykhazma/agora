@@ -44,7 +44,7 @@ Open-source communities have the same problem as a city without a town square: d
 
 **Community health** — a per-project [CHAOSS](https://chaoss.community)-style panel (responsiveness, contributor concentration / bus factor, 12-week activity) plus a live source-freshness strip.
 
-**Runs itself** — a daily GitHub Actions crawl refreshes every project, isolates per-project failures, retries transient errors, never advances its checkpoint past a failed source, and writes a `health.json` that a second workflow turns into a **GitHub issue** when anything goes stale. No paid APIs — enrichment falls back to free GitHub Models, then to local NLP.
+**Runs itself** — a daily GitHub Actions crawl refreshes every project, isolates per-project failures, retries transient errors, never advances its checkpoint past a failed source, and writes a `health.json` that a second workflow turns into a **GitHub issue** when anything goes stale. No paid APIs required — enrichment falls back to local NLP when no vendor key is set.
 
 ---
 

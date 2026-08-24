@@ -70,7 +70,7 @@ agora/
 │   ├── _http.py                   # Shared retrying HTTP session (backoff on 429/5xx)
 │   └── _io.py                     # Atomic JSON/text writes (never truncate on crash)
 ├── llm/
-│   ├── client.py      # OpenAI, Anthropic, Google, Groq, GitHub Models (`GITHUB_TOKEN`), Ollama, llama.cpp
+│   ├── client.py      # OpenAI, Anthropic, Google, Groq, Ollama, llama.cpp (+ local NLP fallback)
 │   └── local_nlp.py   # Local enrichment: vote parsing, announcement detection
 ├── scripts/
 │   ├── crawl.py             # Main entry — parallel crawlers + LLM; `--re-enrich` = no fetch, re-summarize disk
@@ -195,13 +195,13 @@ Initiatives are built with [union-find](scripts/build_initiatives.py). **Every p
 - **Enrichment is two-stage:** (1) local / structural / extractive always; (2) API **LLMClient** pass for rich threads, docs, and video when not using `--no-llm`. Commit `data/` if the static site should match.
 - **`--re-enrich`** re-runs enrichment on **existing** `proposals.json` rows only — it does **not** re-fetch sources. It will **not** refresh **`vote_data`** or other crawler-derived fields; run a normal **crawl** for that.
 - GitHub **Pages** source = **GitHub Actions**; set **`VITE_BASE_PATH`** repo variable if the site is not at domain root (e.g. `/agora/`).
-- **Actions**: enable workflows; optional **`OPENAI_API_KEY` / `ANTHROPIC_API_KEY`** / **`GROQ_API_KEY` / `GOOGLE_API_KEY`** repository secrets — if none are set, **`get_client()`** falls through to **`github_models`** using the job’s **`GITHUB_TOKEN`** (see `llm/client.py` priority order). Ensure **GitHub Models** is available for the repo/org if you rely on that default.
+- **Actions**: enable workflows; optional **`OPENAI_API_KEY` / `ANTHROPIC_API_KEY`** / **`GROQ_API_KEY` / `GOOGLE_API_KEY`** repository secrets — if none are set, **`get_client()`** falls through to **local extractive NLP** (see `llm/client.py` priority order). GitHub Models (`GITHUB_TOKEN` inference) was retired on 2026-07-30 and is no longer used.
 
 ### Scheduled / incremental crawl in CI
 
 The **Crawl & Enrich** workflow (`.github/workflows/crawl.yml`) runs `python scripts/crawl.py` on a cron and on manual dispatch. It passes **`GITHUB_TOKEN`** and optional vendor key secrets into the job env. It uses **`data/<project>/state.json`** (`last_crawled_at`) so each run is **incremental** (not a full re-ingest) unless you dispatch with **Re-crawl from scratch** (`--reset`). Successful runs commit **`data/`**; that push triggers **Deploy** when `data/**` changes. Workflow input **Skip LLM** maps to **`--no-llm`** (skips stage 2 only; stage 1 still runs).
 
-**Autonomy / resilience.** The cron crawls **every** `projects/*.yaml` automatically — a new project YAML is picked up and backfilled on the next run with no other change. `scripts/crawl.py` **isolates each project** in its own `try/except`: one project (or one flaky source) failing is logged and skipped, the rest still refresh, and the job exits non-zero only at the end so failures are visible without losing a day of updates. With no vendor LLM secret set, enrichment falls through to **GitHub Models** via the job's `GITHUB_TOKEN` — so the whole loop runs at zero marginal cost. The **Deploy** workflow regenerates `index.json` + `feed.xml` from the freshly-committed `proposals.json`, so the site and RSS feed stay current unattended.
+**Autonomy / resilience.** The cron crawls **every** `projects/*.yaml` automatically — a new project YAML is picked up and backfilled on the next run with no other change. `scripts/crawl.py` **isolates each project** in its own `try/except`: one project (or one flaky source) failing is logged and skipped, the rest still refresh, and the job exits non-zero only at the end so failures are visible without losing a day of updates. With no vendor LLM secret set, enrichment uses **local extractive NLP** (stage 1) — summaries are weaker than a cloud model but the loop stays free and green. The **Deploy** workflow regenerates `index.json` + `feed.xml` from the freshly-committed `proposals.json`, so the site and RSS feed stay current unattended.
 
 Hardening that keeps an unattended pipeline from silently rotting:
 

@@ -67,7 +67,7 @@ Strip existing LLM fields from `proposals.json`, re-summarize everything, rebuil
 python scripts/crawl.py --project iceberg --re-enrich
 ```
 
-Use this for a polished pass after a `--no-llm` crawl, or after changing summarization logic. Needs an LLM API key (or GitHub Models in Actions with `GITHUB_TOKEN`).
+Use this for a polished pass after a `--no-llm` crawl, or after changing summarization logic. Needs a vendor LLM API key (`OPENAI_API_KEY`, `GROQ_API_KEY`, etc.); otherwise stage 2 is skipped and local extractive NLP is kept.
 
 ## Crawl from scratch
 

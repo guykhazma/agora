@@ -101,3 +101,43 @@ def test_update_health_preserves_last_success_on_failure(tmp_path, monkeypatch):
     assert gh["ok"] is False
     assert gh["last_success_at"] is not None  # preserved from the first successful run
     assert health["projects"]["spark"]["status"] == "error"
+
+
+# ── LLM client selection (GitHub Models retired) ───────────────────────────
+def test_get_client_uses_local_when_only_github_token(monkeypatch):
+    """GITHUB_TOKEN alone must not select the retired github_models provider."""
+    from llm.local_nlp import LocalNLPClient
+    from llm import client as llm_client
+
+    monkeypatch.delenv("LLM_PROVIDER", raising=False)
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+    monkeypatch.delenv("LLM_API_KEY", raising=False)
+    monkeypatch.setenv("GITHUB_TOKEN", "ghs_test_only")
+
+    c = llm_client.get_client()
+    assert isinstance(c, LocalNLPClient)
+
+
+def test_get_client_github_models_env_falls_back_to_local(monkeypatch):
+    from llm.local_nlp import LocalNLPClient
+    from llm import client as llm_client
+
+    monkeypatch.setenv("LLM_PROVIDER", "github_models")
+    monkeypatch.setenv("GITHUB_TOKEN", "ghs_test_only")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)
+    monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+
+    c = llm_client.get_client()
+    assert isinstance(c, LocalNLPClient)
+
+
+def test_github_models_llmclient_raises_clear_error():
+    from llm.client import LLMClient
+    import pytest
+    with pytest.raises(ValueError, match="retired"):
+        LLMClient(provider="github_models")._ensure_client()

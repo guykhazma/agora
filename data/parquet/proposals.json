@@ -1,7 +1,7 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-08-24T07:10:45.076577+00:00",
-  "total": 275,
+  "generated_at": "2026-08-25T06:33:37.935959+00:00",
+  "total": 276,
   "proposals": [
     {
       "id": "parquet-gh-m36",
@@ -2427,6 +2427,58 @@
       "llm_topics": [],
       "_content_hash": "b6589fc6ab0d",
       "initiative_id": "parquet-init-parquet-gh-m5"
+    },
+    {
+      "id": "parquet-ml-cykmmq4ggd2thqkjcj888ywmsy50fgh1",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] Remove self-references from the FILE logical type",
+      "url": "https://lists.apache.org/thread/cykmmq4ggd2thqkjcj888ywmsy50fgh1",
+      "author": "Alkis Evlogimenos via dev <de...@parquet.apache.org>",
+      "state": "open",
+      "created_at": "2026-08-24T14:02:44+00:00",
+      "updated_at": "2026-08-24T14:56:14+00:00",
+      "body": "Hi folks,\n\nI would like to start a vote on adopting the format change in PR 603 [1]:\nremove self-references from the FILE logical type. This came out of the\ndiscussion on inheriting the inline codec [2].\n\nFILE as merged lets a value set offset and size with no uri, which\naddresses a byte range inside the containing file. This byte range is\neffectively owned by the Parquet writer. Specifying that range properly\nmeans giving it a compression block, an encryption module, an AAD identity,\nand its own size accounting. That is a second page mechanism reachable only\nthrough FILE. The use case is mid sized values and it is better served by\nnon-contiguous pages, which we will propose separately. Removing\nself-references keeps FILE to the forms it specifies cleanly, while the\nformat has not shipped in a release.\n\nThe changes:\n\n1. Remove self-references. A value that sets offset and size with no uri is\ninvalid. offset may only be set together with uri.\n2. Resolve uri uniformly as an external reference, including when it names\nthe file that contains it. Parquet applies no compression or encryption of\nits own to those bytes. The parquet writer does NOT own these bytes. An\nearlier draft forbade referencing the current file, but neither a writer\nnor a reader can check that, so the encoding is uniform instead.\n3. Drop the prohibition on modular encryption. It existed only because\nself-referenced ranges were not encryption modules. The fields of a FILE\ngroup are ordinary columns and are encoded, compressed, and encrypted like\nany other column, inline included.\n4. Allow inline together with the locator fields. Both must denote the same\nbytes, so a reader may resolve from either and get the same result, and\ninline is the cheaper path because it needs no external access. If the two\ndisagree the value is invalid, and a reader is not required to detect it.\nThis combination was underspecified before.\n\nThe spec changes are in https://github.com/apache/parquet-format/pull/603\nand touch Logi",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/parquet-format/pull/603",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Vote in progress: 0 binding +1, 2 non-binding +1",
+      "llm_status": "proposal",
+      "comment_count": 3,
+      "participant_count": 3,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 2,
+        "vetoes": 0,
+        "result": "open",
+        "voters": [
+          {
+            "voter": "Divjot Arora via dev <de...@parquet.apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Russell Spitzer <ru...@gmail.com>",
+            "vote": "+1"
+          }
+        ],
+        "closes_at": "2026-08-27T14:02:44+00:00"
+      },
+      "llm_key_points": [
+        "Hi folks,\n\nI would like to start a vote on adopting the format change in PR 603 [1]:\nremove self-references from the FILE logical type.",
+        "Voters include: Divjot Arora via dev, Russell Spitzer..."
+      ],
+      "llm_topics": [
+        "logical-type",
+        "file-logical",
+        "file",
+        "vote"
+      ],
+      "_content_hash": "5ae0673c7839",
+      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
     },
     {
       "id": "parquet-ml-ott9f9rtdtwpr2pxfhrnb8g27ksnxmsl",
@@ -5826,7 +5878,7 @@
         "format"
       ],
       "_content_hash": "103a0dcb619d",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-xlmp7cq638ht7n6c9f1vqlc6qgs4j4y4"
     },
     {
       "id": "parquet-ml-1nf596dq7fpc0zp35bt17zy7srvo5wt8",
@@ -6380,7 +6432,7 @@
       ],
       "_content_hash": "28a4922aafaa",
       "llm_title": "Feature Addition Requirements for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-jffqzp1hoh8vypffdrbjhotkn06zrxmf"
+      "initiative_id": "parquet-init-parquet-ml-hms38c0807r3qpst7ykf4b42xwpb23g7"
     },
     {
       "id": "parquet-ml-lsf425yk0h0pzvq41kz8z92qffg8mmf8",
@@ -7379,7 +7431,7 @@
       ],
       "_content_hash": "735a1326fdb5",
       "llm_title": "Merge Implementation Status PR for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-jffqzp1hoh8vypffdrbjhotkn06zrxmf"
     },
     {
       "id": "parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",

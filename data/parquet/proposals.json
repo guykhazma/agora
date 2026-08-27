@@ -1,7 +1,7 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-08-26T06:35:25.852240+00:00",
-  "total": 278,
+  "generated_at": "2026-08-27T17:12:20.909116+00:00",
+  "total": 279,
   "proposals": [
     {
       "id": "parquet-gh-m36",
@@ -2430,6 +2430,47 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[RESULT][VOTE] Remove self-references from the FILE logical type",
+      "url": "https://lists.apache.org/thread/jxhzrk4tbx9ynthcskgo75fyzvqz0hrh",
+      "author": "Alkis Evlogimenos via dev <de...@parquet.apache.org>",
+      "state": "open",
+      "created_at": "2026-08-27T14:00:00+00:00",
+      "updated_at": "2026-08-27T14:00:00+00:00",
+      "body": "Hi folks,\n\nThe vote has passed with 7 binding +1 votes, 8 non-binding +1 votes, and no\n0 or -1 votes.\n\nBinding +1:\nRussell Spitzer\nAntoine Pitrou\nMicah Kornfield\nDaniel Weeks\nRyan Blue\nJulien Le Dem\nGang Wu\n\nNon-binding +1:\nDivjot Arora\nRok Mihevc\nBurak Yavuz\nPrateek Gaur\nEd Seidl\nZehua Zou\nXuwei Fu\n\nThanks everyone for reviewing. I will merge PR 603 [1].\n\nOne note on what was voted. Item 4 in the original message said the two\nrepresentations must denote the same bytes and that a value is invalid if\nthey disagree. Following Russell's point that nothing can check this from\ninside Parquet, the PR states only that a reader may resolve the value from\ninline or from the locator and leaves equivalence to producers.\n\nThe non-contiguous pages proposal will follow in a separate thread.\n\nCheers,\n\n[1] https://github.com/apache/parquet-format/pull/603\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/parquet-format/pull/603",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Vote in progress: 0 binding +1",
+      "llm_status": "proposal",
+      "comment_count": 0,
+      "participant_count": 1,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 0,
+        "vetoes": 0,
+        "result": "open",
+        "voters": []
+      },
+      "llm_key_points": [
+        "Hi folks,\n\nThe vote has passed with 7 binding +1 votes, 8 non-binding +1 votes, and no\n0 or -1 votes."
+      ],
+      "llm_topics": [
+        "remove-self-references",
+        "file-logical",
+        "logical-type",
+        "votes"
+      ],
+      "_content_hash": "e6bcb8eed824",
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
+    },
+    {
       "id": "parquet-ml-cykmmq4ggd2thqkjcj888ywmsy50fgh1",
       "source": "mailing_list",
       "kind": "thread",
@@ -2438,7 +2479,7 @@
       "author": "Alkis Evlogimenos via dev <de...@parquet.apache.org>",
       "state": "open",
       "created_at": "2026-08-24T14:02:44+00:00",
-      "updated_at": "2026-08-25T19:51:30+00:00",
+      "updated_at": "2026-08-27T02:34:45+00:00",
       "body": "Hi folks,\n\nI would like to start a vote on adopting the format change in PR 603 [1]:\nremove self-references from the FILE logical type. This came out of the\ndiscussion on inheriting the inline codec [2].\n\nFILE as merged lets a value set offset and size with no uri, which\naddresses a byte range inside the containing file. This byte range is\neffectively owned by the Parquet writer. Specifying that range properly\nmeans giving it a compression block, an encryption module, an AAD identity,\nand its own size accounting. That is a second page mechanism reachable only\nthrough FILE. The use case is mid sized values and it is better served by\nnon-contiguous pages, which we will propose separately. Removing\nself-references keeps FILE to the forms it specifies cleanly, while the\nformat has not shipped in a release.\n\nThe changes:\n\n1. Remove self-references. A value that sets offset and size with no uri is\ninvalid. offset may only be set together with uri.\n2. Resolve uri uniformly as an external reference, including when it names\nthe file that contains it. Parquet applies no compression or encryption of\nits own to those bytes. The parquet writer does NOT own these bytes. An\nearlier draft forbade referencing the current file, but neither a writer\nnor a reader can check that, so the encoding is uniform instead.\n3. Drop the prohibition on modular encryption. It existed only because\nself-referenced ranges were not encryption modules. The fields of a FILE\ngroup are ordinary columns and are encoded, compressed, and encrypted like\nany other column, inline included.\n4. Allow inline together with the locator fields. Both must denote the same\nbytes, so a reader may resolve from either and get the same result, and\ninline is the cheaper path because it needs no external access. If the two\ndisagree the value is invalid, and a reader is not required to detect it.\nThis combination was underspecified before.\n\nThe spec changes are in https://github.com/apache/parquet-format/pull/603\nand touch Logi",
       "labels": [],
       "linked_resources": [
@@ -2447,15 +2488,15 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "Vote in progress: 1 binding +1, 5 non-binding +1",
-      "llm_status": "proposal",
-      "comment_count": 9,
-      "participant_count": 7,
+      "llm_summary": "Vote PASSED with 5 binding +1 votes and 9 non-binding +1",
+      "llm_status": "released",
+      "comment_count": 18,
+      "participant_count": 15,
       "vote_data": {
-        "binding_plus1": 1,
-        "nonbinding_plus1": 5,
+        "binding_plus1": 5,
+        "nonbinding_plus1": 9,
         "vetoes": 0,
-        "result": "open",
+        "result": "passed",
         "voters": [
           {
             "voter": "Antoine Pitrou <an...@python.org>",
@@ -2466,11 +2507,31 @@
             "vote": "+1"
           },
           {
+            "voter": "Daniel Weeks <dw...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
             "voter": "Divjot Arora via dev <de...@parquet.apache.org>",
             "vote": "+1"
           },
           {
+            "voter": "Ed Seidl <et...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Gang Wu <us...@gmail.com>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Julien Le Dem <ju...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
             "voter": "Micah Kornfield <em...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "PRATEEK GAUR <pr...@gmail.com>",
             "vote": "+1"
           },
           {
@@ -2480,13 +2541,25 @@
           {
             "voter": "Russell Spitzer <ru...@gmail.com>",
             "vote": "+1"
+          },
+          {
+            "voter": "Ryan Blue <bl...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Zehua Zou <ze...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "wish maple <ma...@gmail.com>",
+            "vote": "+1"
           }
         ],
         "closes_at": "2026-08-27T14:02:44+00:00"
       },
       "llm_key_points": [
         "Hi folks,\n\nI would like to start a vote on adopting the format change in PR 603 [1]:\nremove self-references from the FILE logical type.",
-        "Voters include: Antoine Pitrou, Burak Yavuz, Divjot Arora via dev..."
+        "Voters include: Antoine Pitrou, Burak Yavuz, Daniel Weeks..."
       ],
       "llm_topics": [
         "logical-type",
@@ -2494,8 +2567,8 @@
         "file",
         "vote"
       ],
-      "_content_hash": "02380d31580e",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "_content_hash": "61b5a8f0d32f",
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-29bkrgwr7pt9jjzf5g5nd9zlhky58dx2",
@@ -2530,6 +2603,7 @@
         "correct-subject",
         "discuss"
       ],
+      "llm_title": "",
       "_content_hash": "1df47b2ce9de",
       "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
@@ -2566,6 +2640,7 @@
         "patch-release",
         "release"
       ],
+      "llm_title": "",
       "_content_hash": "658e2aed8edf",
       "initiative_id": "parquet-init-parquet-ml-bwtprwvc4jgv5d4tmfzh5c9qrv02qfyn"
     },
@@ -2604,7 +2679,7 @@
       ],
       "_content_hash": "5b450bd7e9f6",
       "llm_title": "",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj",
@@ -3426,7 +3501,7 @@
         "file"
       ],
       "_content_hash": "0092483e63ca",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-sy0bfyl0kv7p330j01q64wlogxqdy8w6",
@@ -3652,7 +3727,7 @@
         "design-document"
       ],
       "_content_hash": "4fcaccce739f",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-jffqzp1hoh8vypffdrbjhotkn06zrxmf",
@@ -4056,7 +4131,7 @@
         "active-thread"
       ],
       "_content_hash": "ef5b859d6d35",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-lobpt63hjml246mlxy7ro1vllo80pofk",
@@ -4165,7 +4240,7 @@
       ],
       "_content_hash": "a930bc752794",
       "llm_title": "Support Non-Contiguous Pages in Parquet",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-m6j8lzc09ytyd45wt6pdcyn5qy95f0vt",
@@ -4486,7 +4561,7 @@
       ],
       "_content_hash": "14651b96d5ab",
       "llm_title": "Introducing File Logical Type to Parquet",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-gm7btrgvprdbrh8c5nv061f402txo0vt",
@@ -5400,7 +5475,7 @@
       ],
       "_content_hash": "bbe830a8556f",
       "llm_title": "Configuring Parquet for Vector Embeddings",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0-rc2"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-m6p5shlt1hfk1b3h5y1pbqg8tpkwpcgz",
@@ -5874,7 +5949,7 @@
       ],
       "_content_hash": "a65a490bd3c1",
       "llm_title": "Deprecation of parquet-pig Discussion",
-      "initiative_id": "parquet-init-parquet-ml-vh1twzdbvm4fr4sl2wt8swqgq92k8369"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0-rc2"
     },
     {
       "id": "parquet-ml-g1cngnkzhjt86yt4dfl078yrplfmzcf5",
@@ -5967,7 +6042,7 @@
         "format"
       ],
       "_content_hash": "103a0dcb619d",
-      "initiative_id": "parquet-init-parquet-ml-xlmp7cq638ht7n6c9f1vqlc6qgs4j4y4"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-1nf596dq7fpc0zp35bt17zy7srvo5wt8",
@@ -6521,7 +6596,7 @@
       ],
       "_content_hash": "28a4922aafaa",
       "llm_title": "Feature Addition Requirements for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-jffqzp1hoh8vypffdrbjhotkn06zrxmf"
+      "initiative_id": "parquet-init-parquet-ml-hms38c0807r3qpst7ykf4b42xwpb23g7"
     },
     {
       "id": "parquet-ml-lsf425yk0h0pzvq41kz8z92qffg8mmf8",
@@ -6613,7 +6688,7 @@
         "result"
       ],
       "_content_hash": "5c15452a9553",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-rb0gorvx1lysch6yxks72h94kqhsp719",
@@ -6693,7 +6768,7 @@
         "java"
       ],
       "_content_hash": "529f47606b92",
-      "initiative_id": "parquet-init-parquet-ml-rb0gorvx1lysch6yxks72h94kqhsp719"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-k534codwcdtgy5pzz9mts784sgywspv7",
@@ -6872,7 +6947,7 @@
         "result"
       ],
       "_content_hash": "f7b742403e51",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q",
@@ -7520,7 +7595,7 @@
       ],
       "_content_hash": "735a1326fdb5",
       "llm_title": "Merge Implementation Status PR for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-jffqzp1hoh8vypffdrbjhotkn06zrxmf"
     },
     {
       "id": "parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",
@@ -7728,7 +7803,7 @@
         "geospatial-data"
       ],
       "_content_hash": "e206d626ef2e",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-p6jq3rgdqkqhx0xj8wjt7ldrpyrktw20",
@@ -7917,7 +7992,7 @@
       ],
       "_content_hash": "10981cda1982",
       "llm_title": "Add geometry logical type for geospatial support",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-3obhqhyb0hf9cqby5lf62wdx86cgrrg0",
@@ -8107,7 +8182,7 @@
       ],
       "_content_hash": "bd410895bf53",
       "llm_title": "Apache Parquet-Java 1.15.0 Release Discussion",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-scdq9t2gvvs4glhq0qx4qcvfp62j793s",
@@ -8145,7 +8220,7 @@
       ],
       "_content_hash": "3bd182542327",
       "llm_title": "Deprecate or Drop Parquet-Scala Module",
-      "initiative_id": "parquet-init-parquet-ml-vh1twzdbvm4fr4sl2wt8swqgq92k8369"
+      "initiative_id": "parquet-init-parquet-ml-scdq9t2gvvs4glhq0qx4qcvfp62j793s"
     },
     {
       "id": "parquet-ml-bvyg48ysp3rkh4ls0lnn597ygpyf6goj",
@@ -8702,7 +8777,7 @@
       ],
       "_content_hash": "a32369bf9955",
       "llm_title": "Discussion on Extension Types in Parquet",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-fvrdb8zw0hmjrz4m6nm3fsd5jc23hlxc",
@@ -8809,7 +8884,7 @@
       ],
       "_content_hash": "209f31a55ed8",
       "llm_title": "Clarify min-max truncation in Parquet statistics",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-6h58hj39lhqtcyd2hlsyvqm4lzdh4b9z",
@@ -9120,7 +9195,7 @@
       ],
       "_content_hash": "c242c64ce298",
       "llm_title": "Clarify null_counts and distinct_counts in Parquet",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-t9bbdft69rgk4jotmx26259m1vxhx83v",
@@ -9325,7 +9400,7 @@
         "proposed-release"
       ],
       "_content_hash": "f2a42b8fd8ce",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-3zyfhc3r4b5sh61mb6nwsxx5fp3r18qn",
@@ -9368,7 +9443,7 @@
         "adopt"
       ],
       "_content_hash": "5106d63d6245",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-2whm3txpvpj1kdyg2jz8wsncv6q7w1cb",
@@ -9567,7 +9642,7 @@
       ],
       "_content_hash": "e5389cab138e",
       "llm_title": "Guidance on Parquet Format Features",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-sc9zoxd3pd10odtgbrsh5qh7szhl2lhg",
@@ -10949,7 +11024,7 @@
         "release"
       ],
       "_content_hash": "bbf6af766e79",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-nlfqqnc4jzdkzp49k7pj1fddxxo0rfrl",
@@ -11146,7 +11221,7 @@
         "byte"
       ],
       "_content_hash": "7029f8e2a5e1",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-4mof6ghglxzkvtxxmfc206s5g5d7f8zy",
@@ -11190,7 +11265,7 @@
         "result"
       ],
       "_content_hash": "3f07a3f28573",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-kttwbl5l7opz6nwb5bck2gghc2y3td0o",
@@ -11576,7 +11651,7 @@
         "logical-type"
       ],
       "_content_hash": "0dc68e1bd062",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-odm5pmxssyd9kw1wvgdkg8hd044czqnk",
@@ -11612,7 +11687,7 @@
         "result"
       ],
       "_content_hash": "18866f5c736b",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-2yhhk9y8mkl8cco3ojf0df7o1k65fmt1",
@@ -11861,7 +11936,7 @@
         "release-apache"
       ],
       "_content_hash": "da199c2a345b",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-l1tz6kvq0dw6j9txb10sghnwnb9xgp21",
@@ -12456,7 +12531,7 @@
         "parquet-bloom"
       ],
       "_content_hash": "0174cef2d1f7",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-l1tz6kvq0dw6j9txb10sghnwnb9xgp21"
     },
     {
       "id": "parquet-ml-hz4z6o3c923b6mmpz03xl3cqwq85d75l",
@@ -12499,7 +12574,7 @@
         "apache"
       ],
       "_content_hash": "c8cf120a0100",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-l1tz6kvq0dw6j9txb10sghnwnb9xgp21"
     },
     {
       "id": "parquet-ml-t2h4m9mnpo71otqo6c4rrt7msbd73hdz",
@@ -12551,7 +12626,7 @@
         "parquet-bloom"
       ],
       "_content_hash": "3df1442da7b5",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-l1tz6kvq0dw6j9txb10sghnwnb9xgp21"
     },
     {
       "id": "parquet-ml-ywg8n060kdr9m2c4x2ssrdk3mx4w2n5l",
@@ -12583,7 +12658,7 @@
         "parquet"
       ],
       "_content_hash": "76b64b390fe9",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     },
     {
       "id": "parquet-ml-jx9trwtfn898rs6kprnkh14jnvtqbr1d",
@@ -12706,7 +12781,7 @@
         "parquet-bloom"
       ],
       "_content_hash": "58418d00df17",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-l1tz6kvq0dw6j9txb10sghnwnb9xgp21"
     },
     {
       "id": "parquet-ml-kqdk6mv60dpy3t5nx41wtwnxtm2qpb6o",
@@ -12740,7 +12815,7 @@
         "yuming"
       ],
       "_content_hash": "733984c63e38",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh"
     }
   ]
 }

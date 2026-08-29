@@ -1,8 +1,88 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-08-28T17:57:34.207822+00:00",
+  "generated_at": "2026-08-29T12:01:47.690850+00:00",
   "total": 647,
   "proposals": [
+    {
+      "id": "spark-jira-SPARK-55278",
+      "source": "jira",
+      "kind": "issue",
+      "title": "SPIP: Language-agnostic UDF Protocol for Spark",
+      "url": "https://issues.apache.org/jira/browse/SPARK-55278",
+      "author": "Haiyang Sun",
+      "state": "open",
+      "created_at": "2026-01-29T12:26:31+00:00",
+      "updated_at": "2026-08-28T21:14:19+00:00",
+      "body": "Run user-provided code in Spark {*}consistently across many programming languages{*}.\r\n\r\nToday, Spark Connect allows users to write queries from multiple languages, but support for user-defined functions is incomplete. In practice, only Python has a mature solution, and it relies on language-specific mechanisms that do not generalize to other languages such as [Go|https://github.com/apache/spark-connect-go] / [Rust|https://github.com/apache/spark-connect-rust] / [Swift|https://github.com/apache/spark-connect-swift] / [.NET|https://github.com/GoEddie/spark-connect-dotnet] (where UDF is not supported).\r\n\r\nOur objective is to define a *unified API and execution protocol* for user-defined functions that run outside the Spark engine process via inter-process communication (IPC). This allows Spark to interact with external workers in a consistent way, regardless of the language used to implement the function.\r\n\r\nSPIP doc: [https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0]\r\n\r\nWorker Specification doc: [https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0]\r\n\r\n\u00a0",
+      "labels": [
+        "SPIP",
+        "pull-request-available"
+      ],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: Language-agnostic UDF Protocol for Spark"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffLanguage-agnostic UDF Worker Specification"
+        }
+      ],
+      "comment_count": 7,
+      "llm_summary": "Today, Spark Connect allows users to write queries from multiple languages, but support for user-defined functions is incomplete. Our objective is to define a *unified API and execution protocol* for user-defined functions that run outside the Spark engine process via inter-process communication (IPC). --- Google Doc --- \ufeffSPIP: Language-agnostic UDF Protocol for Spark Author: Haiyang Sun Daniel Tenedorio Shepherd: Herman van HovellDB Tsai",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "language-agnostic-udf",
+        "udf-protocol",
+        "spark",
+        "spark-connect"
+      ],
+      "_content_hash": "e92de83ca329",
+      "llm_title": "",
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+    },
+    {
+      "id": "spark-jira-SPARK-56249",
+      "source": "jira",
+      "kind": "issue",
+      "title": "Auto CDC support",
+      "url": "https://issues.apache.org/jira/browse/SPARK-56249",
+      "author": "Andreas Neumann",
+      "state": "open",
+      "created_at": "2026-03-27T01:00:28+00:00",
+      "updated_at": "2026-08-28T21:12:24+00:00",
+      "body": "*SPIP Document:* [SPIP: Auto CDC|https://docs.google.com/document/d/1Hp5BGEYJRHbk6J7XUph3bAPZKRQXKOuV1PEaqZMMRoQ/]\r\n\r\n*Motivation*\r\n\r\nWith the upcoming introduction of standardized CDC support, Spark will soon have a unified way to _produce_ change data feeds. However, _consuming_ these feeds and applying them to a target table remains a significant challenge.\r\n\r\nCommon patterns like *SCD Type 1* (maintaining a 1:1 replica) and *SCD Type 2* (tracking full change history) often require hand-crafted, complex MERGE logic. In distributed systems, these implementations are frequently error-prone when handling deletions or out-of-order data.\r\n\r\n*Proposal*\r\n\r\nThis SPIP proposes a new *\"Auto CDC\"* flow type for Spark. It encapsulates the complex logic for SCD types and out-of-order data, allowing data engineers to configure a declarative flow instead of writing manual MERGE statements. This feature will be available in both {*}Python and SQL{*}.\r\n\r\nExample SQL:\r\n{code:java}\r\n-- Produce a change feed\r\nCREATE STREAMING TABLE cdc.users AS\r\nSELECT * FROM STREAM my_table CHANGES FROM VERSION 10;\r\n\r\n-- Consume the change feed\r\nCREATE FLOW flow\r\nAS AUTO CDC INTO\r\n\u00a0\u00a0target\r\nFROM stream(cdc_data.users)\r\n\u00a0\u00a0KEYS (userId)\r\n\u00a0\u00a0APPLY AS DELETE WHEN operation = \"DELETE\"\r\n\u00a0\u00a0SEQUENCE BY sequenceNum\r\n\u00a0\u00a0COLUMNS * EXCEPT (operation, sequenceNum)\r\n\u00a0\u00a0STORED AS SCD TYPE 2\r\n\u00a0\u00a0TRACK HISTORY ON * EXCEPT (city);\r\n\u00a0 {code}",
+      "labels": [
+        "SPIP",
+        "pull-request-available"
+      ],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1Hp5BGEYJRHbk6J7XUph3bAPZKRQXKOuV1PEaqZMMRoQ/",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: Auto CDC"
+        }
+      ],
+      "comment_count": 3,
+      "llm_summary": "With the upcoming introduction of standardized CDC support, Spark will soon have a unified way to _produce_ change data feeds. In distributed systems, these implementations are frequently error-prone when handling deletions or out-of-order data. --- Google Doc --- \ufeffSPIP: Auto CDC Authors: Andreas Neumann, Ryan Zhu, Sandy Ryza Created: 2026-03-26 Jira: SPARK-56249 Q1.",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "auto-cdc",
+        "spip-document",
+        "cdc",
+        "document"
+      ],
+      "_content_hash": "4103959986f3",
+      "llm_title": "",
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+    },
     {
       "id": "spark-jira-SPARK-57487",
       "source": "jira",
@@ -122,49 +202,6 @@
       "initiative_id": "spark-init-spark-ml-nozkdbsc7oy69j581qtp9v69wtzv4tdl"
     },
     {
-      "id": "spark-jira-SPARK-55278",
-      "source": "jira",
-      "kind": "issue",
-      "title": "SPIP: Language-agnostic UDF Protocol for Spark",
-      "url": "https://issues.apache.org/jira/browse/SPARK-55278",
-      "author": "Haiyang Sun",
-      "state": "open",
-      "created_at": "2026-01-29T12:26:31+00:00",
-      "updated_at": "2026-08-06T04:12:41+00:00",
-      "body": "Run user-provided code in Spark {*}consistently across many programming languages{*}.\r\n\r\nToday, Spark Connect allows users to write queries from multiple languages, but support for user-defined functions is incomplete. In practice, only Python has a mature solution, and it relies on language-specific mechanisms that do not generalize to other languages such as [Go|https://github.com/apache/spark-connect-go] / [Rust|https://github.com/apache/spark-connect-rust] / [Swift|https://github.com/apache/spark-connect-swift] / [.NET|https://github.com/GoEddie/spark-connect-dotnet] (where UDF is not supported).\r\n\r\nOur objective is to define a *unified API and execution protocol* for user-defined functions that run outside the Spark engine process via inter-process communication (IPC). This allows Spark to interact with external workers in a consistent way, regardless of the language used to implement the function.\r\n\r\nSPIP doc: [https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0]\r\n\r\nWorker Specification doc: [https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0]\r\n\r\n\u00a0",
-      "labels": [
-        "SPIP",
-        "pull-request-available"
-      ],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSPIP: Language-agnostic UDF Protocol for Spark"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffLanguage-agnostic UDF Worker Specification"
-        }
-      ],
-      "comment_count": 6,
-      "llm_summary": "Today, Spark Connect allows users to write queries from multiple languages, but support for user-defined functions is incomplete. Our objective is to define a *unified API and execution protocol* for user-defined functions that run outside the Spark engine process via inter-process communication (IPC). --- Google Doc --- \ufeffSPIP: Language-agnostic UDF Protocol for Spark Author: Haiyang Sun Daniel Tenedorio Shepherd: Herman van HovellDB Tsai",
-      "llm_status": "discussion",
-      "llm_key_points": [],
-      "llm_topics": [
-        "language-agnostic-udf",
-        "udf-protocol",
-        "spark",
-        "spark-connect"
-      ],
-      "_content_hash": "e92de83ca329",
-      "llm_title": "",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
-    },
-    {
       "id": "spark-jira-SPARK-58455",
       "source": "jira",
       "kind": "issue",
@@ -263,42 +300,6 @@
         "ingestion-errors"
       ],
       "_content_hash": "02a9e590106b",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
-    },
-    {
-      "id": "spark-jira-SPARK-56249",
-      "source": "jira",
-      "kind": "issue",
-      "title": "Auto CDC support",
-      "url": "https://issues.apache.org/jira/browse/SPARK-56249",
-      "author": "Andreas Neumann",
-      "state": "open",
-      "created_at": "2026-03-27T01:00:28+00:00",
-      "updated_at": "2026-07-07T19:15:15+00:00",
-      "body": "*SPIP Document:* [SPIP: Auto CDC|https://docs.google.com/document/d/1Hp5BGEYJRHbk6J7XUph3bAPZKRQXKOuV1PEaqZMMRoQ/]\r\n\r\n*Motivation*\r\n\r\nWith the upcoming introduction of standardized CDC support, Spark will soon have a unified way to _produce_ change data feeds. However, _consuming_ these feeds and applying them to a target table remains a significant challenge.\r\n\r\nCommon patterns like *SCD Type 1* (maintaining a 1:1 replica) and *SCD Type 2* (tracking full change history) often require hand-crafted, complex MERGE logic. In distributed systems, these implementations are frequently error-prone when handling deletions or out-of-order data.\r\n\r\n*Proposal*\r\n\r\nThis SPIP proposes a new *\"Auto CDC\"* flow type for Spark. It encapsulates the complex logic for SCD types and out-of-order data, allowing data engineers to configure a declarative flow instead of writing manual MERGE statements. This feature will be available in both {*}Python and SQL{*}.\r\n\r\nExample SQL:\r\n{code:java}\r\n-- Produce a change feed\r\nCREATE STREAMING TABLE cdc.users AS\r\nSELECT * FROM STREAM my_table CHANGES FROM VERSION 10;\r\n\r\n-- Consume the change feed\r\nCREATE FLOW flow\r\nAS AUTO CDC INTO\r\n\u00a0\u00a0target\r\nFROM stream(cdc_data.users)\r\n\u00a0\u00a0KEYS (userId)\r\n\u00a0\u00a0APPLY AS DELETE WHEN operation = \"DELETE\"\r\n\u00a0\u00a0SEQUENCE BY sequenceNum\r\n\u00a0\u00a0COLUMNS * EXCEPT (operation, sequenceNum)\r\n\u00a0\u00a0STORED AS SCD TYPE 2\r\n\u00a0\u00a0TRACK HISTORY ON * EXCEPT (city);\r\n\u00a0 {code}",
-      "labels": [
-        "SPIP",
-        "pull-request-available"
-      ],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1Hp5BGEYJRHbk6J7XUph3bAPZKRQXKOuV1PEaqZMMRoQ/",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSPIP: Auto CDC"
-        }
-      ],
-      "comment_count": 3,
-      "llm_summary": "With the upcoming introduction of standardized CDC support, Spark will soon have a unified way to _produce_ change data feeds. In distributed systems, these implementations are frequently error-prone when handling deletions or out-of-order data. --- Google Doc --- \ufeffSPIP: Auto CDC Authors: Andreas Neumann, Ryan Zhu, Sandy Ryza Created: 2026-03-26 Jira: SPARK-56249 Q1.",
-      "llm_status": "discussion",
-      "llm_key_points": [],
-      "llm_topics": [
-        "auto-cdc",
-        "spip-document",
-        "cdc",
-        "document"
-      ],
-      "_content_hash": "4103959986f3",
       "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
@@ -1775,13 +1776,13 @@
       "author": "Allison Wang <al...@apache.org>",
       "state": "open",
       "created_at": "2026-08-27T03:36:05+00:00",
-      "updated_at": "2026-08-28T07:13:38+00:00",
+      "updated_at": "2026-08-28T23:06:22+00:00",
       "body": "Hi all,\n\nI'd like to open the vote on the proposal to introduce a new Apache Spark\nrepository for community-contributed Python data sources:\n*apache/spark-python-data-sources* based on the existing project\nhttps://github.com/allisonwang-db/pyspark-data-sources\n\nDISCUSS thread:\nhttps://lists.apache.org/thread/0yqzbr8pzfnfomqq1zdgzcqltnrc6s1o\n\nThe vote is open for at least the next 72 hours.\n\n[ ] +1: Accept the proposal\n[ ] +0\n[ ] -1: I don't think this is a good idea because...\n\nThanks,\nAllison\n",
       "labels": [],
       "linked_resources": [],
       "llm_summary": "Vote in progress: 0 binding +1, 3 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 4,
+      "comment_count": 5,
       "participant_count": 5,
       "vote_data": {
         "binding_plus1": 0,
@@ -1814,7 +1815,7 @@
         "spark-repository",
         "community-contributed-python"
       ],
-      "_content_hash": "3cf5156c0d95",
+      "_content_hash": "c5f4d0c6e6cf",
       "initiative_id": "spark-init-spark-jira-SPARK-15689"
     },
     {
@@ -1830,14 +1831,14 @@
       "body": "Hi all,\n\nI would like to discuss whether Apache Spark should provide an experimental,\ncommunity-maintained home for the ecosystem around the PySpark Data Source\nAPI\n<https://spark.apache.org/docs/latest/api/python/tutorial/sql/python_data_source.html>\n:\n\n\nProposed repository: apache/spark-python-datasources\n\nExisting implementation: allisonwang-db/pyspark-data-sources\n<https://github.com/allisonwang-db/pyspark-data-sources>\n\nThe intent would not be to make these data sources part of Spark core.\nInstead, the repository would provide an Apache-governed place where the\ncommunity can collaborate on reusable implementations of the public Python\nData Source API, share practical examples, and grow the ecosystem around\nthe API without expanding Spark core itself.\n\nThe existing project can serve as the initial contribution. It contains\nbatch and streaming readers and writers built with the public PySpark Data\nSource API, covering a range of external systems and use cases.\n\nI propose starting with a deliberately lightweight model:\n\n   -\n\n   The repository would be experimental and community-supported.\n   -\n\n   It would focus specifically on implementations built on the public PySpark\n   Data Source API.\n   <https://spark.apache.org/docs/latest/api/python/tutorial/sql/python_data_source.html>\n   -\n\n   Code in this repository would remain separate from Spark core and would\n   not carry the same compatibility or support guarantees as Spark itself.\n   -\n\n   New contributions would go through community review, with\n   maintainability, dependencies, licensing, testing, and security taken into\n   consideration.\n   -\n\n   Implementations that become unmaintained or no longer meet the\n   repository's requirements could be deprecated or removed through the normal\n   community process.\n   -\n\n   The repository would be governed by the Apache Spark community and\n   follow ASF policies.\n\nThe existing project is currently published on PyPI as pyspark-data-sources\nusing the pyspark_datasource",
       "labels": [],
       "linked_resources": [],
-      "llm_summary": "It contains batch and streaming readers and writers built with the public PySpark Data Source API, covering a range of external systems and use cases. > Hi all, > > I would like to discuss whether Apache Spark should provide an experimental, > community-maintained home for the ecosystem around the PySpark Data > Source API > <https://spark.apache.org/docs/latest/api/python/tutorial/sql/python_data_source.html> > : > > > Proposed repository: apache/spark-python-dat > On Aug 18, 2026, at 10:51\u202fPM, Nicholas Chammas <ni...@gmail.com> wrote: > > We had something broadly similar from ~10 years ago, but not limited to data sources: https://spark-packages.org/ > > My impression of Spark Packages is that it is inactive and unm",
+      "llm_summary": "> On Aug 18, 2026, at 10:51\u202fPM, Nicholas Chammas <ni...@gmail.com> wrote: > > We had something broadly similar from ~10 years ago, but not limited to data sources: https://spark-packages.org/ > > My impression of Spark Packages is that it is inactive and unm > On Aug 19, 2026, at 3:10\u202fPM, Allison Wang <al...@apache.org> wrote: > > This proposal has a much narrower focus PySpark data sources and place the implementations in one Apache github repository similar to spark-connect-go <https://github.com/apache/spark-connect-go>. > Hi all, > > I would like to discuss whether Apache Spark should provide an experimental, > community-maintained home for the ecosystem around the PySpark Data > Source API > <https://spark.apache.org/docs/latest/api/python/tutorial/sql/python_data_source.html> > : > > > Proposed repository: apache/spark-python-dat",
       "llm_status": "discussion",
       "comment_count": 9,
       "participant_count": 6,
       "llm_key_points": [
-        "I actually support this.",
-        "Nice, wondering if we envision hosting higher performance java/scala data\nsource like DSV2 connectors here as well?",
-        "We had something broadly similar from ~10 years ago, but not limited to data sources: https://spark-packages.org/\n\nMy im"
+        "We had something broadly similar from ~10 years ago, but not limited to data sources: https://spark-packages.org/\n\nMy im",
+        "Just to be clear, I mean \"broadly similar\u201d as in they are both community-maintained libraries for Spark.",
+        "Hi Nicholas, the main lesson for me is that sustainability must be a core\npart of the design."
       ],
       "llm_topics": [
         "data-source",
@@ -1845,8 +1846,7 @@
         "python-data",
         "data-sources"
       ],
-      "_content_hash": "a58dd9f64865",
-      "llm_title": "",
+      "_content_hash": "85d19b12d691",
       "initiative_id": "spark-init-spark-jira-SPARK-15689"
     },
     {
@@ -2044,19 +2044,20 @@
           "title": "\ufeffSPIP: Add the DECFLOAT data type"
         }
       ],
-      "llm_summary": "I would like to start a discussion on the SPIP to add a new Spark SQL data type: DECFLOAT (IEEE 754 decimal64 / decimal128), for base-10 floating-point decimals with per-value exponents. It is additive, round-trips through a proposed Parquet logical type for cross-engine interop, and would ship config-gated during incubation like TIME, leaving existing DECIMAL / DOUBLE behavior unchanged. The IEEE 754 alignment, the config-gated incubation pattern, and the explicit type table are really helpful - excited to see this move forward.",
+      "llm_summary": "I would like to start a discussion on the SPIP to add a new Spark SQL data type: DECFLOAT (IEEE 754 decimal64 / decimal128), for base-10 floating-point decimals with per-value exponents. It is additive, round-trips through a proposed Parquet logical type for cross-engine interop, and would ship config-gated during incubation like TIME, leaving existing DECIMAL / DOUBLE behavior unchanged. Spark's existing native dependencies (snappy, zstd, lz4) are compression codecs that ship as multi-platform fat JARs.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
-      "llm_key_points": [],
-      "llm_topics": [
-        "decfloat",
-        "decfloat-data",
-        "spark-sql",
-        "decimal-floating-point"
+      "llm_key_points": [
+        "Hi Shrirang,\n\nBoth your points are well-taken and folded into the SPIP document."
       ],
-      "_content_hash": "c1b3b5543848",
-      "llm_title": "",
+      "llm_topics": [
+        "sql-data",
+        "decfloat-data",
+        "decfloat",
+        "data-type"
+      ],
+      "_content_hash": "039e0b594d3b",
       "initiative_id": "spark-init-spark-ml-nozkdbsc7oy69j581qtp9v69wtzv4tdl"
     },
     {
@@ -20389,7 +20390,7 @@
         "spark"
       ],
       "_content_hash": "bb2e07d0a0dc",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-w3v4fjk9lvxvp3lr5tngg0hvhfrkl5b0",

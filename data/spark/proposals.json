@@ -1,8 +1,74 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-09-03T10:27:15.543136+00:00",
+  "generated_at": "2026-09-04T10:13:52.408183+00:00",
   "total": 652,
   "proposals": [
+    {
+      "id": "spark-jira-SPARK-57703",
+      "source": "jira",
+      "kind": "issue",
+      "title": "SPIP: OIDC Credential Propagation",
+      "url": "https://issues.apache.org/jira/browse/SPARK-57703",
+      "author": "Kousuke Saruta",
+      "state": "open",
+      "created_at": "2026-06-25T20:59:23+00:00",
+      "updated_at": "2026-09-03T21:17:31+00:00",
+      "body": "SPIP document: [https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?tab=t.0#heading=h.fkw9v2um6wxa|https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?usp=sharing]\r\n\r\n\u2013\r\n\r\n*Q1. What are you trying to do?*\r\n\r\nAdd a mechanism for Spark on Kubernetes to propagate OIDC-based credentials from the driver to executors, enabling per-workload (and eventually per-user) access control on cloud storage (S3, ADLS, GCS) and S3-compatible systems (MinIO, Ceph). This is the Kubernetes + OIDC equivalent of what Kerberos + delegation tokens provide on YARN + HDFS.\r\n\r\n*Q2. What problem is this proposal NOT designed to solve?*\r\n - Spark Connect authentication (separate concern, future work)\r\n - Azure / GCP provider implementations (future, same SPI)\r\n - Hive Metastore / catalog OIDC integration (future)\r\n - Modifying Hadoop UserGroupInformation\r\n - Per-task multi-user credential scoping\r\n\r\n*Q3. How is it done today, and what are the limits of current practice?*\r\n\r\nToday, all Spark jobs on Kubernetes access cloud storage as the pod's service account (IRSA / Pod Identity). There is no Spark-level mechanism to carry an OIDC token through the driver to executors and convert it into per-workload storage credentials. Workarounds are: one cluster per user (expensive), shared over-privileged service account (insecure), or custom credential provider implementations (unmaintainable).\r\n\r\n*Q4. What is new in your approach and why do you think it will be successful?*\r\n\r\nWe introduce a `CredentialProvider` SPI that generalizes OAuth 2.0 Token Exchange (RFC 8693). The driver reads a projected ServiceAccount token (OIDC JWT), calls the SPI to obtain temporary storage credentials, and distributes them to executors via a new `UpdateUserCredentials` RPC \u2014 mirroring the existing `HadoopDelegationTokenManager` / `UpdateDelegationTokens` pattern. This approach succeeds because it follows an established Spark pattern, coexists with Kerberos, a",
+      "labels": [
+        "SPIP"
+      ],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?tab=t.0#heading=h.fkw9v2um6wxa|https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?usp=sharing",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeff[SPIP] OIDC Credential Propagation"
+        }
+      ],
+      "comment_count": 1,
+      "llm_summary": "Add a mechanism for Spark on Kubernetes to propagate OIDC-based credentials from the driver to executors, enabling per-workload (and eventually per-user) access control on cloud storage (S3, ADLS, GCS) and S3-compatible systems (MinIO, Ceph). The driver reads a projected ServiceAccount token (OIDC JWT), calls the SPI to obtain temporary storage credentials, and distributes them to executors via a new `UpdateUserCredentials` RPC \u2014 mirroring the existing `HadoopDelegationTokenManager` / `UpdateDelegationTokens` pattern. Spark provides a well-established credential propagation model for Hadoop / Kerberos environments: the driver obtains delegation tokens for each backend (HDFS, Hive, HBase, \u2026), pushes them to executors, and refreshes them automatically for long-running jobs.",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "propagation-spip",
+        "spip-document",
+        "spip",
+        "credential-propagation"
+      ],
+      "_content_hash": "89f08f3832c6",
+      "llm_title": "",
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+    },
+    {
+      "id": "spark-jira-SPARK-58787",
+      "source": "jira",
+      "kind": "issue",
+      "title": "SPIP: Add a fixed-dimension numeric VECTOR data type",
+      "url": "https://issues.apache.org/jira/browse/SPARK-58787",
+      "author": "Uros Stankovic",
+      "state": "open",
+      "created_at": "2026-08-14T23:48:30+00:00",
+      "updated_at": "2026-09-03T20:31:01+00:00",
+      "body": "*Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.*\r\n\r\nAdd a new Spark SQL data type for storing a fixed number of numeric values.\r\n\r\nFor example:\r\n\r\n{code:sql}\r\nCREATE TABLE documents (\r\n  id BIGINT,\r\n  embedding VECTOR(768, FLOAT)\r\n);\r\n{code}\r\n\r\n{{VECTOR(768, FLOAT)}} means that every non-null value contains exactly 768 non-null FLOAT coordinates. The vector column itself may be nullable, but a present vector value with the wrong number of coordinates or a null coordinate is invalid.\r\n\r\nThe initial supported coordinate types will be:\r\n* INT\r\n* BIGINT\r\n* FLOAT\r\n* DOUBLE\r\n\r\nThe dimension must be a positive integer and is part of the data type. For example, {{VECTOR(768, FLOAT)}} and {{VECTOR(1536, FLOAT)}} are different types.\r\n\r\nThe new type represents dense vectors. It is intended for embeddings, numerical feature vectors, count vectors, and interoperability with systems and storage formats that have a fixed-dimension vector type.\r\n\r\nThe SQL syntax follows the emerging SQL standard proposal, which places the dimension before the coordinate type:\r\n\r\n{code:sql}\r\nVECTOR(<dimension>, <coordinate type>)\r\n{code}\r\n\r\nThe corresponding programmatic Spark type will be {{VectorType(FloatType, 768)}}.\r\n\r\nThe type will use Spark's existing array representation during execution. This proposal introduces a new logical type and schema contract, not a new packed in-memory representation.\r\n\r\n*Q2. What problem is this proposal NOT designed to solve?*\r\n\r\nThis proposal does not attempt to:\r\n* Add a generic fixed-size array for arbitrary element types.\r\n* Represent matrices or multidimensional tensors.\r\n* Represent sparse vectors.\r\n* Replace the existing MLlib {{VectorUDT}}.\r\n* Add a vector index or approximate-nearest-neighbor search engine.\r\n* Add a complete library of vector distance and similarity functions.\r\n* Introduce a specialized UnsafeRow or columnar representation.\r\n* Add FP16, BF16, INT8, INT4, or binary coordinate types in the first vers",
+      "labels": [
+        "SPIP",
+        "releasenotes"
+      ],
+      "linked_resources": [],
+      "comment_count": 0,
+      "llm_summary": "Add a new Spark SQL data type for storing a fixed number of numeric values. This proposal introduces a new logical type and schema contract, not a new packed in-memory representation. This proposal does not attempt to: * Add a generic fixed-size array for arbitrary element types.",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "add",
+        "vector",
+        "float",
+        "type"
+      ],
+      "llm_title": "",
+      "_content_hash": "ba4301289695",
+      "initiative_id": "spark-init-spark-ml-s57pbcgtbgl12dpctl6z2ojpznzjxh12"
+    },
     {
       "id": "spark-jira-SPARK-55278",
       "source": "jira",
@@ -12,7 +78,7 @@
       "author": "Haiyang Sun",
       "state": "open",
       "created_at": "2026-01-29T12:26:31+00:00",
-      "updated_at": "2026-09-03T03:52:41+00:00",
+      "updated_at": "2026-09-03T17:25:11+00:00",
       "body": "Run user-provided code in Spark {*}consistently across many programming languages{*}.\r\n\r\nToday, Spark Connect allows users to write queries from multiple languages, but support for user-defined functions is incomplete. In practice, only Python has a mature solution, and it relies on language-specific mechanisms that do not generalize to other languages such as [Go|https://github.com/apache/spark-connect-go] / [Rust|https://github.com/apache/spark-connect-rust] / [Swift|https://github.com/apache/spark-connect-swift] / [.NET|https://github.com/GoEddie/spark-connect-dotnet] (where UDF is not supported).\r\n\r\nOur objective is to define a *unified API and execution protocol* for user-defined functions that run outside the Spark engine process via inter-process communication (IPC). This allows Spark to interact with external workers in a consistent way, regardless of the language used to implement the function.\r\n\r\nSPIP doc: [https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0]\r\n\r\nWorker Specification doc: [https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0]\r\n\r\n\u00a0",
       "labels": [
         "SPIP",
@@ -173,35 +239,6 @@
       "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
-      "id": "spark-jira-SPARK-58787",
-      "source": "jira",
-      "kind": "issue",
-      "title": "SPIP: Add a fixed-dimension numeric VECTOR data type",
-      "url": "https://issues.apache.org/jira/browse/SPARK-58787",
-      "author": "Uros Stankovic",
-      "state": "open",
-      "created_at": "2026-08-14T23:48:30+00:00",
-      "updated_at": "2026-08-15T00:44:01+00:00",
-      "body": "*Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.*\r\n\r\nAdd a new Spark SQL data type for storing a fixed number of numeric values.\r\n\r\nFor example:\r\n\r\n{code:sql}\r\nCREATE TABLE documents (\r\n  id BIGINT,\r\n  embedding VECTOR(768, FLOAT)\r\n);\r\n{code}\r\n\r\n{{VECTOR(768, FLOAT)}} means that every non-null value contains exactly 768 non-null FLOAT coordinates. The vector column itself may be nullable, but a present vector value with the wrong number of coordinates or a null coordinate is invalid.\r\n\r\nThe initial supported coordinate types will be:\r\n* INT\r\n* BIGINT\r\n* FLOAT\r\n* DOUBLE\r\n\r\nThe dimension must be a positive integer and is part of the data type. For example, {{VECTOR(768, FLOAT)}} and {{VECTOR(1536, FLOAT)}} are different types.\r\n\r\nThe new type represents dense vectors. It is intended for embeddings, numerical feature vectors, count vectors, and interoperability with systems and storage formats that have a fixed-dimension vector type.\r\n\r\nThe SQL syntax follows the emerging SQL standard proposal, which places the dimension before the coordinate type:\r\n\r\n{code:sql}\r\nVECTOR(<dimension>, <coordinate type>)\r\n{code}\r\n\r\nThe corresponding programmatic Spark type will be {{VectorType(FloatType, 768)}}.\r\n\r\nThe type will use Spark's existing array representation during execution. This proposal introduces a new logical type and schema contract, not a new packed in-memory representation.\r\n\r\n*Q2. What problem is this proposal NOT designed to solve?*\r\n\r\nThis proposal does not attempt to:\r\n* Add a generic fixed-size array for arbitrary element types.\r\n* Represent matrices or multidimensional tensors.\r\n* Represent sparse vectors.\r\n* Replace the existing MLlib {{VectorUDT}}.\r\n* Add a vector index or approximate-nearest-neighbor search engine.\r\n* Add a complete library of vector distance and similarity functions.\r\n* Introduce a specialized UnsafeRow or columnar representation.\r\n* Add FP16, BF16, INT8, INT4, or binary coordinate types in the first vers",
-      "labels": [
-        "SPIP",
-        "releasenotes"
-      ],
-      "linked_resources": [],
-      "comment_count": 0,
-      "llm_summary": "Add a new Spark SQL data type for storing a fixed number of numeric values. This proposal introduces a new logical type and schema contract, not a new packed in-memory representation. This proposal does not attempt to: * Add a generic fixed-size array for arbitrary element types.",
-      "llm_status": "discussion",
-      "llm_key_points": [],
-      "llm_topics": [
-        "add",
-        "vector",
-        "float",
-        "type"
-      ],
-      "_content_hash": "ba4301289695",
-      "initiative_id": "spark-init-spark-ml-s57pbcgtbgl12dpctl6z2ojpznzjxh12"
-    },
-    {
       "id": "spark-jira-SPARK-58455",
       "source": "jira",
       "kind": "issue",
@@ -264,7 +301,7 @@
         "unified"
       ],
       "_content_hash": "b6589fc6ab0d",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-jira-SPARK-56599",
@@ -300,41 +337,6 @@
         "ingestion-errors"
       ],
       "_content_hash": "02a9e590106b",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
-    },
-    {
-      "id": "spark-jira-SPARK-57703",
-      "source": "jira",
-      "kind": "issue",
-      "title": "SPIP: OIDC Credential Propagation",
-      "url": "https://issues.apache.org/jira/browse/SPARK-57703",
-      "author": "Kousuke Saruta",
-      "state": "open",
-      "created_at": "2026-06-25T20:59:23+00:00",
-      "updated_at": "2026-06-30T21:05:08+00:00",
-      "body": "SPIP document: [https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?tab=t.0#heading=h.fkw9v2um6wxa|https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?usp=sharing]\r\n\r\n\u2013\r\n\r\n*Q1. What are you trying to do?*\r\n\r\nAdd a mechanism for Spark on Kubernetes to propagate OIDC-based credentials from the driver to executors, enabling per-workload (and eventually per-user) access control on cloud storage (S3, ADLS, GCS) and S3-compatible systems (MinIO, Ceph). This is the Kubernetes + OIDC equivalent of what Kerberos + delegation tokens provide on YARN + HDFS.\r\n\r\n*Q2. What problem is this proposal NOT designed to solve?*\r\n - Spark Connect authentication (separate concern, future work)\r\n - Azure / GCP provider implementations (future, same SPI)\r\n - Hive Metastore / catalog OIDC integration (future)\r\n - Modifying Hadoop UserGroupInformation\r\n - Per-task multi-user credential scoping\r\n\r\n*Q3. How is it done today, and what are the limits of current practice?*\r\n\r\nToday, all Spark jobs on Kubernetes access cloud storage as the pod's service account (IRSA / Pod Identity). There is no Spark-level mechanism to carry an OIDC token through the driver to executors and convert it into per-workload storage credentials. Workarounds are: one cluster per user (expensive), shared over-privileged service account (insecure), or custom credential provider implementations (unmaintainable).\r\n\r\n*Q4. What is new in your approach and why do you think it will be successful?*\r\n\r\nWe introduce a `CredentialProvider` SPI that generalizes OAuth 2.0 Token Exchange (RFC 8693). The driver reads a projected ServiceAccount token (OIDC JWT), calls the SPI to obtain temporary storage credentials, and distributes them to executors via a new `UpdateUserCredentials` RPC \u2014 mirroring the existing `HadoopDelegationTokenManager` / `UpdateDelegationTokens` pattern. This approach succeeds because it follows an established Spark pattern, coexists with Kerberos, a",
-      "labels": [
-        "SPIP"
-      ],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?tab=t.0#heading=h.fkw9v2um6wxa|https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?usp=sharing",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeff[SPIP] OIDC Credential Propagation"
-        }
-      ],
-      "comment_count": 0,
-      "llm_summary": "Add a mechanism for Spark on Kubernetes to propagate OIDC-based credentials from the driver to executors, enabling per-workload (and eventually per-user) access control on cloud storage (S3, ADLS, GCS) and S3-compatible systems (MinIO, Ceph). The driver reads a projected ServiceAccount token (OIDC JWT), calls the SPI to obtain temporary storage credentials, and distributes them to executors via a new `UpdateUserCredentials` RPC \u2014 mirroring the existing `HadoopDelegationTokenManager` / `UpdateDelegationTokens` pattern. Spark provides a well-established credential propagation model for Hadoop / Kerberos environments: the driver obtains delegation tokens for each backend (HDFS, Hive, HBase, \u2026), pushes them to executors, and refreshes them automatically for long-running jobs.",
-      "llm_status": "discussion",
-      "llm_key_points": [],
-      "llm_topics": [
-        "propagation-spip",
-        "spip-document",
-        "spip",
-        "credential-propagation"
-      ],
-      "_content_hash": "89f08f3832c6",
       "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
@@ -476,7 +478,7 @@
         "motivation"
       ],
       "_content_hash": "fbd70c369786",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-jira-SPARK-51658",
@@ -744,7 +746,7 @@
         "spark-dataframes"
       ],
       "_content_hash": "001ad555ca35",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-jira-SPARK-24918",
@@ -831,7 +833,7 @@
         "accelerator-aware-task"
       ],
       "_content_hash": "85e275672969",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-jira-SPARK-25501",
@@ -993,7 +995,7 @@
         "apache-spark"
       ],
       "_content_hash": "78b1e7ceaf5f",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-jira-SPARK-51207",
@@ -1231,7 +1233,7 @@
         "kubernetes-operator"
       ],
       "_content_hash": "8abb53a49d86",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-jira-SPARK-49834",
@@ -1259,7 +1261,7 @@
         "analyzer"
       ],
       "_content_hash": "017ad709fa51",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-jira-SPARK-42485",
@@ -1513,7 +1515,7 @@
         "performance-improvement"
       ],
       "_content_hash": "9d9f4fb1df66",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-jira-SPARK-27067",
@@ -1582,7 +1584,7 @@
         "shuffle"
       ],
       "_content_hash": "55eda4e9c18e",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-jira-SPARK-26247",
@@ -1765,7 +1767,7 @@
         "spark-sub-project"
       ],
       "_content_hash": "e46e418f4ebe",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-o9h87grjcot5foczfnz444qph2gg7w5q",
@@ -1776,17 +1778,17 @@
       "author": "Hyukjin Kwon <gu...@apache.org>",
       "state": "open",
       "created_at": "2026-09-01T22:07:28+00:00",
-      "updated_at": "2026-09-03T01:12:00+00:00",
+      "updated_at": "2026-09-03T23:26:37+00:00",
       "body": "Please vote on releasing the following candidate as Apache Spark Connect\nRust\nClient 4.2.0 RC2.\n\nThis is the *first* release of the ground-up Rust rewrite of the Spark\nConnect\nPython client (published to PyPI as pyspark-client-rust): a drop-in\nreplacement\nfor pyspark-client <https://pypi.org/project/pyspark-client/>, backed by a\nnative Rust core instead of py4j/grpcio.\n\nThe vote is open until Thursday, September 7, 2026, 5:00 PM PDT and passes\nif a majority of +1 PMC votes are cast, with a minimum of\n3 +1 votes.\n\n[ ] +1 Release this package as Apache Spark Connect Rust Client 4.2.0\n[ ] -1 Do not release this package because \u2026\n\nTAG:\nhttps://github.com/apache/spark-connect-rust/releases/tag/v4.2.0-rc2\n(commit: ce1fa08)\n\nRELEASE FILES (wheels + sdist, built and attached by GitHub Actions):\nhttps://github.com/apache/spark-connect-rust/releases/tag/v4.2.0-rc2\n\nDOCUMENTATION:\nhttps://apache.github.io/spark-connect-rust/\n\nLIST OF ISSUES:\nhttps://issues.apache.org/jira/projects/SPARK/versions/12357484\nHOW TO TRY IT \u2014 PYTHON (pip)\n\nThe release attaches abi3 wheels (Linux x86_64/aarch64, macOS universal2,\nWindows x86_64; CPython 3.9+) plus a source distribution. Grab the wheel for\nyour platform from the release page and install it directly, e.g.:\n\n  pip install https://github.com/apache/spark-connect-rust/releases/download/v4.2.0-rc2/pyspark_client_rust-4.2.0-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl\n\nThen use it exactly like PySpark. See if your existing workloads work with\nthis.\nHOW TO TEST IT \u2014 RUST (cargo)\n\nThe Rust crates are intentionally NOT on crates.io for a release candidate\n(crates.io is immutable; the crates are published there only when the\nrelease is\nfinalized). Test against the tagged source instead:\n\n  # A) Pin a git dependency to the RC tag in your project's Cargo.toml:\n  [dependencies]\n  apache-spark-connect = { git =\n\"https://github.com/apache/spark-connect-rust\", tag = \"v4.2.0-rc2\" }\n\n  # B) Or build and run the crates' own tests from the ta",
       "labels": [],
       "linked_resources": [],
-      "llm_summary": "Vote in progress: 0 binding +1, 6 non-binding +1",
+      "llm_summary": "Vote in progress: 0 binding +1, 8 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 7,
-      "participant_count": 7,
+      "comment_count": 9,
+      "participant_count": 9,
       "vote_data": {
         "binding_plus1": 0,
-        "nonbinding_plus1": 6,
+        "nonbinding_plus1": 8,
         "vetoes": 0,
         "result": "open",
         "voters": [
@@ -1796,6 +1798,10 @@
           },
           {
             "voter": "Dongjoon Hyun <do...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Gengliang Wang <lt...@gmail.com>",
             "vote": "+1"
           },
           {
@@ -1811,6 +1817,10 @@
             "vote": "+1"
           },
           {
+            "voter": "Yang Jie <ya...@apache.org>",
+            "vote": "+1"
+          },
+          {
             "voter": "bo yang <bo...@gmail.com>",
             "vote": "+1"
           }
@@ -1818,7 +1828,7 @@
       },
       "llm_key_points": [
         "Please vote on releasing the following candidate as Apache Spark Connect\nRust\nClient 4.2.0 RC2.",
-        "Voters include: \"L. C. Hsieh\", Dongjoon Hyun, Holden Karau..."
+        "Voters include: \"L. C. Hsieh\", Dongjoon Hyun, Gengliang Wang..."
       ],
       "llm_topics": [
         "spark-connect",
@@ -1826,8 +1836,42 @@
         "connect-rust",
         "apache-spark"
       ],
-      "_content_hash": "0c88ab5795db",
+      "_content_hash": "6e63fbccec6e",
       "initiative_id": "spark-init-spark-jira-SPARK-55278"
+    },
+    {
+      "id": "spark-ml-zdhxbb5yw0fs5y3kpbfq8ygr6vn0m2pl",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] SPIP: FileType: native support for unstructured data in Spark",
+      "url": "https://lists.apache.org/thread/zdhxbb5yw0fs5y3kpbfq8ygr6vn0m2pl",
+      "author": "Burak Yavuz <br...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-09-03T16:57:15+00:00",
+      "updated_at": "2026-09-03T16:57:15+00:00",
+      "body": "Hi all,\n\nI'd like to bring this to your attention once again. I've seen avatars\ndisplaying activity in the document, but haven't received any comments.\nHopefully that just means that you found the proposal to be AMAZING!\n\nI would like to start a Vote on this next week, probably Tuesday since\nMonday is a holiday in the United States. Looking forward to your feedback.\n\nBest,\nBurak\n\nOn Mon, Aug 31, 2026 at 9:46\u202fAM Burak Yavuz <br...@gmail.com> wrote:\n\n> Hi all,\n>\n> We would like to start a discussion on introducing a new SparkSQL\n> data type called FILE for providing better support for unstructured or\n> large data in Spark.\n>\n> Jira: SPARK-59132 <https://issues.apache.org/jira/browse/SPARK-59132>\n>\n> Brief context: We want to make it easy and cheap to work with files, such\n> as PDFs, images, audio and video, from tables using Spark. Today you either\n> copy the bytes of a file into a table as a binary column, or you keep the\n> path to the file as a string and hope everything downstream knows what to\n> do with it.\n> We propose a new data type, FileType (spelled FILE in SQL), which holds\n> the path of a file and a small amount of metadata describing it. The\n> engine, the file format, and user defined functions all understand this\n> type, so a query can filter, join and project files without reading their\n> contents, and load the bytes only where it actually needs them.\n>\n> Please find more information in the SPIP\n> <https://docs.google.com/document/d/1pPof896ZwcZ-2Yn-YhC4TbyYWn1umiQJykGDkAxzCWc/edit?tab=t.0>\n> .\n>\n> We've recently introduced a FILE type in Parquet\n> <https://github.com/apache/parquet-format/blob/master/LogicalTypes.md#file>\n> to provide a consistent representation across engines and table formats to\n> access large blobs. This SPIP provides the engine interfaces and\n> implementation to leverage this representation.\n>\n> Looking forward to your feedback!\n>\n> Best regards,\n> Burak Yavuz and Dejan Krakovic\n>\n>\n>\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1pPof896ZwcZ-2Yn-YhC4TbyYWn1umiQJykGDkAxzCWc/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: FILE EXTERNAL, a new DataType for dealing with files and unstructured data"
+        }
+      ],
+      "llm_summary": "I would like to start a Vote on this next week, probably Tuesday since Monday is a holiday in the United States. > > Jira: SPARK-59132 <https://issues.apache.org/jira/browse/SPARK-59132> > > Brief context: We want to make it easy and cheap to work with files, such > as PDFs, images, audio and video, from tables using Spark. We want to make it easy and cheap to work with files, such as PDFs, images, audio and video, from tables using Spark.",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [],
+      "llm_topics": [
+        "file",
+        "discuss",
+        "burak-yavuz",
+        "spip"
+      ],
+      "_content_hash": "46c611004c73",
+      "initiative_id": "spark-init-spark-ml-zdhxbb5yw0fs5y3kpbfq8ygr6vn0m2pl"
     },
     {
       "id": "spark-ml-5zdp98b0fzvz7x5xdgrbcyhcx8yprxnr",
@@ -1962,40 +2006,6 @@
       ],
       "_content_hash": "d3774da4347d",
       "initiative_id": "spark-init-spark-ml-s57pbcgtbgl12dpctl6z2ojpznzjxh12"
-    },
-    {
-      "id": "spark-ml-6f83qcpj1ox40jfxtottqlhjbhhxwmhf",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] SPIP: FileType: native support for unstructured data in Spark",
-      "url": "https://lists.apache.org/thread/6f83qcpj1ox40jfxtottqlhjbhhxwmhf",
-      "author": "Burak Yavuz <br...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-08-31T16:46:17+00:00",
-      "updated_at": "2026-08-31T16:46:17+00:00",
-      "body": "Hi all,\n\nWe would like to start a discussion on introducing a new SparkSQL data type\ncalled FILE for providing better support for unstructured or large data in\nSpark.\n\nJira: SPARK-59132 <https://issues.apache.org/jira/browse/SPARK-59132>\n\nBrief context: We want to make it easy and cheap to work with files, such\nas PDFs, images, audio and video, from tables using Spark. Today you either\ncopy the bytes of a file into a table as a binary column, or you keep the\npath to the file as a string and hope everything downstream knows what to\ndo with it.\nWe propose a new data type, FileType (spelled FILE in SQL), which holds the\npath of a file and a small amount of metadata describing it. The engine,\nthe file format, and user defined functions all understand this type, so a\nquery can filter, join and project files without reading their contents,\nand load the bytes only where it actually needs them.\n\nPlease find more information in the SPIP\n<https://docs.google.com/document/d/1pPof896ZwcZ-2Yn-YhC4TbyYWn1umiQJykGDkAxzCWc/edit?tab=t.0>\n.\n\nWe've recently introduced a FILE type in Parquet\n<https://github.com/apache/parquet-format/blob/master/LogicalTypes.md#file>\nto provide a consistent representation across engines and table formats to\naccess large blobs. This SPIP provides the engine interfaces and\nimplementation to leverage this representation.\n\nLooking forward to your feedback!\n\nBest regards,\nBurak Yavuz and Dejan Krakovic\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1pPof896ZwcZ-2Yn-YhC4TbyYWn1umiQJykGDkAxzCWc/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSPIP: FILE EXTERNAL, a new DataType for dealing with files and unstructured data"
-        }
-      ],
-      "llm_summary": "Brief context: We want to make it easy and cheap to work with files, such as PDFs, images, audio and video, from tables using Spark. This SPIP provides the engine interfaces and implementation to leverage this representation. We want to make it easy and cheap to work with files, such as PDFs, images, audio and video, from tables using Spark.",
-      "llm_status": "discussion",
-      "comment_count": 0,
-      "participant_count": 1,
-      "llm_key_points": [],
-      "llm_topics": [
-        "file",
-        "spark",
-        "native-support",
-        "discuss"
-      ],
-      "_content_hash": "d8fa3b27344f",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
       "id": "spark-ml-vh21614wrjmr7cdd905qhwbwqd25lmjj",
@@ -2978,7 +2988,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "56e5487627dc",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-0vdnpt0j9c4ptlhvl117b3w5moqxw8bc",
@@ -3014,7 +3024,7 @@
         "peter-toth"
       ],
       "_content_hash": "37899491df81",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-4qozg1rdvv2vvltp858sygj31jrpskx5",
@@ -3051,7 +3061,7 @@
       ],
       "llm_title": "",
       "_content_hash": "0f69235d488e",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-rwhj82w65y3rj7bypmbtynwl5pgwrbjw",
@@ -3087,7 +3097,7 @@
         "peter-toth"
       ],
       "_content_hash": "4bd9a17c90bd",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1",
@@ -3954,7 +3964,7 @@
         "kubernetes-operator"
       ],
       "_content_hash": "321a70dec377",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-54kpt80xz2bt2wh1zwss8ckp2tmq7pno",
@@ -4133,7 +4143,7 @@
         "announce"
       ],
       "_content_hash": "6d1e0cb11e41",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg",
@@ -4698,7 +4708,7 @@
         "announce"
       ],
       "_content_hash": "90e3583d3164",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-40s5tn9228h8o3p8vdvt49l6dcbxlmoc",
@@ -4782,7 +4792,7 @@
         "local-laptop"
       ],
       "_content_hash": "8e8c054aef0e",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-ckpv8z0fqw42xkbrskqf3ggsl1yb81c4",
@@ -4993,7 +5003,7 @@
         "faster"
       ],
       "_content_hash": "234be0c22d25",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-036j2fhgcs1kmshbo3r6pcmqp1ro5kyk",
@@ -5287,7 +5297,7 @@
         "datafusion-comet"
       ],
       "_content_hash": "5f4dae60fa77",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-xq88d310v6nzwtppqsk69x9r9r2qgtmh",
@@ -5426,7 +5436,7 @@
         "spip"
       ],
       "_content_hash": "9faf2e9d1ba4",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-3xojq1dhs72gvkxbxj2c2om5odzl16sx",
@@ -5488,7 +5498,7 @@
         "spark-community"
       ],
       "_content_hash": "a33aeaa3db50",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-4gk7hqfwsz1s05hj47zyg8dqnqhcsmmr",
@@ -5679,7 +5689,7 @@
         "spark-community"
       ],
       "_content_hash": "6895e1ddb24b",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-v9qmqs2n15g5dp1gzv9jpc3qh6bg3w7c",
@@ -6469,7 +6479,7 @@
         "spark"
       ],
       "_content_hash": "34e97449307d",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-czlg2bbh3hc22810qdcptg04hzrtv424",
@@ -6832,7 +6842,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "c3cf5385686c",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-8x7w4k9yqs385fqqctvdnrtrfhkcr766",
@@ -7696,7 +7706,7 @@
         "docker-official"
       ],
       "_content_hash": "f1487e6acb2b",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-hjfsbtgthpnwk285wdb500fnz3bd1mjx",
@@ -7977,7 +7987,7 @@
         "apache-spark"
       ],
       "_content_hash": "ac030e3bd291",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-x4pn230qw1rtcpv36o9530f3hkzllrck",
@@ -8004,7 +8014,7 @@
         "apache"
       ],
       "_content_hash": "c6025214cd89",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-ft6t2qtkn7sosf18t02pjlv86p631t5x",
@@ -8285,7 +8295,7 @@
         "apache"
       ],
       "_content_hash": "3e3df829f2cf",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-s1szvkkw7krshx8kht1bnzbq8h3cmyft",
@@ -8325,7 +8335,7 @@
         "release"
       ],
       "_content_hash": "4b0729a96783",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-4r6q8187b30p0ppclw0pyfjp8h8xs3rq",
@@ -8516,7 +8526,7 @@
         "store"
       ],
       "_content_hash": "5dd6a20efee6",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-5rrbrh3314wqbydfdhlz4508glm7942c",
@@ -8543,7 +8553,7 @@
         "spark"
       ],
       "_content_hash": "ea685f8cf1cb",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-jml8gjom8pyxs04jm3xx6ttds0z0376g",
@@ -8885,7 +8895,7 @@
         "release"
       ],
       "_content_hash": "e2fe6a545972",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-7t82jvvdy1c57vzm5drztygfb39mk1bz",
@@ -8916,7 +8926,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "6a5711920c44",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-tyopctz8r5r2omww9l0z5hrr1oysmwf3",
@@ -9534,7 +9544,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "b5de5bc714a0",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-pnotsqhs3xprw7rgjh1w858m12d7gz1w",
@@ -9883,7 +9893,7 @@
         "apache"
       ],
       "_content_hash": "2862de796730",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-5fppyngm9gbw1dx9w67cht7hhrcbw08x",
@@ -10246,7 +10256,7 @@
         "apache"
       ],
       "_content_hash": "7f438d9bc5b2",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-hc37pwjvcsvdoydzb2d7ksvg951tq21v",
@@ -10517,7 +10527,7 @@
         "apache"
       ],
       "_content_hash": "6da8d9650cc2",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-wok5jwmzgm5jtg9dzdhq4von5mtg1897",
@@ -10755,7 +10765,7 @@
         "dongjoon"
       ],
       "_content_hash": "e5f3a2a7742d",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-6z3167c04l5s46j6vs07d90gjxxcts6t",
@@ -11050,7 +11060,7 @@
         "announce"
       ],
       "_content_hash": "c911229e0f39",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-9w2cgqy2xsr91p9jb9802l5monlw36bz",
@@ -11671,7 +11681,7 @@
         "release"
       ],
       "_content_hash": "f52fa49848aa",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-9tm9ggr64b5ykv9yp52vxd18dpknrrtg",
@@ -11698,7 +11708,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "0311dbb42d72",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-zzlr1g6g11qlpr8xrr3tpszoh52tf2m9",
@@ -11858,7 +11868,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "98f789695745",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-rrn979v01kjqs4tqyj3lr4xj111h4z0v",
@@ -12081,7 +12091,7 @@
         "operator"
       ],
       "_content_hash": "57a2b5de51f4",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-khl9oglldblfnop56fowvgsy0m06pngf",
@@ -12558,7 +12568,7 @@
         "sedona"
       ],
       "_content_hash": "7402c800001a",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-tvf0msobcg1s3v9x14xtbpb7dgvk3zzj",
@@ -12621,7 +12631,7 @@
         "spark"
       ],
       "_content_hash": "667a8bdd654d",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-xzjcog2hfczlxxp12cfy3x6zdycr1ogc",
@@ -13198,7 +13208,7 @@
         "docker-hub"
       ],
       "_content_hash": "33a900be7810",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-l5ko8ggmlnz29s9m71dkv1pqq8rphqc3",
@@ -13227,7 +13237,7 @@
         "download-spark"
       ],
       "_content_hash": "0159eb8af124",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-r8nqo8pmdt01m9rdfmh8dlkbl3t51yyf",
@@ -13536,7 +13546,7 @@
         "apache-spark"
       ],
       "_content_hash": "99853a2065e3",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-0blhqx9yhxdhxsmy9fq11ppgg9k0v83j",
@@ -14160,7 +14170,7 @@
         "apache"
       ],
       "_content_hash": "ace6d952b2c1",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-yrbo7wz4y56ytxf448lsogh6rcp20lz8",
@@ -15455,7 +15465,7 @@
         "vote"
       ],
       "_content_hash": "8889f8660299",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-fz2tdzc0100m146mtrk76zv1wg1bdzfk",
@@ -15606,7 +15616,7 @@
         "result"
       ],
       "_content_hash": "168b07affc06",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-rt924d38oq37rvgd13g4p0n4nnzpv8h6",
@@ -15633,7 +15643,7 @@
         "released-apache"
       ],
       "_content_hash": "ba0a3406bf6d",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-0558xk1dqp5fyox4rw0kdsgj7v2700c3",
@@ -15995,7 +16005,7 @@
         "announce"
       ],
       "_content_hash": "e930d40dece4",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-blb0sq2tnztw4pwfn9cxf5n67rcyvsqo",
@@ -17469,7 +17479,7 @@
         "sedona"
       ],
       "_content_hash": "1be94736a18c",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-qrvo6xrt8zvp5ss73z5spt9q89r0htwo",
@@ -17925,7 +17935,7 @@
         "catalyst-project"
       ],
       "_content_hash": "ea2cbf9c9ea5",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-408wkyyow602ty14llqlxdzxojcrqgkg",
@@ -18010,7 +18020,7 @@
         "announce"
       ],
       "_content_hash": "b950bf1685a7",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-gfmow613gnlbo475czv2qgxwsv6s13z1",
@@ -18178,7 +18188,7 @@
         "single-pass"
       ],
       "_content_hash": "21ebec960c9b",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-4ctj2mlgs4q2yb4hdw2jy4z34p5yw2b1",
@@ -18852,7 +18862,7 @@
         "single-pass-resolution"
       ],
       "_content_hash": "20bec6c2182f",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-xojcdlw77pht9bs4mt4087ynq6k9sbqq",
@@ -19113,7 +19123,7 @@
         "good-idea"
       ],
       "_content_hash": "cf0f25e0c0a9",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-y2k6jjvqy7y1rq3l220okj7qqrtywycs",
@@ -19440,7 +19450,7 @@
         "release"
       ],
       "_content_hash": "b0c1dccdf643",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-z01s19z7qf1jm5xoxsmgp6734tbhcqxb",
@@ -21336,7 +21346,7 @@
         "announce"
       ],
       "_content_hash": "e2b9cd3f1267",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-3y4p28s1qf4tgkgs45j4ho2z3xrqkqfm",
@@ -21733,7 +21743,7 @@
         "spark-jira"
       ],
       "_content_hash": "fcfe96f9a833",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-ztlwoz1v1sn81ssks12tb19x37zozxlz",
@@ -22230,7 +22240,7 @@
         "xinrong-meng"
       ],
       "_content_hash": "5c4d2d893ca1",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j",
@@ -22585,7 +22595,7 @@
         "announce"
       ],
       "_content_hash": "beda6a0798ba",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-pfp3mbso57m2ks7r928vjlgnljfd1n45",
@@ -22780,7 +22790,7 @@
         "release"
       ],
       "_content_hash": "9c29a985fa52",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-nlk9n25cznksqqf0j9wxdxg62x8vtj87",
@@ -23091,7 +23101,7 @@
         "result"
       ],
       "_content_hash": "f47e09858f4a",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-kvcf74n603nspg4j7whhst06zdmk66th",
@@ -23209,7 +23219,7 @@
         "java-based-kubernetes"
       ],
       "_content_hash": "9726f0a6bbee",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-9f5z5lw2tg0yfvhwxvqspyyh45bppkf1",
@@ -23435,7 +23445,7 @@
         "apache"
       ],
       "_content_hash": "5749a8bad614",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-2x8nvb5sbzyld4l4c0r8jfftp5ygkh1c",
@@ -24011,7 +24021,7 @@
         "announce"
       ],
       "_content_hash": "411f3bc51134",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-d6yqo61nk9c7c0mcz14m4c1c1wml5jhc",
@@ -24674,7 +24684,7 @@
         "dongjoon"
       ],
       "_content_hash": "db37b4685b24",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-pyby097xs0m8t9t755pwrpr9zydm7bop",
@@ -25149,7 +25159,7 @@
         "apache"
       ],
       "_content_hash": "8c5b7b788790",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-o1o9n1t036rmfp45q1jrjs0zzzx0j156",
@@ -25180,7 +25190,7 @@
         "xinrong"
       ],
       "_content_hash": "49d9c3a18bc5",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-lr1h56rs88sdpt503swzp0rx4htfkf61",
@@ -25207,7 +25217,7 @@
         "announce"
       ],
       "_content_hash": "f3c5a8a9a19e",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-0o61jn9cmg6r0f22ljgjg5c31z8fn0zn",
@@ -25869,7 +25879,7 @@
         "download-spark"
       ],
       "_content_hash": "564abd9deefd",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-kylocl9zb6p686qwhypcx4wv2y4hv2h1",
@@ -25911,7 +25921,7 @@
         "performance-improvement"
       ],
       "_content_hash": "8b09357127ec",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-tdgf4gd4copzxjdoldkf1n2gn5m0kdkc",
@@ -25993,7 +26003,7 @@
         "performance-improvement"
       ],
       "_content_hash": "48429bc6df81",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-l6tprb580lrq1118c83kt9fst30jp8n3",
@@ -26187,7 +26197,7 @@
         "materialization"
       ],
       "_content_hash": "3306418cb616",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-342qnjxmnoydzxr0k8yq4roxdmqjhw9x",
@@ -26360,7 +26370,7 @@
         "release"
       ],
       "_content_hash": "11ef119282b3",
-      "initiative_id": "spark-init-spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-y6hby3k9nqds4fgx0b1w5yhhlqb2f7gb",
@@ -26444,7 +26454,7 @@
         "maciej-szymkiewicz"
       ],
       "_content_hash": "85b3f677283f",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-gh2oktrndxopqnyxbsvp2p0k6jk1n9fs",
@@ -26714,7 +26724,7 @@
         "yuming-wang"
       ],
       "_content_hash": "a0cd2e254ca8",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-n5zb2hj3rl15g8wnlvl9xn4ghosxgj4p",
@@ -26748,7 +26758,7 @@
         "spark"
       ],
       "_content_hash": "033d720f0836",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-zys6wylgmdq3gm47go306tsr0ovto0g3",
@@ -27025,7 +27035,7 @@
         "result"
       ],
       "_content_hash": "c6e5548b9d17",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-cpz2bvlvmng8h36o7d2wbh211jjqq0f5",
@@ -27170,7 +27180,7 @@
         "docker-images"
       ],
       "_content_hash": "5759fa56ff69",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-l1793y5224n8bqkp3s6ltgkykso4htb3",
@@ -27208,7 +27218,7 @@
         "docker"
       ],
       "_content_hash": "53424d08a946",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-lt20887byz07o15qwpk8mjb6nhjp7hoz",
@@ -27362,7 +27372,7 @@
         "announce"
       ],
       "_content_hash": "0ab406715a3d",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-pbkggpgjpwopjgsn80tcmgh9b87fc9p0",
@@ -27586,7 +27596,7 @@
         "apache"
       ],
       "_content_hash": "c6e02031c5de",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-smpwykpoqr0y5r5xgc9jpt1fjm72fvck",
@@ -27628,7 +27638,7 @@
         "spip"
       ],
       "_content_hash": "f3cf472da1c5",
-      "initiative_id": "spark-init-spark-jira-SPARK-58240"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-nbqj698v59skknrh7bp6ol0rrs9zsr6r",
@@ -28389,7 +28399,7 @@
         "docker-images"
       ],
       "_content_hash": "0019b42af4f4",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-sjj6jpzv0l0ysj2nkn7jrnq5jqr2mz8h",
@@ -28635,7 +28645,7 @@
         "download-spark"
       ],
       "_content_hash": "52b312ebbcc6",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-z2qqpghwfznspr3n4ozopnpq9rp19k1d",
@@ -29406,7 +29416,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",
@@ -29978,7 +29988,7 @@
         "release"
       ],
       "_content_hash": "4ec947e6e0d8",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-yov8xsggo3g2qr2p1rrr2xtps25wkbvj",
@@ -30128,7 +30138,7 @@
         "release"
       ],
       "_content_hash": "0f9591a09142",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-z0ywwnqocc3vzmbm8y4cfw0fdcofvct4",
@@ -30304,7 +30314,7 @@
         "download-spark"
       ],
       "_content_hash": "c0f02131c02b",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-jmkpt7yohhmh2mzjvdd127hos2snx33k",
@@ -30345,7 +30355,7 @@
         "spark"
       ],
       "_content_hash": "b7018fa0cada",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-21v99v1hdr43bozmplbwwgg09g764k3q",
@@ -31162,7 +31172,7 @@
         "announce-spark"
       ],
       "_content_hash": "00193636e2bd",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-n936z3211rw8z9t9gz6d0n47opvcfjo9",
@@ -31380,7 +31390,7 @@
         "announce"
       ],
       "_content_hash": "e25a6f6005fb",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-obcw512wvjdjkpf61wxj78tnc9jp71x2",
@@ -31421,7 +31431,7 @@
         "spark"
       ],
       "_content_hash": "534ff7745efc",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-obcw512wvjdjkpf61wxj78tnc9jp71x2"
     },
     {
       "id": "spark-ml-9x911pqg44bdmrshqsyrr64t2ockjqpg",
@@ -31491,7 +31501,7 @@
         "release"
       ],
       "_content_hash": "a6ecaa36881f",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-obcw512wvjdjkpf61wxj78tnc9jp71x2"
     },
     {
       "id": "spark-ml-pwvytb3kw58tvkpdg897n1yw3hn5w0ph",
@@ -31609,7 +31619,7 @@
         "shuffle"
       ],
       "_content_hash": "3252490c10fc",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-z2rbq1bwvb6xhl3w9ogbop0boqzg94m8",
@@ -31843,7 +31853,7 @@
         "release"
       ],
       "_content_hash": "89c3c2fb0fa1",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-obcw512wvjdjkpf61wxj78tnc9jp71x2"
     },
     {
       "id": "spark-ml-5bww6j9gmqr91xp2pd9w4h1fbkk3kh1n",

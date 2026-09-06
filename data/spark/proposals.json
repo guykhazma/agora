@@ -1,8 +1,38 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-09-05T09:43:06.362767+00:00",
+  "generated_at": "2026-09-06T09:58:33.285487+00:00",
   "total": 652,
   "proposals": [
+    {
+      "id": "spark-jira-SPARK-56822",
+      "source": "jira",
+      "kind": "issue",
+      "title": "SPIP: Timestamps with nanosecond precision",
+      "url": "https://issues.apache.org/jira/browse/SPARK-56822",
+      "author": "Max Gekk",
+      "state": "open",
+      "created_at": "2026-05-11T15:13:30+00:00",
+      "updated_at": "2026-09-05T23:30:11+00:00",
+      "body": "h1. Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.\r\n\r\nAdd nanosecond-capable timestamps with an explicit fractional precision *n* in SQL and APIs, while keeping a simple binary value: epoch microseconds (64-bit) + nanoseconds within that microsecond (0\u2013999, stored in 16 bits).\r\nh3. SQL surface\r\n\r\nSupport TIMESTAMP_NTZ\\(n\\), TIMESTAMP_LTZ\\(n\\), and TIMESTAMP\\(n\\) in the parser (including equivalent spellings: WITHOUT TIME ZONE, WITH LOCAL TIME ZONE, etc.) so precision is first-class in the grammar, not a side convention. The parameter n is optional, and its valid range is [0, 9]. It defines how many decimal digits of the fractional second are part of the type. For example: n = 6 -> microseconds, n = 9 -> nanoseconds.\r\nh3. Scala / Java APIs\r\n\r\nIntroduce parameterized catalyst types, e.g. TimestampNTZNanosType\\(n\\) for TIMESTAMP_NTZ\\(n\\) and TimestampNanosType\\(n\\) for TIMESTAMP_LTZ\\(n\\).\r\nh3. In-memory value\r\n\r\nThe internal representation of both types is long micros since the epoch + short (or 16-bit) nanos-in-micro in [0, 999]. Both NTZ and LTZ have the same representation; time zone only affects interpretation for LTZ, not the pair layout.\r\n\u00a0\r\nh1. Q2. What problem is this proposal NOT designed to solve?\r\n * *Precision below nanosecond-target range.* This SPIP only covers high-precision parameterized timestamps where 7 <= n <= 9. Support/changes for n < 7 are explicitly out of scope for this proposal.\r\n\r\n * *Subtraction of timestamps.* The result should be a day-time interval but the data type has microsecond precision at the moment.\r\n\r\n * *Changing existing time zone semantics.* It does not redefine NTZ/LTZ semantics, session time zone behavior, or SQL time zone rules.\r\n\r\n * *A full rework of all connectors/storage formats.* It does not promise end-to-end nanosecond support in every external system; connector-specific follow-ups may still be needed.\r\n\r\nh1. Q3. How is it done today, and what are the limits of current practice?\r",
+      "labels": [
+        "SPIP",
+        "pull-request-available"
+      ],
+      "linked_resources": [],
+      "comment_count": 0,
+      "llm_summary": "The internal representation of both types is long micros since the epoch + short (or 16-bit) nanos-in-micro in [0, 999]. * The result should be a day-time interval but the data type has microsecond precision at the moment. * It does not promise end-to-end nanosecond support in every external system; connector-specific follow-ups may still be needed.",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "time-zone",
+        "timestamp",
+        "time",
+        "zone"
+      ],
+      "llm_title": "",
+      "_content_hash": "c08c56ea7b2c",
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+    },
     {
       "id": "spark-jira-SPARK-57703",
       "source": "jira",
@@ -207,36 +237,6 @@
       "_content_hash": "c07df12478eb",
       "llm_title": "",
       "initiative_id": "spark-init-spark-ml-s57pbcgtbgl12dpctl6z2ojpznzjxh12"
-    },
-    {
-      "id": "spark-jira-SPARK-56822",
-      "source": "jira",
-      "kind": "issue",
-      "title": "SPIP: Timestamps with nanosecond precision",
-      "url": "https://issues.apache.org/jira/browse/SPARK-56822",
-      "author": "Max Gekk",
-      "state": "open",
-      "created_at": "2026-05-11T15:13:30+00:00",
-      "updated_at": "2026-08-18T06:59:54+00:00",
-      "body": "h1. Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.\r\n\r\nAdd nanosecond-capable timestamps with an explicit fractional precision *n* in SQL and APIs, while keeping a simple binary value: epoch microseconds (64-bit) + nanoseconds within that microsecond (0\u2013999, stored in 16 bits).\r\nh3. SQL surface\r\n\r\nSupport TIMESTAMP_NTZ\\(n\\), TIMESTAMP_LTZ\\(n\\), and TIMESTAMP\\(n\\) in the parser (including equivalent spellings: WITHOUT TIME ZONE, WITH LOCAL TIME ZONE, etc.) so precision is first-class in the grammar, not a side convention. The parameter n is optional, and its valid range is [0, 9]. It defines how many decimal digits of the fractional second are part of the type. For example: n = 6 -> microseconds, n = 9 -> nanoseconds.\r\nh3. Scala / Java APIs\r\n\r\nIntroduce parameterized catalyst types, e.g. TimestampNTZNanosType\\(n\\) for TIMESTAMP_NTZ\\(n\\) and TimestampNanosType\\(n\\) for TIMESTAMP_LTZ\\(n\\).\r\nh3. In-memory value\r\n\r\nThe internal representation of both types is long micros since the epoch + short (or 16-bit) nanos-in-micro in [0, 999]. Both NTZ and LTZ have the same representation; time zone only affects interpretation for LTZ, not the pair layout.\r\n\u00a0\r\nh1. Q2. What problem is this proposal NOT designed to solve?\r\n * *Precision below nanosecond-target range.* This SPIP only covers high-precision parameterized timestamps where 7 <= n <= 9. Support/changes for n < 7 are explicitly out of scope for this proposal.\r\n\r\n * *Subtraction of timestamps.* The result should be a day-time interval but the data type has microsecond precision at the moment.\r\n\r\n * *Changing existing time zone semantics.* It does not redefine NTZ/LTZ semantics, session time zone behavior, or SQL time zone rules.\r\n\r\n * *A full rework of all connectors/storage formats.* It does not promise end-to-end nanosecond support in every external system; connector-specific follow-ups may still be needed.\r\n\r\nh1. Q3. How is it done today, and what are the limits of current practice?\r",
-      "labels": [
-        "SPIP",
-        "pull-request-available"
-      ],
-      "linked_resources": [],
-      "comment_count": 0,
-      "llm_summary": "The internal representation of both types is long micros since the epoch + short (or 16-bit) nanos-in-micro in [0, 999]. * The result should be a day-time interval but the data type has microsecond precision at the moment. * It does not promise end-to-end nanosecond support in every external system; connector-specific follow-ups may still be needed.",
-      "llm_status": "discussion",
-      "llm_key_points": [],
-      "llm_topics": [
-        "time-zone",
-        "timestamp",
-        "time",
-        "zone"
-      ],
-      "llm_title": "",
-      "_content_hash": "c08c56ea7b2c",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-jira-SPARK-58455",
@@ -1770,6 +1770,61 @@
       "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
+      "id": "spark-ml-5zdp98b0fzvz7x5xdgrbcyhcx8yprxnr",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [VOTE] Release Spark 4.3.0 (RC1)",
+      "url": "https://lists.apache.org/thread/5zdp98b0fzvz7x5xdgrbcyhcx8yprxnr",
+      "author": "Cheng Pan <pa...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-09-01T01:51:07+00:00",
+      "updated_at": "2026-09-06T08:52:14+00:00",
+      "body": "-1 (non-binding)\n\nFound a PySpark packaging issue, and made a fix.\nhttps://github.com/apache/spark/pull/58428\n\nThanks,\nCheng Pan\n\n\n\n> On Aug 31, 2026, at 21:37, Jungtaek Lim <ka...@apache.org> wrote:\n> \n> Folks, please do not hesitate to test this RC; we generally did not make RC1 pass, but we should use the RC1 to descope the defects and critical fixes, to verify less things in the next RC, and iterate till we eventually have consensus of OK sign on specific RC.\n> \n> On Mon, Aug 31, 2026 at 6:51\u202fPM <kabhwan@apache.org <ma...@apache.org>> wrote:\n>> Please vote on releasing the following candidate as Apache Spark version 4.3.0.\n>> \n>> The vote is open until Thu, 03 Sep 2026 03:51:35 PDT and passes if a majority +1 PMC votes are cast, with\n>> a minimum of 3 +1 votes.\n>> \n>> [ ] +1 Release this package as Apache Spark 4.3.0\n>> [ ] -1 Do not release this package because ...\n>> \n>> To learn more about Apache Spark, please see https://spark.apache.org/\n>> \n>> The tag to be voted on is v4.3.0-rc1 (commit 3db813416c8):\n>> https://github.com/apache/spark/tree/v4.3.0-rc1\n>> \n>> The release files, including signatures, digests, etc. can be found at:\n>> https://dist.apache.org/repos/dist/dev/spark/v4.3.0-rc1-bin/\n>> \n>> Signatures used for Spark RCs can be found in this file:\n>> https://downloads.apache.org/spark/KEYS\n>> \n>> The staging repository for this release can be found at:\n>> https://repository.apache.org/content/repositories/orgapachespark-1530/\n>> \n>> The documentation corresponding to this release can be found at:\n>> https://dist.apache.org/repos/dist/dev/spark/v4.3.0-rc1-docs/\n>> \n>> The list of bug fixes going into 4.3.0 can be found at the following URL:\n>> https://issues.apache.org/jira/projects/SPARK/versions/12356944\n>> \n>> FAQ\n>> \n>> =========================\n>> How can I help test this release?\n>> =========================\n>> \n>> If you are a Spark user, you can help us test this release by taking\n>> an existing Spark workload and running on this release cand",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/spark/pull/58428",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/spark/pull/55410",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Vote VETOED \u2014 2 veto(es) recorded",
+      "llm_status": "abandoned",
+      "comment_count": 2,
+      "participant_count": 2,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 0,
+        "vetoes": 2,
+        "result": "vetoed",
+        "voters": [
+          {
+            "voter": "Cheng Pan <pa...@gmail.com>",
+            "vote": "-1"
+          },
+          {
+            "voter": "Jungtaek Lim <ka...@gmail.com>",
+            "vote": "-1"
+          }
+        ]
+      },
+      "llm_key_points": [
+        "-1 (non-binding)\n\nFound a PySpark packaging issue, and made a fix.",
+        "Voters include: Cheng Pan, Jungtaek Lim..."
+      ],
+      "llm_topics": [
+        "apache-spark",
+        "packaging-issue",
+        "pyspark-packaging",
+        "found"
+      ],
+      "_content_hash": "e8ed7c7eb085",
+      "initiative_id": "spark-init-spark-ml-5zdp98b0fzvz7x5xdgrbcyhcx8yprxnr"
+    },
+    {
       "id": "spark-ml-o9h87grjcot5foczfnz444qph2gg7w5q",
       "source": "mailing_list",
       "kind": "thread",
@@ -1873,61 +1928,6 @@
       "_content_hash": "46c611004c73",
       "llm_title": "",
       "initiative_id": "spark-init-spark-ml-zdhxbb5yw0fs5y3kpbfq8ygr6vn0m2pl"
-    },
-    {
-      "id": "spark-ml-5zdp98b0fzvz7x5xdgrbcyhcx8yprxnr",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "Re: [VOTE] Release Spark 4.3.0 (RC1)",
-      "url": "https://lists.apache.org/thread/5zdp98b0fzvz7x5xdgrbcyhcx8yprxnr",
-      "author": "Cheng Pan <pa...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-09-01T01:51:07+00:00",
-      "updated_at": "2026-09-02T13:55:32+00:00",
-      "body": "-1 (non-binding)\n\nFound a PySpark packaging issue, and made a fix.\nhttps://github.com/apache/spark/pull/58428\n\nThanks,\nCheng Pan\n\n\n\n> On Aug 31, 2026, at 21:37, Jungtaek Lim <ka...@apache.org> wrote:\n> \n> Folks, please do not hesitate to test this RC; we generally did not make RC1 pass, but we should use the RC1 to descope the defects and critical fixes, to verify less things in the next RC, and iterate till we eventually have consensus of OK sign on specific RC.\n> \n> On Mon, Aug 31, 2026 at 6:51\u202fPM <kabhwan@apache.org <ma...@apache.org>> wrote:\n>> Please vote on releasing the following candidate as Apache Spark version 4.3.0.\n>> \n>> The vote is open until Thu, 03 Sep 2026 03:51:35 PDT and passes if a majority +1 PMC votes are cast, with\n>> a minimum of 3 +1 votes.\n>> \n>> [ ] +1 Release this package as Apache Spark 4.3.0\n>> [ ] -1 Do not release this package because ...\n>> \n>> To learn more about Apache Spark, please see https://spark.apache.org/\n>> \n>> The tag to be voted on is v4.3.0-rc1 (commit 3db813416c8):\n>> https://github.com/apache/spark/tree/v4.3.0-rc1\n>> \n>> The release files, including signatures, digests, etc. can be found at:\n>> https://dist.apache.org/repos/dist/dev/spark/v4.3.0-rc1-bin/\n>> \n>> Signatures used for Spark RCs can be found in this file:\n>> https://downloads.apache.org/spark/KEYS\n>> \n>> The staging repository for this release can be found at:\n>> https://repository.apache.org/content/repositories/orgapachespark-1530/\n>> \n>> The documentation corresponding to this release can be found at:\n>> https://dist.apache.org/repos/dist/dev/spark/v4.3.0-rc1-docs/\n>> \n>> The list of bug fixes going into 4.3.0 can be found at the following URL:\n>> https://issues.apache.org/jira/projects/SPARK/versions/12356944\n>> \n>> FAQ\n>> \n>> =========================\n>> How can I help test this release?\n>> =========================\n>> \n>> If you are a Spark user, you can help us test this release by taking\n>> an existing Spark workload and running on this release cand",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/spark/pull/58428",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/spark/pull/55410",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Vote VETOED \u2014 2 veto(es) recorded",
-      "llm_status": "abandoned",
-      "comment_count": 1,
-      "participant_count": 2,
-      "vote_data": {
-        "binding_plus1": 0,
-        "nonbinding_plus1": 0,
-        "vetoes": 2,
-        "result": "vetoed",
-        "voters": [
-          {
-            "voter": "Cheng Pan <pa...@gmail.com>",
-            "vote": "-1"
-          },
-          {
-            "voter": "Jungtaek Lim <ka...@gmail.com>",
-            "vote": "-1"
-          }
-        ]
-      },
-      "llm_key_points": [
-        "-1 (non-binding)\n\nFound a PySpark packaging issue, and made a fix.",
-        "Voters include: Cheng Pan, Jungtaek Lim..."
-      ],
-      "llm_topics": [
-        "apache-spark",
-        "packaging-issue",
-        "pyspark-packaging",
-        "found"
-      ],
-      "_content_hash": "202537da8b31",
-      "initiative_id": "spark-init-spark-ml-5zdp98b0fzvz7x5xdgrbcyhcx8yprxnr"
     },
     {
       "id": "spark-ml-s57pbcgtbgl12dpctl6z2ojpznzjxh12",
@@ -20607,7 +20607,7 @@
         "spark"
       ],
       "_content_hash": "bb2e07d0a0dc",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-ml-y0fhglwjdrt90qjd0ntgvy0qodzdtzmn"
     },
     {
       "id": "spark-ml-w3v4fjk9lvxvp3lr5tngg0hvhfrkl5b0",

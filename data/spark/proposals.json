@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-09-06T09:58:33.285487+00:00",
+  "generated_at": "2026-09-07T11:07:24.642690+00:00",
   "total": 652,
   "proposals": [
     {
@@ -12,7 +12,7 @@
       "author": "Max Gekk",
       "state": "open",
       "created_at": "2026-05-11T15:13:30+00:00",
-      "updated_at": "2026-09-05T23:30:11+00:00",
+      "updated_at": "2026-09-06T15:29:22+00:00",
       "body": "h1. Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.\r\n\r\nAdd nanosecond-capable timestamps with an explicit fractional precision *n* in SQL and APIs, while keeping a simple binary value: epoch microseconds (64-bit) + nanoseconds within that microsecond (0\u2013999, stored in 16 bits).\r\nh3. SQL surface\r\n\r\nSupport TIMESTAMP_NTZ\\(n\\), TIMESTAMP_LTZ\\(n\\), and TIMESTAMP\\(n\\) in the parser (including equivalent spellings: WITHOUT TIME ZONE, WITH LOCAL TIME ZONE, etc.) so precision is first-class in the grammar, not a side convention. The parameter n is optional, and its valid range is [0, 9]. It defines how many decimal digits of the fractional second are part of the type. For example: n = 6 -> microseconds, n = 9 -> nanoseconds.\r\nh3. Scala / Java APIs\r\n\r\nIntroduce parameterized catalyst types, e.g. TimestampNTZNanosType\\(n\\) for TIMESTAMP_NTZ\\(n\\) and TimestampNanosType\\(n\\) for TIMESTAMP_LTZ\\(n\\).\r\nh3. In-memory value\r\n\r\nThe internal representation of both types is long micros since the epoch + short (or 16-bit) nanos-in-micro in [0, 999]. Both NTZ and LTZ have the same representation; time zone only affects interpretation for LTZ, not the pair layout.\r\n\u00a0\r\nh1. Q2. What problem is this proposal NOT designed to solve?\r\n * *Precision below nanosecond-target range.* This SPIP only covers high-precision parameterized timestamps where 7 <= n <= 9. Support/changes for n < 7 are explicitly out of scope for this proposal.\r\n\r\n * *Subtraction of timestamps.* The result should be a day-time interval but the data type has microsecond precision at the moment.\r\n\r\n * *Changing existing time zone semantics.* It does not redefine NTZ/LTZ semantics, session time zone behavior, or SQL time zone rules.\r\n\r\n * *A full rework of all connectors/storage formats.* It does not promise end-to-end nanosecond support in every external system; connector-specific follow-ups may still be needed.\r\n\r\nh1. Q3. How is it done today, and what are the limits of current practice?\r",
       "labels": [
         "SPIP",
@@ -26371,7 +26371,7 @@
         "release"
       ],
       "_content_hash": "11ef119282b3",
-      "initiative_id": "spark-init-spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-y6hby3k9nqds4fgx0b1w5yhhlqb2f7gb",
@@ -29417,7 +29417,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",

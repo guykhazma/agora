@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-09-09T10:28:28.213195+00:00",
+  "generated_at": "2026-09-10T10:19:18.040021+00:00",
   "total": 655,
   "proposals": [
     {
@@ -12,14 +12,14 @@
       "author": "Max Gekk",
       "state": "open",
       "created_at": "2026-05-11T15:13:30+00:00",
-      "updated_at": "2026-09-06T15:29:22+00:00",
+      "updated_at": "2026-09-09T18:19:29+00:00",
       "body": "h1. Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.\r\n\r\nAdd nanosecond-capable timestamps with an explicit fractional precision *n* in SQL and APIs, while keeping a simple binary value: epoch microseconds (64-bit) + nanoseconds within that microsecond (0\u2013999, stored in 16 bits).\r\nh3. SQL surface\r\n\r\nSupport TIMESTAMP_NTZ\\(n\\), TIMESTAMP_LTZ\\(n\\), and TIMESTAMP\\(n\\) in the parser (including equivalent spellings: WITHOUT TIME ZONE, WITH LOCAL TIME ZONE, etc.) so precision is first-class in the grammar, not a side convention. The parameter n is optional, and its valid range is [0, 9]. It defines how many decimal digits of the fractional second are part of the type. For example: n = 6 -> microseconds, n = 9 -> nanoseconds.\r\nh3. Scala / Java APIs\r\n\r\nIntroduce parameterized catalyst types, e.g. TimestampNTZNanosType\\(n\\) for TIMESTAMP_NTZ\\(n\\) and TimestampNanosType\\(n\\) for TIMESTAMP_LTZ\\(n\\).\r\nh3. In-memory value\r\n\r\nThe internal representation of both types is long micros since the epoch + short (or 16-bit) nanos-in-micro in [0, 999]. Both NTZ and LTZ have the same representation; time zone only affects interpretation for LTZ, not the pair layout.\r\n\u00a0\r\nh1. Q2. What problem is this proposal NOT designed to solve?\r\n * *Precision below nanosecond-target range.* This SPIP only covers high-precision parameterized timestamps where 7 <= n <= 9. Support/changes for n < 7 are explicitly out of scope for this proposal.\r\n\r\n * *Subtraction of timestamps.* The result should be a day-time interval but the data type has microsecond precision at the moment.\r\n\r\n * *Changing existing time zone semantics.* It does not redefine NTZ/LTZ semantics, session time zone behavior, or SQL time zone rules.\r\n\r\n * *A full rework of all connectors/storage formats.* It does not promise end-to-end nanosecond support in every external system; connector-specific follow-ups may still be needed.\r\n\r\nh1. Q3. How is it done today, and what are the limits of current practice?\r",
       "labels": [
         "SPIP",
         "pull-request-available"
       ],
       "linked_resources": [],
-      "comment_count": 0,
+      "comment_count": 1,
       "llm_summary": "The internal representation of both types is long micros since the epoch + short (or 16-bit) nanos-in-micro in [0, 999]. * The result should be a day-time interval but the data type has microsecond precision at the moment. * It does not promise end-to-end nanosecond support in every external system; connector-specific follow-ups may still be needed.",
       "llm_status": "discussion",
       "llm_key_points": [],
@@ -29,8 +29,8 @@
         "time",
         "zone"
       ],
-      "llm_title": "",
       "_content_hash": "c08c56ea7b2c",
+      "llm_title": "",
       "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
@@ -1770,6 +1770,41 @@
       "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
+      "id": "spark-ml-52nvp22lnppbdrcxzv7y2vwwch449n4t",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] Native PySpark StreamTest framework",
+      "url": "https://lists.apache.org/thread/52nvp22lnppbdrcxzv7y2vwwch449n4t",
+      "author": "Hyukjin Kwon <gu...@apache.org>",
+      "state": "open",
+      "created_at": "2026-09-10T05:27:55+00:00",
+      "updated_at": "2026-09-10T07:33:49+00:00",
+      "body": "+1\r\n\r\nOn Fri, 8 May 2026 at 04:21, Jerry Peng <je...@gmail.com> wrote:\r\n\r\n>\r\n> Hi all,\r\n>\r\n> I'd like to propose adding a Python-native port of the Scala `StreamTest`\r\n> framework\r\n> (`sql/core/src/test/scala/org/apache/spark/sql/streaming/StreamTest.scala`)\r\n> to PySpark, and invite review of a 4-PR stack that delivers it.\r\n>\r\n> *Why*\r\n>\r\n> Scala's `StreamTest` provides a declarative, action-based testing paradigm\r\n> used by ~38 Structured Streaming test suites in the Apache Spark codebase.\r\n> PySpark has no equivalent today: streaming tests are written ad-hoc with\r\n> manual `writeStream` / `processAllAvailable` / `time.sleep` loops, which\r\n> makes them verbose, fragile, and slow to develop. As PySpark streaming\r\n> usage grows -- including `transformWithState`, Python data sources, RTM --\r\n> the lack of a structured testing framework is increasingly a productivity\r\n> tax on PySpark contributors and downstream users writing PySpark streaming\r\n> applications.\r\n>\r\n> *What*\r\n>\r\n> A new test-only utility package `pyspark.testing.streaming` plus a small\r\n> set of test-only helpers in `PythonSQLUtils.scala`. Tests are written as a\r\n> sequence of actions:\r\n>\r\n>   class WordCountTest(StreamTest):\r\n>\r\n>\r\n>\r\n>       def test_count(self):\r\n>\r\n>\r\n>\r\n>           source = MemoryStream(self.spark, \"string\")\r\n>\r\n>           counts = source.to_df().groupBy(\"value\").count()\r\n>\r\n>\r\n>\r\n>           self.run_stream_test(\r\n>\r\n>               counts,\r\n>\r\n>\r\n>\r\n>               AddData(source, \"a\", \"b\", \"a\"),\r\n>\r\n>               CheckAnswer((\"a\", 2), (\"b\", 1)),\r\n>\r\n>\r\n>\r\n>               output_mode=\"complete\",\r\n>\r\n>\r\n>\r\n>           )\r\n>\r\n> The framework supports the full action vocabulary you'd expect from the\r\n> Scala equivalent -- `StartStream`, `StopStream`, `AddData`,\r\n> `ProcessAllAvailable`, `CheckAnswer` / `CheckLastBatch` / `CheckNewAnswer`\r\n> / `CheckAnswerByFunc`, `Assert` / `AssertOnQuery` / `Execute`,\r\n> `ExpectFailure` -- plus Real-Time Mode (`LowLatencyMemoryStream`,\r\n> `Contin",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/spark/pull/55656",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "> > Hi all, > > I'd like to propose adding a Python-native port of the Scala `StreamTest` > framework > (`sql/core/src/test/scala/org/apache/spark/sql/streaming/StreamTest.scala`) > to PySpark, and invite review of a 4-PR stack that delivers it. > PySpark has no equivalent today: streaming tests are written ad-hoc with > manual `writeStream` / `processAllAvailable` / `time.sleep` loops, which > makes them verbose, fragile, and slow to develop. Tests are written as a > sequence of actions: > >   class WordCountTest(StreamTest): > > > >       def test_count(self): > > > >           source = MemoryStream(self.spark, \"string\") > >           counts = source.to_df().groupBy(\"value\").count() > > > >           self.run_stream_test( > >               counts, > > > >               AddData(source, \"a\", \"b\", \"a\"), > >               CheckAnswer((\"a\", 2), (\"b\", 1)), > > > >               output_mode=\"complete\", > > > >           ) > > The framework supports the full action vocabulary you'd expect from the > Scala equivalent -- `StartStream`, `StopStream`, `AddData`, > `ProcessAllAvailable`, `CheckAnswer` / `CheckLastBatch` / `CheckNewAnswer` > / `CheckAnswerByFunc`, `Assert` / `AssertOnQuery` / `Execute`, > `ExpectFailure` -- plus Real-Time Mode (`LowLatencyMemoryStream`, > `Contin",
+      "llm_status": "discussion",
+      "comment_count": 2,
+      "participant_count": 3,
+      "llm_key_points": [
+        "I can take a look next week if we\u2019re not in a rush, otherwise I can take a\r\nlook over the weekend.",
+        "Hi Holden,\r\n\r\n> Have you looked at how Beam/Flink do their Python stream testing?"
+      ],
+      "llm_topics": [
+        "jerry-peng",
+        "python-native-port",
+        "native-pyspark",
+        "apache-spark"
+      ],
+      "_content_hash": "118353145720",
+      "initiative_id": "spark-init-spark-ml-52nvp22lnppbdrcxzv7y2vwwch449n4t"
+    },
+    {
       "id": "spark-ml-ycgvv34l0b678gzkcc4hj0oskhqkdpjv",
       "source": "mailing_list",
       "kind": "thread",
@@ -1778,7 +1813,7 @@
       "author": "Burak Yavuz <br...@gmail.com>",
       "state": "open",
       "created_at": "2026-09-08T19:47:04+00:00",
-      "updated_at": "2026-09-08T22:14:35+00:00",
+      "updated_at": "2026-09-09T18:51:28+00:00",
       "body": "Hi Spark devs,\n\nI would like to start a vote on introducing FileType for handling\nunstructured data.\n\nThe SPIP document:\nhttps://docs.google.com/document/d/1pPof896ZwcZ-2Yn-YhC4TbyYWn1umiQJykGDkAxzCWc/edit?tab=t.0#heading=h.m1700lw4wsoj\n\nDiscussion thread:\nhttps://lists.apache.org/thread/6f83qcpj1ox40jfxtottqlhjbhhxwmhf\n\nJIRA Ticket:\nhttps://issues.apache.org/jira/browse/SPARK-59132\n\nThe vote will be open for at least 72 hours, and passes if a majority +1 PMC\nvotes are cast, with a minimum of 3 +1 votes.\nPlease vote:\n[ ] +1: Accept the proposal as an official SPIP\n[ ] +0\n[ ] -1: I don't think this is a good idea because ...\n\nBest regards,\nBurak Yavuz\n",
       "labels": [],
       "linked_resources": [
@@ -1789,16 +1824,20 @@
           "title": "\ufeffSPIP: FILE EXTERNAL, a new DataType for dealing with files and unstructured data"
         }
       ],
-      "llm_summary": "Vote in progress: 0 binding +1, 4 non-binding +1",
+      "llm_summary": "Vote in progress: 0 binding +1, 5 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 5,
-      "participant_count": 5,
+      "comment_count": 6,
+      "participant_count": 6,
       "vote_data": {
         "binding_plus1": 0,
-        "nonbinding_plus1": 4,
+        "nonbinding_plus1": 5,
         "vetoes": 0,
         "result": "open",
         "voters": [
+          {
+            "voter": "Daniel Tenedorio <dt...@apache.org>",
+            "vote": "+1"
+          },
           {
             "voter": "Gengliang Wang <lt...@gmail.com>",
             "vote": "+1"
@@ -1820,7 +1859,7 @@
       },
       "llm_key_points": [
         "Hi Spark devs,\n\nI would like to start a vote on introducing FileType for handling\nunstructured data.",
-        "Voters include: Gengliang Wang, Hyukjin Kwon, Xiao Li..."
+        "Voters include: Daniel Tenedorio, Gengliang Wang, Hyukjin Kwon..."
       ],
       "llm_topics": [
         "spark-devs",
@@ -1828,7 +1867,7 @@
         "introducing-filetype",
         "handling-unstructured"
       ],
-      "_content_hash": "aa532adcb388",
+      "_content_hash": "0ac8bbaa7d3e",
       "initiative_id": "spark-init-spark-ml-ycgvv34l0b678gzkcc4hj0oskhqkdpjv"
     },
     {
@@ -4301,7 +4340,7 @@
         "uro-bojani"
       ],
       "_content_hash": "011b99573a32",
-      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-92kjhnglm90z2n8v7hxn6d9nb2gzhq1z",
@@ -4588,7 +4627,7 @@
         "apache-spark"
       ],
       "_content_hash": "ec8146319b15",
-      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv",
@@ -4619,7 +4658,7 @@
         "spark-project"
       ],
       "_content_hash": "af074b2503b6",
-      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-c3sjlfos8d4o2859bjpltpgsf33wfnfh",
@@ -5564,38 +5603,6 @@
       ],
       "_content_hash": "9faf2e9d1ba4",
       "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
-    },
-    {
-      "id": "spark-ml-3xojq1dhs72gvkxbxj2c2om5odzl16sx",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Native PySpark StreamTest framework",
-      "url": "https://lists.apache.org/thread/3xojq1dhs72gvkxbxj2c2om5odzl16sx",
-      "author": "Jerry Peng <je...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-05-07T19:20:53+00:00",
-      "updated_at": "2026-05-07T19:20:53+00:00",
-      "body": "Hi all,\r\n\r\nI'd like to propose adding a Python-native port of the Scala `StreamTest`\r\nframework\r\n(`sql/core/src/test/scala/org/apache/spark/sql/streaming/StreamTest.scala`)\r\nto PySpark, and invite review of a 4-PR stack that delivers it.\r\n\r\n*Why*\r\n\r\nScala's `StreamTest` provides a declarative, action-based testing paradigm\r\nused by ~38 Structured Streaming test suites in the Apache Spark codebase.\r\nPySpark has no equivalent today: streaming tests are written ad-hoc with\r\nmanual `writeStream` / `processAllAvailable` / `time.sleep` loops, which\r\nmakes them verbose, fragile, and slow to develop. As PySpark streaming\r\nusage grows -- including `transformWithState`, Python data sources, RTM --\r\nthe lack of a structured testing framework is increasingly a productivity\r\ntax on PySpark contributors and downstream users writing PySpark streaming\r\napplications.\r\n\r\n*What*\r\n\r\nA new test-only utility package `pyspark.testing.streaming` plus a small\r\nset of test-only helpers in `PythonSQLUtils.scala`. Tests are written as a\r\nsequence of actions:\r\n\r\n  class WordCountTest(StreamTest):\r\n\r\n\r\n\r\n      def test_count(self):\r\n\r\n\r\n\r\n          source = MemoryStream(self.spark, \"string\")\r\n\r\n          counts = source.to_df().groupBy(\"value\").count()\r\n\r\n\r\n\r\n          self.run_stream_test(\r\n\r\n              counts,\r\n\r\n\r\n\r\n              AddData(source, \"a\", \"b\", \"a\"),\r\n\r\n              CheckAnswer((\"a\", 2), (\"b\", 1)),\r\n\r\n\r\n\r\n              output_mode=\"complete\",\r\n\r\n\r\n\r\n          )\r\n\r\nThe framework supports the full action vocabulary you'd expect from the\r\nScala equivalent -- `StartStream`, `StopStream`, `AddData`,\r\n`ProcessAllAvailable`, `CheckAnswer` / `CheckLastBatch` / `CheckNewAnswer`\r\n/ `CheckAnswerByFunc`, `Assert` / `AssertOnQuery` / `Execute`,\r\n`ExpectFailure` -- plus Real-Time Mode (`LowLatencyMemoryStream`,\r\n`ContinuousMemorySink`, `Trigger.RealTime`) via polling Check actions.\r\n\r\n*How*\r\n\r\nThe strategy is to keep the JVM streaming runtime as the source of truth\r\nand put a thin Python lay",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/spark/pull/55656",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "I'd like to propose adding a Python-native port of the Scala `StreamTest` framework (`sql/core/src/test/scala/org/apache/spark/sql/streaming/StreamTest.scala`) to PySpark, and invite review of a 4-PR stack that delivers it. PySpark has no equivalent today: streaming tests are written ad-hoc with manual `writeStream` / `processAllAvailable` / `time.sleep` loops, which makes them verbose, fragile, and slow to develop. The framework supports the full action vocabulary you'd expect from the Scala equivalent -- `StartStream`, `StopStream`, `AddData`, `ProcessAllAvailable`, `CheckAnswer` / `CheckLastBatch` / `CheckNewAnswer` / `CheckAnswerByFunc`, `Assert` / `AssertOnQuery` / `Execute`, `ExpectFailure` -- plus Real-Time Mode (`LowLatencyMemoryStream`, `ContinuousMemorySink`, `Trigger.RealTime`) via polling Check actions.",
-      "llm_status": "discussion",
-      "comment_count": 0,
-      "participant_count": 1,
-      "llm_key_points": [],
-      "llm_topics": [
-        "python-native-port",
-        "native-pyspark",
-        "apache-spark",
-        "propose-adding"
-      ],
-      "_content_hash": "9105149bebc2",
-      "initiative_id": "spark-init-spark-ml-3xojq1dhs72gvkxbxj2c2om5odzl16sx"
     },
     {
       "id": "spark-ml-cz8c347sm85s3wdwd6kzrs62dt8bmqt9",
@@ -7200,7 +7207,7 @@
         "tian-gao"
       ],
       "_content_hash": "dacca48c4fa0",
-      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-mqfysmjmkdnw0fxy9t5dp7bxpvo36jrv",
@@ -29543,7 +29550,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",

@@ -1,34 +1,8 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-09-09T10:29:42.520319+00:00",
-  "total": 288,
+  "generated_at": "2026-09-10T10:20:33.829060+00:00",
+  "total": 289,
   "proposals": [
-    {
-      "id": "parquet-gh-rel-apache-parquet-1-18-1-rc1",
-      "source": "github",
-      "kind": "release",
-      "title": "Apache Parquet 1.18.1 RC1",
-      "url": "https://github.com/apache/parquet-java/releases/tag/apache-parquet-1.18.1-rc1",
-      "author": "Fokko",
-      "state": "closed",
-      "tag": "apache-parquet-1.18.1-rc1",
-      "created_at": "2026-08-31T16:50:36Z",
-      "updated_at": "2026-08-31T17:23:27Z",
-      "body": "**Full Changelog**: https://github.com/apache/parquet-java/compare/apache-parquet-1.18.0...apache-parquet-1.18.1-rc1",
-      "labels": [],
-      "linked_resources": [],
-      "llm_summary": "**Full Changelog**: https://github.com/apache/parquet-java/compare/apache-parquet-1.18.0...apache-parquet-1.18.1-rc1",
-      "llm_status": "discussion",
-      "llm_key_points": [],
-      "llm_topics": [
-        "full-changelog",
-        "apache-parquet",
-        "parquet",
-        "full"
-      ],
-      "_content_hash": "24cf546a5623",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
-    },
     {
       "id": "parquet-gh-m36",
       "source": "github",
@@ -36,9 +10,9 @@
       "title": "1.18.1",
       "url": "https://github.com/apache/parquet-java/milestone/36",
       "author": "community",
-      "state": "open",
+      "state": "closed",
       "created_at": "2026-08-18T06:55:42Z",
-      "updated_at": "2026-08-31T16:15:32Z",
+      "updated_at": "2026-09-10T10:08:52Z",
       "due_on": "2026-08-22T00:00:00Z",
       "body": "",
       "labels": [],
@@ -66,7 +40,7 @@
       "author": "community",
       "state": "open",
       "created_at": "2026-07-18T20:33:29Z",
-      "updated_at": "2026-08-11T20:33:58Z",
+      "updated_at": "2026-09-10T10:08:37Z",
       "due_on": null,
       "body": "",
       "labels": [],
@@ -84,6 +58,32 @@
       "llm_title": "",
       "_content_hash": "b6589fc6ab0d",
       "initiative_id": "parquet-init-parquet-gh-m35"
+    },
+    {
+      "id": "parquet-gh-rel-apache-parquet-1-18-1-rc1",
+      "source": "github",
+      "kind": "release",
+      "title": "Apache Parquet 1.18.1 RC1",
+      "url": "https://github.com/apache/parquet-java/releases/tag/apache-parquet-1.18.1-rc1",
+      "author": "Fokko",
+      "state": "closed",
+      "tag": "apache-parquet-1.18.1-rc1",
+      "created_at": "2026-08-31T16:50:36Z",
+      "updated_at": "2026-08-31T17:23:27Z",
+      "body": "**Full Changelog**: https://github.com/apache/parquet-java/compare/apache-parquet-1.18.0...apache-parquet-1.18.1-rc1",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "**Full Changelog**: https://github.com/apache/parquet-java/compare/apache-parquet-1.18.0...apache-parquet-1.18.1-rc1",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "full-changelog",
+        "apache-parquet",
+        "parquet",
+        "full"
+      ],
+      "_content_hash": "24cf546a5623",
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-gh-m34",
@@ -2456,6 +2456,167 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] How should readers behave with unsupported format versions?",
+      "url": "https://lists.apache.org/thread/7ghf93l0ss74l3k4jo9qc2bdmrmng3hm",
+      "author": "Ryan Blue <bl...@apache.org>",
+      "state": "open",
+      "created_at": "2026-09-09T22:38:19+00:00",
+      "updated_at": "2026-09-10T09:11:43+00:00",
+      "body": "Hi everyone,\n\nThis is a new thread to discuss an issue raised in the \"Finalizing the\nversioning proposal\" thread. I suggested starting a new thread to focus on\nthis question in the community sync and there was agreement so that we can\nget more attention to the issue.\n\nThe question that we identified is: How should a reader behave when it\nencounters a file written with an unsupported format version?\n\nThere are 3 main options:\n1. A reader should fail because it does not support the version\n2. A reader should attempt to read the file\n3. This choice is left up to implementations\n\nI'll cover each option in more detail below, but first I want to clarify\nthat we are not talking about \"preview\" features like encodings or\nforward-compatible changes like new logical types. Preview features will\nbreak readers that do not support them and only affect specific columns\nusing the feature. For preview features, the expectation is that readers\nwill attempt to read the file and will fail if they need to project a\ncolumn that cannot be read.\n\nThe choice of how to handle an unsupported format version primarily affects\nchanges that add, remove, or modify the semantics of metadata fields. For\nexample:\n- Changing `path_in_schema` from required to optional\n- Adding `offset` and `size` fields to a page header to relocate page data\n- Fixing stats written with the wrong sort order\n\nIf we choose option 1, then a v3 reader that encounters a v4 file would be\nrequired to fail with an error that the file is too new to be read. With\nthe current versioning scheme, the forward-compatibility within a version\nmeans that a v3 reader can read any v3 file and will produce the correct\ndata. But this guarantee does not extend to any higher version. Without a\nguarantee that results are correct, the v3 reader must reject a v4 file.\n\nIf we choose option 2, then the v3 reader will attempt to read the v4 file.\nIn this case, Parquet will need to provide an additional guarantee that\nreading future formats will eit",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/parquet-java/pull/3611",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "I'll cover each option in more detail below, but first I want to clarify that we are not talking about \"preview\" features like encodings or forward-compatible changes like new logical types. The choice of how to handle an unsupported format version primarily affects changes that add, remove, or modify the semantics of metadata fields. This choice is left up to implementations > > I'll cover each option in more detail below, but first I want to clarify > that we are not talking about \"preview\" features like encodings or > forward-compatible changes like new logical types.",
+      "llm_status": "discussion",
+      "comment_count": 4,
+      "participant_count": 3,
+      "llm_key_points": [
+        "Le 10/09/2026 \u00e0 00:38, Ryan Blue a \u00e9crit\u00a0:\n> \n> There are 3 main options:\n> 1.",
+        "Here is my attempt to summarize the tradeoffs (Ryan's explanation during\nthe call was very helpful for me).",
+        "Here is my attempt to summarize the tradeoffs (Ryan's explanation during\nthe call was very helpful for me)."
+      ],
+      "llm_topics": [
+        "file",
+        "reader",
+        "read",
+        "unsupported-format"
+      ],
+      "_content_hash": "853717dd424b",
+      "initiative_id": "parquet-init-parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm"
+    },
+    {
+      "id": "parquet-ml-v11pw7sbnkdxzjhkmcbsx06clyvjv0xx",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] Extended Precision Nanosecond Timestamps",
+      "url": "https://lists.apache.org/thread/v11pw7sbnkdxzjhkmcbsx06clyvjv0xx",
+      "author": "Divjot Arora via dev <de...@parquet.apache.org>",
+      "state": "open",
+      "created_at": "2026-09-08T11:10:25+00:00",
+      "updated_at": "2026-09-10T07:40:46+00:00",
+      "body": "Hi all,\n\nI would like to start a vote for to adopt parquet-format PR 601 [1]. This\nPR allows\nthe TimestampType logical type annotation to annotate\nFIXED_LEN_BYTE_ARRAY(12)\ncolumns in order to support the full SQL timestamp range in nanoseconds.\nAll three time\nunits (millis/micros/nanos) are supported for such columns. There are Java\n[2] and C++ [3]\nreference implementations (the C++ one includes Parquet to Arrow type\nconversion as well),\nas well as a parquet-testing PR [4] to add a file with such columns.\n\nPlease vote in the next 72 hours.\n\n[ ] +1 Approve the proposed format change\n[ ] +0 No opinion\n[ ] -1 Do not approve (please provide specific reasons)\n\nCheers,\nDiv\n\n[1] https://github.com/apache/parquet-format/pull/601\n[2] https://github.com/apache/parquet-java/pull/3680\n[3] https://github.com/apache/arrow/pull/50916\n[4] https://github.com/apache/parquet-testing/pull/123\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/parquet-format/pull/601",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-java/pull/3680",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/50916",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-testing/pull/123",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Vote PASSED with 4 binding +1 votes and 2 non-binding +1",
+      "llm_status": "released",
+      "comment_count": 6,
+      "participant_count": 7,
+      "vote_data": {
+        "binding_plus1": 4,
+        "nonbinding_plus1": 2,
+        "vetoes": 0,
+        "result": "passed",
+        "voters": [
+          {
+            "voter": "Alkis Evlogimenos via dev <de...@parquet.apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Daniel Weeks <dw...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "G\u00e1bor Sz\u00e1dovszky <ga...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Micah Kornfield <em...@gmail.com>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Ryan Blue <bl...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Stevo Mitri\u0107 via dev <de...@parquet.apache.org>",
+            "vote": "+1"
+          }
+        ],
+        "closes_at": "2026-09-11T11:10:25+00:00"
+      },
+      "llm_key_points": [
+        "Hi all,\n\nI would like to start a vote for to adopt parquet-format PR 601 [1].",
+        "Voters include: Alkis Evlogimenos via dev, Daniel Weeks, G\u00e1bor Sz\u00e1dovszky..."
+      ],
+      "llm_topics": [
+        "extended-precision",
+        "precision-nanosecond",
+        "adopt-parquet-format",
+        "nanosecond-timestamps"
+      ],
+      "_content_hash": "a0a18642d1c2",
+      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+    },
+    {
+      "id": "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
+      "url": "https://lists.apache.org/thread/kgmgn2vmrz49thbfhv8b66lglsyd81xt",
+      "author": "Rok Mihevc <ro...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-09-08T18:42:14+00:00",
+      "updated_at": "2026-09-09T11:08:27+00:00",
+      "body": "Hi all,\n\nAs proposed during the general community call we held a focused call today\nto discuss the proposal for adding a logical vector type to parquet. This\nwas called because it seems:\n\n* Vectors (as in vector DB) storage needs are different to what we need for\nfixed size list applications we've been disucssing so far [0]. This is\ndriven also by Iceberg's need for Vector type [1]\n* We don't yet have a consensus of what physical representation of Vector\ntype should be.\n\n\nNotes from the call can be found here [2]. Short summary:\n\nWe have converged on two options that could work, but have not yet decided\nwhich one to propose:\n\n- Option A - FLBA as physical storage (FLBA(num_elements * element_width)).\nVector logical type would provide an enum specifying the element type, and\nthe element would be non-nullable. The element type enum could be\nindependent of the parquet type system, making evolution easier. Downside\nis loss of element-level encodings available today, though they can be\nadded later. Upside is simplicity and ease of evolution.\n\n- Option C1 - LIST with numeric parquet type elements as physical storage.\nNew float types (e.g. BF16) can be added in parquet proper as needed.\nDownside is we need to add new types to parquet, DL/RL overhead is likely\nnot a concern. Upside is we have encoding support now.\n\nRegarding NaN/Inf limitations, the consensus was that these should be\nhandled by statistics. This leads to a need for a new inf_count statustics.\n\nIt would be great to discuss the merits of these two proposals here on the\nmailing list for maximum visibility and participation.\nWe will likely continue to discuss this on tomorrow's community call too.\n\n\n[0] https://lists.apache.org/thread/xot5f3ghhtc82n1bf0wdl9zqwlrzqks3\n[1]\nhttps://docs.google.com/document/d/1zA8PskNDFKXXJpzWQr25CFoX_aIZHBNHbkxk0t3PteE/edit?tab=t.0#heading=h.j5pn3fef87b2\n[2]\nhttps://docs.google.com/document/d/1rPTjEJTwN97UfHvNlvdriX9XBQsW8PGwIHMXHvy-XlU/edit?tab=t.0\n\n\nBest,\nRok\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1zA8PskNDFKXXJpzWQr25CFoX_aIZHBNHbkxk0t3PteE/edit?tab=t.0#heading=h.j5pn3fef87b2",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffIceberg Vector Type Support Proposal"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1rPTjEJTwN97UfHvNlvdriX9XBQsW8PGwIHMXHvy-XlU/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSep 8, 2026 | Parquet Numeric Vector Type call"
+        }
+      ],
+      "llm_summary": "Motivation Fixed-shape vector data is increasingly common in AI/ML workloads, especially embeddings and materialized model features. Parquet community is also discussing native support for fixed-size list/vector-like data, so Iceberg should decide how this should surface at the table-format layer. A native type would improve usability and interoperability with systems that already expose shape-declared vectors or fixed-size lists, such as Lance, pgvector, Snowflake, and emerging SQL standard.",
+      "llm_status": "discussion",
+      "comment_count": 6,
+      "participant_count": 4,
+      "llm_key_points": [
+        "Le 08/09/2026 \u00e0 20:42, Rok Mihevc a \u00e9crit\u00a0:\n> Hi all,\n> \n> As proposed during the general community call we held a focus",
+        "Hi all,\n\nAndrew's and Gunnar's results show that existing LIST storage can be read\nefficiently.",
+        "Thanks for the summary Rok,\n\nI like the direction C1 is going, but I'm a little concerned about the\nfollowing statement:"
+      ],
+      "llm_topics": [
+        "vector-type",
+        "vector",
+        "focused-call",
+        "type"
+      ],
+      "_content_hash": "9d378f64bb1a",
+      "llm_title": "",
+      "initiative_id": "parquet-init-parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt"
+    },
+    {
       "id": "parquet-ml-ovo7vhh2gp31v32xzq6wm5f0grk97bs3",
       "source": "mailing_list",
       "kind": "thread",
@@ -2536,50 +2697,6 @@
       "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
-      "id": "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
-      "url": "https://lists.apache.org/thread/kgmgn2vmrz49thbfhv8b66lglsyd81xt",
-      "author": "Rok Mihevc <ro...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-09-08T18:42:14+00:00",
-      "updated_at": "2026-09-08T23:08:37+00:00",
-      "body": "Hi all,\n\nAs proposed during the general community call we held a focused call today\nto discuss the proposal for adding a logical vector type to parquet. This\nwas called because it seems:\n\n* Vectors (as in vector DB) storage needs are different to what we need for\nfixed size list applications we've been disucssing so far [0]. This is\ndriven also by Iceberg's need for Vector type [1]\n* We don't yet have a consensus of what physical representation of Vector\ntype should be.\n\n\nNotes from the call can be found here [2]. Short summary:\n\nWe have converged on two options that could work, but have not yet decided\nwhich one to propose:\n\n- Option A - FLBA as physical storage (FLBA(num_elements * element_width)).\nVector logical type would provide an enum specifying the element type, and\nthe element would be non-nullable. The element type enum could be\nindependent of the parquet type system, making evolution easier. Downside\nis loss of element-level encodings available today, though they can be\nadded later. Upside is simplicity and ease of evolution.\n\n- Option C1 - LIST with numeric parquet type elements as physical storage.\nNew float types (e.g. BF16) can be added in parquet proper as needed.\nDownside is we need to add new types to parquet, DL/RL overhead is likely\nnot a concern. Upside is we have encoding support now.\n\nRegarding NaN/Inf limitations, the consensus was that these should be\nhandled by statistics. This leads to a need for a new inf_count statustics.\n\nIt would be great to discuss the merits of these two proposals here on the\nmailing list for maximum visibility and participation.\nWe will likely continue to discuss this on tomorrow's community call too.\n\n\n[0] https://lists.apache.org/thread/xot5f3ghhtc82n1bf0wdl9zqwlrzqks3\n[1]\nhttps://docs.google.com/document/d/1zA8PskNDFKXXJpzWQr25CFoX_aIZHBNHbkxk0t3PteE/edit?tab=t.0#heading=h.j5pn3fef87b2\n[2]\nhttps://docs.google.com/document/d/1rPTjEJTwN97UfHvNlvdriX9XBQsW8PGwIHMXHvy-XlU/edit?tab=t.0\n\n\nBest,\nRok\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1zA8PskNDFKXXJpzWQr25CFoX_aIZHBNHbkxk0t3PteE/edit?tab=t.0#heading=h.j5pn3fef87b2",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffIceberg Vector Type Support Proposal"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1rPTjEJTwN97UfHvNlvdriX9XBQsW8PGwIHMXHvy-XlU/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSep 8, 2026 | Parquet Numeric Vector Type call"
-        }
-      ],
-      "llm_summary": "Motivation Fixed-shape vector data is increasingly common in AI/ML workloads, especially embeddings and materialized model features. Parquet community is also discussing native support for fixed-size list/vector-like data, so Iceberg should decide how this should surface at the table-format layer. A native type would improve usability and interoperability with systems that already expose shape-declared vectors or fixed-size lists, such as Lance, pgvector, Snowflake, and emerging SQL standard.",
-      "llm_status": "discussion",
-      "comment_count": 4,
-      "participant_count": 4,
-      "llm_key_points": [
-        "Le 08/09/2026 \u00e0 20:42, Rok Mihevc a \u00e9crit\u00a0:\n> Hi all,\n> \n> As proposed during the general community call we held a focus",
-        "Hi all,\n\nAndrew's and Gunnar's results show that existing LIST storage can be read\nefficiently.",
-        "Thanks for the summary Rok,\n\nI like the direction C1 is going, but I'm a little concerned about the\nfollowing statement:"
-      ],
-      "llm_topics": [
-        "vector-type",
-        "vector",
-        "focused-call",
-        "type"
-      ],
-      "_content_hash": "9d378f64bb1a",
-      "initiative_id": "parquet-init-parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt"
-    },
-    {
       "id": "parquet-ml-qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk",
       "source": "mailing_list",
       "kind": "thread",
@@ -2622,7 +2739,7 @@
       ],
       "llm_summary": "Since the earlier PFOR thread I have kept measuring and improved decoding speed significantly, added a delta mode, and evaluated the encoding on real dictionary index runs. I see a comparable compression ratio to delta bit pack hybrid (same idea). So I did an evaluation of PFOR for dictionary index runs and added the results on the same to the document.",
       "llm_status": "discussion",
-      "comment_count": 23,
+      "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [],
       "llm_topics": [
@@ -2631,68 +2748,9 @@
         "improved-decoding",
         "discuss"
       ],
+      "llm_title": "",
       "_content_hash": "20730f857f21",
       "initiative_id": "parquet-init-parquet-ml-qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk"
-    },
-    {
-      "id": "parquet-ml-v11pw7sbnkdxzjhkmcbsx06clyvjv0xx",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[VOTE] Extended Precision Nanosecond Timestamps",
-      "url": "https://lists.apache.org/thread/v11pw7sbnkdxzjhkmcbsx06clyvjv0xx",
-      "author": "Divjot Arora via dev <de...@parquet.apache.org>",
-      "state": "open",
-      "created_at": "2026-09-08T11:10:25+00:00",
-      "updated_at": "2026-09-08T12:26:14+00:00",
-      "body": "Hi all,\n\nI would like to start a vote for to adopt parquet-format PR 601 [1]. This\nPR allows\nthe TimestampType logical type annotation to annotate\nFIXED_LEN_BYTE_ARRAY(12)\ncolumns in order to support the full SQL timestamp range in nanoseconds.\nAll three time\nunits (millis/micros/nanos) are supported for such columns. There are Java\n[2] and C++ [3]\nreference implementations (the C++ one includes Parquet to Arrow type\nconversion as well),\nas well as a parquet-testing PR [4] to add a file with such columns.\n\nPlease vote in the next 72 hours.\n\n[ ] +1 Approve the proposed format change\n[ ] +0 No opinion\n[ ] -1 Do not approve (please provide specific reasons)\n\nCheers,\nDiv\n\n[1] https://github.com/apache/parquet-format/pull/601\n[2] https://github.com/apache/parquet-java/pull/3680\n[3] https://github.com/apache/arrow/pull/50916\n[4] https://github.com/apache/parquet-testing/pull/123\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/parquet-format/pull/601",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-java/pull/3680",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/50916",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-testing/pull/123",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Vote in progress: 0 binding +1, 1 non-binding +1",
-      "llm_status": "proposal",
-      "comment_count": 1,
-      "participant_count": 2,
-      "vote_data": {
-        "binding_plus1": 0,
-        "nonbinding_plus1": 1,
-        "vetoes": 0,
-        "result": "open",
-        "voters": [
-          {
-            "voter": "Stevo Mitri\u0107 via dev <de...@parquet.apache.org>",
-            "vote": "+1"
-          }
-        ],
-        "closes_at": "2026-09-11T11:10:25+00:00"
-      },
-      "llm_key_points": [
-        "Hi all,\n\nI would like to start a vote for to adopt parquet-format PR 601 [1].",
-        "Voters include: Stevo Mitri\u0107 via dev..."
-      ],
-      "llm_topics": [
-        "extended-precision",
-        "precision-nanosecond",
-        "adopt-parquet-format",
-        "nanosecond-timestamps"
-      ],
-      "_content_hash": "7493559f77e9",
-      "initiative_id": "parquet-init-parquet-ml-v11pw7sbnkdxzjhkmcbsx06clyvjv0xx"
     },
     {
       "id": "parquet-ml-3h0ybjk5bg22msl1czvtjymmppllg59b",

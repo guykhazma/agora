@@ -1,8 +1,26 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-09-09T10:28:28.242571+00:00",
+  "generated_at": "2026-09-10T10:19:18.070606+00:00",
   "total": 164,
   "initiatives": [
+    {
+      "id": "spark-init-spark-ml-52nvp22lnppbdrcxzv7y2vwwch449n4t",
+      "title": "Native PySpark StreamTest framework",
+      "summary": "> > Hi all, > > I'd like to propose adding a Python-native port of the Scala `StreamTest` > framework > (`sql/core/src/test/scala/org/apache/spark/sql/streaming/StreamTest.scala`) > to PySpark, and invite review of a 4-PR stack that delivers it. > PySpark has no equivalent today: streaming tests are written ad-hoc with > manual `writeStream` / `processAllAvailable` / `time.sleep` loops, which > makes them verbose, fragile, and slow to develop. Tests are written as a > sequence of actions: > >   class WordCountTest(StreamTest): > > > >       def test_count(self): > > > >           source = MemoryStream(self.spark, \"string\") > >           counts = source.to_df().groupBy(\"value\").count() > > > >           self.run_stream_test( > >               counts, > > > >               AddData(source, \"a\", \"b\", \"a\"), > >               CheckAnswer((\"a\", 2), (\"b\", 1)), > > > >               output_mode=\"complete\", > > > >           ) > > The framework supports the full action vocabulary you'd expect from the > Scala equivalent -- `StartStream`, `StopStream`, `AddData`, > `ProcessAllAvailable`, `CheckAnswer` / `CheckLastBatch` / `CheckNewAnswer` > / `CheckAnswerByFunc`, `Assert` / `AssertOnQuery` / `Execute`, > `ExpectFailure` -- plus Real-Time Mode (`LowLatencyMemoryStream`, > `Contin",
+      "status": "discussion",
+      "key_points": [
+        "I can take a look next week if we\u2019re not in a rush, otherwise I can take a\r\nlook over the weekend.",
+        "Hi Holden,\r\n\r\n> Have you looked at how Beam/Flink do their Python stream testing?"
+      ],
+      "proposal_ids": [
+        "spark-ml-52nvp22lnppbdrcxzv7y2vwwch449n4t"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-09-10T07:33:49+00:00",
+      "signals": [],
+      "archived": false
+    },
     {
       "id": "spark-init-spark-ml-ycgvv34l0b678gzkcc4hj0oskhqkdpjv",
       "title": "SPIP: FileType",
@@ -22,57 +40,9 @@
           "title": "\ufeffSPIP: FILE EXTERNAL, a new DataType for dealing with files and unstructured data"
         }
       ],
-      "last_activity": "2026-09-08T22:14:35+00:00",
+      "last_activity": "2026-09-09T18:51:28+00:00",
       "signals": [
         "shared_doc"
-      ],
-      "archived": false
-    },
-    {
-      "id": "spark-init-spark-ml-d4q3zl26vldm1pb95b7zr2pqbcx3q4lq",
-      "title": "Apache Spark Connect Rust Client 4.2.0 released",
-      "summary": "On Thu, Jul 11, 2024 at 3:22\u202fPM Zhou Jiang <zh...@gmail.com> wrote: > > +1 for releasing 3.5.2, which would also benefit the Spark Operator multi-version support. \u53d1\u4ef6\u4eba: Hyukjin Kwon <gu...@apache.org> ",
-      "status": "released",
-      "key_points": [],
-      "proposal_ids": [
-        "spark-ml-d4q3zl26vldm1pb95b7zr2pqbcx3q4lq",
-        "spark-ml-34lmh2l1jx0dls4r6xf413p1nc739gzq",
-        "spark-ml-lxjdg2f2drrz8hz29g7fgmc4t02rfmp2",
-        "spark-ml-o9h87grjcot5foczfnz444qph2gg7w5q",
-        "spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz",
-        "spark-ml-g8b6fz8pt0pytz756psvvvqvsmn45l2v",
-        "spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1",
-        "spark-ml-bmqbpo4fp08y009hvgsv7s0kg9qo1c8p",
-        "spark-ml-kfhrtdy0q4cwo62vc23xh0f2z9tv5mfb",
-        "spark-ml-xq88d310v6nzwtppqsk69x9r9r2qgtmh",
-        "spark-ml-8x7w4k9yqs385fqqctvdnrtrfhkcr766",
-        "spark-ml-k6k50ck0b7djlmnt8t45720jx2qov678",
-        "spark-ml-frdt497o0g3n5czqffdzn5xhh3rd0of7",
-        "spark-ml-9xdy16hzq067cmr2zf9bdptc7mpd300c",
-        "spark-ml-dfkpmt6m398g4y1kmq0gsrko5x82sfh9",
-        "spark-ml-p0y46b1986pm4hmg5fy9zbf3g1k8ngrx",
-        "spark-ml-khl9oglldblfnop56fowvgsy0m06pngf",
-        "spark-ml-ftonkoxxmr61zynsmjwjft7ry6s0s60b",
-        "spark-ml-mpgf1g8t33g7plhxnqxnowxzltq2q8bb",
-        "spark-ml-0blhqx9yhxdhxsmy9fq11ppgg9k0v83j",
-        "spark-ml-s54ogfn526yvs1drvw7h0xfym8xq1nwq",
-        "spark-ml-2v585fl7zr5p2d1rrckoly4g8lywbp3g",
-        "spark-ml-6nn76olr65b8zfgzdcbtr9f6o98451o5",
-        "spark-ml-lropros35npnmsg9tgrxfk76sprqjv35",
-        "spark-ml-hxc97ws571wsfyf53wno90w0m371m4qp",
-        "spark-ml-1kr0hhx3c6ml132gqvy5424gz8qnnqd5",
-        "spark-ml-jnm4qg4ghrjzcnnlrhhp4o6ws4jn10jk",
-        "spark-ml-hpkrbdwfrzq3r19z89zn4wd9gt0dhwvo",
-        "spark-ml-kqqlsy90ormkccddtx6wgqmy8r1df8tx",
-        "spark-ml-0o61jn9cmg6r0f22ljgjg5c31z8fn0zn"
-      ],
-      "proposal_count": 30,
-      "shared_docs": [],
-      "last_activity": "2026-09-07T22:43:24+00:00",
-      "signals": [
-        "vote_thread",
-        "topic:apache-spark",
-        "topic:release-apache"
       ],
       "archived": false
     },
@@ -177,13 +147,61 @@
           "title": "\ufeffBetter Spark UI scalability and Driver stability for large applications"
         }
       ],
-      "last_activity": "2026-09-06T15:29:22+00:00",
+      "last_activity": "2026-09-09T18:19:29+00:00",
       "signals": [
         "shared_doc",
         "cross_source",
         "vote_thread",
         "topic:spip-doc",
         "topic:spip-document"
+      ],
+      "archived": false
+    },
+    {
+      "id": "spark-init-spark-ml-d4q3zl26vldm1pb95b7zr2pqbcx3q4lq",
+      "title": "Apache Spark Connect Rust Client 4.2.0 released",
+      "summary": "On Thu, Jul 11, 2024 at 3:22\u202fPM Zhou Jiang <zh...@gmail.com> wrote: > > +1 for releasing 3.5.2, which would also benefit the Spark Operator multi-version support. \u53d1\u4ef6\u4eba: Hyukjin Kwon <gu...@apache.org> ",
+      "status": "released",
+      "key_points": [],
+      "proposal_ids": [
+        "spark-ml-d4q3zl26vldm1pb95b7zr2pqbcx3q4lq",
+        "spark-ml-34lmh2l1jx0dls4r6xf413p1nc739gzq",
+        "spark-ml-lxjdg2f2drrz8hz29g7fgmc4t02rfmp2",
+        "spark-ml-o9h87grjcot5foczfnz444qph2gg7w5q",
+        "spark-ml-b4tqz1bhxjc6yvjmboq34gp0w3lnthyz",
+        "spark-ml-g8b6fz8pt0pytz756psvvvqvsmn45l2v",
+        "spark-ml-xy31fcvz8x6v4pwv3lczfbjyh8843ro1",
+        "spark-ml-bmqbpo4fp08y009hvgsv7s0kg9qo1c8p",
+        "spark-ml-kfhrtdy0q4cwo62vc23xh0f2z9tv5mfb",
+        "spark-ml-xq88d310v6nzwtppqsk69x9r9r2qgtmh",
+        "spark-ml-8x7w4k9yqs385fqqctvdnrtrfhkcr766",
+        "spark-ml-k6k50ck0b7djlmnt8t45720jx2qov678",
+        "spark-ml-frdt497o0g3n5czqffdzn5xhh3rd0of7",
+        "spark-ml-9xdy16hzq067cmr2zf9bdptc7mpd300c",
+        "spark-ml-dfkpmt6m398g4y1kmq0gsrko5x82sfh9",
+        "spark-ml-p0y46b1986pm4hmg5fy9zbf3g1k8ngrx",
+        "spark-ml-khl9oglldblfnop56fowvgsy0m06pngf",
+        "spark-ml-ftonkoxxmr61zynsmjwjft7ry6s0s60b",
+        "spark-ml-mpgf1g8t33g7plhxnqxnowxzltq2q8bb",
+        "spark-ml-0blhqx9yhxdhxsmy9fq11ppgg9k0v83j",
+        "spark-ml-s54ogfn526yvs1drvw7h0xfym8xq1nwq",
+        "spark-ml-2v585fl7zr5p2d1rrckoly4g8lywbp3g",
+        "spark-ml-6nn76olr65b8zfgzdcbtr9f6o98451o5",
+        "spark-ml-lropros35npnmsg9tgrxfk76sprqjv35",
+        "spark-ml-hxc97ws571wsfyf53wno90w0m371m4qp",
+        "spark-ml-1kr0hhx3c6ml132gqvy5424gz8qnnqd5",
+        "spark-ml-jnm4qg4ghrjzcnnlrhhp4o6ws4jn10jk",
+        "spark-ml-hpkrbdwfrzq3r19z89zn4wd9gt0dhwvo",
+        "spark-ml-kqqlsy90ormkccddtx6wgqmy8r1df8tx",
+        "spark-ml-0o61jn9cmg6r0f22ljgjg5c31z8fn0zn"
+      ],
+      "proposal_count": 30,
+      "shared_docs": [],
+      "last_activity": "2026-09-07T22:43:24+00:00",
+      "signals": [
+        "vote_thread",
+        "topic:apache-spark",
+        "topic:release-apache"
       ],
       "archived": false
     },
@@ -775,7 +793,6 @@
         "spark-ml-gkdtqsb0zkhzcbb4kh17fpwddl4r5h7z",
         "spark-ml-b9yy4p08856dgfs894nt4y2khcnckd3t",
         "spark-ml-l2hhc6y2stfgy6hxddpo4ycgs4lszhcx",
-        "spark-ml-2z3rfzmq8bv01yrmchs87g82grbzfz0m",
         "spark-ml-h4dw28rb00xjrywoc151jlhw24o3yfb8",
         "spark-ml-od9whzo97w1lv3dsk039zodk6s14vvsm",
         "spark-ml-mj3cf661jg2lc3gq5wjp07tbwpol532b",
@@ -784,7 +801,7 @@
         "spark-ml-tsq0237k4kx05vk4nms3pxptd1hmqpzs",
         "spark-ml-08xqf5r05gkfc9t5b2sks3xk391drnp9"
       ],
-      "proposal_count": 81,
+      "proposal_count": 80,
       "shared_docs": [
         {
           "url": "https://docs.google.com/document/d/1nN-pKuvt-amUcrkTvYAQ-bJBgtsWb9nAkNoVNRM2S2o",
@@ -1054,7 +1071,7 @@
       "archived": false
     },
     {
-      "id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg",
+      "id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv",
       "title": "New Spark Committer",
       "summary": "Both have made meaningful contributions to the Spark community, and we are excited to see both take on this new role and continue helping move the project forward. > > > DB Tsai  |  https://www.dbtsai",
       "status": "discussion",
@@ -1313,21 +1330,6 @@
         "topic:spark",
         "topic:spark-documentation"
       ],
-      "archived": false
-    },
-    {
-      "id": "spark-init-spark-ml-3xojq1dhs72gvkxbxj2c2om5odzl16sx",
-      "title": "Native PySpark StreamTest framework",
-      "summary": "I'd like to propose adding a Python-native port of the Scala `StreamTest` framework (`sql/core/src/test/scala/org/apache/spark/sql/streaming/StreamTest.scala`) to PySpark, and invite review of a 4-PR stack that delivers it. PySpark has no equivalent today: streaming tests are written ad-hoc with manual `writeStream` / `processAllAvailable` / `time.sleep` loops, which makes them verbose, fragile, and slow to develop. The framework supports the full action vocabulary you'd expect from the Scala equivalent -- `StartStream`, `StopStream`, `AddData`, `ProcessAllAvailable`, `CheckAnswer` / `CheckLastBatch` / `CheckNewAnswer` / `CheckAnswerByFunc`, `Assert` / `AssertOnQuery` / `Execute`, `ExpectFailure` -- plus Real-Time Mode (`LowLatencyMemoryStream`, `ContinuousMemorySink`, `Trigger.RealTime`) via polling Check actions.",
-      "status": "discussion",
-      "key_points": [],
-      "proposal_ids": [
-        "spark-ml-3xojq1dhs72gvkxbxj2c2om5odzl16sx"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2026-05-07T19:20:53+00:00",
-      "signals": [],
       "archived": false
     },
     {
@@ -2844,9 +2846,10 @@
         "spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j",
         "spark-ml-9n6k6c3no9chbv11hc6210tkx9oygnj2",
         "spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt",
-        "spark-ml-7x5s8fpg16jvlm4cng5kvfk3njhwd0zh"
+        "spark-ml-7x5s8fpg16jvlm4cng5kvfk3njhwd0zh",
+        "spark-ml-2z3rfzmq8bv01yrmchs87g82grbzfz0m"
       ],
-      "proposal_count": 4,
+      "proposal_count": 5,
       "shared_docs": [],
       "last_activity": "2024-02-24T02:20:52+00:00",
       "signals": [

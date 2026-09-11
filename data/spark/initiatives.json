@@ -1,26 +1,8 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-09-10T10:19:18.070606+00:00",
+  "generated_at": "2026-09-11T10:16:34.398181+00:00",
   "total": 164,
   "initiatives": [
-    {
-      "id": "spark-init-spark-ml-52nvp22lnppbdrcxzv7y2vwwch449n4t",
-      "title": "Native PySpark StreamTest framework",
-      "summary": "> > Hi all, > > I'd like to propose adding a Python-native port of the Scala `StreamTest` > framework > (`sql/core/src/test/scala/org/apache/spark/sql/streaming/StreamTest.scala`) > to PySpark, and invite review of a 4-PR stack that delivers it. > PySpark has no equivalent today: streaming tests are written ad-hoc with > manual `writeStream` / `processAllAvailable` / `time.sleep` loops, which > makes them verbose, fragile, and slow to develop. Tests are written as a > sequence of actions: > >   class WordCountTest(StreamTest): > > > >       def test_count(self): > > > >           source = MemoryStream(self.spark, \"string\") > >           counts = source.to_df().groupBy(\"value\").count() > > > >           self.run_stream_test( > >               counts, > > > >               AddData(source, \"a\", \"b\", \"a\"), > >               CheckAnswer((\"a\", 2), (\"b\", 1)), > > > >               output_mode=\"complete\", > > > >           ) > > The framework supports the full action vocabulary you'd expect from the > Scala equivalent -- `StartStream`, `StopStream`, `AddData`, > `ProcessAllAvailable`, `CheckAnswer` / `CheckLastBatch` / `CheckNewAnswer` > / `CheckAnswerByFunc`, `Assert` / `AssertOnQuery` / `Execute`, > `ExpectFailure` -- plus Real-Time Mode (`LowLatencyMemoryStream`, > `Contin",
-      "status": "discussion",
-      "key_points": [
-        "I can take a look next week if we\u2019re not in a rush, otherwise I can take a\r\nlook over the weekend.",
-        "Hi Holden,\r\n\r\n> Have you looked at how Beam/Flink do their Python stream testing?"
-      ],
-      "proposal_ids": [
-        "spark-ml-52nvp22lnppbdrcxzv7y2vwwch449n4t"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2026-09-10T07:33:49+00:00",
-      "signals": [],
-      "archived": false
-    },
     {
       "id": "spark-init-spark-ml-ycgvv34l0b678gzkcc4hj0oskhqkdpjv",
       "title": "SPIP: FileType",
@@ -40,7 +22,7 @@
           "title": "\ufeffSPIP: FILE EXTERNAL, a new DataType for dealing with files and unstructured data"
         }
       ],
-      "last_activity": "2026-09-09T18:51:28+00:00",
+      "last_activity": "2026-09-11T06:02:16+00:00",
       "signals": [
         "shared_doc"
       ],
@@ -147,7 +129,7 @@
           "title": "\ufeffBetter Spark UI scalability and Driver stability for large applications"
         }
       ],
-      "last_activity": "2026-09-09T18:19:29+00:00",
+      "last_activity": "2026-09-10T14:40:59+00:00",
       "signals": [
         "shared_doc",
         "cross_source",
@@ -155,6 +137,24 @@
         "topic:spip-doc",
         "topic:spip-document"
       ],
+      "archived": false
+    },
+    {
+      "id": "spark-init-spark-ml-52nvp22lnppbdrcxzv7y2vwwch449n4t",
+      "title": "Native PySpark StreamTest framework",
+      "summary": "> > Hi all, > > I'd like to propose adding a Python-native port of the Scala `StreamTest` > framework > (`sql/core/src/test/scala/org/apache/spark/sql/streaming/StreamTest.scala`) > to PySpark, and invite review of a 4-PR stack that delivers it. > PySpark has no equivalent today: streaming tests are written ad-hoc with > manual `writeStream` / `processAllAvailable` / `time.sleep` loops, which > makes them verbose, fragile, and slow to develop. Tests are written as a > sequence of actions: > >   class WordCountTest(StreamTest): > > > >       def test_count(self): > > > >           source = MemoryStream(self.spark, \"string\") > >           counts = source.to_df().groupBy(\"value\").count() > > > >           self.run_stream_test( > >               counts, > > > >               AddData(source, \"a\", \"b\", \"a\"), > >               CheckAnswer((\"a\", 2), (\"b\", 1)), > > > >               output_mode=\"complete\", > > > >           ) > > The framework supports the full action vocabulary you'd expect from the > Scala equivalent -- `StartStream`, `StopStream`, `AddData`, > `ProcessAllAvailable`, `CheckAnswer` / `CheckLastBatch` / `CheckNewAnswer` > / `CheckAnswerByFunc`, `Assert` / `AssertOnQuery` / `Execute`, > `ExpectFailure` -- plus Real-Time Mode (`LowLatencyMemoryStream`, > `Contin",
+      "status": "discussion",
+      "key_points": [
+        "I can take a look next week if we\u2019re not in a rush, otherwise I can take a\r\nlook over the weekend.",
+        "Hi Holden,\r\n\r\n> Have you looked at how Beam/Flink do their Python stream testing?"
+      ],
+      "proposal_ids": [
+        "spark-ml-52nvp22lnppbdrcxzv7y2vwwch449n4t"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-09-10T07:33:49+00:00",
+      "signals": [],
       "archived": false
     },
     {
@@ -793,6 +793,7 @@
         "spark-ml-gkdtqsb0zkhzcbb4kh17fpwddl4r5h7z",
         "spark-ml-b9yy4p08856dgfs894nt4y2khcnckd3t",
         "spark-ml-l2hhc6y2stfgy6hxddpo4ycgs4lszhcx",
+        "spark-ml-2z3rfzmq8bv01yrmchs87g82grbzfz0m",
         "spark-ml-h4dw28rb00xjrywoc151jlhw24o3yfb8",
         "spark-ml-od9whzo97w1lv3dsk039zodk6s14vvsm",
         "spark-ml-mj3cf661jg2lc3gq5wjp07tbwpol532b",
@@ -801,7 +802,7 @@
         "spark-ml-tsq0237k4kx05vk4nms3pxptd1hmqpzs",
         "spark-ml-08xqf5r05gkfc9t5b2sks3xk391drnp9"
       ],
-      "proposal_count": 80,
+      "proposal_count": 81,
       "shared_docs": [
         {
           "url": "https://docs.google.com/document/d/1nN-pKuvt-amUcrkTvYAQ-bJBgtsWb9nAkNoVNRM2S2o",
@@ -1071,7 +1072,7 @@
       "archived": false
     },
     {
-      "id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv",
+      "id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg",
       "title": "New Spark Committer",
       "summary": "Both have made meaningful contributions to the Spark community, and we are excited to see both take on this new role and continue helping move the project forward. > > > DB Tsai  |  https://www.dbtsai",
       "status": "discussion",
@@ -2846,10 +2847,9 @@
         "spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j",
         "spark-ml-9n6k6c3no9chbv11hc6210tkx9oygnj2",
         "spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt",
-        "spark-ml-7x5s8fpg16jvlm4cng5kvfk3njhwd0zh",
-        "spark-ml-2z3rfzmq8bv01yrmchs87g82grbzfz0m"
+        "spark-ml-7x5s8fpg16jvlm4cng5kvfk3njhwd0zh"
       ],
-      "proposal_count": 5,
+      "proposal_count": 4,
       "shared_docs": [],
       "last_activity": "2024-02-24T02:20:52+00:00",
       "signals": [

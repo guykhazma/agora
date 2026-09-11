@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-09-10T10:20:33.829060+00:00",
+  "generated_at": "2026-09-11T10:17:11.904118+00:00",
   "total": 289,
   "proposals": [
     {
@@ -2464,7 +2464,7 @@
       "author": "Ryan Blue <bl...@apache.org>",
       "state": "open",
       "created_at": "2026-09-09T22:38:19+00:00",
-      "updated_at": "2026-09-10T09:11:43+00:00",
+      "updated_at": "2026-09-10T19:25:11+00:00",
       "body": "Hi everyone,\n\nThis is a new thread to discuss an issue raised in the \"Finalizing the\nversioning proposal\" thread. I suggested starting a new thread to focus on\nthis question in the community sync and there was agreement so that we can\nget more attention to the issue.\n\nThe question that we identified is: How should a reader behave when it\nencounters a file written with an unsupported format version?\n\nThere are 3 main options:\n1. A reader should fail because it does not support the version\n2. A reader should attempt to read the file\n3. This choice is left up to implementations\n\nI'll cover each option in more detail below, but first I want to clarify\nthat we are not talking about \"preview\" features like encodings or\nforward-compatible changes like new logical types. Preview features will\nbreak readers that do not support them and only affect specific columns\nusing the feature. For preview features, the expectation is that readers\nwill attempt to read the file and will fail if they need to project a\ncolumn that cannot be read.\n\nThe choice of how to handle an unsupported format version primarily affects\nchanges that add, remove, or modify the semantics of metadata fields. For\nexample:\n- Changing `path_in_schema` from required to optional\n- Adding `offset` and `size` fields to a page header to relocate page data\n- Fixing stats written with the wrong sort order\n\nIf we choose option 1, then a v3 reader that encounters a v4 file would be\nrequired to fail with an error that the file is too new to be read. With\nthe current versioning scheme, the forward-compatibility within a version\nmeans that a v3 reader can read any v3 file and will produce the correct\ndata. But this guarantee does not extend to any higher version. Without a\nguarantee that results are correct, the v3 reader must reject a v4 file.\n\nIf we choose option 2, then the v3 reader will attempt to read the v4 file.\nIn this case, Parquet will need to provide an additional guarantee that\nreading future formats will eit",
       "labels": [],
       "linked_resources": [
@@ -2475,8 +2475,8 @@
       ],
       "llm_summary": "I'll cover each option in more detail below, but first I want to clarify that we are not talking about \"preview\" features like encodings or forward-compatible changes like new logical types. The choice of how to handle an unsupported format version primarily affects changes that add, remove, or modify the semantics of metadata fields. This choice is left up to implementations > > I'll cover each option in more detail below, but first I want to clarify > that we are not talking about \"preview\" features like encodings or > forward-compatible changes like new logical types.",
       "llm_status": "discussion",
-      "comment_count": 4,
-      "participant_count": 3,
+      "comment_count": 7,
+      "participant_count": 4,
       "llm_key_points": [
         "Le 10/09/2026 \u00e0 00:38, Ryan Blue a \u00e9crit\u00a0:\n> \n> There are 3 main options:\n> 1.",
         "Here is my attempt to summarize the tradeoffs (Ryan's explanation during\nthe call was very helpful for me).",
@@ -2489,6 +2489,7 @@
         "unsupported-format"
       ],
       "_content_hash": "853717dd424b",
+      "llm_title": "",
       "initiative_id": "parquet-init-parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm"
     },
     {
@@ -3008,7 +3009,7 @@
       ],
       "_content_hash": "df5e84f62b08",
       "llm_title": "",
-      "initiative_id": "parquet-init-parquet-ml-4ks6fg3pt13xgkr1c1gf436opy951tnm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-d5t1qphb8lj0qqltrv57bknx18fwbf2l",
@@ -3384,7 +3385,7 @@
       ],
       "_content_hash": "5b450bd7e9f6",
       "llm_title": "",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
     },
     {
       "id": "parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj",
@@ -3559,7 +3560,7 @@
         "parquet"
       ],
       "_content_hash": "94d5ca5afc35",
-      "initiative_id": "parquet-init-parquet-ml-3653pwzmxo0sbfvcopfvkbjoyy4nor5q"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms",
@@ -4833,7 +4834,7 @@
       ],
       "_content_hash": "a930bc752794",
       "llm_title": "Support Non-Contiguous Pages in Parquet",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
     },
     {
       "id": "parquet-ml-m6j8lzc09ytyd45wt6pdcyn5qy95f0vt",
@@ -7189,7 +7190,7 @@
       ],
       "_content_hash": "28a4922aafaa",
       "llm_title": "Feature Addition Requirements for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
+      "initiative_id": "parquet-init-parquet-ml-hms38c0807r3qpst7ykf4b42xwpb23g7"
     },
     {
       "id": "parquet-ml-lsf425yk0h0pzvq41kz8z92qffg8mmf8",

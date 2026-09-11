@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-09-10T10:19:18.040021+00:00",
+  "generated_at": "2026-09-11T10:16:34.367725+00:00",
   "total": 655,
   "proposals": [
     {
@@ -12,7 +12,7 @@
       "author": "Max Gekk",
       "state": "open",
       "created_at": "2026-05-11T15:13:30+00:00",
-      "updated_at": "2026-09-09T18:19:29+00:00",
+      "updated_at": "2026-09-10T14:40:59+00:00",
       "body": "h1. Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.\r\n\r\nAdd nanosecond-capable timestamps with an explicit fractional precision *n* in SQL and APIs, while keeping a simple binary value: epoch microseconds (64-bit) + nanoseconds within that microsecond (0\u2013999, stored in 16 bits).\r\nh3. SQL surface\r\n\r\nSupport TIMESTAMP_NTZ\\(n\\), TIMESTAMP_LTZ\\(n\\), and TIMESTAMP\\(n\\) in the parser (including equivalent spellings: WITHOUT TIME ZONE, WITH LOCAL TIME ZONE, etc.) so precision is first-class in the grammar, not a side convention. The parameter n is optional, and its valid range is [0, 9]. It defines how many decimal digits of the fractional second are part of the type. For example: n = 6 -> microseconds, n = 9 -> nanoseconds.\r\nh3. Scala / Java APIs\r\n\r\nIntroduce parameterized catalyst types, e.g. TimestampNTZNanosType\\(n\\) for TIMESTAMP_NTZ\\(n\\) and TimestampNanosType\\(n\\) for TIMESTAMP_LTZ\\(n\\).\r\nh3. In-memory value\r\n\r\nThe internal representation of both types is long micros since the epoch + short (or 16-bit) nanos-in-micro in [0, 999]. Both NTZ and LTZ have the same representation; time zone only affects interpretation for LTZ, not the pair layout.\r\n\u00a0\r\nh1. Q2. What problem is this proposal NOT designed to solve?\r\n * *Precision below nanosecond-target range.* This SPIP only covers high-precision parameterized timestamps where 7 <= n <= 9. Support/changes for n < 7 are explicitly out of scope for this proposal.\r\n\r\n * *Subtraction of timestamps.* The result should be a day-time interval but the data type has microsecond precision at the moment.\r\n\r\n * *Changing existing time zone semantics.* It does not redefine NTZ/LTZ semantics, session time zone behavior, or SQL time zone rules.\r\n\r\n * *A full rework of all connectors/storage formats.* It does not promise end-to-end nanosecond support in every external system; connector-specific follow-ups may still be needed.\r\n\r\nh1. Q3. How is it done today, and what are the limits of current practice?\r",
       "labels": [
         "SPIP",
@@ -1770,6 +1770,133 @@
       "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
+      "id": "spark-ml-ycgvv34l0b678gzkcc4hj0oskhqkdpjv",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] SPIP: FileType",
+      "url": "https://lists.apache.org/thread/ycgvv34l0b678gzkcc4hj0oskhqkdpjv",
+      "author": "Burak Yavuz <br...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-09-08T19:47:04+00:00",
+      "updated_at": "2026-09-11T06:02:16+00:00",
+      "body": "Hi Spark devs,\n\nI would like to start a vote on introducing FileType for handling\nunstructured data.\n\nThe SPIP document:\nhttps://docs.google.com/document/d/1pPof896ZwcZ-2Yn-YhC4TbyYWn1umiQJykGDkAxzCWc/edit?tab=t.0#heading=h.m1700lw4wsoj\n\nDiscussion thread:\nhttps://lists.apache.org/thread/6f83qcpj1ox40jfxtottqlhjbhhxwmhf\n\nJIRA Ticket:\nhttps://issues.apache.org/jira/browse/SPARK-59132\n\nThe vote will be open for at least 72 hours, and passes if a majority +1 PMC\nvotes are cast, with a minimum of 3 +1 votes.\nPlease vote:\n[ ] +1: Accept the proposal as an official SPIP\n[ ] +0\n[ ] -1: I don't think this is a good idea because ...\n\nBest regards,\nBurak Yavuz\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1pPof896ZwcZ-2Yn-YhC4TbyYWn1umiQJykGDkAxzCWc/edit?tab=t.0#heading=h.m1700lw4wsoj",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: FILE EXTERNAL, a new DataType for dealing with files and unstructured data"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1pPof896ZwcZ-2Yn-",
+          "kind": "google_doc",
+          "fetched": false
+        }
+      ],
+      "llm_summary": "Vote in progress: 1 binding +1, 18 non-binding +1",
+      "llm_status": "proposal",
+      "comment_count": 21,
+      "participant_count": 21,
+      "vote_data": {
+        "binding_plus1": 1,
+        "nonbinding_plus1": 18,
+        "vetoes": 0,
+        "result": "open",
+        "voters": [
+          {
+            "voter": "Andreas Neumann <an...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Anurag Mantripragada <an...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Chao Sun <su...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Daniel Tenedorio <dt...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Gengliang Wang <lt...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Holden Karau <ho...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Hyukjin Kwon <gu...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "John Zhuge <jz...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Jungtaek Lim <ka...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Neelesh Salian <ne...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Peter Toth <pe...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Szehon Ho <sz...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Uro\u0161 Bojani\u0107 <ur...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Xiao Li <ga...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Ye Xianjin <ad...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Yicong Huang <yi...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Yuming Wang <yu...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "huaxin gao <hu...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "karuppayya <ka...@gmail.com>",
+            "vote": "+1"
+          }
+        ],
+        "closes_at": "2026-09-11T19:47:04+00:00"
+      },
+      "llm_key_points": [
+        "Hi Spark devs,\n\nI would like to start a vote on introducing FileType for handling\nunstructured data.",
+        "Voters include: Andreas Neumann, Anurag Mantripragada, Chao Sun..."
+      ],
+      "llm_topics": [
+        "spark-devs",
+        "unstructured-data",
+        "introducing-filetype",
+        "handling-unstructured"
+      ],
+      "_content_hash": "521b9ea13f0d",
+      "initiative_id": "spark-init-spark-ml-ycgvv34l0b678gzkcc4hj0oskhqkdpjv"
+    },
+    {
       "id": "spark-ml-52nvp22lnppbdrcxzv7y2vwwch449n4t",
       "source": "mailing_list",
       "kind": "thread",
@@ -1801,74 +1928,9 @@
         "native-pyspark",
         "apache-spark"
       ],
+      "llm_title": "",
       "_content_hash": "118353145720",
       "initiative_id": "spark-init-spark-ml-52nvp22lnppbdrcxzv7y2vwwch449n4t"
-    },
-    {
-      "id": "spark-ml-ycgvv34l0b678gzkcc4hj0oskhqkdpjv",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[VOTE] SPIP: FileType",
-      "url": "https://lists.apache.org/thread/ycgvv34l0b678gzkcc4hj0oskhqkdpjv",
-      "author": "Burak Yavuz <br...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-09-08T19:47:04+00:00",
-      "updated_at": "2026-09-09T18:51:28+00:00",
-      "body": "Hi Spark devs,\n\nI would like to start a vote on introducing FileType for handling\nunstructured data.\n\nThe SPIP document:\nhttps://docs.google.com/document/d/1pPof896ZwcZ-2Yn-YhC4TbyYWn1umiQJykGDkAxzCWc/edit?tab=t.0#heading=h.m1700lw4wsoj\n\nDiscussion thread:\nhttps://lists.apache.org/thread/6f83qcpj1ox40jfxtottqlhjbhhxwmhf\n\nJIRA Ticket:\nhttps://issues.apache.org/jira/browse/SPARK-59132\n\nThe vote will be open for at least 72 hours, and passes if a majority +1 PMC\nvotes are cast, with a minimum of 3 +1 votes.\nPlease vote:\n[ ] +1: Accept the proposal as an official SPIP\n[ ] +0\n[ ] -1: I don't think this is a good idea because ...\n\nBest regards,\nBurak Yavuz\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1pPof896ZwcZ-2Yn-YhC4TbyYWn1umiQJykGDkAxzCWc/edit?tab=t.0#heading=h.m1700lw4wsoj",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSPIP: FILE EXTERNAL, a new DataType for dealing with files and unstructured data"
-        }
-      ],
-      "llm_summary": "Vote in progress: 0 binding +1, 5 non-binding +1",
-      "llm_status": "proposal",
-      "comment_count": 6,
-      "participant_count": 6,
-      "vote_data": {
-        "binding_plus1": 0,
-        "nonbinding_plus1": 5,
-        "vetoes": 0,
-        "result": "open",
-        "voters": [
-          {
-            "voter": "Daniel Tenedorio <dt...@apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Gengliang Wang <lt...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Hyukjin Kwon <gu...@apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Xiao Li <ga...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Yicong Huang <yi...@apache.org>",
-            "vote": "+1"
-          }
-        ],
-        "closes_at": "2026-09-11T19:47:04+00:00"
-      },
-      "llm_key_points": [
-        "Hi Spark devs,\n\nI would like to start a vote on introducing FileType for handling\nunstructured data.",
-        "Voters include: Daniel Tenedorio, Gengliang Wang, Hyukjin Kwon..."
-      ],
-      "llm_topics": [
-        "spark-devs",
-        "unstructured-data",
-        "introducing-filetype",
-        "handling-unstructured"
-      ],
-      "_content_hash": "0ac8bbaa7d3e",
-      "initiative_id": "spark-init-spark-ml-ycgvv34l0b678gzkcc4hj0oskhqkdpjv"
     },
     {
       "id": "spark-ml-d4q3zl26vldm1pb95b7zr2pqbcx3q4lq",
@@ -4340,7 +4402,7 @@
         "uro-bojani"
       ],
       "_content_hash": "011b99573a32",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
     },
     {
       "id": "spark-ml-92kjhnglm90z2n8v7hxn6d9nb2gzhq1z",
@@ -4627,7 +4689,7 @@
         "apache-spark"
       ],
       "_content_hash": "ec8146319b15",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
     },
     {
       "id": "spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv",
@@ -4658,7 +4720,7 @@
         "spark-project"
       ],
       "_content_hash": "af074b2503b6",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
     },
     {
       "id": "spark-ml-c3sjlfos8d4o2859bjpltpgsf33wfnfh",
@@ -7207,7 +7269,7 @@
         "tian-gao"
       ],
       "_content_hash": "dacca48c4fa0",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
     },
     {
       "id": "spark-ml-mqfysmjmkdnw0fxy9t5dp7bxpvo36jrv",
@@ -29550,7 +29612,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",

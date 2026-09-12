@@ -1,7 +1,7 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-09-11T10:17:11.904118+00:00",
-  "total": 289,
+  "generated_at": "2026-09-12T09:50:44.657872+00:00",
+  "total": 290,
   "proposals": [
     {
       "id": "parquet-gh-m36",
@@ -1513,7 +1513,7 @@
         "throw-exception"
       ],
       "_content_hash": "f7519d5674e8",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
     },
     {
       "id": "parquet-gh-rel-apache-parquet-1-14-4-rc2",
@@ -1552,7 +1552,7 @@
         "throw-exception"
       ],
       "_content_hash": "2d3d9339fcee",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
     },
     {
       "id": "parquet-gh-rel-apache-parquet-1-14-4-rc1",
@@ -1587,7 +1587,7 @@
         "size-exceeds"
       ],
       "_content_hash": "a904ccde2f90",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
     },
     {
       "id": "parquet-gh-m29",
@@ -2456,6 +2456,208 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] WIRE: a logical type for serialized wire-format messages",
+      "url": "https://lists.apache.org/thread/s0tmjgfnvwn793d7v8mor8r8sz0hb44t",
+      "author": "Neelesh Salian <ne...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-09-11T22:12:16+00:00",
+      "updated_at": "2026-09-11T22:12:16+00:00",
+      "body": "Hi all,\n\nI have written up a proposal for a new Parquet logical type, tentatively\ncalled WIRE.\n\nThe Proposal document:\nhttps://docs.google.com/document/d/1bt5YAeB0dvRT6hVt8bkw2AM3D5EyThuyvtLxQBHpG5s/edit?usp=sharing\n\n\nSerialized messages, protobuf especially, are a common way data is stored\nat rest. There are a few ways to put them in Parquet today, and each one\ncosts you something:\n\n1. Store the raw bytes as a blob. You cannot query anything inside them.\n2. Explode every field into columns (what parquet-protobuf and\nparquet-thrift do). You pay a full decode on every write, a migration on\nevery schema change,\nand you drop what does not fit a relational schema (unknown fields, oneof,\nbyte-exactness).\n3. Convert to Variant. You re-encode the message and carry a per-row\nfield-name dictionary that protobuf never needed.\n\nSo today you either cannot query the data, or you pay a lot and lose\nfidelity to make it queryable.\n\nWIRE keeps the message as it is and makes the fields you query columnar. It\nstores the message verbatim in a \"value\" column, so the original is\nrecoverable byte for byte and there is no re-encode or migration when the\nschema grows.\nThe fields you actually query are shredded into native Parquet columns with\nreal statistics and pushdown, reusing the Variant shredding layout.\nThere is no metadata column, because protobuf and thrift address fields by\nnumber, so there is no name dictionary to carry, unlike Variant.\nA reader that does not know WIRE just sees plain columns.\nThe first version covers protobuf and thrift compact, and the design is\nencoding-general, so more can follow.\n\nI would appreciate feedback on two things:\n\n1. The design, and whether this is worth bringing forward as a formal\nproposal. If so, I can follow the proposal lifecycle and add it to the\nActive Proposals list.\n2. What is needed for cross-implementation verification? With Variant, it\ncame down to two implementations proven to read and write each other's\nfiles against shared fixtures in",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1bt5YAeB0dvRT6hVt8bkw2AM3D5EyThuyvtLxQBHpG5s/edit?usp=sharing",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeff[DESIGN] Introducing a new WIRE logical type to Parquet"
+        }
+      ],
+      "llm_summary": "There is no metadata column, because protobuf and thrift address fields by number, so there is no name dictionary to carry, unlike Variant. --- Google Doc --- \ufeff[DESIGN] Introducing a new WIRE logical type to Parquet Authors: Neelesh Salian, David Luper Created: Sep 11, 2026 Status: In Review Motivation Serialized wire-format messages, protobuf being the clearest public example, are a dominant way that event and record data is produced and stored at rest. Cheap to write, but Parquet sees no structure inside it, so there is no pruning, no statistics, and no predicate pushdown on any field.",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [],
+      "llm_topics": [
+        "logical-type",
+        "parquet-logical",
+        "serialized-wire-format",
+        "tentatively-called"
+      ],
+      "_content_hash": "b69ef3a20e75",
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
+    },
+    {
+      "id": "parquet-ml-v11pw7sbnkdxzjhkmcbsx06clyvjv0xx",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] Extended Precision Nanosecond Timestamps",
+      "url": "https://lists.apache.org/thread/v11pw7sbnkdxzjhkmcbsx06clyvjv0xx",
+      "author": "Divjot Arora via dev <de...@parquet.apache.org>",
+      "state": "open",
+      "created_at": "2026-09-08T11:10:25+00:00",
+      "updated_at": "2026-09-11T11:59:55+00:00",
+      "body": "Hi all,\n\nI would like to start a vote for to adopt parquet-format PR 601 [1]. This\nPR allows\nthe TimestampType logical type annotation to annotate\nFIXED_LEN_BYTE_ARRAY(12)\ncolumns in order to support the full SQL timestamp range in nanoseconds.\nAll three time\nunits (millis/micros/nanos) are supported for such columns. There are Java\n[2] and C++ [3]\nreference implementations (the C++ one includes Parquet to Arrow type\nconversion as well),\nas well as a parquet-testing PR [4] to add a file with such columns.\n\nPlease vote in the next 72 hours.\n\n[ ] +1 Approve the proposed format change\n[ ] +0 No opinion\n[ ] -1 Do not approve (please provide specific reasons)\n\nCheers,\nDiv\n\n[1] https://github.com/apache/parquet-format/pull/601\n[2] https://github.com/apache/parquet-java/pull/3680\n[3] https://github.com/apache/arrow/pull/50916\n[4] https://github.com/apache/parquet-testing/pull/123\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/parquet-format/pull/601",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-java/pull/3680",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/50916",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-testing/pull/123",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Vote PASSED with 5 binding +1 votes and 2 non-binding +1",
+      "llm_status": "released",
+      "comment_count": 8,
+      "participant_count": 8,
+      "vote_data": {
+        "binding_plus1": 5,
+        "nonbinding_plus1": 2,
+        "vetoes": 0,
+        "result": "passed",
+        "voters": [
+          {
+            "voter": "Alkis Evlogimenos via dev <de...@parquet.apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Daniel Weeks <dw...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Fokko Driesprong <fo...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "G\u00e1bor Sz\u00e1dovszky <ga...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Micah Kornfield <em...@gmail.com>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Ryan Blue <bl...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Stevo Mitri\u0107 via dev <de...@parquet.apache.org>",
+            "vote": "+1"
+          }
+        ],
+        "closes_at": "2026-09-11T11:10:25+00:00"
+      },
+      "llm_key_points": [
+        "Hi all,\n\nI would like to start a vote for to adopt parquet-format PR 601 [1].",
+        "Voters include: Alkis Evlogimenos via dev, Daniel Weeks, Fokko Driesprong..."
+      ],
+      "llm_topics": [
+        "extended-precision",
+        "precision-nanosecond",
+        "adopt-parquet-format",
+        "nanosecond-timestamps"
+      ],
+      "_content_hash": "77db5732b161",
+      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+    },
+    {
+      "id": "parquet-ml-ovo7vhh2gp31v32xzq6wm5f0grk97bs3",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] Release Apache Parquet Format 2.14.0 RC1",
+      "url": "https://lists.apache.org/thread/ovo7vhh2gp31v32xzq6wm5f0grk97bs3",
+      "author": "Fokko Driesprong <fo...@driesprong.frl>",
+      "state": "open",
+      "created_at": "2026-09-07T16:46:35+00:00",
+      "updated_at": "2026-09-11T10:47:25+00:00",
+      "body": "Hi everyone,\n\nI propose the following RC to be released as the official Apache Parquet Format 2.14.0 release.\n\nThe commit ID is 04d56f291ff963e98bc37ab8100e2fc133ff583c\n\n- This corresponds to the tag: apache-parquet-2.14.0-rc1\n- https://github.com/apache/parquet-java/tree/04d56f291ff963e98bc37ab8100e2fc133ff583c\n\nThe release tarball, signature, and checksums are here:\n\n- https://dist.apache.org/repos/dist/dev/parquet/2.14.0/\n\nYou can find the KEYS file here:\n\n- https://downloads.apache.org/parquet/KEYS\n\nChanges in this release:\n\n- Chronological ordering of INT96 timestamps ([#584](https://github.com/apache/parquet-format/pull/584))\n- The FILE logical type ([#585](https://github.com/apache/parquet-format/pull/585)) with the FILE self-reference follow-up ([#603](https://github.com/apache/parquet-format/pull/603))\n- Adaptive Lossless Floating-Point encoding ([#557](https://github.com/apache/parquet-format/pull/557))\n\nYou can find the full changelog here:\n\n- https://github.com/apache/parquet-format/releases/tag/apache-parquet-format-2.14.0-rc1\n\nBinary artifacts are staged in Nexus here:\n\n- https://repository.apache.org/content/groups/staging/org/apache/parquet/\n\nPlease download, verify, and test. Please vote in the next 72 hours.\n\n[ ] +1 Release this as Apache Parquet Format 2.14.0\n[ ] +0\n[ ] -1 Do not release this because...\n\nKind regards,\nFokko\n\nSent with [Proton Mail](https://proton.me/mail/home) secure email.",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/parquet-format/pull/584",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/pull/585",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/pull/603",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/pull/557",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-site/pull/202",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Vote PASSED with 4 binding +1 votes and 2 non-binding +1",
+      "llm_status": "released",
+      "comment_count": 8,
+      "participant_count": 8,
+      "vote_data": {
+        "binding_plus1": 4,
+        "nonbinding_plus1": 2,
+        "vetoes": 0,
+        "result": "passed",
+        "voters": [
+          {
+            "voter": "Andrew Lamb <an...@gmail.com>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Divjot Arora via dev <de...@parquet.apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Fokko Driesprong <fo...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Gang Wu <us...@gmail.com>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "G\u00e1bor Sz\u00e1dovszky <ga...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Vinoo Ganesh <vi...@gmail.com>",
+            "vote": "+1"
+          }
+        ],
+        "closes_at": "2026-09-10T16:46:35+00:00"
+      },
+      "llm_key_points": [
+        "Hi everyone,\n\nI propose the following RC to be released as the official Apache Parquet Format 2.14.0 release.",
+        "Voters include: Andrew Lamb, Divjot Arora via dev, Fokko Driesprong..."
+      ],
+      "llm_topics": [
+        "parquet-format",
+        "apache-parquet",
+        "official-apache",
+        "release-apache"
+      ],
+      "_content_hash": "064814ab9c5f",
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+    },
+    {
       "id": "parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm",
       "source": "mailing_list",
       "kind": "thread",
@@ -2491,86 +2693,6 @@
       "_content_hash": "853717dd424b",
       "llm_title": "",
       "initiative_id": "parquet-init-parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm"
-    },
-    {
-      "id": "parquet-ml-v11pw7sbnkdxzjhkmcbsx06clyvjv0xx",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[VOTE] Extended Precision Nanosecond Timestamps",
-      "url": "https://lists.apache.org/thread/v11pw7sbnkdxzjhkmcbsx06clyvjv0xx",
-      "author": "Divjot Arora via dev <de...@parquet.apache.org>",
-      "state": "open",
-      "created_at": "2026-09-08T11:10:25+00:00",
-      "updated_at": "2026-09-10T07:40:46+00:00",
-      "body": "Hi all,\n\nI would like to start a vote for to adopt parquet-format PR 601 [1]. This\nPR allows\nthe TimestampType logical type annotation to annotate\nFIXED_LEN_BYTE_ARRAY(12)\ncolumns in order to support the full SQL timestamp range in nanoseconds.\nAll three time\nunits (millis/micros/nanos) are supported for such columns. There are Java\n[2] and C++ [3]\nreference implementations (the C++ one includes Parquet to Arrow type\nconversion as well),\nas well as a parquet-testing PR [4] to add a file with such columns.\n\nPlease vote in the next 72 hours.\n\n[ ] +1 Approve the proposed format change\n[ ] +0 No opinion\n[ ] -1 Do not approve (please provide specific reasons)\n\nCheers,\nDiv\n\n[1] https://github.com/apache/parquet-format/pull/601\n[2] https://github.com/apache/parquet-java/pull/3680\n[3] https://github.com/apache/arrow/pull/50916\n[4] https://github.com/apache/parquet-testing/pull/123\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/parquet-format/pull/601",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-java/pull/3680",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/50916",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-testing/pull/123",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Vote PASSED with 4 binding +1 votes and 2 non-binding +1",
-      "llm_status": "released",
-      "comment_count": 6,
-      "participant_count": 7,
-      "vote_data": {
-        "binding_plus1": 4,
-        "nonbinding_plus1": 2,
-        "vetoes": 0,
-        "result": "passed",
-        "voters": [
-          {
-            "voter": "Alkis Evlogimenos via dev <de...@parquet.apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Daniel Weeks <dw...@apache.org>",
-            "vote": "+1 (binding)"
-          },
-          {
-            "voter": "G\u00e1bor Sz\u00e1dovszky <ga...@apache.org>",
-            "vote": "+1 (binding)"
-          },
-          {
-            "voter": "Micah Kornfield <em...@gmail.com>",
-            "vote": "+1 (binding)"
-          },
-          {
-            "voter": "Ryan Blue <bl...@apache.org>",
-            "vote": "+1 (binding)"
-          },
-          {
-            "voter": "Stevo Mitri\u0107 via dev <de...@parquet.apache.org>",
-            "vote": "+1"
-          }
-        ],
-        "closes_at": "2026-09-11T11:10:25+00:00"
-      },
-      "llm_key_points": [
-        "Hi all,\n\nI would like to start a vote for to adopt parquet-format PR 601 [1].",
-        "Voters include: Alkis Evlogimenos via dev, Daniel Weeks, G\u00e1bor Sz\u00e1dovszky..."
-      ],
-      "llm_topics": [
-        "extended-precision",
-        "precision-nanosecond",
-        "adopt-parquet-format",
-        "nanosecond-timestamps"
-      ],
-      "_content_hash": "a0a18642d1c2",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
     },
     {
       "id": "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
@@ -2616,86 +2738,6 @@
       "_content_hash": "9d378f64bb1a",
       "llm_title": "",
       "initiative_id": "parquet-init-parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt"
-    },
-    {
-      "id": "parquet-ml-ovo7vhh2gp31v32xzq6wm5f0grk97bs3",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[VOTE] Release Apache Parquet Format 2.14.0 RC1",
-      "url": "https://lists.apache.org/thread/ovo7vhh2gp31v32xzq6wm5f0grk97bs3",
-      "author": "Fokko Driesprong <fo...@driesprong.frl>",
-      "state": "open",
-      "created_at": "2026-09-07T16:46:35+00:00",
-      "updated_at": "2026-09-09T01:14:14+00:00",
-      "body": "Hi everyone,\n\nI propose the following RC to be released as the official Apache Parquet Format 2.14.0 release.\n\nThe commit ID is 04d56f291ff963e98bc37ab8100e2fc133ff583c\n\n- This corresponds to the tag: apache-parquet-2.14.0-rc1\n- https://github.com/apache/parquet-java/tree/04d56f291ff963e98bc37ab8100e2fc133ff583c\n\nThe release tarball, signature, and checksums are here:\n\n- https://dist.apache.org/repos/dist/dev/parquet/2.14.0/\n\nYou can find the KEYS file here:\n\n- https://downloads.apache.org/parquet/KEYS\n\nChanges in this release:\n\n- Chronological ordering of INT96 timestamps ([#584](https://github.com/apache/parquet-format/pull/584))\n- The FILE logical type ([#585](https://github.com/apache/parquet-format/pull/585)) with the FILE self-reference follow-up ([#603](https://github.com/apache/parquet-format/pull/603))\n- Adaptive Lossless Floating-Point encoding ([#557](https://github.com/apache/parquet-format/pull/557))\n\nYou can find the full changelog here:\n\n- https://github.com/apache/parquet-format/releases/tag/apache-parquet-format-2.14.0-rc1\n\nBinary artifacts are staged in Nexus here:\n\n- https://repository.apache.org/content/groups/staging/org/apache/parquet/\n\nPlease download, verify, and test. Please vote in the next 72 hours.\n\n[ ] +1 Release this as Apache Parquet Format 2.14.0\n[ ] +0\n[ ] -1 Do not release this because...\n\nKind regards,\nFokko\n\nSent with [Proton Mail](https://proton.me/mail/home) secure email.",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/parquet-format/pull/584",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-format/pull/585",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-format/pull/603",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-format/pull/557",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-site/pull/202",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Vote PASSED with 3 binding +1 votes and 2 non-binding +1",
-      "llm_status": "released",
-      "comment_count": 6,
-      "participant_count": 7,
-      "vote_data": {
-        "binding_plus1": 3,
-        "nonbinding_plus1": 2,
-        "vetoes": 0,
-        "result": "passed",
-        "voters": [
-          {
-            "voter": "Andrew Lamb <an...@gmail.com>",
-            "vote": "+1 (binding)"
-          },
-          {
-            "voter": "Divjot Arora via dev <de...@parquet.apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Gang Wu <us...@gmail.com>",
-            "vote": "+1 (binding)"
-          },
-          {
-            "voter": "G\u00e1bor Sz\u00e1dovszky <ga...@apache.org>",
-            "vote": "+1 (binding)"
-          },
-          {
-            "voter": "Vinoo Ganesh <vi...@gmail.com>",
-            "vote": "+1"
-          }
-        ],
-        "closes_at": "2026-09-10T16:46:35+00:00"
-      },
-      "llm_key_points": [
-        "Hi everyone,\n\nI propose the following RC to be released as the official Apache Parquet Format 2.14.0 release.",
-        "Voters include: Andrew Lamb, Divjot Arora via dev, Gang Wu..."
-      ],
-      "llm_topics": [
-        "parquet-format",
-        "apache-parquet",
-        "official-apache",
-        "release-apache"
-      ],
-      "_content_hash": "7e2f26ce5a21",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk",
@@ -2961,7 +3003,7 @@
         "result"
       ],
       "_content_hash": "ff0ef60a45b3",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-4ks6fg3pt13xgkr1c1gf436opy951tnm",
@@ -3089,7 +3131,7 @@
         "divjot-arora"
       ],
       "_content_hash": "91ea5819851b",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7",
@@ -3174,7 +3216,7 @@
         "votes"
       ],
       "_content_hash": "e6bcb8eed824",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-cykmmq4ggd2thqkjcj888ywmsy50fgh1",
@@ -3274,7 +3316,7 @@
         "vote"
       ],
       "_content_hash": "61b5a8f0d32f",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-29bkrgwr7pt9jjzf5g5nd9zlhky58dx2",
@@ -3385,7 +3427,7 @@
       ],
       "_content_hash": "5b450bd7e9f6",
       "llm_title": "",
-      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj",
@@ -4135,7 +4177,7 @@
         "file"
       ],
       "_content_hash": "0092483e63ca",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-sy0bfyl0kv7p330j01q64wlogxqdy8w6",
@@ -4361,7 +4403,7 @@
         "design-document"
       ],
       "_content_hash": "4fcaccce739f",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-qc031s9vp07bpkrvlnz3v3gn0qhn5l91",
@@ -4725,7 +4767,7 @@
         "active-thread"
       ],
       "_content_hash": "ef5b859d6d35",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-lobpt63hjml246mlxy7ro1vllo80pofk",
@@ -4834,7 +4876,7 @@
       ],
       "_content_hash": "a930bc752794",
       "llm_title": "Support Non-Contiguous Pages in Parquet",
-      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-m6j8lzc09ytyd45wt6pdcyn5qy95f0vt",
@@ -4953,7 +4995,7 @@
       ],
       "_content_hash": "6842e800f9ac",
       "llm_title": "INT96 Statistics Discussion",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-ml-htmof8dodkcmsxbsxrhpx4nq6b3yk600"
     },
     {
       "id": "parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr",
@@ -5155,7 +5197,7 @@
       ],
       "_content_hash": "14651b96d5ab",
       "llm_title": "Introducing File Logical Type to Parquet",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-gm7btrgvprdbrh8c5nv061f402txo0vt",
@@ -5428,7 +5470,7 @@
         "seidl"
       ],
       "_content_hash": "6341c3dbc6f2",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr"
     },
     {
       "id": "parquet-ml-417cjw83tt28cdg28vvo23hy6y74dymm",
@@ -5522,7 +5564,7 @@
       ],
       "_content_hash": "0108bd3e371f",
       "llm_title": "Add nan_count for NaN handling in statistics",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-ml-htmof8dodkcmsxbsxrhpx4nq6b3yk600"
     },
     {
       "id": "parquet-ml-srjg9c58f5lb4d7r9773p9sml08bw6np",
@@ -6069,7 +6111,7 @@
       ],
       "_content_hash": "bbe830a8556f",
       "llm_title": "Configuring Parquet for Vector Embeddings",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-m6p5shlt1hfk1b3h5y1pbqg8tpkwpcgz",
@@ -6636,7 +6678,7 @@
         "format"
       ],
       "_content_hash": "103a0dcb619d",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-1nf596dq7fpc0zp35bt17zy7srvo5wt8",
@@ -7190,7 +7232,7 @@
       ],
       "_content_hash": "28a4922aafaa",
       "llm_title": "Feature Addition Requirements for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-hms38c0807r3qpst7ykf4b42xwpb23g7"
+      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
     },
     {
       "id": "parquet-ml-lsf425yk0h0pzvq41kz8z92qffg8mmf8",
@@ -7282,7 +7324,7 @@
         "result"
       ],
       "_content_hash": "5c15452a9553",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-rb0gorvx1lysch6yxks72h94kqhsp719",
@@ -7362,7 +7404,7 @@
         "java"
       ],
       "_content_hash": "529f47606b92",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-rb0gorvx1lysch6yxks72h94kqhsp719"
     },
     {
       "id": "parquet-ml-k534codwcdtgy5pzz9mts784sgywspv7",
@@ -7541,7 +7583,7 @@
         "result"
       ],
       "_content_hash": "f7b742403e51",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q",
@@ -8189,7 +8231,7 @@
       ],
       "_content_hash": "735a1326fdb5",
       "llm_title": "Merge Implementation Status PR for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
     },
     {
       "id": "parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",
@@ -8397,7 +8439,7 @@
         "geospatial-data"
       ],
       "_content_hash": "e206d626ef2e",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-p6jq3rgdqkqhx0xj8wjt7ldrpyrktw20",
@@ -8428,7 +8470,7 @@
         "pmc"
       ],
       "_content_hash": "05719df7b596",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-p6jq3rgdqkqhx0xj8wjt7ldrpyrktw20"
     },
     {
       "id": "parquet-ml-o98otqpkppn2jknm0pskgj5pwp0rvptb",
@@ -8586,7 +8628,7 @@
       ],
       "_content_hash": "10981cda1982",
       "llm_title": "Add geometry logical type for geospatial support",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-3obhqhyb0hf9cqby5lf62wdx86cgrrg0",
@@ -8776,7 +8818,7 @@
       ],
       "_content_hash": "bd410895bf53",
       "llm_title": "Apache Parquet-Java 1.15.0 Release Discussion",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-scdq9t2gvvs4glhq0qx4qcvfp62j793s",
@@ -9132,7 +9174,7 @@
         "vinoo-ganesh"
       ],
       "_content_hash": "eeba24ea7de0",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr"
     },
     {
       "id": "parquet-ml-6d6442qd49kfcbcod1xnwfsq95tp47n0",
@@ -9187,7 +9229,7 @@
         "release"
       ],
       "_content_hash": "bff2f0422637",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr"
     },
     {
       "id": "parquet-ml-xkt3qg18grnkdy570cwpr2gk6rlmqj71",
@@ -9371,7 +9413,7 @@
       ],
       "_content_hash": "a32369bf9955",
       "llm_title": "Discussion on Extension Types in Parquet",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-fvrdb8zw0hmjrz4m6nm3fsd5jc23hlxc",
@@ -9478,7 +9520,7 @@
       ],
       "_content_hash": "209f31a55ed8",
       "llm_title": "Clarify min-max truncation in Parquet statistics",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-6h58hj39lhqtcyd2hlsyvqm4lzdh4b9z",
@@ -9789,7 +9831,7 @@
       ],
       "_content_hash": "c242c64ce298",
       "llm_title": "Clarify null_counts and distinct_counts in Parquet",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-t9bbdft69rgk4jotmx26259m1vxhx83v",
@@ -9994,7 +10036,7 @@
         "proposed-release"
       ],
       "_content_hash": "f2a42b8fd8ce",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-3zyfhc3r4b5sh61mb6nwsxx5fp3r18qn",
@@ -10037,7 +10079,7 @@
         "adopt"
       ],
       "_content_hash": "5106d63d6245",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-2whm3txpvpj1kdyg2jz8wsncv6q7w1cb",
@@ -10066,7 +10108,7 @@
         "parquet"
       ],
       "_content_hash": "74fc86da2c44",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-p6jq3rgdqkqhx0xj8wjt7ldrpyrktw20"
     },
     {
       "id": "parquet-ml-9z8r7ckb0mf5oyfn8qcfvjo3vd4do9yo",
@@ -10096,7 +10138,7 @@
         "pmc-member"
       ],
       "_content_hash": "fcfb9cba670c",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-p6jq3rgdqkqhx0xj8wjt7ldrpyrktw20"
     },
     {
       "id": "parquet-ml-2hbjv29g6qtndtr05zl60g4qmccbzlmy",
@@ -10127,7 +10169,7 @@
         "xuwei"
       ],
       "_content_hash": "3c7ce4bc9339",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-p6jq3rgdqkqhx0xj8wjt7ldrpyrktw20"
     },
     {
       "id": "parquet-ml-6wj2otsx6fclktndbhsgtrzhrmztclp8",
@@ -10236,7 +10278,7 @@
       ],
       "_content_hash": "e5389cab138e",
       "llm_title": "Guidance on Parquet Format Features",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-sc9zoxd3pd10odtgbrsh5qh7szhl2lhg",
@@ -10561,7 +10603,7 @@
         "gidon-gershinsky"
       ],
       "_content_hash": "38e78ee72ecb",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr"
     },
     {
       "id": "parquet-ml-opx5oqoyh5846ho58hsnrdqpoxfn4dxm",
@@ -10612,7 +10654,7 @@
         "apache"
       ],
       "_content_hash": "79829b339d7c",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr"
     },
     {
       "id": "parquet-ml-0gxjk4tphxls0gcrc7lt775pf8s7gtz3",
@@ -11234,7 +11276,7 @@
       ],
       "_content_hash": "7c5da8af2e3d",
       "llm_title": "Rename parquet-mr to parquet-java",
-      "initiative_id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-97g4zqlvobr9knntvsbghjs6v3gr63x2",
@@ -11356,7 +11398,7 @@
       ],
       "_content_hash": "c45d3b6caaaf",
       "llm_title": "Discussion on Parquet Reference Implementation",
-      "initiative_id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-128wv5cwv51scm8vdfn1g9gskw717qyt",
@@ -11460,7 +11502,7 @@
         "apache-parquet"
       ],
       "_content_hash": "492c341bf429",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-p6jq3rgdqkqhx0xj8wjt7ldrpyrktw20"
     },
     {
       "id": "parquet-ml-3pvz9l4lvhy0ks6084zw9d9r85qh7755",
@@ -11502,7 +11544,7 @@
         "release-vote"
       ],
       "_content_hash": "0211fa34ef04",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr"
     },
     {
       "id": "parquet-ml-kd69vqpshszzc3bkg30vmnnvgh52lxzk",
@@ -11582,7 +11624,7 @@
         "parquet"
       ],
       "_content_hash": "bd86719d7bc5",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr"
     },
     {
       "id": "parquet-ml-1p8ot4nbx872zhr6p6ow2dzmqvtf3zkb",
@@ -11618,7 +11660,7 @@
         "release"
       ],
       "_content_hash": "bbf6af766e79",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-nlfqqnc4jzdkzp49k7pj1fddxxo0rfrl",
@@ -11682,7 +11724,7 @@
         "release"
       ],
       "_content_hash": "fc9d326a0882",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr"
     },
     {
       "id": "parquet-ml-3dngr2by6g38ot3pxtvc9rf7xlx4pjhz",
@@ -11815,7 +11857,7 @@
         "byte"
       ],
       "_content_hash": "7029f8e2a5e1",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-4mof6ghglxzkvtxxmfc206s5g5d7f8zy",
@@ -11859,7 +11901,7 @@
         "result"
       ],
       "_content_hash": "3f07a3f28573",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-kttwbl5l7opz6nwb5bck2gghc2y3td0o",
@@ -11956,7 +11998,7 @@
         "release-apache"
       ],
       "_content_hash": "8c4cba58c51e",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr"
     },
     {
       "id": "parquet-ml-fdf1zz0f3xzz5zpvo6c811xjswhm1zy6",
@@ -12132,7 +12174,7 @@
         "gidon-gershinsky"
       ],
       "_content_hash": "6cbbd5930920",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr"
     },
     {
       "id": "parquet-ml-5hnr6r45rg8wpvnq0psq7gb5895nwcb2",
@@ -12245,7 +12287,7 @@
         "logical-type"
       ],
       "_content_hash": "0dc68e1bd062",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-odm5pmxssyd9kw1wvgdkg8hd044czqnk",
@@ -12281,7 +12323,7 @@
         "result"
       ],
       "_content_hash": "18866f5c736b",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-2yhhk9y8mkl8cco3ojf0df7o1k65fmt1",
@@ -12530,7 +12572,7 @@
         "release-apache"
       ],
       "_content_hash": "da199c2a345b",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-l1tz6kvq0dw6j9txb10sghnwnb9xgp21",
@@ -12818,7 +12860,7 @@
         "management-committee"
       ],
       "_content_hash": "a025e0d33611",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr"
     },
     {
       "id": "parquet-ml-jdlzq7kjq1xyoyr06hbgjnrv18lk5x5c",
@@ -12849,7 +12891,7 @@
         "congratulations-gidon"
       ],
       "_content_hash": "f74939cd23ac",
-      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
+      "initiative_id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr"
     },
     {
       "id": "parquet-ml-chlgn9dlqdgkdrxtgsz0mshkdrm09chs",
@@ -13252,7 +13294,7 @@
         "parquet"
       ],
       "_content_hash": "76b64b390fe9",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
       "id": "parquet-ml-jx9trwtfn898rs6kprnkh14jnvtqbr1d",
@@ -13409,7 +13451,7 @@
         "yuming"
       ],
       "_content_hash": "733984c63e38",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     }
   ]
 }

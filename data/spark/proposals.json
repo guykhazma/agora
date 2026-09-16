@@ -1,8 +1,39 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-09-15T10:43:43.605029+00:00",
+  "generated_at": "2026-09-16T10:31:50.507064+00:00",
   "total": 657,
   "proposals": [
+    {
+      "id": "spark-jira-SPARK-51162",
+      "source": "jira",
+      "kind": "issue",
+      "title": "SPIP: Add the TIME data type",
+      "url": "https://issues.apache.org/jira/browse/SPARK-51162",
+      "author": "Max Gekk",
+      "state": "closed",
+      "created_at": "2025-02-11T13:46:09+00:00",
+      "updated_at": "2026-09-15T23:20:15+00:00",
+      "body": "*Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.*\r\n\r\nAdd new data type *TIME* to Spark SQL which represents a time value with fields hour, minute, second, up to microseconds. All operations over the type are performed without taking any time zone into account. New data type should conform to the type *TIME\\(n\\) WITHOUT TIME ZONE* defined by the SQL standard where 0 <= n <= 6.\r\n\r\n*Q2. What problem is this proposal NOT designed to solve?*\r\n\r\nDon't support the TIME type with time zone defined by the SQL standard: {*}TIME\\(n\\) WITH TIME ZONE{*}.\r\nAlso don't support TIME with local timezone.\r\n\r\n*Q3. How is it done today, and what are the limits of current practice?*\r\n\r\nThe TIME type can be emulated via the TIMESTAMP_NTZ data type by setting the date part to the some constant value like 1970-01-01, 0001-01-01 or 0000-00-00 (though this is out of supported range of dates).\r\n\r\nAlthough the type can be emulation via TIMESTAMP_NTZ, Spark SQL cannot recognize it in data sources, and for instance cannot load the TIME values from parquet files.\r\n\r\n*Q4. What is new in your approach and why do you think it will be successful?*\r\n\r\nThe approach is not new, and we have clear picture how to split the work by sub-tasks based on our experience of adding new types ANSI intervals and TIMESTAMP_NTZ.\r\n\r\n*Q5. Who cares? If you are successful, what difference will it make?*\r\n\r\nThe new type simplifies migrations to Spark SQL from other DBMS like PostgreSQL, Snowflake, Google SQL, Amazon Redshift, Teradata, DB2. Such users don't have to rewrite their SQL code to emulate the TIME type. Also new functionality impacts on existing Spark SQL users who need to load data w/ the TIME values that were stored by other systems.\r\n\r\n*Q6. What are the risks?*\r\n\r\nAdditional handling new type in operators, expression and data sources can cause performance regressions. Such risk can be compensated by developing time benchmarks in parallel with supporting new type in differe",
+      "labels": [
+        "SPIP",
+        "pull-request-available",
+        "releasenotes"
+      ],
+      "linked_resources": [],
+      "comment_count": 9,
+      "llm_summary": "Although the type can be emulation via TIMESTAMP_NTZ, Spark SQL cannot recognize it in data sources, and for instance cannot load the TIME values from parquet files. The approach is not new, and we have clear picture how to split the work by sub-tasks based on our experience of adding new types ANSI intervals and TIMESTAMP_NTZ. Also new functionality impacts on existing Spark SQL users who need to load data w/ the TIME values that were stored by other systems.",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "time",
+        "time-zone",
+        "spark-sql",
+        "time-type"
+      ],
+      "llm_title": "",
+      "_content_hash": "5b11202abeb3",
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+    },
     {
       "id": "spark-jira-SPARK-56822",
       "source": "jira",
@@ -513,36 +544,6 @@
       ],
       "_content_hash": "f13b0907c319",
       "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
-    },
-    {
-      "id": "spark-jira-SPARK-51162",
-      "source": "jira",
-      "kind": "issue",
-      "title": "SPIP: Add the TIME data type",
-      "url": "https://issues.apache.org/jira/browse/SPARK-51162",
-      "author": "Max Gekk",
-      "state": "closed",
-      "created_at": "2025-02-11T13:46:09+00:00",
-      "updated_at": "2026-05-09T10:35:57+00:00",
-      "body": "*Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.*\r\n\r\nAdd new data type *TIME* to Spark SQL which represents a time value with fields hour, minute, second, up to microseconds. All operations over the type are performed without taking any time zone into account. New data type should conform to the type *TIME\\(n\\) WITHOUT TIME ZONE* defined by the SQL standard where 0 <= n <= 6.\r\n\r\n*Q2. What problem is this proposal NOT designed to solve?*\r\n\r\nDon't support the TIME type with time zone defined by the SQL standard: {*}TIME\\(n\\) WITH TIME ZONE{*}.\r\nAlso don't support TIME with local timezone.\r\n\r\n*Q3. How is it done today, and what are the limits of current practice?*\r\n\r\nThe TIME type can be emulated via the TIMESTAMP_NTZ data type by setting the date part to the some constant value like 1970-01-01, 0001-01-01 or 0000-00-00 (though this is out of supported range of dates).\r\n\r\nAlthough the type can be emulation via TIMESTAMP_NTZ, Spark SQL cannot recognize it in data sources, and for instance cannot load the TIME values from parquet files.\r\n\r\n*Q4. What is new in your approach and why do you think it will be successful?*\r\n\r\nThe approach is not new, and we have clear picture how to split the work by sub-tasks based on our experience of adding new types ANSI intervals and TIMESTAMP_NTZ.\r\n\r\n*Q5. Who cares? If you are successful, what difference will it make?*\r\n\r\nThe new type simplifies migrations to Spark SQL from other DBMS like PostgreSQL, Snowflake, Google SQL, Amazon Redshift, Teradata, DB2. Such users don't have to rewrite their SQL code to emulate the TIME type. Also new functionality impacts on existing Spark SQL users who need to load data w/ the TIME values that were stored by other systems.\r\n\r\n*Q6. What are the risks?*\r\n\r\nAdditional handling new type in operators, expression and data sources can cause performance regressions. Such risk can be compensated by developing time benchmarks in parallel with supporting new type in differe",
-      "labels": [
-        "SPIP",
-        "pull-request-available",
-        "releasenotes"
-      ],
-      "linked_resources": [],
-      "comment_count": 9,
-      "llm_summary": "Although the type can be emulation via TIMESTAMP_NTZ, Spark SQL cannot recognize it in data sources, and for instance cannot load the TIME values from parquet files. The approach is not new, and we have clear picture how to split the work by sub-tasks based on our experience of adding new types ANSI intervals and TIMESTAMP_NTZ. Also new functionality impacts on existing Spark SQL users who need to load data w/ the TIME values that were stored by other systems.",
-      "llm_status": "discussion",
-      "llm_key_points": [],
-      "llm_topics": [
-        "time",
-        "time-zone",
-        "spark-sql",
-        "time-type"
-      ],
-      "_content_hash": "5b11202abeb3",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-jira-SPARK-56040",

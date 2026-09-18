@@ -44,7 +44,7 @@ Open-source communities have the same problem as a city without a town square: d
 
 **Community health** — a per-project [CHAOSS](https://chaoss.community)-style panel (responsiveness, contributor concentration / bus factor, 12-week activity) plus a live source-freshness strip.
 
-**Runs itself** — a daily GitHub Actions crawl refreshes every project, isolates per-project failures, retries transient errors, never advances its checkpoint past a failed source, and writes a `health.json` that a second workflow turns into a **GitHub issue** when anything goes stale. No paid APIs required — enrichment falls back to local NLP when no vendor key is set.
+**Runs itself** — a daily GitHub Actions crawl refreshes every project, isolates per-project failures, retries transient errors, never advances its checkpoint past a failed critical source, and writes a `health.json` that a second workflow turns into a **GitHub issue** when anything goes stale. No paid APIs required — enrichment falls back to local NLP when no vendor key is set.
 
 ---
 
@@ -79,7 +79,7 @@ mailing_list:
   pony_mail_domain: my-project.apache.org
   history_start: "2024-01"   # full backfill from this month when state is empty / --reset
   # For a high-volume list, keep only governance threads (omit to ingest everything):
-  thread_prefixes: ["[VOTE]", "[DISCUSS]", "[PROPOSAL]", "[RESULT]", "[ANNOUNCE"]
+  thread_prefixes: ["[VOTE]", "[DISCUSS]", "[PROPOSAL]", "[RESULT]", "[ANNOUNCE]"]
 ```
 
 See [`projects/spark.yaml`](projects/spark.yaml) and [`projects/parquet.yaml`](projects/parquet.yaml) for real-world examples, and [ARCHITECTURE.md](ARCHITECTURE.md) for all available fields and how the pipeline works.

@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-09-20T10:19:38.495340+00:00",
+  "generated_at": "2026-09-21T11:30:21.085550+00:00",
   "total": 659,
   "proposals": [
     {
@@ -1769,6 +1769,46 @@
       ],
       "_content_hash": "e46e418f4ebe",
       "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+    },
+    {
+      "id": "spark-ml-r3jyf1on98lgnxw6pdhjj0qrh09mnxvz",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] Spark routing architecture for Iceberg Materialized Views",
+      "url": "https://lists.apache.org/thread/r3jyf1on98lgnxw6pdhjj0qrh09mnxvz",
+      "author": "Walaa Eldin Moustafa <wa...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-09-21T06:11:45+00:00",
+      "updated_at": "2026-09-21T06:11:45+00:00",
+      "body": "Thanks, Ryan! I agree, and it maps well onto how the implementation is\nsplit into two components. The first is in Iceberg-core: it owns the\nmaterialized-view metadata and the parsing/recording of the source states\n(what the result was computed from) and performs the basic freshness\nchecks. The second extends Iceberg's Spark implementation with the\nengine-facing definition of a materialized view: read the storage table\nwhen it's fresh, and evaluate the view query when it's stale.\n\nAlso, a quick update on that second (Spark) component: I've gone with the\nDSv2 catalog-based routing (#9830\n<https://github.com/apache/iceberg/pull/9830>) and updated it to use Spark\n4.2's new loadRelation API. A single loadRelation call now returns the\nstorage table when the MV is fresh and the view when it's stale, which\ncollapses the pre-4.2 indirection (loadView throwing / loadTable returning\na wrapper) into one path.\n\nThanks,\nWalaa.\n\n\nOn Tue, Jul 14, 2026 at 3:21\u202fPM Ryan Blue <bl...@apache.org> wrote:\n\n> I think that we should start with an implementation in Iceberg that\n> performs basic checks. That can be used for a variety of contexts,\n> including direct API usage without an engine (MV use without an engine to\n> run the view is a plus). This would probably be used in the Spark\n> integration to provide MV support without needing Spark APIs for it yet.\n>\n> We would also want to have a way for engines to make better decisions and\n> do things like join in newer information on top of what is in the\n> materialized table. That depends on engine capabilities and logic. That\n> doesn't exist yet so I think starting with the simple case (replace a view\n> with a table read) and allowing engines to add complexity over time is\n> probably the right way to go.\n>\n> Ryan\n>\n> On Mon, Jun 29, 2026 at 12:50\u202fPM Walaa Eldin Moustafa <\n> wa.moustafa@gmail.com> wrote:\n>\n>> Hi all (cross-posting to Iceberg and Spark dev lists),\n>>\n>> I'd like to gather input from both communities on an architectural\n>> decis",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/iceberg/pull/9830",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/iceberg/pull/11041",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/wmoustafa/iceberg-1/pull/2",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "The first is in Iceberg-core: it owns the materialized-view metadata and the parsing/recording of the source states (what the result was computed from) and performs the basic freshness checks. That > doesn't exist yet so I think starting with the simple case (replace a view > with a table read) and allowing engines to add complexity over time is > probably the right way to go. > > Ryan > > On Mon, Jun 29, 2026 at 12:50\u202fPM Walaa Eldin Moustafa < > wa.moustafa@gmail.com> wrote: > >> Hi all (cross-posting to Iceberg and Spark dev lists), >> >> I'd like to gather input from both communities on an architectural >> decis",
+      "llm_status": "discussion",
+      "comment_count": 2,
+      "participant_count": 1,
+      "llm_key_points": [],
+      "llm_topics": [
+        "spark",
+        "iceberg-spark",
+        "discuss",
+        "view"
+      ],
+      "_content_hash": "2ce073277481",
+      "initiative_id": "spark-init-spark-ml-r3jyf1on98lgnxw6pdhjj0qrh09mnxvz"
     },
     {
       "id": "spark-ml-gg4tjscpoqbp110t96rz4svhykwr3spb",
@@ -3638,49 +3678,6 @@
       ],
       "_content_hash": "7e43e189262d",
       "initiative_id": "spark-init-spark-jira-SPARK-57703"
-    },
-    {
-      "id": "spark-ml-rpbw52h2wr44300h7bxfdzdmf67m3gng",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Spark routing architecture for Iceberg Materialized Views",
-      "url": "https://lists.apache.org/thread/rpbw52h2wr44300h7bxfdzdmf67m3gng",
-      "author": "Walaa Eldin Moustafa <wa...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-06-29T19:49:05+00:00",
-      "updated_at": "2026-07-14T22:20:45+00:00",
-      "body": "Hi all (cross-posting to Iceberg and Spark dev lists),\n\nI'd like to gather input from both communities on an architectural decision\nfor the Spark implementation of Iceberg Materialized Views.\n\n*Background*\n\nThe Iceberg community has been working on a Materialized View specification\n(https://github.com/apache/iceberg/pull/11041), and the design is now\ndirectionally aligned among contributors active on the spec PR. We are now\ndevising the Spark implementation as the first end-to-end realization of\nthe spec. A core engine concern is read-time routing: when a query\nreferences an MV, the engine must decide whether to read the precomputed\nstorage table (when the MV is fresh) or evaluate the view query (when\nstale). Both architectures have been implemented; the PRs and trade-offs\nare laid out below.\n\n\n*1. DSv2 catalog-based routing: *https://github.com/apache/iceberg/pull/9830\n\nThe catalog itself decides routing. SparkCatalog.loadTable returns a\nwrapper that reads from the storage table when fresh; loadView indicates\n\"use loadTable instead\" when fresh.\n\nPros:\n- Routing decision lives at the catalog boundary, where the View \u2194 storage\nTable relationship is already modeled.\n- Aligns with Spark 4.2's new RelationCatalog.loadRelation API [1], which\nlets a catalog return either a Table or View for the same identifier. MV\nrouting fits this model naturally, and the current pre-4.2 indirection\n(loadView throws / loadTable returns a wrapper) can collapse to a single\nloadRelation call.\n\nCons:\n- Freshness evaluation runs inside the view catalog. When MV dependencies\nspan multiple catalogs, loading dependency metadata from another catalog\ndoesn't compose cleanly inside one catalog's load path.\n- Pre-4.2, routing requires the indirection above.\n\n\n*2. Catalyst analyzer-based routing:*\nhttps://github.com/wmoustafa/iceberg-1/pull/2\n\nA new Catalyst rule (ResolveMaterializedViews) rewrites UnresolvedRelation\nfor a fresh MV to the storage table identifier; Spark's normal table\nresolution load",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/iceberg/pull/11041",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/iceberg/pull/9830",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/wmoustafa/iceberg-1/pull/2",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "The Iceberg community has been working on a Materialized View specification (https://github.com/apache/iceberg/pull/11041), and the design is now directionally aligned among contributors active on the spec PR. Pros: - Routing decision lives at the catalog boundary, where the View \u2194 storage Table relationship is already modeled. MV routing fits this model naturally, and the current pre-4.2 indirection (loadView throws / loadTable returns a wrapper) can collapse to a single loadRelation call.",
-      "llm_status": "discussion",
-      "comment_count": 2,
-      "participant_count": 2,
-      "llm_key_points": [
-        "I think that we should start with an implementation in Iceberg that\nperforms basic checks.",
-        "I think that we should start with an implementation in Iceberg that\nperforms basic checks."
-      ],
-      "llm_topics": [
-        "iceberg-materialized",
-        "materialized-views",
-        "materialized-view",
-        "iceberg"
-      ],
-      "_content_hash": "fe805227aa28",
-      "initiative_id": "spark-init-spark-ml-rpbw52h2wr44300h7bxfdzdmf67m3gng"
     },
     {
       "id": "spark-ml-bmqbpo4fp08y009hvgsv7s0kg9qo1c8p",
@@ -27071,7 +27068,7 @@
         "yuming-wang"
       ],
       "_content_hash": "a0cd2e254ca8",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-n5zb2hj3rl15g8wnlvl9xn4ghosxgj4p",
@@ -29763,7 +29760,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",

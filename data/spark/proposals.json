@@ -1,7 +1,7 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-09-22T10:37:34.328101+00:00",
-  "total": 661,
+  "generated_at": "2026-09-23T10:30:51.264173+00:00",
+  "total": 663,
   "proposals": [
     {
       "id": "spark-jira-SPARK-55278",
@@ -12,7 +12,7 @@
       "author": "Haiyang Sun",
       "state": "open",
       "created_at": "2026-01-29T12:26:31+00:00",
-      "updated_at": "2026-09-16T13:52:34+00:00",
+      "updated_at": "2026-09-23T08:16:51+00:00",
       "body": "Run user-provided code in Spark {*}consistently across many programming languages{*}.\r\n\r\nToday, Spark Connect allows users to write queries from multiple languages, but support for user-defined functions is incomplete. In practice, only Python has a mature solution, and it relies on language-specific mechanisms that do not generalize to other languages such as [Go|https://github.com/apache/spark-connect-go] / [Rust|https://github.com/apache/spark-connect-rust] / [Swift|https://github.com/apache/spark-connect-swift] / [.NET|https://github.com/GoEddie/spark-connect-dotnet] (where UDF is not supported).\r\n\r\nOur objective is to define a *unified API and execution protocol* for user-defined functions that run outside the Spark engine process via inter-process communication (IPC). This allows Spark to interact with external workers in a consistent way, regardless of the language used to implement the function.\r\n\r\nSPIP doc: [https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0]\r\n\r\nWorker Specification doc: [https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0]\r\n\r\n\u00a0",
       "labels": [
         "SPIP",
@@ -45,6 +45,41 @@
       "_content_hash": "e92de83ca329",
       "llm_title": "",
       "initiative_id": "spark-init-spark-jira-SPARK-55278"
+    },
+    {
+      "id": "spark-jira-SPARK-59726",
+      "source": "jira",
+      "kind": "issue",
+      "title": "SPIP: Pluggable Row-Filter and Column-Mask Enforcement in Catalyst",
+      "url": "https://issues.apache.org/jira/browse/SPARK-59726",
+      "author": "Huaxin Gao",
+      "state": "open",
+      "created_at": "2026-09-23T03:34:34+00:00",
+      "updated_at": "2026-09-23T03:36:38+00:00",
+      "body": "External catalogs and governance systems need to enforce fine-grained access\r\ncontrol, row-level filtering and column masking, on data read through Spark.\r\nToday Spark has no supported API for a data source or catalog to attach such\r\npolicies to a scan and have them enforced correctly in the query plan.\r\nIntegrators must inject Catalyst rules through SparkSessionExtensions and use\r\npackage-private Catalyst internals, which is brittle across versions and\r\nunsafe: a masking projection added naively can be removed or collapsed by the\r\noptimizer, silently returning unmasked data.\r\n\r\nThis SPIP proposes a stable, public, optimizer-safe DataSource V2 API for a\r\ntable to declare a read access policy (readable columns, a row filter, and a\r\nset of column masks) that Spark enforces with fail-closed semantics: the row\r\nfilter evaluates on original values before masking, the masks cannot be\r\noptimized away, and anything Spark cannot resolve fails the read rather than\r\nreturning unprotected data.\r\n\r\nSPIP document: https://docs.google.com/document/d/1hYEHORjHUnFzSoBY2DeOPILVJyu6iWXBusYwpF9FQJM/edit?tab=t.0\r\n\r\nDiscussion thread: <to be added >",
+      "labels": [
+        "SPIP"
+      ],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1hYEHORjHUnFzSoBY2DeOPILVJyu6iWXBusYwpF9FQJM/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: Pluggable Row-Filter and Column-Mask Enforcement in Catalyst"
+        }
+      ],
+      "comment_count": 0,
+      "llm_summary": "External catalogs and governance systems need to enforce fine-grained access control, row-level filtering and column masking, on data read through Spark. Today Spark has no supported API for a data source or catalog to attach such policies to a scan and have them enforced correctly in the query plan. Today Spark has no supported API for a data source or catalog to attach such policies to a scan and have them enforced correctly and safely in the query plan[a].",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "spark",
+        "catalyst",
+        "catalyst-external",
+        "external-catalogs"
+      ],
+      "_content_hash": "daf945ddc0d2",
+      "initiative_id": "spark-init-spark-jira-SPARK-59726"
     },
     {
       "id": "spark-jira-SPARK-51162",
@@ -1353,7 +1388,7 @@
         "pandas"
       ],
       "_content_hash": "29883ba4ffc6",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-jira-SPARK-45511",
@@ -1771,6 +1806,73 @@
       "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
+      "id": "spark-ml-bfdvfq7576w64kmjhhtxf16xwd3rx041",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] SPIP: Pluggable Row-Filter and Column-Mask Enforcement in Catalyst",
+      "url": "https://lists.apache.org/thread/bfdvfq7576w64kmjhhtxf16xwd3rx041",
+      "author": "huaxin gao <hu...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-09-23T03:39:25+00:00",
+      "updated_at": "2026-09-23T08:48:42+00:00",
+      "body": "Hi all,\n\nI would like to start a discussion on a SPIP that adds a public DataSource\nV2\nAPI for a table or catalog to declare a read access policy (readable\ncolumns,\na row filter, and column masks) that Spark enforces in the query plan. Here\nare\nthe jira <https://issues.apache.org/jira/browse/SPARK-59726> and SPIP doc\n<https://docs.google.com/document/d/1hYEHORjHUnFzSoBY2DeOPILVJyu6iWXBusYwpF9FQJM/edit?tab=t.0>\n.\n\nToday Spark has no supported API for this. Integrators inject Catalyst rules\nthrough SparkSessionExtensions and build on internal Catalyst APIs, as\nApache\nRanger (via the Kyuubi Spark AuthZ plugin) and a recent Apache Iceberg POC\nboth do. That is brittle across versions and unsafe: a masking projection\nadded naively to a plan can be removed or collapsed by the optimizer,\nsilently\nreturning unmasked data.\n\nThe proposal adds SupportsAccessControl, enforced during analysis, with\nthree\nguarantees: the masks cannot be optimized away, the row filter always sees\noriginal pre-mask values, and anything Spark cannot resolve fails the read\nrather than returning unprotected data.\n\nDetails and proposed interfaces are in the doc. Feedback is very welcome.\n\nThanks,\nHuaxin\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1hYEHORjHUnFzSoBY2DeOPILVJyu6iWXBusYwpF9FQJM/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: Pluggable Row-Filter and Column-Mask Enforcement in Catalyst"
+        }
+      ],
+      "llm_summary": "That is brittle across versions and unsafe: a masking projection added naively to a plan can be removed or collapsed by the optimizer, silently returning unmasked data. The proposal adds SupportsAccessControl, enforced during analysis, with three guarantees: the masks cannot be optimized away, the row filter always sees original pre-mask values, and anything Spark cannot resolve fails the read rather than returning unprotected data. This closes a real gap and I think putting enforcement in the engine, fail-closed and optimizer-aware, is the right call, and keeping it a vendor-neutral DSv2 capability lets Iceberg, Ranger, Polaris, and Delta retire their private-API workarounds instead of each carrying its own.",
+      "llm_status": "discussion",
+      "comment_count": 1,
+      "participant_count": 2,
+      "llm_key_points": [
+        "Thanks for putting this together."
+      ],
+      "llm_topics": [
+        "catalyst-apis",
+        "public-datasource",
+        "today-spark",
+        "spark"
+      ],
+      "_content_hash": "fbdb5b416377",
+      "initiative_id": "spark-init-spark-jira-SPARK-59726"
+    },
+    {
+      "id": "spark-ml-96goypb9vq64h9t5jkmw8n8yo3xtrogv",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Release Apache Spark 4.1.4",
+      "url": "https://lists.apache.org/thread/96goypb9vq64h9t5jkmw8n8yo3xtrogv",
+      "author": "Uro\u0161 Bojani\u0107 <ur...@apache.org>",
+      "state": "open",
+      "created_at": "2026-09-22T09:22:22+00:00",
+      "updated_at": "2026-09-22T23:45:07+00:00",
+      "body": "Hi all,\n\nFollowing Szehon's 4.2.1 release discussion, I would like to propose the next maintenance releases for the older maintained lines as well, and I would be happy to start off by volunteering to drive 4.1.4 release.\n\nAll of 3.5.x / 4.0.x / 4.1.x / 4.2.x were last released together in mid-July 2026, which is about ~10 weeks ago. Since then:\n\n- branch-4.1 has accumulated 63 JIRAs (82 commits), including wrong-results correctness fixes (SPARK-59050 SPJ multi-join, SPARK-58341 positional parameters, SPARK-57932 regexp on supplementary chars, SPARK-59602 float normalization), stability fixes (SPARK-58323 StackOverflow, SPARK-58886 Int overflow, SPARK-55271/SPARK-59008 NPEs), and resource-leak fixes (SPARK-58714, SPARK-58751).\n\n- branch-4.0 has 48 JIRAs (60 commits), sharing most of the above correctness fixes. Please note that 4.0.x reaches ~18 months this November, so this would likely be one of its final maintenance releases.\n\n- branch-3.5 (extended LTS, security-only) has 14 JIRAs of accumulated security hardening (XSS, Zip-Slip, credential logging, path-traversal, info-disclosure fixes) that are not yet in any 3.5 release; we should perhaps consider getting these out to LTS users.\n\nConcretely, I propose that I drive the 4.1.4 release, but we can also coordinate this with 4.0.5 (they share most cherry-picks), and possibly follow with a security-focused 3.5.10.\n\nIn any case, I would be happy to pair / coordinate with Szehon in this process. What do you folks think? Also, please mention if you have any additional must-have backports for any these releases (4.1.4, 4.0.5, 3.5.10).\n\nBest,\nUro\u0161\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "Please note that 4.0.x reaches ~18 months this November, so this would likely be one of its final maintenance releases. - branch-3.5 (extended LTS, security-only) has 14 JIRAs of accumulated security hardening (XSS, Zip-Slip, credential logging, path-traversal, info-disclosure fixes) that are not yet in any 3.5 release; we should perhaps consider getting these out to LTS users. Concretely, I propose that I drive the 4.1.4 release, but we can also coordinate this with 4.0.5 (they share most cherry-picks), and possibly follow with a security-focused 3.5.10.",
+      "llm_status": "discussion",
+      "comment_count": 4,
+      "participant_count": 5,
+      "llm_key_points": [
+        "+1\n\nOn Tue, Sep 22, 2026 at 11:23\u202fAM Uro\u0161 Bojani\u0107 <ur...@apache.org> wrote:\n\n> Hi all,\n>\n> Following Szehon's 4.2.1 rele",
+        "+1\n\n2026\u5e749\u670822\u65e5(\u706b) 22:28 Peter Toth <pe...@gmail.com>:\n\n> +1\n>\n> On Tue, Sep 22, 2026 at 11:23\u202fAM Uro\u0161 Bojani\u0107 <ur...@apa",
+        "+1\n\nOn Tue, Sep 22, 2026 at 7:58\u202fAM Kousuke Saruta <sa...@apache.org> wrote:\n\n> +1\n>\n> 2026\u5e749\u670822\u65e5(\u706b) 22:28 Peter Toth <p"
+      ],
+      "llm_topics": [
+        "apache-spark",
+        "release-apache",
+        "discuss",
+        "release"
+      ],
+      "_content_hash": "544d139e7afa",
+      "initiative_id": "spark-init-spark-ml-96goypb9vq64h9t5jkmw8n8yo3xtrogv"
+    },
+    {
       "id": "spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw",
       "source": "mailing_list",
       "kind": "thread",
@@ -1779,14 +1881,14 @@
       "author": "Szehon Ho <sz...@gmail.com>",
       "state": "open",
       "created_at": "2026-09-21T23:56:43+00:00",
-      "updated_at": "2026-09-22T09:28:47+00:00",
+      "updated_at": "2026-09-22T23:41:44+00:00",
       "body": "Hi all,\n\nI'd like to start a discussion about releasing Apache Spark 4.2.1.\n\nI'm particularly interested in getting SPARK-59572\n<https://issues.apache.org/jira/browse/SPARK-59572> into 4.2.1. It fixes a\ncorrectness issue introduced in 4.2.0 where failures to evaluate a DSv2\nPartitionPredicate can be treated as matches, leading to incorrect query\nresults.\n\nIt's been over two months since Spark 4.2.0 was released in July. The changes\non branch-4.2 since 4.2.0\n<https://github.com/apache/spark/compare/v4.2.0...branch-4.2> now include\n99 PRs covering 97 JIRA issues. Besides SPARK-59572, these include\ncorrectness and stability fixes across SQL, Core, Streaming, PySpark, and\nKubernetes, with several addressing storage-partitioned joins.\n\nI'm happy to volunteer to drive the release to learn the process!\n\nWould folks be in favor of moving forward with a 4.2.1 release? Are there\nany other fixes or blockers we should address first?\n\nThanks,\nSzehon\n",
       "labels": [],
       "linked_resources": [],
       "llm_summary": "It fixes a correctness issue introduced in 4.2.0 where failures to evaluate a DSv2 PartitionPredicate can be treated as matches, leading to incorrect query results. It fixes > a correctness issue introduced in 4.2.0 where failures to evaluate a DSv2 > PartitionPredicate can be treated as matches, leading to incorrect query > results. It fixes a correctness issue introduced in 4.2.0 where failures to evaluate a DSv2 PartitionPredicate can be treated as matches, leading to incorrect query results.",
       "llm_status": "discussion",
-      "comment_count": 5,
-      "participant_count": 6,
+      "comment_count": 10,
+      "participant_count": 10,
       "llm_key_points": [
         "+1 for this, thank you for proposing and driving the maintenance release, Szehon!",
         "+1\n\nOn Tue, 22 Sept 2026 at 08:57, Szehon Ho <sz...@gmail.com> wrote:\n\n> Hi all,\n>\n> I'd like to start a discussion abou",
@@ -1799,34 +1901,8 @@
         "releasing-apache"
       ],
       "_content_hash": "12d1f5fe54cc",
+      "llm_title": "",
       "initiative_id": "spark-init-spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw"
-    },
-    {
-      "id": "spark-ml-96goypb9vq64h9t5jkmw8n8yo3xtrogv",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Release Apache Spark 4.1.4",
-      "url": "https://lists.apache.org/thread/96goypb9vq64h9t5jkmw8n8yo3xtrogv",
-      "author": "Uro\u0161 Bojani\u0107 <ur...@apache.org>",
-      "state": "open",
-      "created_at": "2026-09-22T09:22:22+00:00",
-      "updated_at": "2026-09-22T09:22:22+00:00",
-      "body": "Hi all,\n\nFollowing Szehon's 4.2.1 release discussion, I would like to propose the next maintenance releases for the older maintained lines as well, and I would be happy to start off by volunteering to drive 4.1.4 release.\n\nAll of 3.5.x / 4.0.x / 4.1.x / 4.2.x were last released together in mid-July 2026, which is about ~10 weeks ago. Since then:\n\n- branch-4.1 has accumulated 63 JIRAs (82 commits), including wrong-results correctness fixes (SPARK-59050 SPJ multi-join, SPARK-58341 positional parameters, SPARK-57932 regexp on supplementary chars, SPARK-59602 float normalization), stability fixes (SPARK-58323 StackOverflow, SPARK-58886 Int overflow, SPARK-55271/SPARK-59008 NPEs), and resource-leak fixes (SPARK-58714, SPARK-58751).\n\n- branch-4.0 has 48 JIRAs (60 commits), sharing most of the above correctness fixes. Please note that 4.0.x reaches ~18 months this November, so this would likely be one of its final maintenance releases.\n\n- branch-3.5 (extended LTS, security-only) has 14 JIRAs of accumulated security hardening (XSS, Zip-Slip, credential logging, path-traversal, info-disclosure fixes) that are not yet in any 3.5 release; we should perhaps consider getting these out to LTS users.\n\nConcretely, I propose that I drive the 4.1.4 release, but we can also coordinate this with 4.0.5 (they share most cherry-picks), and possibly follow with a security-focused 3.5.10.\n\nIn any case, I would be happy to pair / coordinate with Szehon in this process. What do you folks think? Also, please mention if you have any additional must-have backports for any these releases (4.1.4, 4.0.5, 3.5.10).\n\nBest,\nUro\u0161\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
-      "labels": [],
-      "linked_resources": [],
-      "llm_summary": "Please note that 4.0.x reaches ~18 months this November, so this would likely be one of its final maintenance releases. - branch-3.5 (extended LTS, security-only) has 14 JIRAs of accumulated security hardening (XSS, Zip-Slip, credential logging, path-traversal, info-disclosure fixes) that are not yet in any 3.5 release; we should perhaps consider getting these out to LTS users. Concretely, I propose that I drive the 4.1.4 release, but we can also coordinate this with 4.0.5 (they share most cherry-picks), and possibly follow with a security-focused 3.5.10.",
-      "llm_status": "discussion",
-      "comment_count": 0,
-      "participant_count": 1,
-      "llm_key_points": [],
-      "llm_topics": [
-        "apache-spark",
-        "release-apache",
-        "older-maintained",
-        "maintained-lines"
-      ],
-      "_content_hash": "4bde9b2bf2e5",
-      "initiative_id": "spark-init-spark-ml-96goypb9vq64h9t5jkmw8n8yo3xtrogv"
     },
     {
       "id": "spark-ml-r3jyf1on98lgnxw6pdhjj0qrh09mnxvz",
@@ -2752,7 +2828,7 @@
       ],
       "llm_title": "",
       "_content_hash": "97cea4020d47",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-vgg3omvqqmyo2c8w5rnnhl78k1rzp2qg",
@@ -3047,7 +3123,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -4609,7 +4685,7 @@
         "uro-bojani"
       ],
       "_content_hash": "011b99573a32",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-92kjhnglm90z2n8v7hxn6d9nb2gzhq1z",
@@ -4896,7 +4972,7 @@
         "apache-spark"
       ],
       "_content_hash": "ec8146319b15",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv",
@@ -4927,7 +5003,7 @@
         "spark-project"
       ],
       "_content_hash": "af074b2503b6",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-c3sjlfos8d4o2859bjpltpgsf33wfnfh",
@@ -5584,7 +5660,7 @@
         "pyspark"
       ],
       "_content_hash": "f1327ace7e23",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-2c5fpsz7f2mfwmc4bxy0q9442zl0tcgn",
@@ -5615,7 +5691,7 @@
         "peter-toth"
       ],
       "_content_hash": "b38e7b779ac6",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-xvv4qt9dpnb1kszxdqlxyv9b46749ypo",
@@ -7476,7 +7552,7 @@
         "tian-gao"
       ],
       "_content_hash": "dacca48c4fa0",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-mqfysmjmkdnw0fxy9t5dp7bxpvo36jrv",
@@ -7721,7 +7797,7 @@
         "vote-passes"
       ],
       "_content_hash": "f6a4f948416b",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-dylmft4n6v7mqb4b47hvjxhoz6hkhqkb",
@@ -8769,7 +8845,7 @@
         "security-fixes"
       ],
       "_content_hash": "76edeb3f9870",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-wfg7gfxqzysr08qkq6gh0wtnw5t3nqtl",
@@ -10903,7 +10979,7 @@
         "apache"
       ],
       "_content_hash": "2c6c48880b4f",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-9y3t9j6ntg30os6os1c30dy5b2prqt8y",
@@ -11108,7 +11184,7 @@
         "apache-spark"
       ],
       "_content_hash": "b1796e2be8d5",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-cfdlfl19k8gpc8m4ollmppyo0qbdpbh4",
@@ -11199,7 +11275,7 @@
         "release"
       ],
       "_content_hash": "a07f3d993e3f",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-p0y46b1986pm4hmg5fy9zbf3g1k8ngrx",
@@ -11715,7 +11791,7 @@
         "binding"
       ],
       "_content_hash": "0cfb04e25f4e",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-rx5pqh01c86slpqv9161hqwgm5lwxxzq",
@@ -11911,7 +11987,7 @@
         "release"
       ],
       "_content_hash": "05d6213c6e90",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-4t4l9dfq9ozmo5b11govl2j9obt6vjb4",
@@ -11976,7 +12052,7 @@
         "discuss"
       ],
       "_content_hash": "c73481e96ce1",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-zxdn5hj7tb0zb21b4xxzfxz717sx31fj",
@@ -14313,7 +14389,7 @@
         "subset-argument"
       ],
       "_content_hash": "e68b1d71e82d",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-v9djkznh8sz5smdl7mx9zt5kxd51g18y",
@@ -17926,7 +18002,7 @@
         "deprecate"
       ],
       "_content_hash": "d6459727ac29",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-8b483tg6q06w3p03t5co8v8228qngqgw",
@@ -17961,7 +18037,7 @@
         "lts-period"
       ],
       "_content_hash": "5e4a9be2e683",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-hfpgp3mz0lq6w9ysqv92zkygwn8bmcpk",
@@ -18244,7 +18320,7 @@
         "vote"
       ],
       "_content_hash": "cd56fa6f3ba5",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-tdlkpp7h2rs5k89pnmrvs64hd1t8f76b",
@@ -18369,7 +18445,7 @@
         "apache"
       ],
       "_content_hash": "c477dc28e3fe",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-jmnvlqkhmfv5lg5l1fw4gyq1xgsx92nw",
@@ -18396,7 +18472,7 @@
         "apache"
       ],
       "_content_hash": "b35686693544",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-04k62jn7k6dqhtov44yg9c6gkowyy47n",
@@ -21009,7 +21085,7 @@
         "spark"
       ],
       "_content_hash": "bb2e07d0a0dc",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-w3v4fjk9lvxvp3lr5tngg0hvhfrkl5b0",
@@ -21139,7 +21215,7 @@
         "discuss"
       ],
       "_content_hash": "fe2f594a7167",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-g9kj4zv7slct25fox0plxzcd1h8dvjm6",
@@ -26773,7 +26849,7 @@
         "release"
       ],
       "_content_hash": "11ef119282b3",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-y6hby3k9nqds4fgx0b1w5yhhlqb2f7gb",
@@ -27127,7 +27203,7 @@
         "yuming-wang"
       ],
       "_content_hash": "a0cd2e254ca8",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-n5zb2hj3rl15g8wnlvl9xn4ghosxgj4p",
@@ -27648,7 +27724,7 @@
         "pyspark"
       ],
       "_content_hash": "c62f327caf97",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-fyq8h9c7qd9y3jmm6kbo1n8ngdsh6f79",
@@ -28740,7 +28816,7 @@
         "api"
       ],
       "_content_hash": "2157e26a7e9e",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-yq6f5gv7gtdbk1ynwpd9hnc547bgz03m",
@@ -31267,7 +31343,7 @@
         "api"
       ],
       "_content_hash": "d05f73f56e42",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-c1j9zcycbwyh3hcdck7qlg7ppxpd68wc",
@@ -31389,7 +31465,7 @@
         "api"
       ],
       "_content_hash": "2cb82c94753c",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-7jjbhdz2njbk596rgckg1vvcsg07vksz",
@@ -31834,7 +31910,7 @@
         "spark"
       ],
       "_content_hash": "534ff7745efc",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-obcw512wvjdjkpf61wxj78tnc9jp71x2"
     },
     {
       "id": "spark-ml-9x911pqg44bdmrshqsyrr64t2ockjqpg",
@@ -31904,7 +31980,7 @@
         "release"
       ],
       "_content_hash": "a6ecaa36881f",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-obcw512wvjdjkpf61wxj78tnc9jp71x2"
     },
     {
       "id": "spark-ml-pwvytb3kw58tvkpdg897n1yw3hn5w0ph",
@@ -32256,7 +32332,7 @@
         "release"
       ],
       "_content_hash": "89c3c2fb0fa1",
-      "initiative_id": "spark-init-spark-ml-wh7flo2ov17g7novt8t4lxk2z7044y93"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-5bww6j9gmqr91xp2pd9w4h1fbkk3kh1n",

@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-09-22T10:39:00.621036+00:00",
+  "generated_at": "2026-09-23T10:31:47.159261+00:00",
   "total": 294,
   "proposals": [
     {
@@ -1734,7 +1734,7 @@
         "throw-exception"
       ],
       "_content_hash": "f7519d5674e8",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-gh-rel-apache-parquet-1-14-4-rc2",
@@ -1773,7 +1773,7 @@
         "throw-exception"
       ],
       "_content_hash": "2d3d9339fcee",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-gh-rel-apache-parquet-1-14-4-rc1",
@@ -1808,7 +1808,7 @@
         "size-exceeds"
       ],
       "_content_hash": "a904ccde2f90",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-gh-m29",
@@ -2677,6 +2677,97 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
+      "url": "https://lists.apache.org/thread/kgmgn2vmrz49thbfhv8b66lglsyd81xt",
+      "author": "Rok Mihevc <ro...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-09-08T18:42:14+00:00",
+      "updated_at": "2026-09-23T10:09:47+00:00",
+      "body": "Hi all,\n\nAs proposed during the general community call we held a focused call today\nto discuss the proposal for adding a logical vector type to parquet. This\nwas called because it seems:\n\n* Vectors (as in vector DB) storage needs are different to what we need for\nfixed size list applications we've been disucssing so far [0]. This is\ndriven also by Iceberg's need for Vector type [1]\n* We don't yet have a consensus of what physical representation of Vector\ntype should be.\n\n\nNotes from the call can be found here [2]. Short summary:\n\nWe have converged on two options that could work, but have not yet decided\nwhich one to propose:\n\n- Option A - FLBA as physical storage (FLBA(num_elements * element_width)).\nVector logical type would provide an enum specifying the element type, and\nthe element would be non-nullable. The element type enum could be\nindependent of the parquet type system, making evolution easier. Downside\nis loss of element-level encodings available today, though they can be\nadded later. Upside is simplicity and ease of evolution.\n\n- Option C1 - LIST with numeric parquet type elements as physical storage.\nNew float types (e.g. BF16) can be added in parquet proper as needed.\nDownside is we need to add new types to parquet, DL/RL overhead is likely\nnot a concern. Upside is we have encoding support now.\n\nRegarding NaN/Inf limitations, the consensus was that these should be\nhandled by statistics. This leads to a need for a new inf_count statustics.\n\nIt would be great to discuss the merits of these two proposals here on the\nmailing list for maximum visibility and participation.\nWe will likely continue to discuss this on tomorrow's community call too.\n\n\n[0] https://lists.apache.org/thread/xot5f3ghhtc82n1bf0wdl9zqwlrzqks3\n[1]\nhttps://docs.google.com/document/d/1zA8PskNDFKXXJpzWQr25CFoX_aIZHBNHbkxk0t3PteE/edit?tab=t.0#heading=h.j5pn3fef87b2\n[2]\nhttps://docs.google.com/document/d/1rPTjEJTwN97UfHvNlvdriX9XBQsW8PGwIHMXHvy-XlU/edit?tab=t.0\n\n\nBest,\nRok\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1zA8PskNDFKXXJpzWQr25CFoX_aIZHBNHbkxk0t3PteE/edit?tab=t.0#heading=h.j5pn3fef87b2",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffIceberg Vector Type Support Proposal"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1rPTjEJTwN97UfHvNlvdriX9XBQsW8PGwIHMXHvy-XlU/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSep 8, 2026 | Parquet Numeric Vector Type call"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1nf30OqK_UqxA4YTEZQszmOBEG56m9M5mp9rIYC2SUWc/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffFixed-size list type for Parquet"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/pull/624",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Motivation Fixed-shape vector data is increasingly common in AI/ML workloads, especially embeddings and materialized model features. Parquet community is also discussing native support for fixed-size list/vector-like data, so Iceberg should decide how this should surface at the table-format layer. A native type would improve usability and interoperability with systems that already expose shape-declared vectors or fixed-size lists, such as Lance, pgvector, Snowflake, and emerging SQL standard.",
+      "llm_status": "discussion",
+      "comment_count": 11,
+      "participant_count": 4,
+      "llm_key_points": [
+        "Le 08/09/2026 \u00e0 20:42, Rok Mihevc a \u00e9crit\u00a0:\n> Hi all,\n> \n> As proposed during the general community call we held a focus",
+        "Hi all,\n\nAndrew's and Gunnar's results show that existing LIST storage can be read\nefficiently.",
+        "Thanks for the summary Rok,\n\nI like the direction C1 is going, but I'm a little concerned about the\nfollowing statement:"
+      ],
+      "llm_topics": [
+        "vector-type",
+        "vector",
+        "focused-call",
+        "type"
+      ],
+      "_content_hash": "9d378f64bb1a",
+      "llm_title": "",
+      "initiative_id": "parquet-init-parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt"
+    },
+    {
+      "id": "parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] How should readers behave with unsupported format versions?",
+      "url": "https://lists.apache.org/thread/7ghf93l0ss74l3k4jo9qc2bdmrmng3hm",
+      "author": "Ryan Blue <bl...@apache.org>",
+      "state": "open",
+      "created_at": "2026-09-09T22:38:19+00:00",
+      "updated_at": "2026-09-22T19:56:18+00:00",
+      "body": "Hi everyone,\n\nThis is a new thread to discuss an issue raised in the \"Finalizing the\nversioning proposal\" thread. I suggested starting a new thread to focus on\nthis question in the community sync and there was agreement so that we can\nget more attention to the issue.\n\nThe question that we identified is: How should a reader behave when it\nencounters a file written with an unsupported format version?\n\nThere are 3 main options:\n1. A reader should fail because it does not support the version\n2. A reader should attempt to read the file\n3. This choice is left up to implementations\n\nI'll cover each option in more detail below, but first I want to clarify\nthat we are not talking about \"preview\" features like encodings or\nforward-compatible changes like new logical types. Preview features will\nbreak readers that do not support them and only affect specific columns\nusing the feature. For preview features, the expectation is that readers\nwill attempt to read the file and will fail if they need to project a\ncolumn that cannot be read.\n\nThe choice of how to handle an unsupported format version primarily affects\nchanges that add, remove, or modify the semantics of metadata fields. For\nexample:\n- Changing `path_in_schema` from required to optional\n- Adding `offset` and `size` fields to a page header to relocate page data\n- Fixing stats written with the wrong sort order\n\nIf we choose option 1, then a v3 reader that encounters a v4 file would be\nrequired to fail with an error that the file is too new to be read. With\nthe current versioning scheme, the forward-compatibility within a version\nmeans that a v3 reader can read any v3 file and will produce the correct\ndata. But this guarantee does not extend to any higher version. Without a\nguarantee that results are correct, the v3 reader must reject a v4 file.\n\nIf we choose option 2, then the v3 reader will attempt to read the v4 file.\nIn this case, Parquet will need to provide an additional guarantee that\nreading future formats will eit",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/parquet-java/pull/3611",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "This choice is left up to implementations > > I'll cover each option in more detail below, but first I want to clarify > that we are not talking about \"preview\" features like encodings or > forward-compatible changes like new logical types. > From what I can tell, the current state of parquet is implicitly Option 2 > (as readers can and do try to read any file and skip or error when > encountering unsupported features), and don't check version numbers. Preserving existing interpretations, making compatible additions ignorable, and explicitly distinguishing features that require new understanding is a widely used format-evolution strategy.",
+      "llm_status": "discussion",
+      "comment_count": 15,
+      "participant_count": 10,
+      "llm_key_points": [
+        "Le 10/09/2026 \u00e0 00:38, Ryan Blue a \u00e9crit\u00a0:\n> \n> There are 3 main options:\n> 1.",
+        "Here is my attempt to summarize the tradeoffs (Ryan's explanation during\nthe call was very helpful for me).",
+        "> If the spec requires that readers fail fast on unknown versions (\"Option\n1\"),\n> * Pro: New changes to the spec don't h"
+      ],
+      "llm_topics": [
+        "file",
+        "reader",
+        "read",
+        "unsupported-format"
+      ],
+      "_content_hash": "7a564df9ef8b",
+      "initiative_id": "parquet-init-parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm"
+    },
+    {
       "id": "parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9",
       "source": "mailing_list",
       "kind": "thread",
@@ -2685,7 +2776,7 @@
       "author": "PRATEEK GAUR <pr...@gmail.com>",
       "state": "open",
       "created_at": "2026-09-18T14:53:51+00:00",
-      "updated_at": "2026-09-18T18:12:26+00:00",
+      "updated_at": "2026-09-22T18:34:23+00:00",
       "body": "Hi everyone,\n\nFastLanes has generated a lot of interest lately and came up a lot during\nrecent PFOR discussions [1]. It mostly gets talked about as one big\npackage, but in reality, it combines a few different ideas.\n\nTo see what actually makes sense for Parquet, I wrote up a performance\nstudy. The goal is to show how the FastLanes layout spec works under the\nhood, share actual benchmark numbers, and start a discussion on what we\nmight want to adopt. Please note that all benchmarking was done in the\narrow C++ repo.\n\nHere are our key observations:\n\n   1.\n\n   For plain PFOR, the layout advantage is highly hardware-dependent:\n   Parquet\u2019s current C++ reader is already vectorized and optimized. On our\n   test machine, simply changing the layout to use lane interleaving gave only\n   a minor speedup. While other hardware configurations [Kosta's super laptop]\n   show larger single-core gains, our multi-core tests suggest these\n   advantages can shrink when multiple CPUs compete for memory bandwidth. We\n   should discuss whether this hardware-dependent gain justifies a global\n   format change.\n   2.\n\n   For Delta encoding, the transposed layout looks highly promising:\n   Standard Delta encoding forces the CPU to calculate values sequentially,\n   which slows things down. The FastLanes container fundamentally breaks this\n   bottleneck by splitting the work into parallel streams. Using its\n   recommended layout (FL_ORDER), we saw a massive decoding speedup with\n   virtually no impact on file size.\n   3.\n\n   The baseline matters: Measuring these layout changes against basic,\n   unoptimized code makes them look like a huge leap forward. But when\n   measured against the highly optimized code Parquet (xsimd c++) already\n   ships today, the actual margins shrink significantly, giving us a more\n   realistic picture of the gains.\n\nI\u2019d love for the community to take a look at the document, check the\nmethodology, and share your thoughts!\n\nDocument:\nhttps://docs.google.com/document/d/1L2",
       "labels": [],
       "linked_resources": [
@@ -2723,14 +2814,14 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "While other hardware configurations [Kosta's super laptop] show larger single-core gains, our multi-core tests suggest these advantages can shrink when multiple CPUs compete for memory bandwidth. But when measured against the highly optimized code Parquet (xsimd c++) already ships today, the actual margins shrink significantly, giving us a more realistic picture of the gains. FastLanes, explained What bit packing is, what FastLanes proposes, and what we can borrow for PFOR-delta encoding Authors : Prateek Gaur and Kosta Torasov In Collaboration with : Russell Spitzer, Alkis, Antoine Pitrou, Gang Wu, Ryan Blue, Andrew Lamb, Micah Kornfield, Julien Le Dem, Jeff Plaisance, Ben Owad Date : September 10, 2026",
+      "llm_summary": "The goal is to show how the FastLanes layout spec works under the hood, share actual benchmark numbers, and start a discussion on what we might want to adopt. While other hardware configurations [Kosta's super laptop] show larger single-core gains, our multi-core tests suggest these advantages can shrink when multiple CPUs compete for memory bandwidth. But when measured against the highly optimized code Parquet (xsimd c++) already ships today, the actual margins shrink significantly, giving us a more realistic picture of the gains.",
       "llm_status": "discussion",
-      "comment_count": 3,
-      "participant_count": 2,
+      "comment_count": 7,
+      "participant_count": 3,
       "llm_key_points": [
         "Le 18/09/2026 \u00e0 16:53, PRATEEK GAUR a \u00e9crit\u00a0:\n> \n>     For Delta encoding, the transposed layout looks highly promising:",
         "Hi Antoine,\n\nYou hit the nail on the head.",
-        "Hi Antoine,\n\nYou hit the nail on the head."
+        "When I read first about fastlanes I thought it would be great for parquet."
       ],
       "llm_topics": [
         "benchmark-results",
@@ -2738,45 +2829,64 @@
         "lot",
         "parquet"
       ],
-      "_content_hash": "7ccf37e9ebba",
+      "_content_hash": "692113228757",
       "initiative_id": "parquet-init-parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9"
     },
     {
-      "id": "parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm",
+      "id": "parquet-ml-qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk",
       "source": "mailing_list",
       "kind": "thread",
-      "title": "[DISCUSS] How should readers behave with unsupported format versions?",
-      "url": "https://lists.apache.org/thread/7ghf93l0ss74l3k4jo9qc2bdmrmng3hm",
-      "author": "Ryan Blue <bl...@apache.org>",
+      "title": "Re: [DISCUSS][Encoding] PFOR Encoding",
+      "url": "https://lists.apache.org/thread/qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk",
+      "author": "PRATEEK GAUR <pr...@gmail.com>",
       "state": "open",
-      "created_at": "2026-09-09T22:38:19+00:00",
-      "updated_at": "2026-09-16T19:56:38+00:00",
-      "body": "Hi everyone,\n\nThis is a new thread to discuss an issue raised in the \"Finalizing the\nversioning proposal\" thread. I suggested starting a new thread to focus on\nthis question in the community sync and there was agreement so that we can\nget more attention to the issue.\n\nThe question that we identified is: How should a reader behave when it\nencounters a file written with an unsupported format version?\n\nThere are 3 main options:\n1. A reader should fail because it does not support the version\n2. A reader should attempt to read the file\n3. This choice is left up to implementations\n\nI'll cover each option in more detail below, but first I want to clarify\nthat we are not talking about \"preview\" features like encodings or\nforward-compatible changes like new logical types. Preview features will\nbreak readers that do not support them and only affect specific columns\nusing the feature. For preview features, the expectation is that readers\nwill attempt to read the file and will fail if they need to project a\ncolumn that cannot be read.\n\nThe choice of how to handle an unsupported format version primarily affects\nchanges that add, remove, or modify the semantics of metadata fields. For\nexample:\n- Changing `path_in_schema` from required to optional\n- Adding `offset` and `size` fields to a page header to relocate page data\n- Fixing stats written with the wrong sort order\n\nIf we choose option 1, then a v3 reader that encounters a v4 file would be\nrequired to fail with an error that the file is too new to be read. With\nthe current versioning scheme, the forward-compatibility within a version\nmeans that a v3 reader can read any v3 file and will produce the correct\ndata. But this guarantee does not extend to any higher version. Without a\nguarantee that results are correct, the v3 reader must reject a v4 file.\n\nIf we choose option 2, then the v3 reader will attempt to read the v4 file.\nIn this case, Parquet will need to provide an additional guarantee that\nreading future formats will eit",
+      "created_at": "2026-09-08T15:07:22+00:00",
+      "updated_at": "2026-09-22T18:28:06+00:00",
+      "body": "Hi all,\n\nSince the earlier PFOR thread I have kept measuring and improved decoding\nspeed\nsignificantly, added a delta mode, and evaluated the encoding on real\ndictionary index runs.\nThe detailed write-up for all of this has been added to the original doc\nitself : [1] .\n\nFirst, decode.\nWith code changes and with no encoded byte changing, made PFOR\nabout 40% faster to decode at -O3.\n\nSecond, added delta mode.\nCertain data distributions definitely benefit from delta encoding and\nwanted to explore this\ncapability on top of PFOR's blocking + patching scheme and results looking\nquite promising\nfor the data distributions that can take advantage of it. Here I added it\nas a per block decision\nmode which selects delta mode if the values are close together. I see a\ncomparable compression\nratio to delta bit pack hybrid (same idea). And pretty good decompression\nspeed. Added details to\nthe same document. Code for the same is in [2].\n\nThird, PFOR for dictionary index runs.\nBased on the characteristics of PFOR and the dictionary index runs I was\nhopeful\nthat I'll get good results with PFOR on dictionary indices. So I did an\nevaluation of PFOR for dictionary\nindex runs and added the results on the same to the document. I do see\nvalue in using PFOR for\ndictionary index encoding.\n\nLooking for feedback from the team.\n\nBest\nPrateek\n\n[1]\nhttps://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/\n[2] https://github.com/apache/arrow/pull/50088 c++ (pfor+frame only)\n[3] https://github.com/apache/arrow/pull/51150 c++ (pfor + dynamic frame or\ndelta)\n[4] https://github.com/apache/arrow-rs/pull/10977 rust\n\nOn Mon, Jul 13, 2026 at 8:31\u202fAM PRATEEK GAUR <pr...@gmail.com> wrote:\n\n> Hi team,\n>\n> Just wanted to resurface the doc in your email folders, looking forward to\n> some suggestions.\n> I'll work towards adding a few more datasets to the comparison in the\n> coming days.\n>\n> Best\n> Prateek\n>\n> On Wed, Jul 1, 2026 at 9:01\u202fAM PRATEEK GAUR <pr...@gmail.com> wrote:\n>\n>> Hi Anto",
       "labels": [],
       "linked_resources": [
         {
-          "url": "https://github.com/apache/parquet-java/pull/3611",
+          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/",
+          "kind": "google_doc",
+          "fetched": false
+        },
+        {
+          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/edit?tab=t.0#heading=h.uzgoevv9ajp",
+          "kind": "google_doc",
+          "fetched": false
+        },
+        {
+          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": false
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/50088",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/51150",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow-rs/pull/10977",
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "I'll cover each option in more detail below, but first I want to clarify that we are not talking about \"preview\" features like encodings or forward-compatible changes like new logical types. The choice of how to handle an unsupported format version primarily affects changes that add, remove, or modify the semantics of metadata fields. This choice is left up to implementations > > I'll cover each option in more detail below, but first I want to clarify > that we are not talking about \"preview\" features like encodings or > forward-compatible changes like new logical types.",
+      "llm_summary": "Since the earlier PFOR thread I have kept measuring and improved decoding speed significantly, added a delta mode, and evaluated the encoding on real dictionary index runs. I see a comparable compression ratio to delta bit pack hybrid (same idea). So I did an evaluation of PFOR for dictionary index runs and added the results on the same to the document.",
       "llm_status": "discussion",
-      "comment_count": 13,
-      "participant_count": 8,
-      "llm_key_points": [
-        "Le 10/09/2026 \u00e0 00:38, Ryan Blue a \u00e9crit\u00a0:\n> \n> There are 3 main options:\n> 1.",
-        "Here is my attempt to summarize the tradeoffs (Ryan's explanation during\nthe call was very helpful for me).",
-        "Here is my attempt to summarize the tradeoffs (Ryan's explanation during\nthe call was very helpful for me)."
-      ],
+      "comment_count": 3,
+      "participant_count": 3,
+      "llm_key_points": [],
       "llm_topics": [
-        "file",
-        "reader",
-        "read",
-        "unsupported-format"
+        "pfor",
+        "dictionary-index",
+        "improved-decoding",
+        "discuss"
       ],
-      "_content_hash": "853717dd424b",
+      "_content_hash": "20730f857f21",
       "llm_title": "",
-      "initiative_id": "parquet-init-parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm"
+      "initiative_id": "parquet-init-parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9"
     },
     {
       "id": "parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t",
@@ -2979,107 +3089,6 @@
       ],
       "_content_hash": "064814ab9c5f",
       "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
-    },
-    {
-      "id": "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
-      "url": "https://lists.apache.org/thread/kgmgn2vmrz49thbfhv8b66lglsyd81xt",
-      "author": "Rok Mihevc <ro...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-09-08T18:42:14+00:00",
-      "updated_at": "2026-09-09T11:08:27+00:00",
-      "body": "Hi all,\n\nAs proposed during the general community call we held a focused call today\nto discuss the proposal for adding a logical vector type to parquet. This\nwas called because it seems:\n\n* Vectors (as in vector DB) storage needs are different to what we need for\nfixed size list applications we've been disucssing so far [0]. This is\ndriven also by Iceberg's need for Vector type [1]\n* We don't yet have a consensus of what physical representation of Vector\ntype should be.\n\n\nNotes from the call can be found here [2]. Short summary:\n\nWe have converged on two options that could work, but have not yet decided\nwhich one to propose:\n\n- Option A - FLBA as physical storage (FLBA(num_elements * element_width)).\nVector logical type would provide an enum specifying the element type, and\nthe element would be non-nullable. The element type enum could be\nindependent of the parquet type system, making evolution easier. Downside\nis loss of element-level encodings available today, though they can be\nadded later. Upside is simplicity and ease of evolution.\n\n- Option C1 - LIST with numeric parquet type elements as physical storage.\nNew float types (e.g. BF16) can be added in parquet proper as needed.\nDownside is we need to add new types to parquet, DL/RL overhead is likely\nnot a concern. Upside is we have encoding support now.\n\nRegarding NaN/Inf limitations, the consensus was that these should be\nhandled by statistics. This leads to a need for a new inf_count statustics.\n\nIt would be great to discuss the merits of these two proposals here on the\nmailing list for maximum visibility and participation.\nWe will likely continue to discuss this on tomorrow's community call too.\n\n\n[0] https://lists.apache.org/thread/xot5f3ghhtc82n1bf0wdl9zqwlrzqks3\n[1]\nhttps://docs.google.com/document/d/1zA8PskNDFKXXJpzWQr25CFoX_aIZHBNHbkxk0t3PteE/edit?tab=t.0#heading=h.j5pn3fef87b2\n[2]\nhttps://docs.google.com/document/d/1rPTjEJTwN97UfHvNlvdriX9XBQsW8PGwIHMXHvy-XlU/edit?tab=t.0\n\n\nBest,\nRok\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1zA8PskNDFKXXJpzWQr25CFoX_aIZHBNHbkxk0t3PteE/edit?tab=t.0#heading=h.j5pn3fef87b2",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffIceberg Vector Type Support Proposal"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1rPTjEJTwN97UfHvNlvdriX9XBQsW8PGwIHMXHvy-XlU/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSep 8, 2026 | Parquet Numeric Vector Type call"
-        }
-      ],
-      "llm_summary": "Motivation Fixed-shape vector data is increasingly common in AI/ML workloads, especially embeddings and materialized model features. Parquet community is also discussing native support for fixed-size list/vector-like data, so Iceberg should decide how this should surface at the table-format layer. A native type would improve usability and interoperability with systems that already expose shape-declared vectors or fixed-size lists, such as Lance, pgvector, Snowflake, and emerging SQL standard.",
-      "llm_status": "discussion",
-      "comment_count": 6,
-      "participant_count": 4,
-      "llm_key_points": [
-        "Le 08/09/2026 \u00e0 20:42, Rok Mihevc a \u00e9crit\u00a0:\n> Hi all,\n> \n> As proposed during the general community call we held a focus",
-        "Hi all,\n\nAndrew's and Gunnar's results show that existing LIST storage can be read\nefficiently.",
-        "Thanks for the summary Rok,\n\nI like the direction C1 is going, but I'm a little concerned about the\nfollowing statement:"
-      ],
-      "llm_topics": [
-        "vector-type",
-        "vector",
-        "focused-call",
-        "type"
-      ],
-      "_content_hash": "9d378f64bb1a",
-      "llm_title": "",
-      "initiative_id": "parquet-init-parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt"
-    },
-    {
-      "id": "parquet-ml-qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "Re: [DISCUSS][Encoding] PFOR Encoding",
-      "url": "https://lists.apache.org/thread/qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk",
-      "author": "PRATEEK GAUR <pr...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-09-08T15:07:22+00:00",
-      "updated_at": "2026-09-08T15:07:22+00:00",
-      "body": "Hi all,\n\nSince the earlier PFOR thread I have kept measuring and improved decoding\nspeed\nsignificantly, added a delta mode, and evaluated the encoding on real\ndictionary index runs.\nThe detailed write-up for all of this has been added to the original doc\nitself : [1] .\n\nFirst, decode.\nWith code changes and with no encoded byte changing, made PFOR\nabout 40% faster to decode at -O3.\n\nSecond, added delta mode.\nCertain data distributions definitely benefit from delta encoding and\nwanted to explore this\ncapability on top of PFOR's blocking + patching scheme and results looking\nquite promising\nfor the data distributions that can take advantage of it. Here I added it\nas a per block decision\nmode which selects delta mode if the values are close together. I see a\ncomparable compression\nratio to delta bit pack hybrid (same idea). And pretty good decompression\nspeed. Added details to\nthe same document. Code for the same is in [2].\n\nThird, PFOR for dictionary index runs.\nBased on the characteristics of PFOR and the dictionary index runs I was\nhopeful\nthat I'll get good results with PFOR on dictionary indices. So I did an\nevaluation of PFOR for dictionary\nindex runs and added the results on the same to the document. I do see\nvalue in using PFOR for\ndictionary index encoding.\n\nLooking for feedback from the team.\n\nBest\nPrateek\n\n[1]\nhttps://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/\n[2] https://github.com/apache/arrow/pull/50088 c++ (pfor+frame only)\n[3] https://github.com/apache/arrow/pull/51150 c++ (pfor + dynamic frame or\ndelta)\n[4] https://github.com/apache/arrow-rs/pull/10977 rust\n\nOn Mon, Jul 13, 2026 at 8:31\u202fAM PRATEEK GAUR <pr...@gmail.com> wrote:\n\n> Hi team,\n>\n> Just wanted to resurface the doc in your email folders, looking forward to\n> some suggestions.\n> I'll work towards adding a few more datasets to the comparison in the\n> coming days.\n>\n> Best\n> Prateek\n>\n> On Wed, Jul 1, 2026 at 9:01\u202fAM PRATEEK GAUR <pr...@gmail.com> wrote:\n>\n>> Hi Anto",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/",
-          "kind": "google_doc",
-          "fetched": false
-        },
-        {
-          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/edit?tab=t.0#heading=h.uzgoevv9ajp",
-          "kind": "google_doc",
-          "fetched": false
-        },
-        {
-          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": false
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/50088",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/51150",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow-rs/pull/10977",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Since the earlier PFOR thread I have kept measuring and improved decoding speed significantly, added a delta mode, and evaluated the encoding on real dictionary index runs. I see a comparable compression ratio to delta bit pack hybrid (same idea). So I did an evaluation of PFOR for dictionary index runs and added the results on the same to the document.",
-      "llm_status": "discussion",
-      "comment_count": 0,
-      "participant_count": 1,
-      "llm_key_points": [],
-      "llm_topics": [
-        "pfor",
-        "dictionary-index",
-        "improved-decoding",
-        "discuss"
-      ],
-      "llm_title": "",
-      "_content_hash": "20730f857f21",
-      "initiative_id": "parquet-init-parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9"
     },
     {
       "id": "parquet-ml-3h0ybjk5bg22msl1czvtjymmppllg59b",
@@ -7036,7 +7045,7 @@
         "clarify"
       ],
       "_content_hash": "dace230d68c3",
-      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
+      "initiative_id": "parquet-init-parquet-ml-1nf596dq7fpc0zp35bt17zy7srvo5wt8"
     },
     {
       "id": "parquet-ml-61hhzqr4cr5zb4kymhxwj1vb0ozd47q2",
@@ -7068,7 +7077,7 @@
         "micah-kornfield"
       ],
       "_content_hash": "2a9d2df4f4db",
-      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
+      "initiative_id": "parquet-init-parquet-ml-1nf596dq7fpc0zp35bt17zy7srvo5wt8"
     },
     {
       "id": "parquet-ml-y553jl3byk1s7bgkoht9nt46ky2vrzf0",
@@ -7106,7 +7115,7 @@
       ],
       "_content_hash": "c224df0daae0",
       "llm_title": "Refactor Implementation Status Page to YAML",
-      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
+      "initiative_id": "parquet-init-parquet-ml-y553jl3byk1s7bgkoht9nt46ky2vrzf0"
     },
     {
       "id": "parquet-ml-yjlod93mo7sfzb7t74qbotdr9txjr2qs",
@@ -8517,7 +8526,7 @@
       ],
       "_content_hash": "735a1326fdb5",
       "llm_title": "Merge Implementation Status PR for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
     },
     {
       "id": "parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",

@@ -1,12 +1,57 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-09-22T10:39:00.634629+00:00",
-  "total": 66,
+  "generated_at": "2026-09-23T10:31:47.172977+00:00",
+  "total": 68,
   "initiatives": [
+    {
+      "id": "parquet-init-parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
+      "title": "Numeric Vector type",
+      "summary": "Only supporting a single level of nesting within an optional group like in your embedding example might be a reasonable limitation to start with, and would likely cover the majority of use cases. Toda",
+      "status": "discussion",
+      "key_points": [],
+      "proposal_ids": [
+        "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
+        "parquet-ml-3d7mf3l749r7d77f3lsr4jjqk10gjm92"
+      ],
+      "proposal_count": 2,
+      "shared_docs": [
+        {
+          "url": "https://docs.google.com/document/d/1nf30OqK_UqxA4YTEZQszmOBEG56m9M5mp9rIYC2SUWc/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffFixed-size list type for Parquet"
+        }
+      ],
+      "last_activity": "2026-09-23T10:09:47+00:00",
+      "signals": [
+        "shared_doc",
+        "topic:vector"
+      ],
+      "archived": false
+    },
+    {
+      "id": "parquet-init-parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm",
+      "title": "How should readers behave with unsupported format versions?",
+      "summary": "This choice is left up to implementations > > I'll cover each option in more detail below, but first I want to clarify > that we are not talking about \"preview\" features like encodings or > forward-compatible changes like new logical types. > From what I can tell, the current state of parquet is implicitly Option 2 > (as readers can and do try to read any file and skip or error when > encountering unsupported features), and don't check version numbers. Preserving existing interpretations, making compatible additions ignorable, and explicitly distinguishing features that require new understanding is a widely used format-evolution strategy.",
+      "status": "discussion",
+      "key_points": [
+        "Le 10/09/2026 \u00e0 00:38, Ryan Blue a \u00e9crit\u00a0:\n> \n> There are 3 main options:\n> 1.",
+        "Here is my attempt to summarize the tradeoffs (Ryan's explanation during\nthe call was very helpful for me).",
+        "> If the spec requires that readers fail fast on unknown versions (\"Option\n1\"),\n> * Pro: New changes to the spec don't h"
+      ],
+      "proposal_ids": [
+        "parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-09-22T19:56:18+00:00",
+      "signals": [],
+      "archived": false
+    },
     {
       "id": "parquet-init-parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9",
       "title": "Breakdown of FastLanes for Parquet",
-      "summary": "While other hardware configurations [Kosta's super laptop] show larger single-core gains, our multi-core tests suggest these advantages can shrink when multiple CPUs compete for memory bandwidth. But ",
+      "summary": "The goal is to show how the FastLanes layout spec works under the hood, share actual benchmark numbers, and start a discussion on what we might want to adopt. While other hardware configurations [Kost",
       "status": "discussion",
       "key_points": [],
       "proposal_ids": [
@@ -21,29 +66,10 @@
           "fetched": false
         }
       ],
-      "last_activity": "2026-09-18T18:12:26+00:00",
+      "last_activity": "2026-09-22T18:34:23+00:00",
       "signals": [
         "shared_doc"
       ],
-      "archived": false
-    },
-    {
-      "id": "parquet-init-parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm",
-      "title": "How should readers behave with unsupported format versions?",
-      "summary": "I'll cover each option in more detail below, but first I want to clarify that we are not talking about \"preview\" features like encodings or forward-compatible changes like new logical types. The choice of how to handle an unsupported format version primarily affects changes that add, remove, or modify the semantics of metadata fields. This choice is left up to implementations > > I'll cover each option in more detail below, but first I want to clarify > that we are not talking about \"preview\" features like encodings or > forward-compatible changes like new logical types.",
-      "status": "discussion",
-      "key_points": [
-        "Le 10/09/2026 \u00e0 00:38, Ryan Blue a \u00e9crit\u00a0:\n> \n> There are 3 main options:\n> 1.",
-        "Here is my attempt to summarize the tradeoffs (Ryan's explanation during\nthe call was very helpful for me).",
-        "Here is my attempt to summarize the tradeoffs (Ryan's explanation during\nthe call was very helpful for me)."
-      ],
-      "proposal_ids": [
-        "parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2026-09-16T19:56:38+00:00",
-      "signals": [],
       "archived": false
     },
     {
@@ -79,6 +105,9 @@
         "parquet-gh-rel-apache-parquet-1-18-1",
         "parquet-gh-rel-apache-parquet-1-17-0",
         "parquet-gh-rel-apache-parquet-1-17-0-rc0",
+        "parquet-gh-rel-apache-parquet-1-14-4",
+        "parquet-gh-rel-apache-parquet-1-14-4-rc2",
+        "parquet-gh-rel-apache-parquet-1-14-4-rc1",
         "parquet-ml-qlff21wcqj17wt6m7mjyok19x49085l0",
         "parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7",
         "parquet-ml-29bkrgwr7pt9jjzf5g5nd9zlhky58dx2",
@@ -91,9 +120,6 @@
         "parquet-ml-st8l40z5n4cx5c22rcog50ws4pkzdc3s",
         "parquet-ml-mk4lp6wnxwbp4xf2bh95tjy7n6t4kwzy",
         "parquet-ml-g1cngnkzhjt86yt4dfl078yrplfmzcf5",
-        "parquet-ml-1nf596dq7fpc0zp35bt17zy7srvo5wt8",
-        "parquet-ml-61hhzqr4cr5zb4kymhxwj1vb0ozd47q2",
-        "parquet-ml-y553jl3byk1s7bgkoht9nt46ky2vrzf0",
         "parquet-ml-0bdyyb7qobrxx94x8v7t5z7g2ksnpyr2",
         "parquet-ml-vfzx2651y4p86zt5d8pnhk4n2y4bf0l7",
         "parquet-ml-hxqpjg5yflr2dqmdtc4z55kl1s9p8rzh",
@@ -121,8 +147,8 @@
         "shared_doc",
         "cross_source",
         "vote_thread",
-        "topic:versioning",
-        "topic:documentation"
+        "topic:apache-parquet",
+        "topic:versioning"
       ],
       "archived": false
     },
@@ -196,7 +222,6 @@
         "parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q",
         "parquet-ml-22dvcnm7v5d30slzc3hp8d9qq8syj1dq",
         "parquet-ml-dy22njos6c0wbo82s377wvbobbd7y6lx",
-        "parquet-ml-kd3k4q691lp5c4q3r767zb8jltrm9z33",
         "parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",
         "parquet-ml-bvyg48ysp3rkh4ls0lnn597ygpyf6goj",
         "parquet-ml-xwd3mqjr9bdpg3jcnlprbyb4x09c9ymj",
@@ -209,7 +234,7 @@
         "parquet-ml-kttwbl5l7opz6nwb5bck2gghc2y3td0o",
         "parquet-ml-wgobz41mfldbhqpg9q4mdwypghg2cxg2"
       ],
-      "proposal_count": 19,
+      "proposal_count": 18,
       "shared_docs": [
         {
           "url": "https://docs.google.com/document/d/1guEzBQjzOEEZvvibeZjNraKmZHWtxQR95O_DvtZU0xw/edit?usp=sharing",
@@ -305,24 +330,6 @@
       "shared_docs": [],
       "last_activity": "2026-09-10T10:08:37Z",
       "signals": [],
-      "archived": false
-    },
-    {
-      "id": "parquet-init-parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
-      "title": "Numeric Vector type",
-      "summary": "Only supporting a single level of nesting within an optional group like in your embedding example might be a reasonable limitation to start with, and would likely cover the majority of use cases. Toda",
-      "status": "discussion",
-      "key_points": [],
-      "proposal_ids": [
-        "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
-        "parquet-ml-3d7mf3l749r7d77f3lsr4jjqk10gjm92"
-      ],
-      "proposal_count": 2,
-      "shared_docs": [],
-      "last_activity": "2026-09-09T11:08:27+00:00",
-      "signals": [
-        "topic:vector"
-      ],
       "archived": false
     },
     {
@@ -443,9 +450,6 @@
         "parquet-gh-rel-apache-parquet-1-16-0-rc2",
         "parquet-gh-rel-apache-parquet-1-16-0-rc1",
         "parquet-gh-rel-apache-parquet-1-16-0-rc0",
-        "parquet-gh-rel-apache-parquet-1-14-4",
-        "parquet-gh-rel-apache-parquet-1-14-4-rc2",
-        "parquet-gh-rel-apache-parquet-1-14-4-rc1",
         "parquet-gh-rel-apache-parquet-1-14-3",
         "parquet-gh-rel-apache-parquet-1-14-3-rc2",
         "parquet-ml-3obhqhyb0hf9cqby5lf62wdx86cgrrg0",
@@ -454,7 +458,7 @@
         "parquet-ml-fnp3p9shbrc11zpn8j8b19rzl9tvwfro",
         "parquet-ml-xkt3qg18grnkdy570cwpr2gk6rlmqj71"
       ],
-      "proposal_count": 16,
+      "proposal_count": 13,
       "shared_docs": [],
       "last_activity": "2026-08-11T20:15:51Z",
       "signals": [
@@ -629,6 +633,7 @@
         "parquet-ml-djnbbcnft0fqm9ldby2q96nbtrwqz477",
         "parquet-ml-hms38c0807r3qpst7ykf4b42xwpb23g7",
         "parquet-ml-7zfwc3o53btd2xbdb8bqf8lxsrk76cxr",
+        "parquet-ml-kd3k4q691lp5c4q3r767zb8jltrm9z33",
         "parquet-ml-k9q8nctkmoh0mwd7r470ytqr64f33w9g",
         "parquet-ml-zhpm9m7wgr2szmb1vlh3yqh04wctww89",
         "parquet-ml-x3472kldrq5kjnld9ztj1jozz25f40hg",
@@ -645,7 +650,7 @@
         "parquet-ml-r80z7tx670h34hqhml0g53qnov3j79tc",
         "parquet-ml-21f6xotkqstk81jcsk1t3r94g718jbzc"
       ],
-      "proposal_count": 29,
+      "proposal_count": 30,
       "shared_docs": [
         {
           "url": "https://docs.google.com/document/d/19hQLYcU5_r5nJB7GtnjfODLlSDiNS24GXAtKg9b0_ls/edit",
@@ -888,6 +893,42 @@
       "proposal_count": 2,
       "shared_docs": [],
       "last_activity": "2025-12-29T14:41:13+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
+      "id": "parquet-init-parquet-ml-1nf596dq7fpc0zp35bt17zy7srvo5wt8",
+      "title": "Clarify versioning in parquet-format",
+      "summary": "> > > > > > > > > > > >> Le 18/12/2025 \u00e0 16:48, Micah Kornfield a \u00e9crit : > > > >> Just wanted to bump this vote thread. > > > >> Thanks, > > > >> Micah > > > >>> On Monday, December 15, 2025, Micah K",
+      "status": "proposal",
+      "key_points": [],
+      "proposal_ids": [
+        "parquet-ml-1nf596dq7fpc0zp35bt17zy7srvo5wt8",
+        "parquet-ml-61hhzqr4cr5zb4kymhxwj1vb0ozd47q2"
+      ],
+      "proposal_count": 2,
+      "shared_docs": [],
+      "last_activity": "2025-12-19T16:34:58+00:00",
+      "signals": [
+        "topic:clarify-versioning"
+      ],
+      "archived": false
+    },
+    {
+      "id": "parquet-init-parquet-ml-y553jl3byk1s7bgkoht9nt46ky2vrzf0",
+      "title": "Refactor Implementation Status Page to YAML",
+      "summary": "A draft PR has been proposed to refactor the implementation status page to use YAML for better data management and metadata collection. Feedback suggests that YAML is preferable due to its ease of editing and support for comments, while maintaining the use of Hugo templates for rendering.",
+      "status": "discussion",
+      "key_points": [
+        "Switching from JSON to YAML",
+        "Maintaining Hugo for rendering"
+      ],
+      "proposal_ids": [
+        "parquet-ml-y553jl3byk1s7bgkoht9nt46ky2vrzf0"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2025-12-13T10:14:39+00:00",
       "signals": [],
       "archived": false
     },

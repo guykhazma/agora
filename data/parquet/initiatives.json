@@ -1,20 +1,54 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-09-23T10:31:47.172977+00:00",
-  "total": 68,
+  "generated_at": "2026-09-24T10:51:05.372431+00:00",
+  "total": 69,
   "initiatives": [
     {
-      "id": "parquet-init-parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
+      "id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t",
       "title": "Numeric Vector type",
-      "summary": "Only supporting a single level of nesting within an optional group like in your embedding example might be a reasonable limitation to start with, and would likely cover the majority of use cases. Toda",
-      "status": "discussion",
+      "summary": "Following last week's sync and the discussing in the comments of the PR, we took a step back and looked at the difference in complexity between having two separate types: one narrowly focused on refer",
+      "status": "released",
       "key_points": [],
       "proposal_ids": [
         "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
-        "parquet-ml-3d7mf3l749r7d77f3lsr4jjqk10gjm92"
+        "parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t",
+        "parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd",
+        "parquet-ml-d5t1qphb8lj0qqltrv57bknx18fwbf2l",
+        "parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh",
+        "parquet-ml-cykmmq4ggd2thqkjcj888ywmsy50fgh1",
+        "parquet-ml-3d7mf3l749r7d77f3lsr4jjqk10gjm92",
+        "parquet-ml-lbtdvq63382fgl2049zb6vn396h9lmfz",
+        "parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7",
+        "parquet-ml-f930pg123w86wpqhthhsx603g27obgo2",
+        "parquet-ml-od9hxfssjgnmsh23o18q78hszowq7pcy",
+        "parquet-ml-nmq7odlbg1p6yx0hg00clzjbc3tb1tc3",
+        "parquet-ml-nf0m7z256gtq16m3by78mf4w6tpffdqh",
+        "parquet-ml-mw7fg76kyoootmntw5fk539423g9vqkr",
+        "parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo",
+        "parquet-ml-q20b8kjvs27ly0w2zzxld029nwkc5fhx",
+        "parquet-ml-3lpfqyqxsfvtr1zs90ho4nxhbfkpsl4d",
+        "parquet-ml-9xo3mp4n23p8psmrhso5t9q899vxwfjt",
+        "parquet-ml-zfnmg5p51b7oylft5w5k4670wgkd4zv4",
+        "parquet-ml-oqd9lt7p0jtf217hg0667xhk0zvwbgvt",
+        "parquet-ml-nq7n6pbp222txrfo232ybgpvlvpmykbp",
+        "parquet-ml-3zyfhc3r4b5sh61mb6nwsxx5fp3r18qn",
+        "parquet-ml-bcc13dtdvnxvg55nhyowbwzqomfljgvb",
+        "parquet-ml-1p8ot4nbx872zhr6p6ow2dzmqvtf3zkb",
+        "parquet-ml-4mof6ghglxzkvtxxmfc206s5g5d7f8zy",
+        "parquet-ml-gyvqcx9ssxkjlrwogqwy7n4z6ofdm871",
+        "parquet-ml-odm5pmxssyd9kw1wvgdkg8hd044czqnk",
+        "parquet-ml-hlqr2p77cmhg5ws3n7jy07c1f4lcdkds",
+        "parquet-ml-ywg8n060kdr9m2c4x2ssrdk3mx4w2n5l",
+        "parquet-ml-kqdk6mv60dpy3t5nx41wtwnxtm2qpb6o"
       ],
-      "proposal_count": 2,
+      "proposal_count": 30,
       "shared_docs": [
+        {
+          "url": "https://docs.google.com/document/d/1AiwrstqkwkBoOZqgOkm9JGwSMcNeHyLR7EEj1CVqpZQ/edit?tab=t.81io57da7gz#heading=h.nely2c1b14se",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffFILE - complete type"
+        },
         {
           "url": "https://docs.google.com/document/d/1nf30OqK_UqxA4YTEZQszmOBEG56m9M5mp9rIYC2SUWc/edit?tab=t.0",
           "kind": "google_doc",
@@ -22,30 +56,13 @@
           "title": "\ufeffFixed-size list type for Parquet"
         }
       ],
-      "last_activity": "2026-09-23T10:09:47+00:00",
+      "last_activity": "2026-09-24T09:54:27+00:00",
       "signals": [
         "shared_doc",
-        "topic:vector"
+        "vote_thread",
+        "topic:result",
+        "topic:logical-type"
       ],
-      "archived": false
-    },
-    {
-      "id": "parquet-init-parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm",
-      "title": "How should readers behave with unsupported format versions?",
-      "summary": "This choice is left up to implementations > > I'll cover each option in more detail below, but first I want to clarify > that we are not talking about \"preview\" features like encodings or > forward-compatible changes like new logical types. > From what I can tell, the current state of parquet is implicitly Option 2 > (as readers can and do try to read any file and skip or error when > encountering unsupported features), and don't check version numbers. Preserving existing interpretations, making compatible additions ignorable, and explicitly distinguishing features that require new understanding is a widely used format-evolution strategy.",
-      "status": "discussion",
-      "key_points": [
-        "Le 10/09/2026 \u00e0 00:38, Ryan Blue a \u00e9crit\u00a0:\n> \n> There are 3 main options:\n> 1.",
-        "Here is my attempt to summarize the tradeoffs (Ryan's explanation during\nthe call was very helpful for me).",
-        "> If the spec requires that readers fail fast on unknown versions (\"Option\n1\"),\n> * Pro: New changes to the spec don't h"
-      ],
-      "proposal_ids": [
-        "parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2026-09-22T19:56:18+00:00",
-      "signals": [],
       "archived": false
     },
     {
@@ -66,10 +83,68 @@
           "fetched": false
         }
       ],
-      "last_activity": "2026-09-22T18:34:23+00:00",
+      "last_activity": "2026-09-24T06:25:35+00:00",
       "signals": [
         "shared_doc"
       ],
+      "archived": false
+    },
+    {
+      "id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm",
+      "title": "Lakehouse Day EU 2026",
+      "summary": "Lakehouse Day will take place on Saturday, October 10 in Glasgow, Scotland, co-located with Community Over Code and hosted by the Apache Software Foundation. It's a full-day, multi-track event dedicat",
+      "status": "released",
+      "key_points": [],
+      "proposal_ids": [
+        "parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm",
+        "parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms",
+        "parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr",
+        "parquet-ml-fgyd7m7klggmk6t2fj9lt3qhgzxx8pry",
+        "parquet-ml-7xq85j6rd8som3y6cqxtk6n6ddhdy3wm",
+        "parquet-ml-ygtv1t2klfmchh99ybkggwn066nskvpt",
+        "parquet-ml-hwyhmg5zlkfgz1lzbgkfdjycptpd9sm6",
+        "parquet-ml-vr1h7dnr4jp2f1xhzzkwzcw49qgfgsyl",
+        "parquet-ml-fbqhrp2v20g1mlkbdg5n6mjz4o80log4",
+        "parquet-ml-okzqb3kn479gqzxm21gg5vqr35om9gw5",
+        "parquet-ml-ryr3zd48pzvrc4m4sj2jytstynq2pm7g",
+        "parquet-ml-vdb2jd2v3v7gzs31qzysrdf55oby6hfd",
+        "parquet-ml-m911chzz5pz8o8fb1y0x49h96g8w29d7",
+        "parquet-ml-f9379yx0lf5gtpkgyv922pvowtzy4kmm",
+        "parquet-ml-2gggm938z0x9fx3wtwctfm5htsxlf3z4",
+        "parquet-ml-v8b1mnfg7lqsgrn6xnzjcm9mdt6jpmfo",
+        "parquet-ml-fdf1zz0f3xzz5zpvo6c811xjswhm1zy6",
+        "parquet-ml-2yhhk9y8mkl8cco3ojf0df7o1k65fmt1",
+        "parquet-ml-0yokbmfcbhz76ftjbxktwxfo5vrt57od",
+        "parquet-ml-wgp2wj2o6llrp98n8ckf073zldhzmrp4",
+        "parquet-ml-f68ylrsm8vvvo9t5nq56kp218dkdm1b7"
+      ],
+      "proposal_count": 21,
+      "shared_docs": [],
+      "last_activity": "2026-09-23T16:46:17+00:00",
+      "signals": [
+        "vote_thread",
+        "topic:apache-parquet",
+        "topic:apache"
+      ],
+      "archived": false
+    },
+    {
+      "id": "parquet-init-parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm",
+      "title": "How should readers behave with unsupported format versions?",
+      "summary": "This choice is left up to implementations > > I'll cover each option in more detail below, but first I want to clarify > that we are not talking about \"preview\" features like encodings or > forward-compatible changes like new logical types. > From what I can tell, the current state of parquet is implicitly Option 2 > (as readers can and do try to read any file and skip or error when > encountering unsupported features), and don't check version numbers. Preserving existing interpretations, making compatible additions ignorable, and explicitly distinguishing features that require new understanding is a widely used format-evolution strategy.",
+      "status": "discussion",
+      "key_points": [
+        "Le 10/09/2026 \u00e0 00:38, Ryan Blue a \u00e9crit\u00a0:\n> \n> There are 3 main options:\n> 1.",
+        "Here is my attempt to summarize the tradeoffs (Ryan's explanation during\nthe call was very helpful for me).",
+        "> If the spec requires that readers fail fast on unknown versions (\"Option\n1\"),\n> * Pro: New changes to the spec don't h"
+      ],
+      "proposal_ids": [
+        "parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-09-22T19:56:18+00:00",
+      "signals": [],
       "archived": false
     },
     {
@@ -153,62 +228,6 @@
       "archived": false
     },
     {
-      "id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t",
-      "title": "WIRE: a logical type for serialized wire-format messages",
-      "summary": "Following last week's sync and the discussing in the comments of the PR, we took a step back and looked at the difference in complexity between having two separate types: one narrowly focused on refer",
-      "status": "released",
-      "key_points": [],
-      "proposal_ids": [
-        "parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t",
-        "parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd",
-        "parquet-ml-d5t1qphb8lj0qqltrv57bknx18fwbf2l",
-        "parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh",
-        "parquet-ml-cykmmq4ggd2thqkjcj888ywmsy50fgh1",
-        "parquet-ml-lbtdvq63382fgl2049zb6vn396h9lmfz",
-        "parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7",
-        "parquet-ml-f930pg123w86wpqhthhsx603g27obgo2",
-        "parquet-ml-od9hxfssjgnmsh23o18q78hszowq7pcy",
-        "parquet-ml-nmq7odlbg1p6yx0hg00clzjbc3tb1tc3",
-        "parquet-ml-xlmp7cq638ht7n6c9f1vqlc6qgs4j4y4",
-        "parquet-ml-nf0m7z256gtq16m3by78mf4w6tpffdqh",
-        "parquet-ml-mw7fg76kyoootmntw5fk539423g9vqkr",
-        "parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo",
-        "parquet-ml-q20b8kjvs27ly0w2zzxld029nwkc5fhx",
-        "parquet-ml-3lpfqyqxsfvtr1zs90ho4nxhbfkpsl4d",
-        "parquet-ml-9xo3mp4n23p8psmrhso5t9q899vxwfjt",
-        "parquet-ml-zfnmg5p51b7oylft5w5k4670wgkd4zv4",
-        "parquet-ml-oqd9lt7p0jtf217hg0667xhk0zvwbgvt",
-        "parquet-ml-nq7n6pbp222txrfo232ybgpvlvpmykbp",
-        "parquet-ml-3zyfhc3r4b5sh61mb6nwsxx5fp3r18qn",
-        "parquet-ml-bcc13dtdvnxvg55nhyowbwzqomfljgvb",
-        "parquet-ml-1p8ot4nbx872zhr6p6ow2dzmqvtf3zkb",
-        "parquet-ml-nlsj0ftxy7y4ov1678rgy5zc7dmogg6q",
-        "parquet-ml-4mof6ghglxzkvtxxmfc206s5g5d7f8zy",
-        "parquet-ml-gyvqcx9ssxkjlrwogqwy7n4z6ofdm871",
-        "parquet-ml-odm5pmxssyd9kw1wvgdkg8hd044czqnk",
-        "parquet-ml-hlqr2p77cmhg5ws3n7jy07c1f4lcdkds",
-        "parquet-ml-ywg8n060kdr9m2c4x2ssrdk3mx4w2n5l",
-        "parquet-ml-kqdk6mv60dpy3t5nx41wtwnxtm2qpb6o"
-      ],
-      "proposal_count": 30,
-      "shared_docs": [
-        {
-          "url": "https://docs.google.com/document/d/1AiwrstqkwkBoOZqgOkm9JGwSMcNeHyLR7EEj1CVqpZQ/edit?tab=t.81io57da7gz#heading=h.nely2c1b14se",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffFILE - complete type"
-        }
-      ],
-      "last_activity": "2026-09-11T22:12:16+00:00",
-      "signals": [
-        "shared_doc",
-        "vote_thread",
-        "topic:result",
-        "topic:apache-parquet"
-      ],
-      "archived": false
-    },
-    {
       "id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q",
       "title": "Extended Precision Nanosecond Timestamps",
       "summary": "The Arrow project is considering dropping support for Java 8 in its next release, with recommendations to use Arrow version 16 for those needing Java 8 compatibility. There are discussions around the ",
@@ -222,6 +241,7 @@
         "parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q",
         "parquet-ml-22dvcnm7v5d30slzc3hp8d9qq8syj1dq",
         "parquet-ml-dy22njos6c0wbo82s377wvbobbd7y6lx",
+        "parquet-ml-kd3k4q691lp5c4q3r767zb8jltrm9z33",
         "parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",
         "parquet-ml-bvyg48ysp3rkh4ls0lnn597ygpyf6goj",
         "parquet-ml-xwd3mqjr9bdpg3jcnlprbyb4x09c9ymj",
@@ -234,7 +254,7 @@
         "parquet-ml-kttwbl5l7opz6nwb5bck2gghc2y3td0o",
         "parquet-ml-wgobz41mfldbhqpg9q4mdwypghg2cxg2"
       ],
-      "proposal_count": 18,
+      "proposal_count": 19,
       "shared_docs": [
         {
           "url": "https://docs.google.com/document/d/1guEzBQjzOEEZvvibeZjNraKmZHWtxQR95O_DvtZU0xw/edit?usp=sharing",
@@ -397,44 +417,6 @@
       "shared_docs": [],
       "last_activity": "2026-08-11T20:23:42Z",
       "signals": [],
-      "archived": false
-    },
-    {
-      "id": "parquet-init-parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr",
-      "title": "Apache Parquet release 1.18.0",
-      "summary": "Parquet is a general-purpose columnar file format for nested data. It uses space-efficient encodings and a compressed and splittable structure for processing frameworks like Hadoop. In light of the di",
-      "status": "released",
-      "key_points": [],
-      "proposal_ids": [
-        "parquet-ml-x0bv01s5gz439z8jrcpn5k4q38qfx7ms",
-        "parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr",
-        "parquet-ml-fgyd7m7klggmk6t2fj9lt3qhgzxx8pry",
-        "parquet-ml-7xq85j6rd8som3y6cqxtk6n6ddhdy3wm",
-        "parquet-ml-ygtv1t2klfmchh99ybkggwn066nskvpt",
-        "parquet-ml-hwyhmg5zlkfgz1lzbgkfdjycptpd9sm6",
-        "parquet-ml-vr1h7dnr4jp2f1xhzzkwzcw49qgfgsyl",
-        "parquet-ml-fbqhrp2v20g1mlkbdg5n6mjz4o80log4",
-        "parquet-ml-okzqb3kn479gqzxm21gg5vqr35om9gw5",
-        "parquet-ml-ryr3zd48pzvrc4m4sj2jytstynq2pm7g",
-        "parquet-ml-vdb2jd2v3v7gzs31qzysrdf55oby6hfd",
-        "parquet-ml-m911chzz5pz8o8fb1y0x49h96g8w29d7",
-        "parquet-ml-f9379yx0lf5gtpkgyv922pvowtzy4kmm",
-        "parquet-ml-2gggm938z0x9fx3wtwctfm5htsxlf3z4",
-        "parquet-ml-v8b1mnfg7lqsgrn6xnzjcm9mdt6jpmfo",
-        "parquet-ml-fdf1zz0f3xzz5zpvo6c811xjswhm1zy6",
-        "parquet-ml-2yhhk9y8mkl8cco3ojf0df7o1k65fmt1",
-        "parquet-ml-0yokbmfcbhz76ftjbxktwxfo5vrt57od",
-        "parquet-ml-wgp2wj2o6llrp98n8ckf073zldhzmrp4",
-        "parquet-ml-f68ylrsm8vvvo9t5nq56kp218dkdm1b7"
-      ],
-      "proposal_count": 20,
-      "shared_docs": [],
-      "last_activity": "2026-08-11T20:18:11+00:00",
-      "signals": [
-        "vote_thread",
-        "topic:apache-parquet",
-        "topic:apache"
-      ],
       "archived": false
     },
     {
@@ -633,7 +615,6 @@
         "parquet-ml-djnbbcnft0fqm9ldby2q96nbtrwqz477",
         "parquet-ml-hms38c0807r3qpst7ykf4b42xwpb23g7",
         "parquet-ml-7zfwc3o53btd2xbdb8bqf8lxsrk76cxr",
-        "parquet-ml-kd3k4q691lp5c4q3r767zb8jltrm9z33",
         "parquet-ml-k9q8nctkmoh0mwd7r470ytqr64f33w9g",
         "parquet-ml-zhpm9m7wgr2szmb1vlh3yqh04wctww89",
         "parquet-ml-x3472kldrq5kjnld9ztj1jozz25f40hg",
@@ -650,7 +631,7 @@
         "parquet-ml-r80z7tx670h34hqhml0g53qnov3j79tc",
         "parquet-ml-21f6xotkqstk81jcsk1t3r94g718jbzc"
       ],
-      "proposal_count": 30,
+      "proposal_count": 29,
       "shared_docs": [
         {
           "url": "https://docs.google.com/document/d/19hQLYcU5_r5nJB7GtnjfODLlSDiNS24GXAtKg9b0_ls/edit",
@@ -893,6 +874,24 @@
       "proposal_count": 2,
       "shared_docs": [],
       "last_activity": "2025-12-29T14:41:13+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
+      "id": "parquet-init-parquet-ml-xlmp7cq638ht7n6c9f1vqlc6qgs4j4y4",
+      "title": "Release Apache Parquet Format 2.12.0 RC0",
+      "summary": "Vote in progress: 2 binding +1, 2 non-binding +1",
+      "status": "proposal",
+      "key_points": [
+        "Hi everyone,\n\nI propose the following RC to be released as the official Apache Parquet\nFormat 2.12.0 release.",
+        "Voters include: Aihua Xu, Andrew Lamb, Fokko Driesprong..."
+      ],
+      "proposal_ids": [
+        "parquet-ml-xlmp7cq638ht7n6c9f1vqlc6qgs4j4y4"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2025-12-22T21:38:50+00:00",
       "signals": [],
       "archived": false
     },
@@ -1444,6 +1443,24 @@
       "last_activity": "2024-07-03T04:47:47Z",
       "signals": [],
       "archived": true
+    },
+    {
+      "id": "parquet-init-parquet-ml-nlsj0ftxy7y4ov1678rgy5zc7dmogg6q",
+      "title": "Expand BYTE_STREAM_SPLIT to support FIXED_LEN_BYTE_ARRAY, IN",
+      "summary": "Vote VETOED \u2014 2 veto(es) recorded",
+      "status": "abandoned",
+      "key_points": [
+        "Hello,\n\nAs discussed previously on this ML [1], I am proposing to expand\nthe types supported by the BYTE_STREAM_SPLIT encoding.",
+        "Voters include: \"Uwe L. Korn\", Antoine Pitrou, Ben Harkins..."
+      ],
+      "proposal_ids": [
+        "parquet-ml-nlsj0ftxy7y4ov1678rgy5zc7dmogg6q"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2024-03-18T10:28:16+00:00",
+      "signals": [],
+      "archived": false
     },
     {
       "id": "parquet-init-parquet-ml-l1tz6kvq0dw6j9txb10sghnwnb9xgp21",

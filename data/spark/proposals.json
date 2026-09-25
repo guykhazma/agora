@@ -1,8 +1,45 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-09-24T10:51:58.794963+00:00",
+  "generated_at": "2026-09-25T10:56:51.872849+00:00",
   "total": 663,
   "proposals": [
+    {
+      "id": "spark-jira-SPARK-56249",
+      "source": "jira",
+      "kind": "issue",
+      "title": "Auto CDC support",
+      "url": "https://issues.apache.org/jira/browse/SPARK-56249",
+      "author": "Andreas Neumann",
+      "state": "open",
+      "created_at": "2026-03-27T01:00:28+00:00",
+      "updated_at": "2026-09-24T11:52:23+00:00",
+      "body": "*SPIP Document:* [SPIP: Auto CDC|https://docs.google.com/document/d/1Hp5BGEYJRHbk6J7XUph3bAPZKRQXKOuV1PEaqZMMRoQ/]\r\n\r\n*Motivation*\r\n\r\nWith the upcoming introduction of standardized CDC support, Spark will soon have a unified way to _produce_ change data feeds. However, _consuming_ these feeds and applying them to a target table remains a significant challenge.\r\n\r\nCommon patterns like *SCD Type 1* (maintaining a 1:1 replica) and *SCD Type 2* (tracking full change history) often require hand-crafted, complex MERGE logic. In distributed systems, these implementations are frequently error-prone when handling deletions or out-of-order data.\r\n\r\n*Proposal*\r\n\r\nThis SPIP proposes a new *\"Auto CDC\"* flow type for Spark. It encapsulates the complex logic for SCD types and out-of-order data, allowing data engineers to configure a declarative flow instead of writing manual MERGE statements. This feature will be available in both {*}Python and SQL{*}.\r\n\r\nExample SQL:\r\n{code:java}\r\n-- Produce a change feed\r\nCREATE STREAMING TABLE cdc.users AS\r\nSELECT * FROM STREAM my_table CHANGES FROM VERSION 10;\r\n\r\n-- Consume the change feed\r\nCREATE FLOW flow\r\nAS AUTO CDC INTO\r\n\u00a0\u00a0target\r\nFROM stream(cdc_data.users)\r\n\u00a0\u00a0KEYS (userId)\r\n\u00a0\u00a0APPLY AS DELETE WHEN operation = \"DELETE\"\r\n\u00a0\u00a0SEQUENCE BY sequenceNum\r\n\u00a0\u00a0COLUMNS * EXCEPT (operation, sequenceNum)\r\n\u00a0\u00a0STORED AS SCD TYPE 2\r\n\u00a0\u00a0TRACK HISTORY ON * EXCEPT (city);\r\n\u00a0 {code}",
+      "labels": [
+        "SPIP",
+        "pull-request-available"
+      ],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1Hp5BGEYJRHbk6J7XUph3bAPZKRQXKOuV1PEaqZMMRoQ/",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: Auto CDC"
+        }
+      ],
+      "comment_count": 4,
+      "llm_summary": "With the upcoming introduction of standardized CDC support, Spark will soon have a unified way to _produce_ change data feeds. In distributed systems, these implementations are frequently error-prone when handling deletions or out-of-order data. --- Google Doc --- \ufeffSPIP: Auto CDC Authors: Andreas Neumann, Ryan Zhu, Sandy Ryza Created: 2026-03-26 Jira: SPARK-56249 Q1.",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "auto-cdc",
+        "spip-document",
+        "cdc",
+        "document"
+      ],
+      "_content_hash": "4103959986f3",
+      "llm_title": "",
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+    },
     {
       "id": "spark-jira-SPARK-55278",
       "source": "jira",
@@ -207,43 +244,6 @@
       "llm_title": "",
       "_content_hash": "ba4301289695",
       "initiative_id": "spark-init-spark-ml-s57pbcgtbgl12dpctl6z2ojpznzjxh12"
-    },
-    {
-      "id": "spark-jira-SPARK-56249",
-      "source": "jira",
-      "kind": "issue",
-      "title": "Auto CDC support",
-      "url": "https://issues.apache.org/jira/browse/SPARK-56249",
-      "author": "Andreas Neumann",
-      "state": "open",
-      "created_at": "2026-03-27T01:00:28+00:00",
-      "updated_at": "2026-08-28T21:12:24+00:00",
-      "body": "*SPIP Document:* [SPIP: Auto CDC|https://docs.google.com/document/d/1Hp5BGEYJRHbk6J7XUph3bAPZKRQXKOuV1PEaqZMMRoQ/]\r\n\r\n*Motivation*\r\n\r\nWith the upcoming introduction of standardized CDC support, Spark will soon have a unified way to _produce_ change data feeds. However, _consuming_ these feeds and applying them to a target table remains a significant challenge.\r\n\r\nCommon patterns like *SCD Type 1* (maintaining a 1:1 replica) and *SCD Type 2* (tracking full change history) often require hand-crafted, complex MERGE logic. In distributed systems, these implementations are frequently error-prone when handling deletions or out-of-order data.\r\n\r\n*Proposal*\r\n\r\nThis SPIP proposes a new *\"Auto CDC\"* flow type for Spark. It encapsulates the complex logic for SCD types and out-of-order data, allowing data engineers to configure a declarative flow instead of writing manual MERGE statements. This feature will be available in both {*}Python and SQL{*}.\r\n\r\nExample SQL:\r\n{code:java}\r\n-- Produce a change feed\r\nCREATE STREAMING TABLE cdc.users AS\r\nSELECT * FROM STREAM my_table CHANGES FROM VERSION 10;\r\n\r\n-- Consume the change feed\r\nCREATE FLOW flow\r\nAS AUTO CDC INTO\r\n\u00a0\u00a0target\r\nFROM stream(cdc_data.users)\r\n\u00a0\u00a0KEYS (userId)\r\n\u00a0\u00a0APPLY AS DELETE WHEN operation = \"DELETE\"\r\n\u00a0\u00a0SEQUENCE BY sequenceNum\r\n\u00a0\u00a0COLUMNS * EXCEPT (operation, sequenceNum)\r\n\u00a0\u00a0STORED AS SCD TYPE 2\r\n\u00a0\u00a0TRACK HISTORY ON * EXCEPT (city);\r\n\u00a0 {code}",
-      "labels": [
-        "SPIP",
-        "pull-request-available"
-      ],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1Hp5BGEYJRHbk6J7XUph3bAPZKRQXKOuV1PEaqZMMRoQ/",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSPIP: Auto CDC"
-        }
-      ],
-      "comment_count": 3,
-      "llm_summary": "With the upcoming introduction of standardized CDC support, Spark will soon have a unified way to _produce_ change data feeds. In distributed systems, these implementations are frequently error-prone when handling deletions or out-of-order data. --- Google Doc --- \ufeffSPIP: Auto CDC Authors: Andreas Neumann, Ryan Zhu, Sandy Ryza Created: 2026-03-26 Jira: SPARK-56249 Q1.",
-      "llm_status": "discussion",
-      "llm_key_points": [],
-      "llm_topics": [
-        "auto-cdc",
-        "spip-document",
-        "cdc",
-        "document"
-      ],
-      "_content_hash": "4103959986f3",
-      "llm_title": "",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-jira-SPARK-57487",
@@ -1814,7 +1814,7 @@
       "author": "huaxin gao <hu...@gmail.com>",
       "state": "open",
       "created_at": "2026-09-23T03:39:25+00:00",
-      "updated_at": "2026-09-24T09:47:40+00:00",
+      "updated_at": "2026-09-25T04:44:29+00:00",
       "body": "Hi all,\n\nI would like to start a discussion on a SPIP that adds a public DataSource\nV2\nAPI for a table or catalog to declare a read access policy (readable\ncolumns,\na row filter, and column masks) that Spark enforces in the query plan. Here\nare\nthe jira <https://issues.apache.org/jira/browse/SPARK-59726> and SPIP doc\n<https://docs.google.com/document/d/1hYEHORjHUnFzSoBY2DeOPILVJyu6iWXBusYwpF9FQJM/edit?tab=t.0>\n.\n\nToday Spark has no supported API for this. Integrators inject Catalyst rules\nthrough SparkSessionExtensions and build on internal Catalyst APIs, as\nApache\nRanger (via the Kyuubi Spark AuthZ plugin) and a recent Apache Iceberg POC\nboth do. That is brittle across versions and unsafe: a masking projection\nadded naively to a plan can be removed or collapsed by the optimizer,\nsilently\nreturning unmasked data.\n\nThe proposal adds SupportsAccessControl, enforced during analysis, with\nthree\nguarantees: the masks cannot be optimized away, the row filter always sees\noriginal pre-mask values, and anything Spark cannot resolve fails the read\nrather than returning unprotected data.\n\nDetails and proposed interfaces are in the doc. Feedback is very welcome.\n\nThanks,\nHuaxin\n",
       "labels": [],
       "linked_resources": [
@@ -1825,21 +1825,22 @@
           "title": "\ufeffSPIP: Pluggable Row-Filter and Column-Mask Enforcement in Catalyst"
         }
       ],
-      "llm_summary": "That is brittle across versions and unsafe: a masking projection added naively to a plan can be removed or collapsed by the optimizer, silently returning unmasked data. The proposal adds SupportsAccessControl, enforced during analysis, with three guarantees: the masks cannot be optimized away, the row filter always sees original pre-mask values, and anything Spark cannot resolve fails the read rather than returning unprotected data. This closes a real gap and I think putting enforcement in the engine, fail-closed and optimizer-aware, is the right call, and keeping it a vendor-neutral DSv2 capability lets Iceberg, Ranger, Polaris, and Delta retire their private-API workarounds instead of each carrying its own.",
+      "llm_summary": "The proposal adds SupportsAccessControl, enforced during analysis, with three guarantees: the masks cannot be optimized away, the row filter always sees original pre-mask values, and anything Spark cannot resolve fails the read rather than returning unprotected data. This closes a real gap and I think putting enforcement in the engine, fail-closed and optimizer-aware, is the right call, and keeping it a vendor-neutral DSv2 capability lets Iceberg, Ranger, Polaris, and Delta retire their private-API workarounds instead of each carrying its own. documenting small conversation thread , I had with Huaxin: Hi , Long back I had implemented the row level filter integrated, with ddl enhancement and access control using ldap policy.",
       "llm_status": "discussion",
-      "comment_count": 6,
-      "participant_count": 7,
+      "comment_count": 7,
+      "participant_count": 8,
       "llm_key_points": [
-        "Thanks for putting this together."
+        "Thanks for putting this together.",
+        "So I think the security barrier / bypass path avoidance can be handled in a few different ways (I've got one proposal I'",
+        "Thanks for taking the time to write this proposal."
       ],
       "llm_topics": [
+        "pluggable-row-filter",
         "catalyst-apis",
-        "public-datasource",
-        "today-spark",
-        "spark"
+        "spark-enforces",
+        "today-spark"
       ],
-      "_content_hash": "fbdb5b416377",
-      "llm_title": "",
+      "_content_hash": "427218dc8b6c",
       "initiative_id": "spark-init-spark-jira-SPARK-59726"
     },
     {
@@ -22804,7 +22805,7 @@
         "disclaimer"
       ],
       "_content_hash": "5609edf4c0a9",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-hpkrbdwfrzq3r19z89zn4wd9gt0dhwvo",
@@ -22877,7 +22878,7 @@
         "commits"
       ],
       "_content_hash": "9462da0713bc",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-ht21nokxqd40bsjjt2w79r9w6rxv512o",
@@ -26851,7 +26852,7 @@
         "release"
       ],
       "_content_hash": "11ef119282b3",
-      "initiative_id": "spark-init-spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-y6hby3k9nqds4fgx0b1w5yhhlqb2f7gb",
@@ -27205,7 +27206,7 @@
         "yuming-wang"
       ],
       "_content_hash": "a0cd2e254ca8",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-n5zb2hj3rl15g8wnlvl9xn4ghosxgj4p",
@@ -29897,7 +29898,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",
@@ -31912,7 +31913,7 @@
         "spark"
       ],
       "_content_hash": "534ff7745efc",
-      "initiative_id": "spark-init-spark-ml-obcw512wvjdjkpf61wxj78tnc9jp71x2"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-9x911pqg44bdmrshqsyrr64t2ockjqpg",
@@ -31982,7 +31983,7 @@
         "release"
       ],
       "_content_hash": "a6ecaa36881f",
-      "initiative_id": "spark-init-spark-ml-obcw512wvjdjkpf61wxj78tnc9jp71x2"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-pwvytb3kw58tvkpdg897n1yw3hn5w0ph",

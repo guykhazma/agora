@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-09-24T10:51:05.364200+00:00",
+  "generated_at": "2026-09-25T10:55:52.595728+00:00",
   "total": 295,
   "proposals": [
     {
@@ -2157,7 +2157,7 @@
         "parquet-mr"
       ],
       "_content_hash": "b6589fc6ab0d",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-gh-m1",
@@ -2188,7 +2188,7 @@
         "milestone"
       ],
       "_content_hash": "6be61edec933",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-gh-m19",
@@ -2685,7 +2685,7 @@
       "author": "Rok Mihevc <ro...@gmail.com>",
       "state": "open",
       "created_at": "2026-09-08T18:42:14+00:00",
-      "updated_at": "2026-09-24T09:54:27+00:00",
+      "updated_at": "2026-09-24T19:51:47+00:00",
       "body": "Hi all,\n\nAs proposed during the general community call we held a focused call today\nto discuss the proposal for adding a logical vector type to parquet. This\nwas called because it seems:\n\n* Vectors (as in vector DB) storage needs are different to what we need for\nfixed size list applications we've been disucssing so far [0]. This is\ndriven also by Iceberg's need for Vector type [1]\n* We don't yet have a consensus of what physical representation of Vector\ntype should be.\n\n\nNotes from the call can be found here [2]. Short summary:\n\nWe have converged on two options that could work, but have not yet decided\nwhich one to propose:\n\n- Option A - FLBA as physical storage (FLBA(num_elements * element_width)).\nVector logical type would provide an enum specifying the element type, and\nthe element would be non-nullable. The element type enum could be\nindependent of the parquet type system, making evolution easier. Downside\nis loss of element-level encodings available today, though they can be\nadded later. Upside is simplicity and ease of evolution.\n\n- Option C1 - LIST with numeric parquet type elements as physical storage.\nNew float types (e.g. BF16) can be added in parquet proper as needed.\nDownside is we need to add new types to parquet, DL/RL overhead is likely\nnot a concern. Upside is we have encoding support now.\n\nRegarding NaN/Inf limitations, the consensus was that these should be\nhandled by statistics. This leads to a need for a new inf_count statustics.\n\nIt would be great to discuss the merits of these two proposals here on the\nmailing list for maximum visibility and participation.\nWe will likely continue to discuss this on tomorrow's community call too.\n\n\n[0] https://lists.apache.org/thread/xot5f3ghhtc82n1bf0wdl9zqwlrzqks3\n[1]\nhttps://docs.google.com/document/d/1zA8PskNDFKXXJpzWQr25CFoX_aIZHBNHbkxk0t3PteE/edit?tab=t.0#heading=h.j5pn3fef87b2\n[2]\nhttps://docs.google.com/document/d/1rPTjEJTwN97UfHvNlvdriX9XBQsW8PGwIHMXHvy-XlU/edit?tab=t.0\n\n\nBest,\nRok\n",
       "labels": [],
       "linked_resources": [
@@ -2718,8 +2718,8 @@
       ],
       "llm_summary": "Motivation Fixed-shape vector data is increasingly common in AI/ML workloads, especially embeddings and materialized model features. Parquet community is also discussing native support for fixed-size list/vector-like data, so Iceberg should decide how this should surface at the table-format layer. A native type would improve usability and interoperability with systems that already expose shape-declared vectors or fixed-size lists, such as Lance, pgvector, Snowflake, and emerging SQL standard.",
       "llm_status": "discussion",
-      "comment_count": 24,
-      "participant_count": 6,
+      "comment_count": 32,
+      "participant_count": 7,
       "llm_key_points": [
         "Le 08/09/2026 \u00e0 20:42, Rok Mihevc a \u00e9crit\u00a0:\n> Hi all,\n> \n> As proposed during the general community call we held a focus",
         "Hi all,\n\nAndrew's and Gunnar's results show that existing LIST storage can be read\nefficiently.",
@@ -2744,7 +2744,7 @@
       "author": "PRATEEK GAUR <pr...@gmail.com>",
       "state": "open",
       "created_at": "2026-09-18T14:53:51+00:00",
-      "updated_at": "2026-09-24T06:25:35+00:00",
+      "updated_at": "2026-09-24T15:55:45+00:00",
       "body": "Hi everyone,\n\nFastLanes has generated a lot of interest lately and came up a lot during\nrecent PFOR discussions [1]. It mostly gets talked about as one big\npackage, but in reality, it combines a few different ideas.\n\nTo see what actually makes sense for Parquet, I wrote up a performance\nstudy. The goal is to show how the FastLanes layout spec works under the\nhood, share actual benchmark numbers, and start a discussion on what we\nmight want to adopt. Please note that all benchmarking was done in the\narrow C++ repo.\n\nHere are our key observations:\n\n   1.\n\n   For plain PFOR, the layout advantage is highly hardware-dependent:\n   Parquet\u2019s current C++ reader is already vectorized and optimized. On our\n   test machine, simply changing the layout to use lane interleaving gave only\n   a minor speedup. While other hardware configurations [Kosta's super laptop]\n   show larger single-core gains, our multi-core tests suggest these\n   advantages can shrink when multiple CPUs compete for memory bandwidth. We\n   should discuss whether this hardware-dependent gain justifies a global\n   format change.\n   2.\n\n   For Delta encoding, the transposed layout looks highly promising:\n   Standard Delta encoding forces the CPU to calculate values sequentially,\n   which slows things down. The FastLanes container fundamentally breaks this\n   bottleneck by splitting the work into parallel streams. Using its\n   recommended layout (FL_ORDER), we saw a massive decoding speedup with\n   virtually no impact on file size.\n   3.\n\n   The baseline matters: Measuring these layout changes against basic,\n   unoptimized code makes them look like a huge leap forward. But when\n   measured against the highly optimized code Parquet (xsimd c++) already\n   ships today, the actual margins shrink significantly, giving us a more\n   realistic picture of the gains.\n\nI\u2019d love for the community to take a look at the document, check the\nmethodology, and share your thoughts!\n\nDocument:\nhttps://docs.google.com/document/d/1L2",
       "labels": [],
       "linked_resources": [
@@ -2784,7 +2784,7 @@
       ],
       "llm_summary": "The goal is to show how the FastLanes layout spec works under the hood, share actual benchmark numbers, and start a discussion on what we might want to adopt. While other hardware configurations [Kosta's super laptop] show larger single-core gains, our multi-core tests suggest these advantages can shrink when multiple CPUs compete for memory bandwidth. But when measured against the highly optimized code Parquet (xsimd c++) already ships today, the actual margins shrink significantly, giving us a more realistic picture of the gains.",
       "llm_status": "discussion",
-      "comment_count": 9,
+      "comment_count": 11,
       "participant_count": 3,
       "llm_key_points": [
         "Le 18/09/2026 \u00e0 16:53, PRATEEK GAUR a \u00e9crit\u00a0:\n> \n>     For Delta encoding, the transposed layout looks highly promising:",
@@ -2797,8 +2797,68 @@
         "lot",
         "parquet"
       ],
-      "_content_hash": "22314777b469",
+      "_content_hash": "9a9001c57915",
       "initiative_id": "parquet-init-parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9"
+    },
+    {
+      "id": "parquet-ml-rd2x7c15dqwf8qkdl70r7zr1ykmwkmf5",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] FSST proposal final design review and move to implementation",
+      "url": "https://lists.apache.org/thread/rd2x7c15dqwf8qkdl70r7zr1ykmwkmf5",
+      "author": "Andrew Lamb <an...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-09-24T10:54:28+00:00",
+      "updated_at": "2026-09-24T10:54:28+00:00",
+      "body": "Thank you Arnav -- I am sorry for the delay. Now that we finally got ALP\nout the door, I plan to spend more time on FSST/OnPair.\n\nI just went through the proposal again, and left some comments. Overall it\nis looking quite good I think -- my personal opinion is there we should\nalso support FSST encoding dictionary pages (I have a minor suggestion\nhere[1], basically to include an optional for an \"inline symbol table\" in a\nFSST encoded page, and remove the  SYMBOL_TABLE_PAGE page type)\n\nAndrew\n\n[1]:\nhttps://docs.google.com/document/d/1Xg2b8HR19QnI3nhtQUDWZJhCLwJzW6y9tU1ziiLFZrM/edit?disco=AAACElKssY4\n\nOn Sat, Aug 15, 2026 at 10:45\u202fAM Arnav Balyan <ar...@gmail.com>\nwrote:\n\n> Hi Gunnar and Curt,\n>\n> Thank you for going through the spec and the comments.\n>\n> > One question for my understanding: have you considered, instead of adding\n> a\n> > new dedicated symbol page type, re-using the existing dict page\n> mechanism?\n>\n> Yes this was initially considered, The FSST symbol table is analogous to a\n> dictionary page in dictionary encoding, with one page per column chunk. We\n> have removed unnecessary parts like the dictionary page fallback. Also FSST\n> symbol table requires storing (symbol data + length histograms + count),\n> given that the symbol table is always 255 symbols and 8 bytes, it provides\n> assumptions which can be better used to encode the symbol table. Curt's\n> point is additionally valid, length histogram is also required.\n>\n> > I've published some test data in\n> https://github.com/apache/parquet-testing/pull/121 which I believe\n> corresponds\n> to the current version of the spec.\n>\n> Thank you Curt, really appreciate it. This will be valuable for the cross\n> compat tests.\n>\n> > FWIW I don't think we normally finalize / vote on a spec until we have 2\n> example\n> implementations\n>\n> Thanks for the feedback Andrew, I have added the updated implementation\n> <https://github.com/apache/arrow/pull/50872> for Arrow here which conforms\n> to the latest spec (cc Curt). Addi",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1Xg2b8HR19QnI3nhtQUDWZJhCLwJzW6y9tU1ziiLFZrM/edit?disco=AAACElKssY4",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffParquet: Specification for FSST[a] Encoding"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1Xg2b8HR19QnI3nhtQUDWZJhCLwJzW6y9tU1ziiLFZrM/edit",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffParquet: Specification for FSST[a] Encoding"
+        },
+        {
+          "url": "https://github.com/apache/parquet-testing/pull/121",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/50872",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow-rs/pull/10153",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/48232",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/issues/531",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "Created: 2026-01-17 Proposal: Parquet Format (tracking active proposal)[b][c][d][e] Mailing List: Discussion See also: FSST Support in Parquet - Fast Static Symbol Table See also: Draft Arrow PR for PoC See also: FSST Paper See also: Byte Type Improvements Stakeholders: julien@apache.orgemkornfield@gmail.com andrewlamb11@gmail.com @antoine@python.org 1. 1.1 Scope: This specification defines FSST encoding support for Apache Parquet column chunks. FSST is a lossless substring based compression method designed for high throughput and random access.",
+      "llm_status": "discussion",
+      "comment_count": 7,
+      "participant_count": 1,
+      "llm_key_points": [],
+      "llm_topics": [
+        "symbol-table",
+        "fsst",
+        "symbol",
+        "page"
+      ],
+      "_content_hash": "48b275090456",
+      "initiative_id": "parquet-init-parquet-ml-rd2x7c15dqwf8qkdl70r7zr1ykmwkmf5"
     },
     {
       "id": "parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm",
@@ -2824,8 +2884,9 @@
         "lakehouse",
         "announce"
       ],
+      "llm_title": "",
       "_content_hash": "26535c5ab6d5",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm",
@@ -3036,7 +3097,7 @@
         "nanosecond-timestamps"
       ],
       "_content_hash": "77db5732b161",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-ovo7vhh2gp31v32xzq6wm5f0grk97bs3",
@@ -3378,7 +3439,7 @@
       ],
       "_content_hash": "df5e84f62b08",
       "llm_title": "",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-d5t1qphb8lj0qqltrv57bknx18fwbf2l",
@@ -3754,62 +3815,7 @@
       ],
       "_content_hash": "5b450bd7e9f6",
       "llm_title": "",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
-    },
-    {
-      "id": "parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] FSST proposal final design review and move to implementation",
-      "url": "https://lists.apache.org/thread/yhv0vp5w1cy08n5n6q2vry98hmw00gnj",
-      "author": "Arnav Balyan <ar...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-08-12T06:45:31+00:00",
-      "updated_at": "2026-08-15T14:45:01+00:00",
-      "body": "Hello everyone,\n\nI wanted to provide a quick update on the FSST encoding proposal for\nParquet.\n\nOver the last several months, we have incorporated the feedback received\nfrom the community and finalized the design. Thank you to everyone who\nreviewed the proposal and helped resolve the open questions.\n\nAt this point, we are planning to move the proposal from the Design/Draft\nphase to the Implementation phase. Before doing so, I would like to ask for\none final round of feedback and ensure that everyone who wanted to review\nthe specification has had an opportunity to do so.\n\nImplementation work is also underway:\n- Devan Benz has started an Arrow Rust\n<https://github.com/apache/arrow-rs/pull/10153> implementation.\n- I have an existing Arrow C++ <https://github.com/apache/arrow/pull/48232>\nPoC for FSST.\n\nFor the initial interoperability work, it would be particularly helpful to\nhave implementations in Parquet Java and Arrow Go as well.\n\nIf anyone is interested in owning or contributing to the Parquet Java or\nArrow Go implementation, please let us know. Contributions to the existing\nRust and C++ implementations and to cross language interoperability testing\nwould also be greatly appreciated.\n\nArtifacts:\n\n- FSST specification:\n\nhttps://docs.google.com/document/d/1Xg2b8HR19QnI3nhtQUDWZJhCLwJzW6y9tU1ziiLFZrM/edit\n\n- Tracking issue:\n  https://github.com/apache/parquet-format/issues/531\n\n- Original FSST mailing-list discussion:\n  https://lists.apache.org/thread/15w66hvm516641btrljmtqhb4m38wn3s\n\n- FSST and OnPair discussion:\n  https://lists.apache.org/thread/hfoltdl6o6txc3zp4680nns1mh29h0r8\n\n- Arrow C++ PoC:\n  https://github.com/apache/arrow/pull/48232\n\n- Arrow Rust implementation:\n  https://github.com/apache/arrow-rs/pull/10153\n\nBased on any new comments/questions, the next steps will be to:\n1. Address any feedback from this final review.\n2. Open a PR updating the proposal status from Draft/PoC to Implementation.\n3. Continue the java/go implementations and establish cross langu",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1Xg2b8HR19QnI3nhtQUDWZJhCLwJzW6y9tU1ziiLFZrM/edit",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffParquet: Specification for FSST Encoding"
-        },
-        {
-          "url": "https://github.com/apache/arrow-rs/pull/10153",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/48232",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-testing/pull/121",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/50872",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-format/issues/531",
-          "kind": "github_issue"
-        }
-      ],
-      "llm_summary": "Created: 2026-01-17 Proposal: Parquet Format (tracking active proposal)[a][b][c][d] Mailing List: Discussion See also: FSST Support in Parquet - Fast Static Symbol Table See also: Draft Arrow PR for PoC See also: FSST Paper See also: Byte Type Improvements Stakeholders: julien@apache.orgemkornfield@gmail.com andrewlamb11@gmail.com @antoine@python.org 1. 1.1 Scope: This specification defines FSST encoding support for Apache Parquet column chunks. FSST is a lossless substring based compression method designed for high throughput and random access.",
-      "llm_status": "discussion",
-      "comment_count": 7,
-      "participant_count": 4,
-      "llm_key_points": [],
-      "llm_topics": [
-        "arrow",
-        "fsst",
-        "arrow-rust",
-        "implementation"
-      ],
-      "_content_hash": "9cdf67927ff5",
-      "llm_title": "",
-      "initiative_id": "parquet-init-parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj"
+      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
     },
     {
       "id": "parquet-ml-hfoltdl6o6txc3zp4680nns1mh29h0r8",
@@ -3862,7 +3868,7 @@
       ],
       "_content_hash": "0b4c006c648c",
       "llm_title": "",
-      "initiative_id": "parquet-init-parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj"
+      "initiative_id": "parquet-init-parquet-ml-rd2x7c15dqwf8qkdl70r7zr1ykmwkmf5"
     },
     {
       "id": "parquet-ml-3653pwzmxo0sbfvcopfvkbjoyy4nor5q",
@@ -3957,7 +3963,7 @@
       ],
       "llm_title": "",
       "_content_hash": "32a2b629b1a8",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-xzjyk2050xyf48971ffzffvowrh7c2mq",
@@ -4986,7 +4992,7 @@
         "timestamps"
       ],
       "_content_hash": "b69e89adc479",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-4kq2gfgx3cmow26h8ofd93653z9zhs2t",
@@ -5044,7 +5050,7 @@
         "final-result"
       ],
       "_content_hash": "2441805bb8ca",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-f930pg123w86wpqhthhsx603g27obgo2",
@@ -5203,7 +5209,7 @@
       ],
       "_content_hash": "a930bc752794",
       "llm_title": "Support Non-Contiguous Pages in Parquet",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
     },
     {
       "id": "parquet-ml-m6j8lzc09ytyd45wt6pdcyn5qy95f0vt",
@@ -5322,7 +5328,7 @@
       ],
       "_content_hash": "6842e800f9ac",
       "llm_title": "INT96 Statistics Discussion",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-7jgphmyf6hpyzbbgzd0bjq9kg502oswr",
@@ -5349,7 +5355,7 @@
         "parquet"
       ],
       "_content_hash": "f684d1c1eb36",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-7kjqsz7n8cwqpgfo2h9c5q0csml77d86",
@@ -5472,7 +5478,7 @@
         "parquet-format"
       ],
       "_content_hash": "ed909b345dd7",
-      "initiative_id": "parquet-init-parquet-ml-htmof8dodkcmsxbsxrhpx4nq6b3yk600"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-od9hxfssjgnmsh23o18q78hszowq7pcy",
@@ -5612,7 +5618,7 @@
         "columnmetadata-path"
       ],
       "_content_hash": "7a7953a81016",
-      "initiative_id": "parquet-init-parquet-ml-htmof8dodkcmsxbsxrhpx4nq6b3yk600"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-jzjx3wcgo800166myz0k1993w8gwvd0b",
@@ -5732,7 +5738,7 @@
         "format-change"
       ],
       "_content_hash": "466df3a13120",
-      "initiative_id": "parquet-init-parquet-ml-htmof8dodkcmsxbsxrhpx4nq6b3yk600"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt",
@@ -5891,7 +5897,7 @@
       ],
       "_content_hash": "0108bd3e371f",
       "llm_title": "Add nan_count for NaN handling in statistics",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-srjg9c58f5lb4d7r9773p9sml08bw6np",
@@ -5968,7 +5974,7 @@
         "parquet"
       ],
       "_content_hash": "d7847a7e3ca8",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-d38j3xc3x7zpfdldj7qz136qk9dgp3d9",
@@ -6292,7 +6298,7 @@
         "community-sync"
       ],
       "_content_hash": "c01c4f7bb1bd",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-vpm212t9lgp603sx3r0b16jlb0zzlp39",
@@ -6775,7 +6781,7 @@
       ],
       "_content_hash": "41514225ff19",
       "llm_title": "Deprecate file_path field in column chunk",
-      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
+      "initiative_id": "parquet-init-parquet-ml-ygs245qdd2d2d91qk801t3pdf47tgn75"
     },
     {
       "id": "parquet-ml-7xq85j6rd8som3y6cqxtk6n6ddhdy3wm",
@@ -6802,7 +6808,7 @@
         "parquet"
       ],
       "_content_hash": "b3ef471b070c",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-st0w1c6txzmrwwbdsqdh7xm2br5b2js3",
@@ -7186,7 +7192,7 @@
       ],
       "_content_hash": "73e8f5e0110c",
       "llm_title": "FSST Dependency Approach Discussion",
-      "initiative_id": "parquet-init-parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj"
+      "initiative_id": "parquet-init-parquet-ml-rd2x7c15dqwf8qkdl70r7zr1ykmwkmf5"
     },
     {
       "id": "parquet-ml-0bdyyb7qobrxx94x8v7t5z7g2ksnpyr2",
@@ -7559,7 +7565,7 @@
       ],
       "_content_hash": "28a4922aafaa",
       "llm_title": "Feature Addition Requirements for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
+      "initiative_id": "parquet-init-parquet-ml-hms38c0807r3qpst7ykf4b42xwpb23g7"
     },
     {
       "id": "parquet-ml-lsf425yk0h0pzvq41kz8z92qffg8mmf8",
@@ -7615,7 +7621,7 @@
         "parquet"
       ],
       "_content_hash": "cd282f758c44",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-nf0m7z256gtq16m3by78mf4w6tpffdqh",
@@ -7874,7 +7880,7 @@
         "parquet"
       ],
       "_content_hash": "880a8568f56f",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-mw7fg76kyoootmntw5fk539423g9vqkr",
@@ -7984,7 +7990,7 @@
       ],
       "_content_hash": "62d1e4a1d005",
       "llm_title": "Parquet-Java 1.16.0 Release Discussion",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-7zfwc3o53btd2xbdb8bqf8lxsrk76cxr",
@@ -8104,7 +8110,7 @@
       ],
       "_content_hash": "061f8c2fea0d",
       "llm_title": "Request for VARIANT Parquet Example Files",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-dy22njos6c0wbo82s377wvbobbd7y6lx",
@@ -8151,7 +8157,7 @@
       ],
       "_content_hash": "570b159e2a79",
       "llm_title": "Rust Variant Implementation Progress",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-vr1h7dnr4jp2f1xhzzkwzcw49qgfgsyl",
@@ -8178,7 +8184,7 @@
         "parquet"
       ],
       "_content_hash": "bb374d22b689",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-htrzl1ytd9x3dfhszbyrozhxw733n3cj",
@@ -8371,7 +8377,7 @@
         "parquet"
       ],
       "_content_hash": "5289b722ef48",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-fvjly206d7qvmo41f6f1h32sq1o42zhm",
@@ -8453,7 +8459,7 @@
         "parquet"
       ],
       "_content_hash": "8561e3b3ec63",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-qx7m2oljrzt69bz38sk2xfpbtqmmck5c",
@@ -8558,7 +8564,7 @@
       ],
       "_content_hash": "735a1326fdb5",
       "llm_title": "Merge Implementation Status PR for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
     },
     {
       "id": "parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",
@@ -8608,7 +8614,7 @@
       ],
       "_content_hash": "16a2e53dae92",
       "llm_title": "Integration Testing for Parquet Implementations",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-n213qg91r1ozjvz5c2k6lv0ybtyg01x4",
@@ -9225,7 +9231,7 @@
       ],
       "_content_hash": "5d790e8f2348",
       "llm_title": "Hadoop Support Discussion",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-8tyz4dzywqdwk4n7xnw2vyz1vf0pfzd9",
@@ -9459,7 +9465,7 @@
         "parquet-java"
       ],
       "_content_hash": "d1a18b94df8f",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm",
@@ -9644,7 +9650,7 @@
       ],
       "_content_hash": "19cf2091a04d",
       "llm_title": "Moving Variant to Parquet Details",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-sxcyfo9wppjbgloon8wnhhf0yx8fmcgx",
@@ -9818,7 +9824,7 @@
         "spark"
       ],
       "_content_hash": "584a428c6f28",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-zfnmg5p51b7oylft5w5k4670wgkd4zv4",
@@ -9881,7 +9887,7 @@
       ],
       "_content_hash": "f5224ebb0442",
       "llm_title": "Adopt Variant Spec from Spark",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-zhpm9m7wgr2szmb1vlh3yqh04wctww89",
@@ -10697,7 +10703,7 @@
       ],
       "_content_hash": "4a9027930c6e",
       "llm_title": "Migration of parquet-cpp issues to GitHub",
-      "initiative_id": "parquet-init-parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj"
+      "initiative_id": "parquet-init-parquet-ml-odx7x0k0q0jhz7mpsyb18bc0m67dxg2n"
     },
     {
       "id": "parquet-ml-4v2yo0t6btl2wyc1sv5zbqflb5o9xm2b",
@@ -10773,7 +10779,7 @@
         "issue-tracking"
       ],
       "_content_hash": "bddb9336e7f9",
-      "initiative_id": "parquet-init-parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj"
+      "initiative_id": "parquet-init-parquet-ml-odx7x0k0q0jhz7mpsyb18bc0m67dxg2n"
     },
     {
       "id": "parquet-ml-cxhkft17vx24x1znnvo47hbh6lpqdnrx",
@@ -10861,7 +10867,7 @@
         "issue-trackers"
       ],
       "_content_hash": "6b75326a2135",
-      "initiative_id": "parquet-init-parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj"
+      "initiative_id": "parquet-init-parquet-ml-odx7x0k0q0jhz7mpsyb18bc0m67dxg2n"
     },
     {
       "id": "parquet-ml-vdb2jd2v3v7gzs31qzysrdf55oby6hfd",
@@ -10888,7 +10894,7 @@
         "parquet-java"
       ],
       "_content_hash": "7e0c45b52703",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-5wm7pwyd3khtbxqs2rrzpby4sd50n349",
@@ -11223,7 +11229,7 @@
       ],
       "_content_hash": "2a08a456c011",
       "llm_title": "Integration Testing for Parquet Implementations",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-w6r0fwj42wvpm5yflwxhtm2ss3z2hrl3",
@@ -11318,7 +11324,7 @@
         "arrow"
       ],
       "_content_hash": "988e5dcd9390",
-      "initiative_id": "parquet-init-parquet-ml-yhv0vp5w1cy08n5n6q2vry98hmw00gnj"
+      "initiative_id": "parquet-init-parquet-ml-odx7x0k0q0jhz7mpsyb18bc0m67dxg2n"
     },
     {
       "id": "parquet-ml-6k36mk46m9cnzlwmkh7015zhv5qjn9ob",
@@ -11458,7 +11464,7 @@
       ],
       "_content_hash": "1d838b69ef5c",
       "llm_title": "Arrow Dropping Java 8 Support Discussion",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-mpgp8qs5zbptf80ydqpwybwtxonbqczh",
@@ -11603,7 +11609,7 @@
       ],
       "_content_hash": "7c5da8af2e3d",
       "llm_title": "Rename parquet-mr to parquet-java",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-ml-m911chzz5pz8o8fb1y0x49h96g8w29d7"
     },
     {
       "id": "parquet-ml-97g4zqlvobr9knntvsbghjs6v3gr63x2",
@@ -11637,7 +11643,7 @@
       ],
       "_content_hash": "ddc918ba8f16",
       "llm_title": "Change Default Branch of parquet-site Repo",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-ps35ocznl0c6olod9ghhhwb3vov4vxpj",
@@ -11725,7 +11731,7 @@
       ],
       "_content_hash": "c45d3b6caaaf",
       "llm_title": "Discussion on Parquet Reference Implementation",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-ml-m911chzz5pz8o8fb1y0x49h96g8w29d7"
     },
     {
       "id": "parquet-ml-128wv5cwv51scm8vdfn1g9gskw717qyt",
@@ -11798,7 +11804,7 @@
         "parquet"
       ],
       "_content_hash": "647b08af7a48",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-fwk38klnvkmxqgtq3blkdncrww07ht7x",
@@ -12089,7 +12095,7 @@
       ],
       "_content_hash": "c317dc333e19",
       "llm_title": "Expediting Parquet 1.14.0 Release",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-nlsj0ftxy7y4ov1678rgy5zc7dmogg6q",
@@ -12262,7 +12268,7 @@
       ],
       "_content_hash": "0ed806e71cf3",
       "llm_title": "Discussion on Parquet 1.14.0 Release",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-v8b1mnfg7lqsgrn6xnzjcm9mdt6jpmfo",
@@ -12289,7 +12295,7 @@
         "parquet"
       ],
       "_content_hash": "8745c126def3",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-35h21l1dylcg9gd31w87xg1ww1xgy7mv",
@@ -12389,7 +12395,7 @@
         "parquet"
       ],
       "_content_hash": "d3040b011771",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-wgobz41mfldbhqpg9q4mdwypghg2cxg2",
@@ -12465,7 +12471,7 @@
         "support-finer"
       ],
       "_content_hash": "20a49614491d",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5"
     },
     {
       "id": "parquet-ml-m6o68jl7fosfxq66p8c85cqr2t2gv611",
@@ -12684,7 +12690,7 @@
         "release"
       ],
       "_content_hash": "dabe273c7b56",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-0yokbmfcbhz76ftjbxktwxfo5vrt57od",
@@ -12748,7 +12754,7 @@
         "parquet"
       ],
       "_content_hash": "37bc680bbe82",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-1mjvdcmwqjcblmfkfgpd9ob2yodx7tom",
@@ -12863,7 +12869,7 @@
         "parquet"
       ],
       "_content_hash": "0d01621fadd6",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-hlqr2p77cmhg5ws3n7jy07c1f4lcdkds",
@@ -13430,7 +13436,7 @@
         "parquet"
       ],
       "_content_hash": "da1ef3f14f2d",
-      "initiative_id": "parquet-init-parquet-ml-4t1l0tdpylqk1kqn0zn3393x0rpk6hhm"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-hczpx4tgsyzkoys3rkgs26grdlfypjtm",

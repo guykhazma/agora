@@ -1,8 +1,37 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-09-25T10:56:51.872849+00:00",
+  "generated_at": "2026-09-26T10:38:29.683695+00:00",
   "total": 663,
   "proposals": [
+    {
+      "id": "spark-jira-SPARK-58820",
+      "source": "jira",
+      "kind": "issue",
+      "title": "SPIP: Add the DECFLOAT data type",
+      "url": "https://issues.apache.org/jira/browse/SPARK-58820",
+      "author": "Uro\u0161 Bojani\u0107",
+      "state": "open",
+      "created_at": "2026-08-17T09:05:32+00:00",
+      "updated_at": "2026-09-25T15:16:46+00:00",
+      "body": "*Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.*\r\n\r\nAdd a new Spark SQL data type *DECFLOAT* that stores decimal numbers with a flexible decimal point (floating point decimal numbers). Each value keeps up to a fixed number of significant decimal digits and its own exponent, so one column can hold both very large integers and very small fractions without picking a single fixed scale for the whole column.\r\n\r\nThe type follows the IEEE 754 decimal floating-point formats:\r\n||*SQL type*||*IEEE format*||*Significant digits*||*Storage width*||\r\n|DECFLOAT(16)|decimal64|16|8 bytes|\r\n|DECFLOAT(34)|decimal128|34|16 bytes|\r\n\r\nBare DECFLOAT means DECFLOAT(34).\r\n\r\nUnlike DECIMAL(p,s), there is no column-wide scale. Unlike FLOAT / DOUBLE, arithmetic is done in base 10, so values such as 0.1 are exact.\r\n\r\nBecause each value carries at most 16 or 34 significant digits, a result needing more digits is rounded to the format's precision. Rounding is decimal (base 10), unlike binary rounding in FLOAT/DOUBLE. The v1 fixed default is IEEE roundTiesToEven / HALF_EVEN (banker's rounding), which differs from Spark's existing DECIMAL arithmetic (rounds HALF_UP). This can be configurable in future iterations.\r\n\r\nThe type also supports IEEE special values: signed zero, +/-Infinity, and quiet NaN.\r\n\r\n*Q2. What problem is this proposal NOT designed to solve?*\r\n * *Arbitrary-precision / unbounded decimals.* Extending Spark's fixed-point DECIMAL beyond 38 digits, or adding a PostgreSQL-style unbounded NUMERIC, is out of scope. Those needs are different from IEEE decimal floating point.\r\n * *Wider-than-IEEE formats in v1.* Formats such as a 70-digit / 256-bit decimal float (sometimes discussed as DECFLOAT(70) / decimal256) are out of scope for the first delivery. The type and storage designs should not preclude them later.\r\n * *Replacing* DECIMAL *or* DOUBLE{*}.{*} Existing fixed-point and binary-float types remain unchanged. DECFLOAT is additive.\r\n * *Non-IEEE ",
+      "labels": [
+        "SPIP"
+      ],
+      "linked_resources": [],
+      "comment_count": 1,
+      "llm_summary": "Each value keeps up to a fixed number of significant decimal digits and its own exponent, so one column can hold both very large integers and very small fractions without picking a single fixed scale for the whole column. The type also supports IEEE special values: signed zero, +/-Infinity, and quiet NaN. * Extending Spark's fixed-point DECIMAL beyond 38 digits, or adding a PostgreSQL-style unbounded NUMERIC, is out of scope.",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "decfloat",
+        "decimal",
+        "spip",
+        "ieee"
+      ],
+      "_content_hash": "c07df12478eb",
+      "llm_title": "",
+      "initiative_id": "spark-init-spark-ml-s57pbcgtbgl12dpctl6z2ojpznzjxh12"
+    },
     {
       "id": "spark-jira-SPARK-56249",
       "source": "jira",
@@ -274,35 +303,6 @@
       "llm_title": "",
       "_content_hash": "c09cf2d9e12f",
       "initiative_id": "spark-init-spark-jira-SPARK-51207"
-    },
-    {
-      "id": "spark-jira-SPARK-58820",
-      "source": "jira",
-      "kind": "issue",
-      "title": "SPIP: Add the DECFLOAT data type",
-      "url": "https://issues.apache.org/jira/browse/SPARK-58820",
-      "author": "Uro\u0161 Bojani\u0107",
-      "state": "open",
-      "created_at": "2026-08-17T09:05:32+00:00",
-      "updated_at": "2026-08-18T15:33:59+00:00",
-      "body": "*Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.*\r\n\r\nAdd a new Spark SQL data type *DECFLOAT* that stores decimal numbers with a flexible decimal point (floating point decimal numbers). Each value keeps up to a fixed number of significant decimal digits and its own exponent, so one column can hold both very large integers and very small fractions without picking a single fixed scale for the whole column.\r\n\r\nThe type follows the IEEE 754 decimal floating-point formats:\r\n||*SQL type*||*IEEE format*||*Significant digits*||*Storage width*||\r\n|DECFLOAT(16)|decimal64|16|8 bytes|\r\n|DECFLOAT(34)|decimal128|34|16 bytes|\r\n\r\nBare DECFLOAT means DECFLOAT(34).\r\n\r\nUnlike DECIMAL(p,s), there is no column-wide scale. Unlike FLOAT / DOUBLE, arithmetic is done in base 10, so values such as 0.1 are exact.\r\n\r\nBecause each value carries at most 16 or 34 significant digits, a result needing more digits is rounded to the format's precision. Rounding is decimal (base 10), unlike binary rounding in FLOAT/DOUBLE. The v1 fixed default is IEEE roundTiesToEven / HALF_EVEN (banker's rounding), which differs from Spark's existing DECIMAL arithmetic (rounds HALF_UP). This can be configurable in future iterations.\r\n\r\nThe type also supports IEEE special values: signed zero, +/-Infinity, and quiet NaN.\r\n\r\n*Q2. What problem is this proposal NOT designed to solve?*\r\n * *Arbitrary-precision / unbounded decimals.* Extending Spark's fixed-point DECIMAL beyond 38 digits, or adding a PostgreSQL-style unbounded NUMERIC, is out of scope. Those needs are different from IEEE decimal floating point.\r\n * *Wider-than-IEEE formats in v1.* Formats such as a 70-digit / 256-bit decimal float (sometimes discussed as DECFLOAT(70) / decimal256) are out of scope for the first delivery. The type and storage designs should not preclude them later.\r\n * *Replacing* DECIMAL *or* DOUBLE{*}.{*} Existing fixed-point and binary-float types remain unchanged. DECFLOAT is additive.\r\n * *Non-IEEE ",
-      "labels": [
-        "SPIP"
-      ],
-      "linked_resources": [],
-      "comment_count": 1,
-      "llm_summary": "Each value keeps up to a fixed number of significant decimal digits and its own exponent, so one column can hold both very large integers and very small fractions without picking a single fixed scale for the whole column. The type also supports IEEE special values: signed zero, +/-Infinity, and quiet NaN. * Extending Spark's fixed-point DECIMAL beyond 38 digits, or adding a PostgreSQL-style unbounded NUMERIC, is out of scope.",
-      "llm_status": "discussion",
-      "llm_key_points": [],
-      "llm_topics": [
-        "decfloat",
-        "decimal",
-        "spip",
-        "ieee"
-      ],
-      "_content_hash": "c07df12478eb",
-      "llm_title": "",
-      "initiative_id": "spark-init-spark-ml-s57pbcgtbgl12dpctl6z2ojpznzjxh12"
     },
     {
       "id": "spark-jira-SPARK-58455",
@@ -1388,7 +1388,7 @@
         "pandas"
       ],
       "_content_hash": "29883ba4ffc6",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-jira-SPARK-45511",
@@ -1814,7 +1814,7 @@
       "author": "huaxin gao <hu...@gmail.com>",
       "state": "open",
       "created_at": "2026-09-23T03:39:25+00:00",
-      "updated_at": "2026-09-25T04:44:29+00:00",
+      "updated_at": "2026-09-26T03:27:21+00:00",
       "body": "Hi all,\n\nI would like to start a discussion on a SPIP that adds a public DataSource\nV2\nAPI for a table or catalog to declare a read access policy (readable\ncolumns,\na row filter, and column masks) that Spark enforces in the query plan. Here\nare\nthe jira <https://issues.apache.org/jira/browse/SPARK-59726> and SPIP doc\n<https://docs.google.com/document/d/1hYEHORjHUnFzSoBY2DeOPILVJyu6iWXBusYwpF9FQJM/edit?tab=t.0>\n.\n\nToday Spark has no supported API for this. Integrators inject Catalyst rules\nthrough SparkSessionExtensions and build on internal Catalyst APIs, as\nApache\nRanger (via the Kyuubi Spark AuthZ plugin) and a recent Apache Iceberg POC\nboth do. That is brittle across versions and unsafe: a masking projection\nadded naively to a plan can be removed or collapsed by the optimizer,\nsilently\nreturning unmasked data.\n\nThe proposal adds SupportsAccessControl, enforced during analysis, with\nthree\nguarantees: the masks cannot be optimized away, the row filter always sees\noriginal pre-mask values, and anything Spark cannot resolve fails the read\nrather than returning unprotected data.\n\nDetails and proposed interfaces are in the doc. Feedback is very welcome.\n\nThanks,\nHuaxin\n",
       "labels": [],
       "linked_resources": [
@@ -1827,7 +1827,7 @@
       ],
       "llm_summary": "The proposal adds SupportsAccessControl, enforced during analysis, with three guarantees: the masks cannot be optimized away, the row filter always sees original pre-mask values, and anything Spark cannot resolve fails the read rather than returning unprotected data. This closes a real gap and I think putting enforcement in the engine, fail-closed and optimizer-aware, is the right call, and keeping it a vendor-neutral DSv2 capability lets Iceberg, Ranger, Polaris, and Delta retire their private-API workarounds instead of each carrying its own. documenting small conversation thread , I had with Huaxin: Hi , Long back I had implemented the row level filter integrated, with ddl enhancement and access control using ldap policy.",
       "llm_status": "discussion",
-      "comment_count": 7,
+      "comment_count": 8,
       "participant_count": 8,
       "llm_key_points": [
         "Thanks for putting this together.",
@@ -1840,8 +1840,45 @@
         "spark-enforces",
         "today-spark"
       ],
-      "_content_hash": "427218dc8b6c",
+      "_content_hash": "2ced07d7b034",
       "initiative_id": "spark-init-spark-jira-SPARK-59726"
+    },
+    {
+      "id": "spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Release Apache Spark 4.2.1",
+      "url": "https://lists.apache.org/thread/4r7zonlh748wn2fhos6w9vgm5wqr1pgw",
+      "author": "Szehon Ho <sz...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-09-21T23:56:43+00:00",
+      "updated_at": "2026-09-25T20:53:59+00:00",
+      "body": "Hi all,\n\nI'd like to start a discussion about releasing Apache Spark 4.2.1.\n\nI'm particularly interested in getting SPARK-59572\n<https://issues.apache.org/jira/browse/SPARK-59572> into 4.2.1. It fixes a\ncorrectness issue introduced in 4.2.0 where failures to evaluate a DSv2\nPartitionPredicate can be treated as matches, leading to incorrect query\nresults.\n\nIt's been over two months since Spark 4.2.0 was released in July. The changes\non branch-4.2 since 4.2.0\n<https://github.com/apache/spark/compare/v4.2.0...branch-4.2> now include\n99 PRs covering 97 JIRA issues. Besides SPARK-59572, these include\ncorrectness and stability fixes across SQL, Core, Streaming, PySpark, and\nKubernetes, with several addressing storage-partitioned joins.\n\nI'm happy to volunteer to drive the release to learn the process!\n\nWould folks be in favor of moving forward with a 4.2.1 release? Are there\nany other fixes or blockers we should address first?\n\nThanks,\nSzehon\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/spark/pull/58870",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "It fixes a correctness issue introduced in 4.2.0 where failures to evaluate a DSv2 PartitionPredicate can be treated as matches, leading to incorrect query results. It fixes > a correctness issue introduced in 4.2.0 where failures to evaluate a DSv2 > PartitionPredicate can be treated as matches, leading to incorrect query > results. It fixes a correctness issue introduced in 4.2.0 where failures to evaluate a DSv2 PartitionPredicate can be treated as matches, leading to incorrect query results.",
+      "llm_status": "discussion",
+      "comment_count": 11,
+      "participant_count": 10,
+      "llm_key_points": [
+        "+1 for this, thank you for proposing and driving the maintenance release, Szehon!",
+        "+1\n\nOn Tue, 22 Sept 2026 at 08:57, Szehon Ho <sz...@gmail.com> wrote:\n\n> Hi all,\n>\n> I'd like to start a discussion abou",
+        "+1\n\nOn Mon, Sep 21, 2026 at 5:48\u202fPM Hyukjin Kwon <gu...@apache.org> wrote:\n\n> +1\n>\n> On Tue, 22 Sept 2026 at 08:57, Szeh"
+      ],
+      "llm_topics": [
+        "apache-spark",
+        "spark",
+        "discuss",
+        "releasing-apache"
+      ],
+      "_content_hash": "12d1f5fe54cc",
+      "llm_title": "",
+      "initiative_id": "spark-init-spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw"
     },
     {
       "id": "spark-ml-96goypb9vq64h9t5jkmw8n8yo3xtrogv",
@@ -1852,13 +1889,13 @@
       "author": "Uro\u0161 Bojani\u0107 <ur...@apache.org>",
       "state": "open",
       "created_at": "2026-09-22T09:22:22+00:00",
-      "updated_at": "2026-09-23T13:49:20+00:00",
+      "updated_at": "2026-09-25T20:39:00+00:00",
       "body": "Hi all,\n\nFollowing Szehon's 4.2.1 release discussion, I would like to propose the next maintenance releases for the older maintained lines as well, and I would be happy to start off by volunteering to drive 4.1.4 release.\n\nAll of 3.5.x / 4.0.x / 4.1.x / 4.2.x were last released together in mid-July 2026, which is about ~10 weeks ago. Since then:\n\n- branch-4.1 has accumulated 63 JIRAs (82 commits), including wrong-results correctness fixes (SPARK-59050 SPJ multi-join, SPARK-58341 positional parameters, SPARK-57932 regexp on supplementary chars, SPARK-59602 float normalization), stability fixes (SPARK-58323 StackOverflow, SPARK-58886 Int overflow, SPARK-55271/SPARK-59008 NPEs), and resource-leak fixes (SPARK-58714, SPARK-58751).\n\n- branch-4.0 has 48 JIRAs (60 commits), sharing most of the above correctness fixes. Please note that 4.0.x reaches ~18 months this November, so this would likely be one of its final maintenance releases.\n\n- branch-3.5 (extended LTS, security-only) has 14 JIRAs of accumulated security hardening (XSS, Zip-Slip, credential logging, path-traversal, info-disclosure fixes) that are not yet in any 3.5 release; we should perhaps consider getting these out to LTS users.\n\nConcretely, I propose that I drive the 4.1.4 release, but we can also coordinate this with 4.0.5 (they share most cherry-picks), and possibly follow with a security-focused 3.5.10.\n\nIn any case, I would be happy to pair / coordinate with Szehon in this process. What do you folks think? Also, please mention if you have any additional must-have backports for any these releases (4.1.4, 4.0.5, 3.5.10).\n\nBest,\nUro\u0161\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
       "labels": [],
       "linked_resources": [],
       "llm_summary": "Please note that 4.0.x reaches ~18 months this November, so this would likely be one of its final maintenance releases. - branch-3.5 (extended LTS, security-only) has 14 JIRAs of accumulated security hardening (XSS, Zip-Slip, credential logging, path-traversal, info-disclosure fixes) that are not yet in any 3.5 release; we should perhaps consider getting these out to LTS users. Concretely, I propose that I drive the 4.1.4 release, but we can also coordinate this with 4.0.5 (they share most cherry-picks), and possibly follow with a security-focused 3.5.10.",
       "llm_status": "discussion",
-      "comment_count": 5,
+      "comment_count": 6,
       "participant_count": 6,
       "llm_key_points": [
         "+1\n\nOn Tue, Sep 22, 2026 at 11:23\u202fAM Uro\u0161 Bojani\u0107 <ur...@apache.org> wrote:\n\n> Hi all,\n>\n> Following Szehon's 4.2.1 rele",
@@ -1876,36 +1913,39 @@
       "initiative_id": "spark-init-spark-ml-96goypb9vq64h9t5jkmw8n8yo3xtrogv"
     },
     {
-      "id": "spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw",
+      "id": "spark-ml-s57pbcgtbgl12dpctl6z2ojpznzjxh12",
       "source": "mailing_list",
       "kind": "thread",
-      "title": "[DISCUSS] Release Apache Spark 4.2.1",
-      "url": "https://lists.apache.org/thread/4r7zonlh748wn2fhos6w9vgm5wqr1pgw",
-      "author": "Szehon Ho <sz...@gmail.com>",
+      "title": "Re: [DISCUSS] SPIP: Add the DECFLOAT data type",
+      "url": "https://lists.apache.org/thread/s57pbcgtbgl12dpctl6z2ojpznzjxh12",
+      "author": "Uro\u0161 Bojani\u0107 <ur...@apache.org>",
       "state": "open",
-      "created_at": "2026-09-21T23:56:43+00:00",
-      "updated_at": "2026-09-22T23:41:44+00:00",
-      "body": "Hi all,\n\nI'd like to start a discussion about releasing Apache Spark 4.2.1.\n\nI'm particularly interested in getting SPARK-59572\n<https://issues.apache.org/jira/browse/SPARK-59572> into 4.2.1. It fixes a\ncorrectness issue introduced in 4.2.0 where failures to evaluate a DSv2\nPartitionPredicate can be treated as matches, leading to incorrect query\nresults.\n\nIt's been over two months since Spark 4.2.0 was released in July. The changes\non branch-4.2 since 4.2.0\n<https://github.com/apache/spark/compare/v4.2.0...branch-4.2> now include\n99 PRs covering 97 JIRA issues. Besides SPARK-59572, these include\ncorrectness and stability fixes across SQL, Core, Streaming, PySpark, and\nKubernetes, with several addressing storage-partitioned joins.\n\nI'm happy to volunteer to drive the release to learn the process!\n\nWould folks be in favor of moving forward with a 4.2.1 release? Are there\nany other fixes or blockers we should address first?\n\nThanks,\nSzehon\n",
+      "created_at": "2026-09-01T16:07:31+00:00",
+      "updated_at": "2026-09-25T15:12:33+00:00",
+      "body": "Hi all,\n\nIn accordance with concerns raised in the first SPIP vote for DECFLOAT (https://lists.apache.org/thread/nozkdbsc7oy69j581qtp9v69wtzv4tdl), please note that the SPIP proposal has been revised and updated accordingly: https://docs.google.com/document/d/1qnLXm0ldHSwPSJs_Q5SzGyyTKMMEqeX5rm8Fh4rvV3E.\n\nIn short, we agree to move away from the initial JNI / libbid proposal. The new proposal is to use a custom Java native IEEE 754 compliant port.\n\nGiven that this DECFLOAT proposal is still actively evolving, we can keep this DISCUSS thread open to any additional feedback and substantive concerns about this SPIP to add the DECFLOAT data type!\n\nBest,\nUro\u0161\n\nOn 2026/08/18 16:00:13 Uro\u0161 Bojani\u0107 wrote:\n> Hi all,\n> \n> I would like to start a discussion on the SPIP to add a new Spark SQL data type: DECFLOAT (IEEE 754 decimal64 / decimal128), for base-10 floating-point decimals with per-value exponents.\n> \n> JIRA ID: https://issues.apache.org/jira/browse/SPARK-58820\n> \n> Brief summary: DECFLOAT is a new IEEE 754 decimal floating-point type (decimal64 / decimal128, i.e. DECFLOAT(16) / DECFLOAT(34)) that closes the gap between DECIMAL, which caps at precision 38 with a fixed per-column scale, and DOUBLE, whose binary rounding makes fractions like 0.1 inexact: each value keeps its own exponent, arithmetic is decimal, and it supports signed zero, Inf, and NaN. It is additive, round-trips through a proposed Parquet logical type for cross-engine interop, and would ship config-gated during incubation like TIME, leaving existing DECIMAL / DOUBLE behavior unchanged.\n> \n> Additional information is available in the SPIP document:\n> https://docs.google.com/document/d/1qnLXm0ldHSwPSJs_Q5SzGyyTKMMEqeX5rm8Fh4rvV3E\n> \n> Please provide your feedback on the approach, scope, and the proposal described in the document.\n> \n> Thank you!\n> \n> Best,\n> Uro\u0161\n> \n> ---------------------------------------------------------------------\n> To unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n> \n> \n\n---",
       "labels": [],
-      "linked_resources": [],
-      "llm_summary": "It fixes a correctness issue introduced in 4.2.0 where failures to evaluate a DSv2 PartitionPredicate can be treated as matches, leading to incorrect query results. It fixes > a correctness issue introduced in 4.2.0 where failures to evaluate a DSv2 > PartitionPredicate can be treated as matches, leading to incorrect query > results. It fixes a correctness issue introduced in 4.2.0 where failures to evaluate a DSv2 PartitionPredicate can be treated as matches, leading to incorrect query results.",
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1qnLXm0ldHSwPSJs_Q5SzGyyTKMMEqeX5rm8Fh4rvV3E",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: Add the DECFLOAT data type"
+        }
+      ],
+      "llm_summary": "On 2026/08/18 16:00:13 Uro\u0161 Bojani\u0107 wrote: > Hi all, > > I would like to start a discussion on the SPIP to add a new Spark SQL data type: DECFLOAT (IEEE 754 decimal64 / decimal128), for base-10 floating-point decimals with per-value exponents. > > JIRA ID: https://issues.apache.org/jira/browse/SPARK-58820 > > Brief summary: DECFLOAT is a new IEEE 754 decimal floating-point type (decimal64 / decimal128, i.e. DECFLOAT(16) / DECFLOAT(34)) that closes the gap between DECIMAL, which caps at precision 38 with a fixed per-column scale, and DOUBLE, whose binary rounding makes fractions like 0.1 inexact: each value keeps its own exponent, arithmetic is decimal, and it supports signed zero, Inf, and NaN. It is additive, round-trips through a proposed Parquet logical type for cross-engine interop, and would ship config-gated during incubation like TIME, leaving existing DECIMAL / DOUBLE behavior unchanged.",
       "llm_status": "discussion",
-      "comment_count": 10,
-      "participant_count": 10,
-      "llm_key_points": [
-        "+1 for this, thank you for proposing and driving the maintenance release, Szehon!",
-        "+1\n\nOn Tue, 22 Sept 2026 at 08:57, Szehon Ho <sz...@gmail.com> wrote:\n\n> Hi all,\n>\n> I'd like to start a discussion abou",
-        "+1\n\nOn Mon, Sep 21, 2026 at 5:48\u202fPM Hyukjin Kwon <gu...@apache.org> wrote:\n\n> +1\n>\n> On Tue, 22 Sept 2026 at 08:57, Szeh"
-      ],
+      "comment_count": 1,
+      "participant_count": 1,
+      "llm_key_points": [],
       "llm_topics": [
-        "apache-spark",
-        "spark",
-        "discuss",
-        "releasing-apache"
+        "decfloat",
+        "spip",
+        "decfloat-data",
+        "spip-vote"
       ],
-      "_content_hash": "12d1f5fe54cc",
+      "_content_hash": "22c2a9e444b2",
       "llm_title": "",
-      "initiative_id": "spark-init-spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw"
+      "initiative_id": "spark-init-spark-ml-s57pbcgtbgl12dpctl6z2ojpznzjxh12"
     },
     {
       "id": "spark-ml-r3jyf1on98lgnxw6pdhjj0qrh09mnxvz",
@@ -2528,41 +2568,6 @@
       "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
-      "id": "spark-ml-s57pbcgtbgl12dpctl6z2ojpznzjxh12",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "Re: [DISCUSS] SPIP: Add the DECFLOAT data type",
-      "url": "https://lists.apache.org/thread/s57pbcgtbgl12dpctl6z2ojpznzjxh12",
-      "author": "Uro\u0161 Bojani\u0107 <ur...@apache.org>",
-      "state": "open",
-      "created_at": "2026-09-01T16:07:31+00:00",
-      "updated_at": "2026-09-01T16:07:31+00:00",
-      "body": "Hi all,\n\nIn accordance with concerns raised in the first SPIP vote for DECFLOAT (https://lists.apache.org/thread/nozkdbsc7oy69j581qtp9v69wtzv4tdl), please note that the SPIP proposal has been revised and updated accordingly: https://docs.google.com/document/d/1qnLXm0ldHSwPSJs_Q5SzGyyTKMMEqeX5rm8Fh4rvV3E.\n\nIn short, we agree to move away from the initial JNI / libbid proposal. The new proposal is to use a custom Java native IEEE 754 compliant port.\n\nGiven that this DECFLOAT proposal is still actively evolving, we can keep this DISCUSS thread open to any additional feedback and substantive concerns about this SPIP to add the DECFLOAT data type!\n\nBest,\nUro\u0161\n\nOn 2026/08/18 16:00:13 Uro\u0161 Bojani\u0107 wrote:\n> Hi all,\n> \n> I would like to start a discussion on the SPIP to add a new Spark SQL data type: DECFLOAT (IEEE 754 decimal64 / decimal128), for base-10 floating-point decimals with per-value exponents.\n> \n> JIRA ID: https://issues.apache.org/jira/browse/SPARK-58820\n> \n> Brief summary: DECFLOAT is a new IEEE 754 decimal floating-point type (decimal64 / decimal128, i.e. DECFLOAT(16) / DECFLOAT(34)) that closes the gap between DECIMAL, which caps at precision 38 with a fixed per-column scale, and DOUBLE, whose binary rounding makes fractions like 0.1 inexact: each value keeps its own exponent, arithmetic is decimal, and it supports signed zero, Inf, and NaN. It is additive, round-trips through a proposed Parquet logical type for cross-engine interop, and would ship config-gated during incubation like TIME, leaving existing DECIMAL / DOUBLE behavior unchanged.\n> \n> Additional information is available in the SPIP document:\n> https://docs.google.com/document/d/1qnLXm0ldHSwPSJs_Q5SzGyyTKMMEqeX5rm8Fh4rvV3E\n> \n> Please provide your feedback on the approach, scope, and the proposal described in the document.\n> \n> Thank you!\n> \n> Best,\n> Uro\u0161\n> \n> ---------------------------------------------------------------------\n> To unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n> \n> \n\n---",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1qnLXm0ldHSwPSJs_Q5SzGyyTKMMEqeX5rm8Fh4rvV3E",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSPIP: Add the DECFLOAT data type"
-        }
-      ],
-      "llm_summary": "On 2026/08/18 16:00:13 Uro\u0161 Bojani\u0107 wrote: > Hi all, > > I would like to start a discussion on the SPIP to add a new Spark SQL data type: DECFLOAT (IEEE 754 decimal64 / decimal128), for base-10 floating-point decimals with per-value exponents. > > JIRA ID: https://issues.apache.org/jira/browse/SPARK-58820 > > Brief summary: DECFLOAT is a new IEEE 754 decimal floating-point type (decimal64 / decimal128, i.e. DECFLOAT(16) / DECFLOAT(34)) that closes the gap between DECIMAL, which caps at precision 38 with a fixed per-column scale, and DOUBLE, whose binary rounding makes fractions like 0.1 inexact: each value keeps its own exponent, arithmetic is decimal, and it supports signed zero, Inf, and NaN. It is additive, round-trips through a proposed Parquet logical type for cross-engine interop, and would ship config-gated during incubation like TIME, leaving existing DECIMAL / DOUBLE behavior unchanged.",
-      "llm_status": "discussion",
-      "comment_count": 0,
-      "participant_count": 1,
-      "llm_key_points": [],
-      "llm_topics": [
-        "decfloat",
-        "spip",
-        "decfloat-data",
-        "spip-vote"
-      ],
-      "_content_hash": "22c2a9e444b2",
-      "llm_title": "",
-      "initiative_id": "spark-init-spark-ml-s57pbcgtbgl12dpctl6z2ojpznzjxh12"
-    },
-    {
       "id": "spark-ml-n8ghxkjtwc289tvffb8sy0s99sp52orh",
       "source": "mailing_list",
       "kind": "thread",
@@ -2831,7 +2836,7 @@
       ],
       "llm_title": "",
       "_content_hash": "97cea4020d47",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-vgg3omvqqmyo2c8w5rnnhl78k1rzp2qg",
@@ -3126,7 +3131,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -4688,7 +4693,7 @@
         "uro-bojani"
       ],
       "_content_hash": "011b99573a32",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
     },
     {
       "id": "spark-ml-92kjhnglm90z2n8v7hxn6d9nb2gzhq1z",
@@ -4975,7 +4980,7 @@
         "apache-spark"
       ],
       "_content_hash": "ec8146319b15",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
     },
     {
       "id": "spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv",
@@ -5006,7 +5011,7 @@
         "spark-project"
       ],
       "_content_hash": "af074b2503b6",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
     },
     {
       "id": "spark-ml-c3sjlfos8d4o2859bjpltpgsf33wfnfh",
@@ -5663,7 +5668,7 @@
         "pyspark"
       ],
       "_content_hash": "f1327ace7e23",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-2c5fpsz7f2mfwmc4bxy0q9442zl0tcgn",
@@ -5694,7 +5699,7 @@
         "peter-toth"
       ],
       "_content_hash": "b38e7b779ac6",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-xvv4qt9dpnb1kszxdqlxyv9b46749ypo",
@@ -7555,7 +7560,7 @@
         "tian-gao"
       ],
       "_content_hash": "dacca48c4fa0",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
     },
     {
       "id": "spark-ml-mqfysmjmkdnw0fxy9t5dp7bxpvo36jrv",
@@ -7800,7 +7805,7 @@
         "vote-passes"
       ],
       "_content_hash": "f6a4f948416b",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-dylmft4n6v7mqb4b47hvjxhoz6hkhqkb",
@@ -8848,7 +8853,7 @@
         "security-fixes"
       ],
       "_content_hash": "76edeb3f9870",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-wfg7gfxqzysr08qkq6gh0wtnw5t3nqtl",
@@ -10982,7 +10987,7 @@
         "apache"
       ],
       "_content_hash": "2c6c48880b4f",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-9y3t9j6ntg30os6os1c30dy5b2prqt8y",
@@ -11187,7 +11192,7 @@
         "apache-spark"
       ],
       "_content_hash": "b1796e2be8d5",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-cfdlfl19k8gpc8m4ollmppyo0qbdpbh4",
@@ -11278,7 +11283,7 @@
         "release"
       ],
       "_content_hash": "a07f3d993e3f",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-p0y46b1986pm4hmg5fy9zbf3g1k8ngrx",
@@ -11794,7 +11799,7 @@
         "binding"
       ],
       "_content_hash": "0cfb04e25f4e",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-rx5pqh01c86slpqv9161hqwgm5lwxxzq",
@@ -11990,7 +11995,7 @@
         "release"
       ],
       "_content_hash": "05d6213c6e90",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-4t4l9dfq9ozmo5b11govl2j9obt6vjb4",
@@ -12055,7 +12060,7 @@
         "discuss"
       ],
       "_content_hash": "c73481e96ce1",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-zxdn5hj7tb0zb21b4xxzfxz717sx31fj",
@@ -14392,7 +14397,7 @@
         "subset-argument"
       ],
       "_content_hash": "e68b1d71e82d",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-v9djkznh8sz5smdl7mx9zt5kxd51g18y",
@@ -18005,7 +18010,7 @@
         "deprecate"
       ],
       "_content_hash": "d6459727ac29",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-8b483tg6q06w3p03t5co8v8228qngqgw",
@@ -18040,7 +18045,7 @@
         "lts-period"
       ],
       "_content_hash": "5e4a9be2e683",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-hfpgp3mz0lq6w9ysqv92zkygwn8bmcpk",
@@ -18323,7 +18328,7 @@
         "vote"
       ],
       "_content_hash": "cd56fa6f3ba5",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-tdlkpp7h2rs5k89pnmrvs64hd1t8f76b",
@@ -18448,7 +18453,7 @@
         "apache"
       ],
       "_content_hash": "c477dc28e3fe",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-jmnvlqkhmfv5lg5l1fw4gyq1xgsx92nw",
@@ -18475,7 +18480,7 @@
         "apache"
       ],
       "_content_hash": "b35686693544",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-04k62jn7k6dqhtov44yg9c6gkowyy47n",
@@ -21088,7 +21093,7 @@
         "spark"
       ],
       "_content_hash": "bb2e07d0a0dc",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-w3v4fjk9lvxvp3lr5tngg0hvhfrkl5b0",
@@ -21218,7 +21223,7 @@
         "discuss"
       ],
       "_content_hash": "fe2f594a7167",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-g9kj4zv7slct25fox0plxzcd1h8dvjm6",
@@ -27727,7 +27732,7 @@
         "pyspark"
       ],
       "_content_hash": "c62f327caf97",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-fyq8h9c7qd9y3jmm6kbo1n8ngdsh6f79",
@@ -28819,7 +28824,7 @@
         "api"
       ],
       "_content_hash": "2157e26a7e9e",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-yq6f5gv7gtdbk1ynwpd9hnc547bgz03m",
@@ -31346,7 +31351,7 @@
         "api"
       ],
       "_content_hash": "d05f73f56e42",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-c1j9zcycbwyh3hcdck7qlg7ppxpd68wc",
@@ -31468,7 +31473,7 @@
         "api"
       ],
       "_content_hash": "2cb82c94753c",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-7jjbhdz2njbk596rgckg1vvcsg07vksz",
@@ -32335,7 +32340,7 @@
         "release"
       ],
       "_content_hash": "89c3c2fb0fa1",
-      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+      "initiative_id": "spark-init-spark-ml-wh7flo2ov17g7novt8t4lxk2z7044y93"
     },
     {
       "id": "spark-ml-5bww6j9gmqr91xp2pd9w4h1fbkk3kh1n",

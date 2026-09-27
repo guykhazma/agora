@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-09-26T10:37:25.805480+00:00",
+  "generated_at": "2026-09-27T11:08:34.120816+00:00",
   "total": 295,
   "proposals": [
     {
@@ -2677,6 +2677,65 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
+      "url": "https://lists.apache.org/thread/kgmgn2vmrz49thbfhv8b66lglsyd81xt",
+      "author": "Rok Mihevc <ro...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-09-08T18:42:14+00:00",
+      "updated_at": "2026-09-26T14:37:02+00:00",
+      "body": "Hi all,\n\nAs proposed during the general community call we held a focused call today\nto discuss the proposal for adding a logical vector type to parquet. This\nwas called because it seems:\n\n* Vectors (as in vector DB) storage needs are different to what we need for\nfixed size list applications we've been disucssing so far [0]. This is\ndriven also by Iceberg's need for Vector type [1]\n* We don't yet have a consensus of what physical representation of Vector\ntype should be.\n\n\nNotes from the call can be found here [2]. Short summary:\n\nWe have converged on two options that could work, but have not yet decided\nwhich one to propose:\n\n- Option A - FLBA as physical storage (FLBA(num_elements * element_width)).\nVector logical type would provide an enum specifying the element type, and\nthe element would be non-nullable. The element type enum could be\nindependent of the parquet type system, making evolution easier. Downside\nis loss of element-level encodings available today, though they can be\nadded later. Upside is simplicity and ease of evolution.\n\n- Option C1 - LIST with numeric parquet type elements as physical storage.\nNew float types (e.g. BF16) can be added in parquet proper as needed.\nDownside is we need to add new types to parquet, DL/RL overhead is likely\nnot a concern. Upside is we have encoding support now.\n\nRegarding NaN/Inf limitations, the consensus was that these should be\nhandled by statistics. This leads to a need for a new inf_count statustics.\n\nIt would be great to discuss the merits of these two proposals here on the\nmailing list for maximum visibility and participation.\nWe will likely continue to discuss this on tomorrow's community call too.\n\n\n[0] https://lists.apache.org/thread/xot5f3ghhtc82n1bf0wdl9zqwlrzqks3\n[1]\nhttps://docs.google.com/document/d/1zA8PskNDFKXXJpzWQr25CFoX_aIZHBNHbkxk0t3PteE/edit?tab=t.0#heading=h.j5pn3fef87b2\n[2]\nhttps://docs.google.com/document/d/1rPTjEJTwN97UfHvNlvdriX9XBQsW8PGwIHMXHvy-XlU/edit?tab=t.0\n\n\nBest,\nRok\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1zA8PskNDFKXXJpzWQr25CFoX_aIZHBNHbkxk0t3PteE/edit?tab=t.0#heading=h.j5pn3fef87b2",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffIceberg Vector Type Support Proposal"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1rPTjEJTwN97UfHvNlvdriX9XBQsW8PGwIHMXHvy-XlU/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSep 8, 2026 | Parquet Numeric Vector Type call"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1nf30OqK_UqxA4YTEZQszmOBEG56m9M5mp9rIYC2SUWc/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffFixed-size list type for Parquet"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/pull/624",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/pull/451",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Motivation Fixed-shape vector data is increasingly common in AI/ML workloads, especially embeddings and materialized model features. Parquet community is also discussing native support for fixed-size list/vector-like data, so Iceberg should decide how this should surface at the table-format layer. A native type would improve usability and interoperability with systems that already expose shape-declared vectors or fixed-size lists, such as Lance, pgvector, Snowflake, and emerging SQL standard.",
+      "llm_status": "discussion",
+      "comment_count": 34,
+      "participant_count": 8,
+      "llm_key_points": [
+        "Le 08/09/2026 \u00e0 20:42, Rok Mihevc a \u00e9crit\u00a0:\n> Hi all,\n> \n> As proposed during the general community call we held a focus",
+        "Hi all,\n\nAndrew's and Gunnar's results show that existing LIST storage can be read\nefficiently.",
+        "Thanks for the summary Rok,\n\nI like the direction C1 is going, but I'm a little concerned about the\nfollowing statement:"
+      ],
+      "llm_topics": [
+        "vector-type",
+        "vector",
+        "focused-call",
+        "type"
+      ],
+      "_content_hash": "9d378f64bb1a",
+      "llm_title": "",
+      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
+    },
+    {
       "id": "parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t",
       "source": "mailing_list",
       "kind": "thread",
@@ -2710,65 +2769,6 @@
         "tentatively-called"
       ],
       "_content_hash": "40f5a8fabd25",
-      "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
-    },
-    {
-      "id": "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
-      "url": "https://lists.apache.org/thread/kgmgn2vmrz49thbfhv8b66lglsyd81xt",
-      "author": "Rok Mihevc <ro...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-09-08T18:42:14+00:00",
-      "updated_at": "2026-09-24T19:51:47+00:00",
-      "body": "Hi all,\n\nAs proposed during the general community call we held a focused call today\nto discuss the proposal for adding a logical vector type to parquet. This\nwas called because it seems:\n\n* Vectors (as in vector DB) storage needs are different to what we need for\nfixed size list applications we've been disucssing so far [0]. This is\ndriven also by Iceberg's need for Vector type [1]\n* We don't yet have a consensus of what physical representation of Vector\ntype should be.\n\n\nNotes from the call can be found here [2]. Short summary:\n\nWe have converged on two options that could work, but have not yet decided\nwhich one to propose:\n\n- Option A - FLBA as physical storage (FLBA(num_elements * element_width)).\nVector logical type would provide an enum specifying the element type, and\nthe element would be non-nullable. The element type enum could be\nindependent of the parquet type system, making evolution easier. Downside\nis loss of element-level encodings available today, though they can be\nadded later. Upside is simplicity and ease of evolution.\n\n- Option C1 - LIST with numeric parquet type elements as physical storage.\nNew float types (e.g. BF16) can be added in parquet proper as needed.\nDownside is we need to add new types to parquet, DL/RL overhead is likely\nnot a concern. Upside is we have encoding support now.\n\nRegarding NaN/Inf limitations, the consensus was that these should be\nhandled by statistics. This leads to a need for a new inf_count statustics.\n\nIt would be great to discuss the merits of these two proposals here on the\nmailing list for maximum visibility and participation.\nWe will likely continue to discuss this on tomorrow's community call too.\n\n\n[0] https://lists.apache.org/thread/xot5f3ghhtc82n1bf0wdl9zqwlrzqks3\n[1]\nhttps://docs.google.com/document/d/1zA8PskNDFKXXJpzWQr25CFoX_aIZHBNHbkxk0t3PteE/edit?tab=t.0#heading=h.j5pn3fef87b2\n[2]\nhttps://docs.google.com/document/d/1rPTjEJTwN97UfHvNlvdriX9XBQsW8PGwIHMXHvy-XlU/edit?tab=t.0\n\n\nBest,\nRok\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1zA8PskNDFKXXJpzWQr25CFoX_aIZHBNHbkxk0t3PteE/edit?tab=t.0#heading=h.j5pn3fef87b2",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffIceberg Vector Type Support Proposal"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1rPTjEJTwN97UfHvNlvdriX9XBQsW8PGwIHMXHvy-XlU/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSep 8, 2026 | Parquet Numeric Vector Type call"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1nf30OqK_UqxA4YTEZQszmOBEG56m9M5mp9rIYC2SUWc/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffFixed-size list type for Parquet"
-        },
-        {
-          "url": "https://github.com/apache/parquet-format/pull/624",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-format/pull/451",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Motivation Fixed-shape vector data is increasingly common in AI/ML workloads, especially embeddings and materialized model features. Parquet community is also discussing native support for fixed-size list/vector-like data, so Iceberg should decide how this should surface at the table-format layer. A native type would improve usability and interoperability with systems that already expose shape-declared vectors or fixed-size lists, such as Lance, pgvector, Snowflake, and emerging SQL standard.",
-      "llm_status": "discussion",
-      "comment_count": 32,
-      "participant_count": 7,
-      "llm_key_points": [
-        "Le 08/09/2026 \u00e0 20:42, Rok Mihevc a \u00e9crit\u00a0:\n> Hi all,\n> \n> As proposed during the general community call we held a focus",
-        "Hi all,\n\nAndrew's and Gunnar's results show that existing LIST storage can be read\nefficiently.",
-        "Thanks for the summary Rok,\n\nI like the direction C1 is going, but I'm a little concerned about the\nfollowing statement:"
-      ],
-      "llm_topics": [
-        "vector-type",
-        "vector",
-        "focused-call",
-        "type"
-      ],
-      "_content_hash": "9d378f64bb1a",
-      "llm_title": "",
       "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
     },
     {
@@ -8566,7 +8566,7 @@
       ],
       "_content_hash": "735a1326fdb5",
       "llm_title": "Merge Implementation Status PR for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
+      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
     },
     {
       "id": "parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",

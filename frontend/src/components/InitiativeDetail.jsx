@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useId } from "react";
 import { STATUS_META, SOURCE_META, getItemType, relativeTime } from "../lib/data";
 import { cleanTitle } from "../lib/utils";
 import { useFocusTrap } from "../lib/useFocusTrap";
+import { initiativeHistory } from "../lib/evidence";
 import StarButton from "./StarButton";
 
 /** Human-readable labels for `signals` from build_initiatives.py */
@@ -43,6 +44,7 @@ export default function InitiativeDetail({ initiative, proposalsById = {}, onClo
     .filter(Boolean)
     .sort((a, b) => (b.updated_at || "").localeCompare(a.updated_at || ""));
 
+  const history = initiativeHistory(members);
   const statusMeta = STATUS_META[initiative.status] || STATUS_META.discussion;
   const sources = [...new Set(members.map(m => m.source))];
   const activeVote = members.find(
@@ -148,6 +150,22 @@ export default function InitiativeDetail({ initiative, proposalsById = {}, onClo
             <section>
               <h3 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Summary</h3>
               <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{initiative.summary}</p>
+            </section>
+          )}
+
+          {history.length > 0 && (
+            <section>
+              <h3 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Source history</h3>
+              <ol className="space-y-3 border-l border-gray-200 dark:border-gray-700 pl-3">
+                {history.map((event, i) => (
+                  <li key={`${event.item.id}-${i}`} className="text-xs">
+                    <p className="text-gray-500">{event.observed ? "Observed " : ""}{new Date(event.date).toLocaleDateString()}</p>
+                    <button type="button" onClick={() => onSelectProposal?.(event.item)} className="text-agora-700 dark:text-agora-300 hover:underline text-left focus-ring">
+                      {event.label} · {cleanTitle(event.item)}
+                    </button>
+                  </li>
+                ))}
+              </ol>
             </section>
           )}
 

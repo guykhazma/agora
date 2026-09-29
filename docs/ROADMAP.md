@@ -1,14 +1,26 @@
 # Agōra — Upgrade Roadmap
 
-*Status: **✅ all phases delivered in this PR.** Grounded in two read-only code audits
-(pipeline reliability + frontend/product) and a scan of the external landscape (CHAOSS,
-Apache Beam community metrics, ASF ComDev). Kept as the record of what was done and why.*
+*Historical implementation roadmap. The phase descriptions below preserve the original
+rationale; they are not a current completeness audit. For current behavior and
+limitations, see [Evidence and enrichment](EVIDENCE_AND_ENRICHMENT.md) and
+[Architecture](../ARCHITECTURE.md).*
+
+## Evidence and reliability follow-up
+
+Implemented: source-linked digest highlights and generation provenance, bounded
+LLM enrichment with local-summary recovery, source-observed history/briefings,
+additional Parquet format repository coverage, crawl-start checkpoints with overlap,
+and accurate labels for the existing metric proxies. Covered by backend and
+frontend regression tests. Old data stays readable; new history builds prospectively.
+
+Still future work: actual first-response metrics, complete historical event ingest,
+and the [monthly archive layout](DATA_LAYOUT_ROADMAP.md). Model-inferred objections
+and decisions are intentionally excluded from change alerts.
 
 ## The one-line thesis
 
-Agōra already **works** and is more complete than any comparable tool (nothing else unifies
-GitHub + mailing list + video + docs + calendars into AI-clustered initiatives with a daily
-autonomous crawl). The next upgrade is **not more features first** — it's making the autonomy
+Agōra unifies GitHub, mailing lists, videos, documents, and calendars into clustered
+initiatives with a daily automated crawl. The next upgrade is **not more features first** — it's making the autonomy
 *real* so the system runs for months unattended without silently rotting, then layering on the
 coverage and product wins that turn it into a genuine "town square."
 

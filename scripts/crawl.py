@@ -39,7 +39,7 @@ import logging
 import sys
 import os
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 import yaml
@@ -57,7 +57,7 @@ sys.path.insert(0, str(ROOT))
 from crawlers import github_crawler, mailing_list_crawler
 from crawlers.doc_crawler import enrich_proposal_with_docs, fetch_doc_text, extract_doc_id, extract_doc_title
 from scripts.update_data import clear_project_outputs, load_state, save_state, write_project_data, update_health
-from llm.client import LLMClient, content_hash
+from llm.client import LLMClient, LLMBudgetExceeded, content_hash
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
@@ -65,6 +65,7 @@ logger = logging.getLogger(__name__)
 # google_doc append-only delta: prefix must match; new bytes are full[cov:]
 GDOC_SNAP_PREFIX = 2048
 GDOC_DELTA_MAX_CHARS = 6000
+SUMMARY_PROMPT_VERSION = 1
 
 
 def load_project_config(project_id: str) -> dict:
@@ -91,7 +92,7 @@ def _llm_output_looks_incomplete(proposal: dict, old: dict) -> bool:
     return False
 
 
-def _needs_summarization(proposal: dict, existing_by_id: dict) -> bool:
+def _needs_summarization(proposal: dict, existing_by_id: dict, stage2_client=None) -> bool:
     """
     Return True if this proposal needs LLM summarization.
     Uses a content hash to avoid re-summarizing unchanged items.
@@ -106,6 +107,15 @@ def _needs_summarization(proposal: dict, existing_by_id: dict) -> bool:
     # Force re-summarize (opt-in per proposal)
     if proposal.get("_force_summarize"):
         return True
+
+    if old and _wants_llm_stage2(proposal, proposal.get("source", ""),
+                                len(proposal.get("_emails") or []),
+                                proposal.get("_doc_content") or "", stage2_client):
+        generation = old.get("summary_generation") or {}
+        if (old.get("_enrichment_pending") or generation.get("method") == "local"
+                or (generation.get("method") == "llm"
+                    and generation.get("prompt_version") != SUMMARY_PROMPT_VERSION)):
+            return True
 
     new_hash = _compute_content_hash(proposal)
 
@@ -274,16 +284,22 @@ def enrich_with_llm(proposals: list[dict], existing_by_id: dict, stage2_llm_clie
     """
     from llm.local_nlp import LocalNLPClient
     local_client = LocalNLPClient()
+    requested_stage2_client = stage2_llm_client
 
+    item_limit = int(os.environ.get("LLM_MAX_ITEMS_PER_PROJECT") or "20")
+    if item_limit < 0:
+        raise ValueError("LLM_MAX_ITEMS_PER_PROJECT must be nonnegative")
+    proposals = sorted(proposals, key=lambda p: p.get("updated_at") or "", reverse=True)
     total = len(proposals)
     skipped = stage2_enriched = local_enriched = failed = 0
     consecutive_fail = 0
     stage2_dead = False
+    budget_exhausted = False
 
     llm_needed = sum(
         1
         for p in proposals
-        if _needs_summarization(p, existing_by_id)
+        if _needs_summarization(p, existing_by_id, stage2_llm_client)
         and _wants_llm_stage2(
             p,
             p.get("source") or "",
@@ -302,8 +318,11 @@ def enrich_with_llm(proposals: list[dict], existing_by_id: dict, stage2_llm_clie
 
     stage2_idx = 0
     for idx, p in enumerate(proposals):
-        if not _needs_summarization(p, existing_by_id):
+        if not _needs_summarization(p, existing_by_id, stage2_llm_client):
             old = existing_by_id[p["id"]]
+            for field in ("summary_generation", "_enrichment_pending"):
+                if field in old:
+                    p[field] = old[field]
             p["llm_summary"] = old.get("llm_summary")
             p["llm_status"] = old.get("llm_status")
             p["llm_key_points"] = old.get("llm_key_points", [])
@@ -356,14 +375,28 @@ def enrich_with_llm(proposals: list[dict], existing_by_id: dict, stage2_llm_clie
             p["llm_status"] = result.get("status") or "discussion"
             p["llm_key_points"] = result.get("key_points", [])
             p["llm_topics"] = result.get("topics", [])
+            p["summary_generation"] = {"method": "local", "prompt_version": SUMMARY_PROMPT_VERSION}
             local_enriched += 1
             p["_content_hash"] = _compute_content_hash(p, doc_content)
             _set_google_doc_summary_anchor(p, doc_content)
 
             # ── Stage 2: API LLM (optional) ─────────────────────────────────────
-            if not _wants_llm_stage2(p, source or "", reply_count, doc_content, stage2_llm_client):
+            if not _wants_llm_stage2(p, source or "", reply_count, doc_content, requested_stage2_client):
                 continue
 
+            p["_enrichment_pending"] = True
+            if stage2_llm_client is None or stage2_idx >= item_limit:
+                # Retain prior output until a deferred request can succeed.
+                old = existing_by_id.get(p["id"], {})
+                if old.get("llm_summary"):
+                    if not old.get("summary_generation"):
+                        p.pop("summary_generation", None)
+                    for field in ("llm_summary", "llm_status", "llm_key_points", "llm_topics",
+                                  "llm_title", "summary_generation", "_content_hash",
+                                  "_gdoc_snap2048", "_gdoc_len_at_summary"):
+                        if field in old:
+                            p[field] = old[field]
+                continue
             stage2_idx += 1
             title_hint = (p.get("title") or "")[:60]
             used_delta = False
@@ -414,6 +447,10 @@ def enrich_with_llm(proposals: list[dict], existing_by_id: dict, stage2_llm_clie
                 p["_content_hash"] = _compute_content_hash(p, doc_content)
                 _set_google_doc_summary_anchor(p, doc_content)
 
+                p["summary_generation"] = {"method": "llm", "provider": stage2_llm_client.provider,
+                                           "model": getattr(stage2_llm_client, "model", "unknown"),
+                                           "prompt_version": SUMMARY_PROMPT_VERSION}
+                p.pop("_enrichment_pending", None)
                 stage2_enriched += 1
                 consecutive_fail = 0
                 delay = _default_delay(stage2_llm_client.provider)
@@ -422,12 +459,17 @@ def enrich_with_llm(proposals: list[dict], existing_by_id: dict, stage2_llm_clie
             except Exception as ce:
                 consecutive_fail += 1
                 err = str(ce).lower()
+                budget_hit = isinstance(ce, LLMBudgetExceeded)
                 fatal = any(t in err for t in (
                     "insufficient_quota", "exceeded your current quota",
                     "invalid api key", "invalid_api_key", "authentication",
                     "401", "403", "permission",
                 ))
-                if not stage2_dead and (fatal or consecutive_fail >= 5):
+                if budget_hit:
+                    budget_exhausted = True
+                    stage2_llm_client = None
+                    logger.info("LLM budget exhausted; deferring remaining upgrades to a later run")
+                elif not stage2_dead and (fatal or consecutive_fail >= 5):
                     stage2_dead = True
                     stage2_llm_client = None  # stop trying — remaining items use local baseline
                     logger.error(
@@ -441,6 +483,10 @@ def enrich_with_llm(proposals: list[dict], existing_by_id: dict, stage2_llm_clie
                 # so the item remains eligible for a retry on the next incremental crawl.
                 old_rec = existing_by_id.get(p["id"])
                 if old_rec and old_rec.get("llm_summary"):
+                    if old_rec.get("summary_generation"):
+                        p["summary_generation"] = old_rec["summary_generation"]
+                    else:
+                        p.pop("summary_generation", None)  # legacy method is unknown
                     p["llm_summary"] = old_rec.get("llm_summary")
                     p["llm_status"] = old_rec.get("llm_status")
                     p["llm_key_points"] = old_rec.get("llm_key_points", [])
@@ -472,6 +518,7 @@ def enrich_with_llm(proposals: list[dict], existing_by_id: dict, stage2_llm_clie
     if status_out is not None:
         status_out["stage2_degraded"] = stage2_dead
         status_out["stage2_enriched"] = stage2_enriched
+        status_out["budget_exhausted"] = budget_exhausted
     return proposals
 
 
@@ -485,10 +532,33 @@ def _strip_internal_fields(proposals: list[dict]) -> list[dict]:
     return proposals
 
 
+def _retry_backlog(existing: list[dict], fetched: list[dict], client) -> list[dict]:
+    fetched_ids = {p["id"] for p in fetched}
+    limit = int(os.environ.get("LLM_MAX_ITEMS_PER_PROJECT") or "20")
+    candidates = [p for p in existing
+                  if p["id"] not in fetched_ids
+                  and p.get("source") in ("github", "mailing_list", "jira")
+                  and _needs_summarization(p, {p["id"]: p}, client)
+                  and _wants_llm_stage2(p, p.get("source", ""), 0, "", client)]
+    return [dict(p) for p in sorted(candidates, key=lambda p: p.get("updated_at") or "",
+                                   reverse=True)[:max(0, limit)]]
+
+
+def _overlap_since(checkpoint: str | None) -> str | None:
+    """Replay five minutes at boundaries; merging by ID makes overlap safe."""
+    if not checkpoint:
+        return None
+    dt = datetime.fromisoformat(checkpoint.replace("Z", "+00:00"))
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return (dt - timedelta(minutes=5)).isoformat()
+
+
 def crawl_project(project_id: str, use_llm: bool = True):
+    crawl_started_at = datetime.now(timezone.utc).isoformat()
     config = load_project_config(project_id)
     state = load_state(project_id)
-    since = state.get("last_crawled_at")
+    since = _overlap_since(state.get("last_crawled_at"))
 
     mode = "incremental" if since else "full backfill"
     logger.info(
@@ -576,6 +646,19 @@ def crawl_project(project_id: str, use_llm: bool = True):
         "_crawl_calendar": "Calendar",
         "_crawl_jira": "JIRA",
     }
+    # Additional repositories get their own IDs and initial full backfill.
+    # Releases, milestones and discussions remain scoped to the primary repo.
+    extra_repos = github_crawler.additional_repositories(config)
+    for repo_config in extra_repos:
+        repo = repo_config["github"]["repo"]
+        label = f"GitHub issues/PRs ({repo})"
+        repo_since = _overlap_since(state.get("github_repositories", {}).get(repo))
+        def crawl_extra(cfg=repo_config, checkpoint=repo_since, source_label=label):
+            return source_label, github_crawler.crawl(cfg, since=checkpoint)
+        crawl_extra.__name__ = label
+        source_labels[label] = label
+        tasks.append(crawl_extra)
+
     # Per-source outcome for health.json + the checkpoint decision below.
     source_status: dict[str, dict] = {}
 
@@ -642,24 +725,15 @@ def crawl_project(project_id: str, use_llm: bool = True):
 
     # Derived fields: stage 1 (local) always; stage 2 (API LLM) when use_llm
     enrich_status: dict = {}
+    from llm.client import get_client
+    stage2_llm = get_client() if use_llm else None
+    new_proposals.extend(_retry_backlog(existing, new_proposals, stage2_llm))
     if new_proposals:
-        from llm.client import get_client
-        stage2_llm = get_client() if use_llm else None
         new_proposals = enrich_with_llm(new_proposals, existing_by_id, stage2_llm, enrich_status)
     _strip_internal_fields(new_proposals)
 
     # Write merged data
     write_project_data(project_id, new_proposals, config)
-
-    # Initiative clustering
-    logger.info("  Building initiative clusters…")
-    from scripts.build_initiatives import build as build_initiatives
-    if use_llm:
-        from llm.client import get_client as _get_llm
-        n_initiatives = build_initiatives(project_id, _get_llm())
-    else:
-        n_initiatives = build_initiatives(project_id)
-    logger.info(f"  Initiatives: {n_initiatives} clusters written")
 
     # Digest
     if use_llm:
@@ -671,6 +745,16 @@ def crawl_project(project_id: str, use_llm: bool = True):
                 "  Digest was not written — see logs (cloud LLM error, or use generate_digest with a key; "
                 "local NLP now uses an extractive fallback)."
             )
+
+    # Initiative clustering
+    logger.info("  Building initiative clusters…")
+    from scripts.build_initiatives import build as build_initiatives
+    if use_llm:
+        from llm.client import get_client as _get_llm
+        n_initiatives = build_initiatives(project_id, _get_llm())
+    else:
+        n_initiatives = build_initiatives(project_id)
+    logger.info(f"  Initiatives: {n_initiatives} clusters written")
 
     # Update state — but only advance the checkpoint if no CRITICAL source failed.
     # Advancing after a GitHub/mailing-list failure would permanently skip everything
@@ -691,7 +775,11 @@ def crawl_project(project_id: str, use_llm: bool = True):
             f"checkpoint; this window will be re-scanned next run."
         )
     else:
-        state["last_crawled_at"] = now_iso
+        state["last_crawled_at"] = crawl_started_at
+    for repo_config in extra_repos:
+        repo = repo_config["github"]["repo"]
+        if source_status[f"GitHub issues/PRs ({repo})"]["ok"]:
+            state.setdefault("github_repositories", {})[repo] = crawl_started_at
     save_state(project_id, state)
 
     # Health / freshness signal (committed + served; read by the UI and the alert workflow).
@@ -731,27 +819,16 @@ def re_enrich_project(project_id: str):
 
     logger.info(f"=== Re-enriching {project_id}: {len(proposals)} existing proposals ===")
 
-    # Strip all existing LLM fields + content hashes so every item is re-processed
+    # Force fresh derivation, but retain old output if a bounded API pass defers it.
+    existing_by_id = {p["id"]: dict(p) for p in proposals}
     for p in proposals:
-        p.pop("llm_summary", None)
-        p.pop("llm_status", None)
-        p.pop("llm_key_points", None)
-        p.pop("llm_topics", None)
-        p.pop("llm_title", None)
-        p.pop("_content_hash", None)
-        p.pop("_gdoc_snap2048", None)
-        p.pop("_gdoc_len_at_summary", None)
+        p["_force_summarize"] = True
 
     from llm.client import get_client as _get_llm
     llm_client = _get_llm()
-    proposals = enrich_with_llm(proposals, {}, llm_client)
+    proposals = enrich_with_llm(proposals, existing_by_id, llm_client)
     _strip_internal_fields(proposals)
     write_project_data(project_id, proposals, config)
-
-    logger.info("  Building initiative clusters…")
-    from scripts.build_initiatives import build as build_initiatives
-    n_initiatives = build_initiatives(project_id, llm_client)
-    logger.info(f"  Initiatives: {n_initiatives} clusters written")
 
     logger.info("  Generating digest…")
     from scripts.generate_digest import generate as generate_digest
@@ -759,6 +836,11 @@ def re_enrich_project(project_id: str):
         logger.warning(
             "  Digest was not written — check logs (e.g. cloud LLM JSON parse failure, or no items with llm_summary)."
         )
+
+    logger.info("  Building initiative clusters…")
+    from scripts.build_initiatives import build as build_initiatives
+    n_initiatives = build_initiatives(project_id, llm_client)
+    logger.info(f"  Initiatives: {n_initiatives} clusters written")
 
     logger.info(f"=== Re-enrichment done: {len(proposals)} proposals, {n_initiatives} initiatives ===")
 

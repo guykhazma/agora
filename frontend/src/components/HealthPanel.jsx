@@ -5,9 +5,9 @@
  * (proposal index rows + initiatives). No new network calls, no LLM. Everything
  * is a heuristic proxy and labelled as such.
  *
- *   • Responsiveness   — median created→updated for commented items (last ~90d)
+ *   • Discussion span   — median created→updated for commented items (last ~90d)
  *   • Contributor mix  — bus factor: fewest authors making 50% of recent activity
- *   • Activity trend   — item updates per week over the last 12 weeks (sparkline)
+ *   • Latest activity dates   — item updates per week over the last 12 weeks (sparkline)
  */
 import { useMemo } from "react";
 
@@ -47,7 +47,7 @@ export default function HealthPanel({ proposals = [], initiatives = [] }) {
       return Number.isFinite(t) && t >= cutoff;
     });
 
-    // ── Responsiveness — created→updated for items that actually drew replies ──
+    // ── Discussion span — created→updated for items that actually drew replies ──
     const responseTimes = [];
     for (const p of recent) {
       const comments = parseInt(p.comment_count) || 0;
@@ -94,7 +94,7 @@ export default function HealthPanel({ proposals = [], initiatives = [] }) {
       pct: totalAuthored ? Math.round((n / totalAuthored) * 100) : 0,
     }));
 
-    // ── Activity trend — updates per week over the last 12 weeks ──
+    // ── Latest activity dates — updates per week over the last 12 weeks ──
     const trend = Array.from({ length: TREND_WEEKS }, () => 0);
     const trendStart = now - TREND_WEEKS * WEEK;
     for (const p of proposals) {
@@ -150,10 +150,10 @@ export default function HealthPanel({ proposals = [], initiatives = [] }) {
 
       <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 dark:divide-gray-800">
 
-        {/* Responsiveness */}
+        {/* Discussion span */}
         <div className="px-5 py-4">
           <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">
-            Typical response
+            Discussion span
           </p>
           <div className="flex items-baseline gap-1.5 mb-3">
             <span className="text-2xl font-semibold text-gray-900 dark:text-gray-100 tabular-nums">
@@ -180,7 +180,7 @@ export default function HealthPanel({ proposals = [], initiatives = [] }) {
             <p className="text-xs text-gray-400 dark:text-gray-500">No commented items in the last {WINDOW_DAYS} days.</p>
           )}
           <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-2">
-            {responseSample} commented item{responseSample !== 1 ? "s" : ""}, last {WINDOW_DAYS}d
+            Creation to latest update · {responseSample} commented item{responseSample !== 1 ? "s" : ""}, last {WINDOW_DAYS}d
           </p>
         </div>
 
@@ -194,7 +194,7 @@ export default function HealthPanel({ proposals = [], initiatives = [] }) {
               {busFactor || "—"}
             </span>
             <span className="text-xs text-gray-400 dark:text-gray-500">
-              author{busFactor !== 1 ? "s" : ""} = 50% of activity
+              author{busFactor !== 1 ? "s" : ""} = 50% of tracked items
             </span>
           </div>
           {topContributors.length > 0 ? (
@@ -217,18 +217,18 @@ export default function HealthPanel({ proposals = [], initiatives = [] }) {
           </p>
         </div>
 
-        {/* Activity trend */}
+        {/* Latest activity dates */}
         <div className="px-5 py-4">
           <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">
-            Activity trend
+            Latest activity dates
           </p>
           <div className="flex items-baseline gap-1.5 mb-3">
             <span className="text-2xl font-semibold text-gray-900 dark:text-gray-100 tabular-nums">{trendTotal}</span>
-            <span className="text-xs text-gray-400 dark:text-gray-500">updates / {TREND_WEEKS}w</span>
+            <span className="text-xs text-gray-400 dark:text-gray-500">items / {TREND_WEEKS}w</span>
           </div>
           <Sparkline values={trend} max={trendMax} />
           <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-2">
-            {initiativeCount} initiative{initiativeCount !== 1 ? "s" : ""} tracked · per-week item updates
+            {initiativeCount} initiative{initiativeCount !== 1 ? "s" : ""} tracked · items grouped by latest update
           </p>
         </div>
       </div>
@@ -259,7 +259,7 @@ function Sparkline({ values, max }) {
             rx="1.5"
             className="fill-agora-400 dark:fill-agora-500"
           >
-            <title>{`Week ${i + 1}: ${v} update${v !== 1 ? "s" : ""}`}</title>
+            <title>{`Week ${i + 1}: ${v} item${v !== 1 ? "s" : ""}`}</title>
           </rect>
         );
       })}

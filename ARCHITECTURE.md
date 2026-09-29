@@ -15,7 +15,10 @@ Known docs from YAML (`known_docs`) — merged after fetch (first-class `google_
                                           │
                     local NLP enrichment (vote parsing, announcements, releases)
                     LLM summarization for rich discussions
-                    (cached by content hash — only re-runs on changes)
+                    (cached by content hash + provenance; bounded retries for local/pending output)
+                                          │
+                    persist proposals + observed history; generate source-linked digest
+                    (before initiative calls consume remaining request budget)
                                           │
                     union-find clustering (see `build_initiatives.py`):
                       1. shared Google Doc URL (strongest)
@@ -164,7 +167,7 @@ Agōra tries to do as much as possible locally before making API calls:
 | Short items (<300 chars, no replies) | Local NLP — title + body sufficient |
 | Rich discussions, long bodies, **community sync Google Docs** (`known_docs`), videos | LLM API call (`summarize_thread` / `summarize_video`; doc text passed as `doc_content` where applicable) |
 
-Each item is cached by a content hash (for `google_doc` rows: full fetched doc text; otherwise body, transcript, linked doc text, etc.). Re-runs skip unchanged items — LLM API costs stay low on incremental crawls.
+Each item is cached by a content hash (for `google_doc` rows: full fetched doc text; otherwise body, transcript, linked doc text, etc.). Known local/pending output can be upgraded without a source edit; known cloud output is refreshed after a prompt-version change. Summaries record method/provider/model/version. Item attempts default to 20 per project, initiative summary attempts to five per project, and LLM-client requests to 100 per process, including retries and digest/initiative calls. See [Evidence and enrichment](docs/EVIDENCE_AND_ENRICHMENT.md) for limits and legacy-data behavior.
 
 ---
 
@@ -207,7 +210,7 @@ Hardening that keeps an unattended pipeline from silently rotting:
 
 - **Retries** — all crawler HTTP goes through `crawlers/_http.py` (a `requests.Session` with `urllib3` backoff on 429/5xx; GitHub GraphQL `RATE_LIMITED` is retried explicitly), so a transient blip doesn't drop a source.
 - **Atomic writes** — every data file is written via `crawlers/_io.py` (`tmp` + `os.replace`), so a cancelled/OOM'd job can never leave a truncated `proposals.json` for the next run to read.
-- **Checkpoint safety** — `last_crawled_at` only advances when no **critical** source (GitHub / mailing list / JIRA) failed. Otherwise the window is re-scanned next run (dedup makes that safe), closing the silent-data-gap hole. Supplementary sources (YouTube/Calendar) don't block it.
+- **Checkpoint safety** — `last_crawled_at` only advances when no **critical** source (GitHub / mailing list / JIRA) failed. Successful checkpoints use the crawl start time; reads overlap by five minutes so changes arriving during processing are fetched next time. Otherwise the window is re-scanned next run (dedup makes that safe). Additional GitHub issue/PR repositories have separate success checkpoints and automatic initial backfills. Supplementary sources (YouTube/Calendar) don't block it.
 - **LLM circuit breaker** — a fatal (auth/quota) or repeatedly-failing stage-2 provider is disabled for the rest of the run (remaining items use the local baseline) and flagged in `health.json`.
 - **Observability** — each run writes `data/health.json` (per-project, per-source: `ok`, `item_count`, `last_success_at`, `error`). The **Health Check** workflow (`.github/workflows/health-check.yml`) runs `scripts/check_health.py` and opens/updates a GitHub issue when a project or source goes stale or keeps failing. The dashboard shows the same data as a source-freshness strip.
 - **Pinned deps + CI** — `crawlers/requirements.txt` is pinned to exact versions (Dependabot proposes bumps); `.github/workflows/ci.yml` runs the `pytest` suite (vote parsing, `thread_prefixes`, dedup, hashing, index) and the frontend lint/test/build on every PR.
@@ -218,3 +221,12 @@ Hardening that keeps an unattended pipeline from silently rotting:
 - **LLM wording only (same raw rows):** **`python scripts/crawl.py --project <id> --re-enrich`** (needs API client as for stage 2, unless you only care about local output).
 
 Future partitioning (index + monthly archives + richer `state.json`) is tracked in **`docs/DATA_LAYOUT_ROADMAP.md`** — not implemented in the codebase yet.
+
+## Evidence and observed history
+
+Digest schema v2 highlights resolve model-returned IDs to crawled source URLs; the
+frontend also accepts legacy string highlights. `generation` exposes LLM vs local
+extraction. `observed_history` stores source-state and inferred vote-tally changes,
+never transitions invented from model output. The Overview briefing and initiative
+source timeline consume this history. Initial imports do not create change alerts.
+See [field semantics, retention and tests](docs/EVIDENCE_AND_ENRICHMENT.md).

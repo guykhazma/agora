@@ -30,19 +30,19 @@ bun dev
 
 ## Two-pass crawling
 
-The `--no-llm` flag skips LLM summarization on the first pass so you get data fast. The second pass (with an API key set) only processes items that are new or changed — it won't re-summarize everything.
+The `--no-llm` flag skips LLM summarization on the first pass so you get data fast. The second pass (with an API key set) processes new/changed items and gradually upgrades eligible local summaries, within the configured request limits.
 
 For incremental updates (after the first run), a single `python scripts/crawl.py --project iceberg` is enough. Sources are crawled in parallel and only fetch items updated since the last run.
 
 ## Regenerate the digest only
 
-After you already have `proposals.json` with LLM summaries, you can refresh `digest.json` without re-crawling sources:
+After you already have `proposals.json` with local or LLM summaries, you can refresh `digest.json` without re-crawling sources:
 
 ```bash
 python scripts/generate_digest.py --project iceberg
 ```
 
-Requires the same LLM API key env vars as a normal crawl.
+Uses the configured LLM when available; `LLM_PROVIDER=local` generates an extractive digest without a key.
 
 ## Derived site data (index.json + RSS feed)
 
@@ -61,7 +61,7 @@ without it — the frontend falls back to `proposals.json` when `index.json` is 
 
 ## Re-enrich without re-crawling
 
-Strip existing LLM fields from `proposals.json`, re-summarize everything, rebuild initiatives, and regenerate the digest — **no** GitHub / mailing-list / YouTube fetch:
+Request fresh summaries for existing `proposals.json`, regenerate the digest, and rebuild initiatives (prior summaries are kept when cloud work is deferred) — **no** GitHub / mailing-list / YouTube fetch:
 
 ```bash
 python scripts/crawl.py --project iceberg --re-enrich
@@ -110,3 +110,23 @@ The health check reports cloud-to-local fallback as a warning, while source
 failures and stale crawls still fail. Set `AGORA_REQUIRE_CLOUD_LLM=1` in the health
 check environment if cloud enrichment must be mandatory. Existing health records
 remain historical; a successful crawl refreshes them.
+
+## Bounded work and source evidence
+
+New digests include clickable sources and label how they were generated. To refresh
+one immediately after upgrading (without re-crawling sources):
+
+```bash
+python scripts/generate_digest.py --project parquet
+```
+
+The defaults allow 20 item-level LLM attempts and five initiative summaries per project,
+with 100 LLM-client requests per process. Override `LLM_MAX_ITEMS_PER_PROJECT` and
+`LLM_MAX_REQUESTS_PER_RUN` (and `LLM_MAX_INITIATIVES_PER_PROJECT`) in your environment, or as GitHub Actions repository
+variables. Limits also apply to `--re-enrich`. Free provider token/day quotas still
+apply. Exhausted budgets defer work to local output and future crawls.
+
+Parquet's next crawl automatically backfills matching `parquet-format` issues/PRs;
+no reset is needed. Source-change history begins with future observed transitions,
+so the change briefing may initially be empty. See [Evidence and enrichment](docs/EVIDENCE_AND_ENRICHMENT.md)
+for configuration, limitations, and test commands.

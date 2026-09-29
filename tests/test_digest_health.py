@@ -16,6 +16,7 @@ def test_digest_cloud_failure_falls_back(tmp_path, monkeypatch, response):
     folder = tmp_path / 'parquet'
     folder.mkdir()
     (folder / 'proposals.json').write_text(json.dumps({'proposals': [{
+        'id': 'page-index', 'url': 'https://example.org/page-index',
         'title': 'Page index discussion', 'llm_summary': 'Readers can use page indexes.',
         'updated_at': datetime.now(timezone.utc).isoformat(), 'source': 'mailing_list',
     }]}))
@@ -29,7 +30,9 @@ def test_digest_cloud_failure_falls_back(tmp_path, monkeypatch, response):
     assert generate_digest.generate('parquet', Cloud())
     digest = json.loads((folder / 'digest.json').read_text())
     assert digest['summary'] == 'Readers can use page indexes.'
-    assert digest['highlights'] == ['Readers can use page indexes.']
+    assert digest['highlights'][0]['text'] == 'Readers can use page indexes.'
+    assert digest['highlights'][0]['sources'][0]['id'] == 'page-index'
+    assert digest['generation']['method'] == 'local'
     assert digest['coverage']['thread_count'] == 1
     assert generate_digest.generate('parquet', LocalNLPClient())
 

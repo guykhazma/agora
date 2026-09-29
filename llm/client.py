@@ -19,6 +19,24 @@ from typing import Optional
 
 logger = logging.getLogger(__name__)
 
+# Shared by all clients/projects in this process, including cluster/digest calls.
+_requests_used = 0
+
+
+class LLMBudgetExceeded(RuntimeError):
+    pass
+
+
+def _take_request():
+    global _requests_used
+    limit = int(os.environ.get("LLM_MAX_REQUESTS_PER_RUN") or "100")
+    if limit < 0:
+        raise ValueError("LLM_MAX_REQUESTS_PER_RUN must be nonnegative")
+    if _requests_used >= limit:
+        raise LLMBudgetExceeded(f"LLM request budget exhausted ({limit} per run)")
+    _requests_used += 1
+
+
 
 def get_client():
     """
@@ -88,10 +106,10 @@ class LLMClient:
         p = self.provider
         if p == "openai":
             import openai
-            self._client = openai.OpenAI(api_key=self.api_key or os.environ.get("OPENAI_API_KEY"))
+            self._client = openai.OpenAI(api_key=self.api_key or os.environ.get("OPENAI_API_KEY"), max_retries=0)
         elif p == "anthropic":
             import anthropic
-            self._client = anthropic.Anthropic(api_key=self.api_key or os.environ.get("ANTHROPIC_API_KEY"))
+            self._client = anthropic.Anthropic(api_key=self.api_key or os.environ.get("ANTHROPIC_API_KEY"), max_retries=0)
         elif p == "google":
             import google.generativeai as genai
             genai.configure(api_key=self.api_key or os.environ.get("GOOGLE_API_KEY"))
@@ -99,18 +117,21 @@ class LLMClient:
         elif p == "ollama":
             import openai
             self._client = openai.OpenAI(
+                max_retries=0,
                 api_key="ollama",
                 base_url=os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434/v1"),
             )
         elif p == "llama_cpp":
             import openai
             self._client = openai.OpenAI(
+                max_retries=0,
                 api_key="llama_cpp",
                 base_url=os.environ.get("LLAMA_CPP_BASE_URL", "http://localhost:8080/v1"),
             )
         elif p == "groq":
             import openai
             self._client = openai.OpenAI(
+                max_retries=0,
                 api_key=self.api_key or os.environ.get("GROQ_API_KEY"),
                 base_url="https://api.groq.com/openai/v1",
             )
@@ -133,6 +154,7 @@ class LLMClient:
         temp = 0.2 if temperature is None else temperature
 
         for attempt in range(_retries):
+            _take_request()
             try:
                 if p in ("openai", "ollama", "llama_cpp", "groq"):
                     resp = self._client.chat.completions.create(

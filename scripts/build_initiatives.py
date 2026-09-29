@@ -22,6 +22,7 @@ Writes: data/{project_id}/initiatives.json
 from __future__ import annotations
 import json
 import logging
+import os
 import re
 import sys
 from collections import defaultdict
@@ -634,6 +635,13 @@ def build(project_id: str, llm_client=None) -> int:
     """
     Build initiatives for a project. Returns number of initiatives created.
     """
+    from llm.local_nlp import LocalNLPClient
+    from llm.client import LLMBudgetExceeded
+    if isinstance(llm_client, LocalNLPClient):
+        llm_client = None
+    llm_limit = int(os.environ.get("LLM_MAX_INITIATIVES_PER_PROJECT") or "5")
+    if llm_limit < 0:
+        raise ValueError("LLM_MAX_INITIATIVES_PER_PROJECT must be nonnegative")
     proposals_path = DATA_DIR / project_id / "proposals.json"
     if not proposals_path.exists():
         logger.warning(f"No proposals file for {project_id}")
@@ -651,7 +659,9 @@ def build(project_id: str, llm_client=None) -> int:
         _write(project_id, [])
         return 0
 
-    cluster_list = list(clusters.items())
+    cluster_list = sorted(clusters.items(), key=lambda entry: max(
+        (by_id[pid].get("updated_at") or "" for pid in entry[1] if pid in by_id), default=""
+    ), reverse=True)
     n_clusters = len(cluster_list)
     logger.info(
         f"Building initiatives for {project_id}: {n_clusters} components from "
@@ -695,7 +705,7 @@ def build(project_id: str, llm_client=None) -> int:
         else:
             all_docs = _co_cited_doc_links(members)
 
-            if llm_client and any(p.get("llm_summary") for p in members):
+            if llm_client and llm_done < llm_limit and any(p.get("llm_summary") for p in members):
                 llm_done += 1
                 hint = (_infer_title(members) or members[0].get("title") or "")[:56]
                 logger.info(f"  Initiative LLM [{llm_done}/{to_llm}] {hint}")
@@ -705,6 +715,10 @@ def build(project_id: str, llm_client=None) -> int:
                         summary_data["title"] = _strip_title_noise(
                             summary_data["title"], shorten_at_colon=True
                         )[:72]
+                except LLMBudgetExceeded:
+                    logger.info("LLM request budget exhausted; remaining initiatives use local summaries")
+                    llm_client = None
+                    summary_data = None
                 except Exception as e:
                     err = str(e)[:240]
                     logger.warning(

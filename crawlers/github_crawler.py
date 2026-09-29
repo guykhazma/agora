@@ -10,6 +10,7 @@ import time
 import logging
 from datetime import datetime, timezone
 from typing import Optional
+from urllib.parse import quote
 
 from crawlers._http import get_session
 from crawlers.link_extractor import extract_links
@@ -138,6 +139,7 @@ def _parse_item(item: dict, kind: str, project_id: str, repo: str = "") -> dict:
     return {
         "id": f"{project_id}-gh-{kind[0]}{item['number']}",
         "source": "github",
+        "repository": repo,
         "kind": kind,
         "number": item["number"],
         "title": item["title"],
@@ -153,6 +155,24 @@ def _parse_item(item: dict, kind: str, project_id: str, repo: str = "") -> dict:
         "llm_status": None,
         "comment_count": len(comments),
     }
+
+
+def additional_repositories(config: dict) -> list[dict]:
+    """Additional issue/PR sources inherit filters; namespace IDs to avoid collisions."""
+    gh = config.get("github", {})
+    seen = {gh.get("repo") or config.get("repo")}
+    result = []
+    for entry in gh.get("additional_repos", []):
+        entry = {"repo": entry} if isinstance(entry, str) else entry
+        repo = entry.get("repo", "")
+        if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repo):
+            raise ValueError(f"Invalid additional GitHub repository: {repo!r}")
+        if repo in seen:
+            continue
+        seen.add(repo)
+        result.append({**config, "id": f"{config['id']}-repo-{quote(repo, safe='')}",
+                       "github": {**gh, **entry, "additional_repos": []}})
+    return result
 
 
 def crawl(project_config: dict, since: Optional[str] = None) -> list[dict]:
@@ -172,8 +192,7 @@ def crawl(project_config: dict, since: Optional[str] = None) -> list[dict]:
 
     # --- Issues ---
     cursor = None
-    pages = 0
-    while pages < 10:  # safety cap
+    while True:
         variables = {"owner": owner, "repo": repo_name, "after": cursor, "since": since}
         data = _graphql(ISSUES_QUERY, variables)
         issues_data = data["repository"]["issues"]
@@ -183,30 +202,33 @@ def crawl(project_config: dict, since: Optional[str] = None) -> list[dict]:
         page_info = issues_data["pageInfo"]
         if not page_info["hasNextPage"]:
             break
+        if not page_info["endCursor"] or page_info["endCursor"] == cursor:
+            raise RuntimeError("GitHub pagination did not advance")
         cursor = page_info["endCursor"]
-        pages += 1
 
     logger.info(f"GitHub issues: fetched {len(results)} proposals for {repo}")
 
     # --- PRs ---
     pr_start = len(results)
     cursor = None
-    pages = 0
-    while pages < 5:
+    while True:
         variables = {"owner": owner, "repo": repo_name, "after": cursor}
         data = _graphql(PRS_QUERY, variables)
         prs_data = data["repository"]["pullRequests"]
+        past_checkpoint = False
         for node in prs_data["nodes"]:
             # Stop if we've gone past the since date
             if since and node["updatedAt"] < since:
+                past_checkpoint = True
                 break
             if _matches_config(node, gh_config):
                 results.append(_parse_item(node, "pr", project_id, repo=repo))
         page_info = prs_data["pageInfo"]
-        if not page_info["hasNextPage"]:
+        if past_checkpoint or not page_info["hasNextPage"]:
             break
+        if not page_info["endCursor"] or page_info["endCursor"] == cursor:
+            raise RuntimeError("GitHub pagination did not advance")
         cursor = page_info["endCursor"]
-        pages += 1
 
     logger.info(f"GitHub PRs: fetched {len(results) - pr_start} proposals for {repo}")
     return results

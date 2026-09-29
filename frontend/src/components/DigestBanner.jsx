@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { generationLabel, highlightsMarkdown } from "../lib/evidence";
+import DigestHighlights from "./DigestHighlights";
 
 function formatDate(iso) {
   if (!iso) return "";
@@ -31,9 +33,10 @@ function digestToMarkdown(digest, projectName) {
   const cov = coverageLine(digest);
   if (cov) lines.push(cov);
   if (digest.generated_at) lines.push(`Generated ${formatDate(digest.generated_at)}`);
+  if (generationLabel(digest.generation)) lines.push(generationLabel(digest.generation));
   lines.push("", digest.summary || "");
   if (digest.highlights?.length) {
-    lines.push("", "## Highlights", ...digest.highlights.map((h) => `- ${h}`));
+    lines.push("", "## Highlights", ...highlightsMarkdown(digest));
   }
   return lines.join("\n").trim() + "\n";
 }
@@ -53,19 +56,24 @@ export default function DigestBanner({ projectId, projectName, compact = false }
     setPhase("loading");
     setDigest(null);
     // no-store: after regenerating digest locally, a normal reload must not use a cached JSON
-    fetch(`${base}/data/${projectId}/digest.json`, { cache: "no-store" })
+    const controller = new AbortController();
+    fetch(`${base}/data/${projectId}/digest.json`, { cache: "no-store", signal: controller.signal })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
+        if (controller.signal.aborted) return;
         setDigest(data);
         setPhase(data?.summary ? "ready" : "missing");
       })
       .catch(() => {
+        if (controller.signal.aborted) return;
         setDigest(null);
         setPhase("missing");
       });
+    return () => controller.abort();
   }, [projectId]);
 
   const hasSummary = digest?.summary;
+  const provenance = generationLabel(digest?.generation);
 
   if (!projectId) return null;
 
@@ -82,6 +90,7 @@ export default function DigestBanner({ projectId, projectName, compact = false }
               <span className="text-xs text-gray-400 dark:text-gray-500">{formatDate(digest.generated_at)}</span>
             )}
           </div>
+          {provenance && <p className="text-[10px] text-gray-500 mb-1">{provenance}</p>}
           {cov && (
             <p className="text-[10px] text-gray-500 dark:text-gray-400 mb-1 line-clamp-1" title={cov}>
               {cov}
@@ -150,7 +159,7 @@ export default function DigestBanner({ projectId, projectName, compact = false }
     <div className="relative overflow-hidden rounded-2xl border border-agora-200/70 dark:border-agora-800/80 bg-gradient-to-br from-white via-agora-50/40 to-indigo-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-agora-950/30 shadow-md shadow-agora-900/5 dark:shadow-none">
       <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-agora-400 to-indigo-500" aria-hidden />
       <div className="relative px-5 py-4 pl-6">
-        <div className="flex items-start gap-5">
+        <div className="flex flex-col md:flex-row items-start gap-5">
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-1.5">
               <span className="text-xs font-semibold text-agora-700 dark:text-agora-300 uppercase tracking-wider">Digest</span>
@@ -183,19 +192,11 @@ export default function DigestBanner({ projectId, projectName, compact = false }
                 </button>
               </span>
             </div>
+            {provenance && <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1">{provenance}</p>}
             {covFull && <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-2">{covFull}</p>}
             <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">{digest.summary}</p>
           </div>
-          {digest.highlights?.length > 0 && (
-            <ul className="hidden md:block space-y-2 flex-shrink-0 max-w-xs border-l border-gray-200/80 dark:border-gray-700 pl-5">
-              {digest.highlights.slice(0, 3).map((h, i) => (
-                <li key={i} className="flex items-start gap-2 text-xs text-gray-600 dark:text-gray-400 leading-snug">
-                  <span className="mt-1.5 h-1 w-1 rounded-full bg-agora-400 flex-shrink-0" />
-                  <span>{h}</span>
-                </li>
-              ))}
-            </ul>
-          )}
+          <DigestHighlights digest={digest} />
         </div>
       </div>
     </div>

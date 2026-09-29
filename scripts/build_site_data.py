@@ -46,6 +46,7 @@ logger = logging.getLogger(__name__)
 _INDEX_DROP_FIELDS = {
     "body",
     "_content_hash",
+    "_enrichment_pending",
     "_gdoc_snap2048",
     "_gdoc_len_at_summary",
     "_doc_content",

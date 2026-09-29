@@ -18,6 +18,7 @@ import { usePreviousVisit } from "../lib/prefs";
 import { useHashRoute } from "../lib/useHashRoute";
 import DigestBanner from "./DigestBanner";
 import HealthStrip from "./HealthStrip";
+import { observedChanges } from "../lib/evidence";
 import HealthPanel from "./HealthPanel";
 import InitiativeDetail from "./InitiativeDetail";
 
@@ -224,11 +225,7 @@ export default function HomeView({ project, proposals, onSelect, onViewActivity,
   // "What's new since you were last here" — items updated after the previous visit.
   const previousVisit = usePreviousVisit(project?.id);
   const newSinceVisit = useMemo(() => {
-    if (!previousVisit) return [];
-    return proposals
-      .filter(p => p.updated_at && new Date(p.updated_at).getTime() > previousVisit)
-      .sort((a, b) => (b.updated_at || "").localeCompare(a.updated_at || ""))
-      .slice(0, 8);
+    return observedChanges(proposals, previousVisit);
   }, [proposals, previousVisit]);
 
   const { votes, recentItems, syncDoc } = useMemo(() => {
@@ -287,20 +284,20 @@ export default function HomeView({ project, proposals, onSelect, onViewActivity,
           <div className="bg-white/90 dark:bg-gray-900/90 border border-agora-200/80 dark:border-agora-800/60 border-l-4 border-l-agora-500 rounded-2xl px-4 py-3 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-xs font-semibold text-agora-600 dark:text-agora-400 uppercase tracking-wider">
-                ✨ {newSinceVisit.length} update{newSinceVisit.length !== 1 ? "s" : ""} since your last visit
+                ✨ {newSinceVisit.length} source change{newSinceVisit.length !== 1 ? "s" : ""} since your last visit
               </span>
             </div>
             <div className="flex flex-wrap gap-1.5">
-              {newSinceVisit.map((p) => (
+              {newSinceVisit.map(({ item: p, label, date }) => (
                 <button
-                  key={p.id}
+                  key={`${p.id}-${date}-${label}`}
                   type="button"
                   onClick={() => onSelect(p)}
                   className="max-w-full text-left text-xs px-2 py-1 rounded-lg bg-agora-50/70 dark:bg-agora-900/20 hover:bg-agora-100 dark:hover:bg-agora-900/40 text-agora-800 dark:text-agora-200 truncate transition-colors focus-ring"
-                  title={cleanTitle(p.title)}
+                  title={`${label} · ${cleanTitle(p)}`}
                 >
-                  <span className="opacity-60 mr-1">{relativeTime(p.updated_at)}</span>
-                  {cleanTitle(p)}
+                  <span className="opacity-60 mr-1">{relativeTime(date)}</span>
+                  {label} · {cleanTitle(p)}
                 </button>
               ))}
             </div>

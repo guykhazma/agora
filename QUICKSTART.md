@@ -94,3 +94,19 @@ The repo uses **GitHub Actions** (`.github/workflows/deploy.yml`): on push to `m
 - You do **not** need to commit `frontend/dist/`; CI builds it.
 
 Scheduled / manual crawls (`.github/workflows/crawl.yml`) commit `data/` when it changes; that commit triggers deploy.
+
+## Free summarization and health alerts
+
+No external service is required: `LLM_PROVIDER=local` uses extractive summaries
+and generates digests without an API key. Cloud digest failures (including invalid
+JSON) also fall back to local extraction.
+
+For cloud summaries, the existing Groq integration defaults to `openai/gpt-oss-20b`.
+Set GitHub Actions secrets `LLM_PROVIDER=groq` and `GROQ_API_KEY`; remove an old
+`LLM_MODEL` override or set it to `openai/gpt-oss-20b`. Free quotas are limited;
+check https://console.groq.com/docs/rate-limits for current account limits.
+
+The health check reports cloud-to-local fallback as a warning, while source
+failures and stale crawls still fail. Set `AGORA_REQUIRE_CLOUD_LLM=1` in the health
+check environment if cloud enrichment must be mandatory. Existing health records
+remain historical; a successful crawl refreshes them.

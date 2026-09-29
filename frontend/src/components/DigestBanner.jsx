@@ -108,7 +108,7 @@ export default function DigestBanner({ projectId, projectName, compact = false }
     return (
       <div className="rounded-2xl border border-dashed border-gray-300/90 dark:border-gray-600 bg-white/50 dark:bg-gray-900/30 px-5 py-4">
         <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Digest</p>
-        <p className="text-sm text-gray-600 dark:text-gray-300">No digest yet — run a crawl with an LLM API key to summarize recent activity.</p>
+        <p className="text-sm text-gray-600 dark:text-gray-300">No digest is available yet. It will appear after recent activity is processed.</p>
         <p className="text-xs text-gray-400 dark:text-gray-500 mt-2 space-y-1">
           <span className="block">
             <code className="text-[11px] bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">python scripts/crawl.py --project {projectId || "…"}</code>

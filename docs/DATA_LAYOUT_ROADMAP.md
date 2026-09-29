@@ -1,6 +1,11 @@
-# Data layout roadmap (not implemented)
+# Data layout roadmap (archive split planned)
 
-This document tracks the **planned** split of static project data. The running app today uses a **single** `data/<project>/proposals.json` per project; nothing here is wired in code until we deliberately implement it.
+This document tracks the **planned monthly archive split**. The running app uses a
+canonical `data/<project>/proposals.json` per project and an existing deploy-generated
+`index.json` for lists. Full detail is currently fetched from `proposals.json` on
+demand. Monthly archives and bucket-based detail loading are not implemented.
+Source history and summary provenance are described in
+[Evidence and enrichment](EVIDENCE_AND_ENRICHMENT.md).
 
 ## Goals
 

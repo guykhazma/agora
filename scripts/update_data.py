@@ -22,6 +22,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from crawlers._io import write_json_atomic
+from scripts.history import record_history, is_older_snapshot
 
 logger = logging.getLogger(__name__)
 
@@ -174,6 +175,9 @@ def merge_proposals(existing: list[dict], new_items: list[dict]) -> list[dict]:
 
     for item in new_items:
         eid = item["id"]
+        if eid in by_id and is_older_snapshot(by_id[eid], item):
+            continue
+        item["observed_history"] = record_history(by_id.get(eid), item)
         if eid in by_id:
             old = by_id[eid]
             # Preserve LLM enrichment + content hash from old if new doesn't have it
@@ -182,6 +186,8 @@ def merge_proposals(existing: list[dict], new_items: list[dict]) -> list[dict]:
                 item["llm_status"] = old.get("llm_status")
                 item["llm_key_points"] = old.get("llm_key_points", [])
                 item["llm_topics"] = old.get("llm_topics", [])
+                if old.get("summary_generation"):
+                    item["summary_generation"] = old["summary_generation"]
             # Always preserve content hash so incremental runs don't re-summarize unchanged items
             if not item.get("_content_hash") and old.get("_content_hash"):
                 item["_content_hash"] = old["_content_hash"]

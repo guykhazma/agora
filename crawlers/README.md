@@ -68,7 +68,11 @@ Optional source-specific fields:
 
 ### `github_crawler.py`
 
-Fetches issues and pull requests from a GitHub repository.
+Fetches issues and pull requests from the primary GitHub repository and optional
+`github.additional_repos`. Additional repositories inherit proposal filters (with
+per-repo overrides), receive distinct ID namespaces, and backfill on first use.
+Releases, milestones and discussions remain on the primary repo. See
+[configuration and checkpoint semantics](../docs/EVIDENCE_AND_ENRICHMENT.md#additional-github-repositories).
 
 **Config** (`projects/{id}.yaml`):
 ```yaml

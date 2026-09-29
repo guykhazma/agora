@@ -28,23 +28,25 @@ Open-source communities have the same problem as a city without a town square: d
 ## What you get
 
 **Overview** — the pulse of the project at a glance:
-- AI-generated digest of what's been active
+- Digest of recent activity with source links and visible AI/local generation method
 - Last community sync notes with summary
 - Upcoming community events with Join links
 - Recent votes with pass/veto status
 - Recent activity feed
 
-**Initiatives** — cross-source topic clusters ranked by how many channels are engaged, grouped by stage: *Vote · In Design · Cross-Source · Active*
+**Initiatives** — cross-source topic clusters ranked by how many channels are engaged, grouped by stage: *Vote · In Design · Cross-Source · Active*. Open one to see its source history: thread openings, posted results, and observed state changes.
 
 **Feed** — filterable stream of every item: votes, RFCs, PRs, discussions, announcements, videos, releases, milestones
 
 **Docs** — design documents and Google Docs extracted from discussions, grouped by topic and sorted by date
 
-**Follow along** — ★ star anything to build a personal watchlist, see *what changed since your last visit*, subscribe to a per-project **RSS feed**, deep-link/share any item or initiative, and copy the digest as Markdown. All client-side / static — no account, no server.
+**Follow along** — ★ star anything to build a personal watchlist, see source-state and inferred vote-tally changes since your last visit, subscribe to a per-project **RSS feed**, deep-link/share any item or initiative, and copy the digest as Markdown. All client-side / static — no account, no server.
 
-**Community health** — a per-project [CHAOSS](https://chaoss.community)-style panel (responsiveness, contributor concentration / bus factor, 12-week activity) plus a live source-freshness strip.
+**Community health** — a per-project [CHAOSS](https://chaoss.community)-style panel (discussion span, concentration of tracked item authors, latest activity dates over 12 weeks) plus a live source-freshness strip.
 
-**Runs itself** — a daily GitHub Actions crawl refreshes every project, isolates per-project failures, retries transient errors, never advances its checkpoint past a failed source, and writes a `health.json` that a second workflow turns into a **GitHub issue** when anything goes stale. No paid APIs required — enrichment falls back to local NLP when no vendor key is set.
+**Runs itself** — a daily GitHub Actions crawl refreshes every project, isolates per-project failures, retries transient errors, holds its project checkpoint when a critical source fails, and writes a `health.json` that a second workflow turns into a **GitHub issue** when anything goes stale. No paid APIs required — enrichment falls back to local NLP when no vendor key is set.
+
+For evidence semantics, free-tier request limits, recovery, and multi-repository configuration, see [Evidence and enrichment](docs/EVIDENCE_AND_ENRICHMENT.md). Existing data remains compatible; provenance and observed history populate as new crawls run.
 
 ---
 
@@ -54,7 +56,7 @@ Open-source communities have the same problem as a city without a town square: d
 |---------|---------|
 | [Apache Iceberg](https://iceberg.apache.org) | GitHub issues, PRs & discussions · dev@ mailing list · YouTube community syncs · Releases & milestones · Community calendars |
 | [Apache Spark](https://spark.apache.org) | dev@ mailing list (SPIP votes & discussions) · Apache JIRA (SPIP proposals) · GitHub releases & milestones |
-| [Apache Parquet](https://parquet.apache.org) | dev@ mailing list (governance) · GitHub issues, PRs, releases & milestones (`parquet-java`) |
+| [Apache Parquet](https://parquet.apache.org) | dev@ mailing list (governance) · GitHub issues & PRs (`parquet-java` + `parquet-format`) · Releases & milestones (`parquet-java`) |
 
 Governance-heavy lists (like Spark's) use a `mailing_list.thread_prefixes` filter so only `[VOTE]` / `[DISCUSS]` / `[SPIP]`-style threads are ingested — signal, not support noise.
 

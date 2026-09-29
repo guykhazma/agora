@@ -1,8 +1,44 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-09-28T12:30:00.918248+00:00",
-  "total": 665,
+  "generated_at": "2026-09-29T11:55:43.553753+00:00",
+  "total": 666,
   "proposals": [
+    {
+      "id": "spark-jira-SPARK-57703",
+      "source": "jira",
+      "kind": "issue",
+      "title": "SPIP: OIDC Credential Propagation",
+      "url": "https://issues.apache.org/jira/browse/SPARK-57703",
+      "author": "Kousuke Saruta",
+      "state": "closed",
+      "created_at": "2026-06-25T20:59:23+00:00",
+      "updated_at": "2026-09-28T14:00:11+00:00",
+      "body": "SPIP document: [https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?tab=t.0#heading=h.fkw9v2um6wxa|https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?usp=sharing]\r\n\r\n\u2013\r\n\r\n*Q1. What are you trying to do?*\r\n\r\nAdd a mechanism for Spark on Kubernetes to propagate OIDC-based credentials from the driver to executors, enabling per-workload (and eventually per-user) access control on cloud storage (S3, ADLS, GCS) and S3-compatible systems (MinIO, Ceph). This is the Kubernetes + OIDC equivalent of what Kerberos + delegation tokens provide on YARN + HDFS.\r\n\r\n*Q2. What problem is this proposal NOT designed to solve?*\r\n - Spark Connect authentication (separate concern, future work)\r\n - Azure / GCP provider implementations (future, same SPI)\r\n - Hive Metastore / catalog OIDC integration (future)\r\n - Modifying Hadoop UserGroupInformation\r\n - Per-task multi-user credential scoping\r\n\r\n*Q3. How is it done today, and what are the limits of current practice?*\r\n\r\nToday, all Spark jobs on Kubernetes access cloud storage as the pod's service account (IRSA / Pod Identity). There is no Spark-level mechanism to carry an OIDC token through the driver to executors and convert it into per-workload storage credentials. Workarounds are: one cluster per user (expensive), shared over-privileged service account (insecure), or custom credential provider implementations (unmaintainable).\r\n\r\n*Q4. What is new in your approach and why do you think it will be successful?*\r\n\r\nWe introduce a `CredentialProvider` SPI that generalizes OAuth 2.0 Token Exchange (RFC 8693). The driver reads a projected ServiceAccount token (OIDC JWT), calls the SPI to obtain temporary storage credentials, and distributes them to executors via a new `UpdateUserCredentials` RPC \u2014 mirroring the existing `HadoopDelegationTokenManager` / `UpdateDelegationTokens` pattern. This approach succeeds because it follows an established Spark pattern, coexists with Kerberos, a",
+      "labels": [
+        "SPIP"
+      ],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?tab=t.0#heading=h.fkw9v2um6wxa|https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?usp=sharing",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeff[SPIP] OIDC Credential Propagation"
+        }
+      ],
+      "comment_count": 1,
+      "llm_summary": "Add a mechanism for Spark on Kubernetes to propagate OIDC-based credentials from the driver to executors, enabling per-workload (and eventually per-user) access control on cloud storage (S3, ADLS, GCS) and S3-compatible systems (MinIO, Ceph). The driver reads a projected ServiceAccount token (OIDC JWT), calls the SPI to obtain temporary storage credentials, and distributes them to executors via a new `UpdateUserCredentials` RPC \u2014 mirroring the existing `HadoopDelegationTokenManager` / `UpdateDelegationTokens` pattern. Spark provides a well-established credential propagation model for Hadoop / Kerberos environments: the driver obtains delegation tokens for each backend (HDFS, Hive, HBase, \u2026), pushes them to executors, and refreshes them automatically for long-running jobs.",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "propagation-spip",
+        "spip-document",
+        "spip",
+        "credential-propagation"
+      ],
+      "_content_hash": "89f08f3832c6",
+      "llm_title": "",
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+    },
     {
       "id": "spark-jira-SPARK-55278",
       "source": "jira",
@@ -12,7 +48,7 @@
       "author": "Haiyang Sun",
       "state": "open",
       "created_at": "2026-01-29T12:26:31+00:00",
-      "updated_at": "2026-09-28T01:17:38+00:00",
+      "updated_at": "2026-09-28T13:18:50+00:00",
       "body": "Run user-provided code in Spark {*}consistently across many programming languages{*}.\r\n\r\nToday, Spark Connect allows users to write queries from multiple languages, but support for user-defined functions is incomplete. In practice, only Python has a mature solution, and it relies on language-specific mechanisms that do not generalize to other languages such as [Go|https://github.com/apache/spark-connect-go] / [Rust|https://github.com/apache/spark-connect-rust] / [Swift|https://github.com/apache/spark-connect-swift] / [.NET|https://github.com/GoEddie/spark-connect-dotnet] (where UDF is not supported).\r\n\r\nOur objective is to define a *unified API and execution protocol* for user-defined functions that run outside the Spark engine process via inter-process communication (IPC). This allows Spark to interact with external workers in a consistent way, regardless of the language used to implement the function.\r\n\r\nSPIP doc: [https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0]\r\n\r\nWorker Specification doc: [https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0]\r\n\r\n\u00a0",
       "labels": [
         "SPIP",
@@ -205,42 +241,6 @@
         "zone"
       ],
       "_content_hash": "c08c56ea7b2c",
-      "llm_title": "",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
-    },
-    {
-      "id": "spark-jira-SPARK-57703",
-      "source": "jira",
-      "kind": "issue",
-      "title": "SPIP: OIDC Credential Propagation",
-      "url": "https://issues.apache.org/jira/browse/SPARK-57703",
-      "author": "Kousuke Saruta",
-      "state": "open",
-      "created_at": "2026-06-25T20:59:23+00:00",
-      "updated_at": "2026-09-03T21:17:31+00:00",
-      "body": "SPIP document: [https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?tab=t.0#heading=h.fkw9v2um6wxa|https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?usp=sharing]\r\n\r\n\u2013\r\n\r\n*Q1. What are you trying to do?*\r\n\r\nAdd a mechanism for Spark on Kubernetes to propagate OIDC-based credentials from the driver to executors, enabling per-workload (and eventually per-user) access control on cloud storage (S3, ADLS, GCS) and S3-compatible systems (MinIO, Ceph). This is the Kubernetes + OIDC equivalent of what Kerberos + delegation tokens provide on YARN + HDFS.\r\n\r\n*Q2. What problem is this proposal NOT designed to solve?*\r\n - Spark Connect authentication (separate concern, future work)\r\n - Azure / GCP provider implementations (future, same SPI)\r\n - Hive Metastore / catalog OIDC integration (future)\r\n - Modifying Hadoop UserGroupInformation\r\n - Per-task multi-user credential scoping\r\n\r\n*Q3. How is it done today, and what are the limits of current practice?*\r\n\r\nToday, all Spark jobs on Kubernetes access cloud storage as the pod's service account (IRSA / Pod Identity). There is no Spark-level mechanism to carry an OIDC token through the driver to executors and convert it into per-workload storage credentials. Workarounds are: one cluster per user (expensive), shared over-privileged service account (insecure), or custom credential provider implementations (unmaintainable).\r\n\r\n*Q4. What is new in your approach and why do you think it will be successful?*\r\n\r\nWe introduce a `CredentialProvider` SPI that generalizes OAuth 2.0 Token Exchange (RFC 8693). The driver reads a projected ServiceAccount token (OIDC JWT), calls the SPI to obtain temporary storage credentials, and distributes them to executors via a new `UpdateUserCredentials` RPC \u2014 mirroring the existing `HadoopDelegationTokenManager` / `UpdateDelegationTokens` pattern. This approach succeeds because it follows an established Spark pattern, coexists with Kerberos, a",
-      "labels": [
-        "SPIP"
-      ],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?tab=t.0#heading=h.fkw9v2um6wxa|https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?usp=sharing",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeff[SPIP] OIDC Credential Propagation"
-        }
-      ],
-      "comment_count": 1,
-      "llm_summary": "Add a mechanism for Spark on Kubernetes to propagate OIDC-based credentials from the driver to executors, enabling per-workload (and eventually per-user) access control on cloud storage (S3, ADLS, GCS) and S3-compatible systems (MinIO, Ceph). The driver reads a projected ServiceAccount token (OIDC JWT), calls the SPI to obtain temporary storage credentials, and distributes them to executors via a new `UpdateUserCredentials` RPC \u2014 mirroring the existing `HadoopDelegationTokenManager` / `UpdateDelegationTokens` pattern. Spark provides a well-established credential propagation model for Hadoop / Kerberos environments: the driver obtains delegation tokens for each backend (HDFS, Hive, HBase, \u2026), pushes them to executors, and refreshes them automatically for long-running jobs.",
-      "llm_status": "discussion",
-      "llm_key_points": [],
-      "llm_topics": [
-        "propagation-spip",
-        "spip-document",
-        "spip",
-        "credential-propagation"
-      ],
-      "_content_hash": "89f08f3832c6",
       "llm_title": "",
       "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
@@ -1388,7 +1388,7 @@
         "pandas"
       ],
       "_content_hash": "29883ba4ffc6",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-jira-SPARK-45511",
@@ -1806,6 +1806,85 @@
       "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
+      "id": "spark-ml-45zt59wgjtzp306mhg1qdpxo5bp73mvm",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] Release Spark 4.1.4 (RC1)",
+      "url": "https://lists.apache.org/thread/45zt59wgjtzp306mhg1qdpxo5bp73mvm",
+      "author": "Uro\u0161 Bojani\u0107 <ur...@apache.org>",
+      "state": "open",
+      "created_at": "2026-09-29T00:50:03+00:00",
+      "updated_at": "2026-09-29T02:57:30+00:00",
+      "body": "Please vote on releasing the following candidate as Apache Spark version 4.1.4.\n\nThe vote is open until Thu, 01 Oct 2026 18:44:12 PDT and passes if a majority +1 PMC votes are cast, with\na minimum of 3 +1 votes.\n\n[ ] +1 Release this package as Apache Spark 4.1.4\n[ ] -1 Do not release this package because ...\n\nTo learn more about Apache Spark, please see https://spark.apache.org/\n\nThe tag to be voted on is v4.1.4-rc1 (commit ce5c307f607):\nhttps://github.com/apache/spark/tree/v4.1.4-rc1\n\nThe release files, including signatures, digests, etc. can be found at:\nhttps://dist.apache.org/repos/dist/dev/spark/v4.1.4-rc1-bin/\n\nSignatures used for Spark RCs can be found in this file:\nhttps://downloads.apache.org/spark/KEYS\n\nThe staging repository for this release can be found at:\nhttps://repository.apache.org/content/repositories/orgapachespark-1532/\n\nThe documentation corresponding to this release can be found at:\nhttps://dist.apache.org/repos/dist/dev/spark/v4.1.4-rc1-docs/\n\nThe list of bug fixes going into 4.1.4 can be found at the following URL:\nhttps://issues.apache.org/jira/projects/SPARK/versions/12357252\n\nFAQ\n\n=========================\nHow can I help test this release?\n=========================\n\nIf you are a Spark user, you can help us test this release by taking\nan existing Spark workload and running on this release candidate, then\nreporting any regressions.\n\nIf you're working in PySpark you can set up a virtual env and install\nthe current RC via \"pip install https://dist.apache.org/repos/dist/dev/spark/v4.1.4-rc1-bin/pyspark-4.1.4.tar.gz\"\nand see if anything important breaks.\nIn the Java/Scala, you can add the staging repository to your project's resolvers and test\nwith the RC (make sure to clean up the artifact cache before/after so\nyou don't end up building with an out of date RC going forward).\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/spark/pull/59074",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Vote in progress: 0 binding +1",
+      "llm_status": "proposal",
+      "comment_count": 1,
+      "participant_count": 2,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 0,
+        "vetoes": 0,
+        "result": "open",
+        "voters": []
+      },
+      "llm_key_points": [
+        "Please vote on releasing the following candidate as Apache Spark version 4.1.4."
+      ],
+      "llm_topics": [
+        "apache-spark",
+        "spark-version",
+        "spark",
+        "release"
+      ],
+      "_content_hash": "f919a9aca6f4",
+      "initiative_id": "spark-init-spark-ml-45zt59wgjtzp306mhg1qdpxo5bp73mvm"
+    },
+    {
+      "id": "spark-ml-3x26ywb5vfrkq6x9prcjl9bghd6y2wwn",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] Support GROUPS window frames in Spark SQL",
+      "url": "https://lists.apache.org/thread/3x26ywb5vfrkq6x9prcjl9bghd6y2wwn",
+      "author": "Mark Andreev <ma...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-09-28T18:20:00+00:00",
+      "updated_at": "2026-09-28T18:20:00+00:00",
+      "body": "Hi Uro\u0161,\n\nCould you review https://github.com/apache/spark/pull/58634\n( [SPARK-58980][SQL] Support GROUPS window frames ) when you have a chance?\n\nI\u2019d be happy to address any feedback or make any changes you suggest.\n\nOn Sun, 23 Aug 2026 at 18:40, Uro\u0161 Bojani\u0107 <ur...@apache.org> wrote:\n\n> P.S. Please check existing open issues on the Spark Jira, e.g. I found\n> https://issues.apache.org/jira/browse/SPARK-28648, which seems to\n> describe the same feature.\n>\n> However, it's been dormant for quite a while now, and the original comment\n> objection rationale there is outdated, since other systems now support\n> GROUPS too.\n>\n> Also, this item is a sub-task of SPARK-27764 \"Feature Parity between\n> PostgreSQL and Spark\", so you're probably fine creating a new Jira ID for\n> your proposal.\n>\n> On 2026/08/10 20:36:22 Mark Andreev wrote:\n> > Hi all,\n> >\n> > I\u2019d like to propose adding SQL-standard `GROUPS` window frames to Spark\n> SQL.\n> >\n> > Spark currently supports `ROWS` and `RANGE`, but not `GROUPS`, which\n> > defines frame boundaries in terms of peer groups. This is useful where\n> > group sizes and ordering-key gaps vary, and cannot in general be\n> expressed\n> > correctly with a fixed `ROWS` or `RANGE` frame.\n> >\n> > I\u2019ve prepared a design proposal covering semantics, compatibility,\n> > implementation feasibility, testing, and behaviour across other SQL\n> engines:\n> >\n> >\n> https://docs.google.com/document/d/1BOVWBHz6vQi39uQ_8SJfMWg55oJrUqNMQAgtHXmTZhA/edit?usp=sharing\n> >\n> > I intend to implement this and open a draft PR.\n> >\n> > Before starting, I\u2019d particularly appreciate feedback on:\n> >\n> > * whether this should go through SPIP or a normal JIRA + PR;\n> > * whether `GROUPS` support for Python/Pandas window UDAFs should be\n> > included initially or deferred.\n> >\n> > Any feedback on the proposed semantics or implementation direction would\n> be\n> > very welcome.\n> >\n> > --\n> > Best regards,\n> > Mark Andreev\n> >\n>\n> ---------------------------------------------------------",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1BOVWBHz6vQi39uQ_8SJfMWg55oJrUqNMQAgtHXmTZhA/edit?usp=sharing",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSupport GROUPS window frames in Spark SQL"
+        },
+        {
+          "url": "https://github.com/apache/spark/pull/58634",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "> > > > Before starting, I\u2019d particularly appreciate feedback on: > > > > * whether this should go through SPIP or a normal JIRA + PR; > > * whether `GROUPS` support for Python/Pandas window UDAFs should be > > included initially or deferred. A substitute based on ROWS or RANGE can be semantically fragile: it may look correct on one dataset and produce different results on another without any error, because it expresses a different frame relationship. This proposes adding GROUPS to the frame grammar with standard semantics, reusing Spark's existing definition of peer rows.",
+      "llm_status": "discussion",
+      "comment_count": 2,
+      "participant_count": 1,
+      "llm_key_points": [],
+      "llm_topics": [
+        "groups",
+        "discuss",
+        "uro-bojani",
+        "spark"
+      ],
+      "_content_hash": "731157c42c35",
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
+    },
+    {
       "id": "spark-ml-bl3zbvbmrhz2m6jz25ogfwfd6v3wjo4q",
       "source": "mailing_list",
       "kind": "thread",
@@ -1957,7 +2036,7 @@
       "body": "Hi all,\n\nFollowing Szehon's 4.2.1 release discussion, I would like to propose the next maintenance releases for the older maintained lines as well, and I would be happy to start off by volunteering to drive 4.1.4 release.\n\nAll of 3.5.x / 4.0.x / 4.1.x / 4.2.x were last released together in mid-July 2026, which is about ~10 weeks ago. Since then:\n\n- branch-4.1 has accumulated 63 JIRAs (82 commits), including wrong-results correctness fixes (SPARK-59050 SPJ multi-join, SPARK-58341 positional parameters, SPARK-57932 regexp on supplementary chars, SPARK-59602 float normalization), stability fixes (SPARK-58323 StackOverflow, SPARK-58886 Int overflow, SPARK-55271/SPARK-59008 NPEs), and resource-leak fixes (SPARK-58714, SPARK-58751).\n\n- branch-4.0 has 48 JIRAs (60 commits), sharing most of the above correctness fixes. Please note that 4.0.x reaches ~18 months this November, so this would likely be one of its final maintenance releases.\n\n- branch-3.5 (extended LTS, security-only) has 14 JIRAs of accumulated security hardening (XSS, Zip-Slip, credential logging, path-traversal, info-disclosure fixes) that are not yet in any 3.5 release; we should perhaps consider getting these out to LTS users.\n\nConcretely, I propose that I drive the 4.1.4 release, but we can also coordinate this with 4.0.5 (they share most cherry-picks), and possibly follow with a security-focused 3.5.10.\n\nIn any case, I would be happy to pair / coordinate with Szehon in this process. What do you folks think? Also, please mention if you have any additional must-have backports for any these releases (4.1.4, 4.0.5, 3.5.10).\n\nBest,\nUro\u0161\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
       "labels": [],
       "linked_resources": [],
-      "llm_summary": "Please note that 4.0.x reaches ~18 months this November, so this would likely be one of its final maintenance releases. - branch-3.5 (extended LTS, security-only) has 14 JIRAs of accumulated security hardening (XSS, Zip-Slip, credential logging, path-traversal, info-disclosure fixes) that are not yet in any 3.5 release; we should perhaps consider getting these out to LTS users. Concretely, I propose that I drive the 4.1.4 release, but we can also coordinate this with 4.0.5 (they share most cherry-picks), and possibly follow with a security-focused 3.5.10.",
+      "llm_summary": "Please note that 4.0.x reaches ~18 months this November, so this would likely be one of its final maintenance releases. Concretely, I propose that I drive the 4.1.4 release, but we can also coordinate this with 4.0.5 (they share most cherry-picks), and possibly follow with a security-focused 3.5.10. > Thanks > Szehon > > On Tue, Sep 22, 2026 at 10:16\u202fAM huaxin gao <hu...@gmail.com> > wrote: > >> +1 >> >> On Tue, Sep 22, 2026 at 7:58\u202fAM Kousuke Saruta <sa...@apache.org> >> wrote: >> >>> +1 >>> >>> 2026\u5e749\u670822\u65e5(\u706b) 22:28 Peter Toth <pe.",
       "llm_status": "discussion",
       "comment_count": 6,
       "participant_count": 6,
@@ -1972,8 +2051,7 @@
         "discuss",
         "release"
       ],
-      "_content_hash": "544d139e7afa",
-      "llm_title": "",
+      "_content_hash": "be7ec6b3bd45",
       "initiative_id": "spark-init-spark-ml-3nkx52x3smdg7romqdzgw2mb5s7xtlvv"
     },
     {
@@ -2835,43 +2913,6 @@
       "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
-      "id": "spark-ml-0pcwflbjnykxjybbmy277lb045wognsp",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Support GROUPS window frames in Spark SQL",
-      "url": "https://lists.apache.org/thread/0pcwflbjnykxjybbmy277lb045wognsp",
-      "author": "Mark Andreev <ma...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-08-10T20:36:22+00:00",
-      "updated_at": "2026-08-23T17:39:16+00:00",
-      "body": "Hi all,\n\nI\u2019d like to propose adding SQL-standard `GROUPS` window frames to Spark SQL.\n\nSpark currently supports `ROWS` and `RANGE`, but not `GROUPS`, which\ndefines frame boundaries in terms of peer groups. This is useful where\ngroup sizes and ordering-key gaps vary, and cannot in general be expressed\ncorrectly with a fixed `ROWS` or `RANGE` frame.\n\nI\u2019ve prepared a design proposal covering semantics, compatibility,\nimplementation feasibility, testing, and behaviour across other SQL engines:\n\nhttps://docs.google.com/document/d/1BOVWBHz6vQi39uQ_8SJfMWg55oJrUqNMQAgtHXmTZhA/edit?usp=sharing\n\nI intend to implement this and open a draft PR.\n\nBefore starting, I\u2019d particularly appreciate feedback on:\n\n* whether this should go through SPIP or a normal JIRA + PR;\n* whether `GROUPS` support for Python/Pandas window UDAFs should be\nincluded initially or deferred.\n\nAny feedback on the proposed semantics or implementation direction would be\nvery welcome.\n\n-- \nBest regards,\nMark Andreev\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1BOVWBHz6vQi39uQ_8SJfMWg55oJrUqNMQAgtHXmTZhA/edit?usp=sharing",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSupport GROUPS window frames in Spark SQL"
-        }
-      ],
-      "llm_summary": "I\u2019ve prepared a design proposal covering semantics, compatibility, implementation feasibility, testing, and behaviour across other SQL engines: A substitute based on ROWS or RANGE can be semantically fragile: it may look correct on one dataset and produce different results on another without any error, because it expresses a different frame relationship. This proposes adding GROUPS to the frame grammar with standard semantics, reusing Spark's existing definition of peer rows.",
-      "llm_status": "discussion",
-      "comment_count": 2,
-      "participant_count": 2,
-      "llm_key_points": [
-        "Hi Mark,\n\nThe proposal sounds good to me, +1 as it's a real gap in Spark."
-      ],
-      "llm_topics": [
-        "groups",
-        "spark-sql",
-        "adding-sql-standard",
-        "spark"
-      ],
-      "_content_hash": "2ee00b539b95",
-      "llm_title": "",
-      "initiative_id": "spark-init-spark-ml-0pcwflbjnykxjybbmy277lb045wognsp"
-    },
-    {
       "id": "spark-ml-qhrg115yk5ch16tb1s4blgrp56wwsrp4",
       "source": "mailing_list",
       "kind": "thread",
@@ -2900,7 +2941,7 @@
       ],
       "llm_title": "",
       "_content_hash": "97cea4020d47",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-vgg3omvqqmyo2c8w5rnnhl78k1rzp2qg",
@@ -3195,7 +3236,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -4757,7 +4798,7 @@
         "uro-bojani"
       ],
       "_content_hash": "011b99573a32",
-      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-92kjhnglm90z2n8v7hxn6d9nb2gzhq1z",
@@ -5044,7 +5085,7 @@
         "apache-spark"
       ],
       "_content_hash": "ec8146319b15",
-      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv",
@@ -5075,7 +5116,7 @@
         "spark-project"
       ],
       "_content_hash": "af074b2503b6",
-      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-c3sjlfos8d4o2859bjpltpgsf33wfnfh",
@@ -5732,7 +5773,7 @@
         "pyspark"
       ],
       "_content_hash": "f1327ace7e23",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-2c5fpsz7f2mfwmc4bxy0q9442zl0tcgn",
@@ -5763,7 +5804,7 @@
         "peter-toth"
       ],
       "_content_hash": "b38e7b779ac6",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-xvv4qt9dpnb1kszxdqlxyv9b46749ypo",
@@ -7624,7 +7665,7 @@
         "tian-gao"
       ],
       "_content_hash": "dacca48c4fa0",
-      "initiative_id": "spark-init-spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-mqfysmjmkdnw0fxy9t5dp7bxpvo36jrv",
@@ -7869,7 +7910,7 @@
         "vote-passes"
       ],
       "_content_hash": "f6a4f948416b",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-dylmft4n6v7mqb4b47hvjxhoz6hkhqkb",
@@ -8917,7 +8958,7 @@
         "security-fixes"
       ],
       "_content_hash": "76edeb3f9870",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-wfg7gfxqzysr08qkq6gh0wtnw5t3nqtl",
@@ -11051,7 +11092,7 @@
         "apache"
       ],
       "_content_hash": "2c6c48880b4f",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-9y3t9j6ntg30os6os1c30dy5b2prqt8y",
@@ -11256,7 +11297,7 @@
         "apache-spark"
       ],
       "_content_hash": "b1796e2be8d5",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-cfdlfl19k8gpc8m4ollmppyo0qbdpbh4",
@@ -11347,7 +11388,7 @@
         "release"
       ],
       "_content_hash": "a07f3d993e3f",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-p0y46b1986pm4hmg5fy9zbf3g1k8ngrx",
@@ -11863,7 +11904,7 @@
         "binding"
       ],
       "_content_hash": "0cfb04e25f4e",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-rx5pqh01c86slpqv9161hqwgm5lwxxzq",
@@ -12059,7 +12100,7 @@
         "release"
       ],
       "_content_hash": "05d6213c6e90",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-4t4l9dfq9ozmo5b11govl2j9obt6vjb4",
@@ -12124,7 +12165,7 @@
         "discuss"
       ],
       "_content_hash": "c73481e96ce1",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-zxdn5hj7tb0zb21b4xxzfxz717sx31fj",
@@ -14461,7 +14502,7 @@
         "subset-argument"
       ],
       "_content_hash": "e68b1d71e82d",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-v9djkznh8sz5smdl7mx9zt5kxd51g18y",
@@ -18074,7 +18115,7 @@
         "deprecate"
       ],
       "_content_hash": "d6459727ac29",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-8b483tg6q06w3p03t5co8v8228qngqgw",
@@ -18109,7 +18150,7 @@
         "lts-period"
       ],
       "_content_hash": "5e4a9be2e683",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-hfpgp3mz0lq6w9ysqv92zkygwn8bmcpk",
@@ -18392,7 +18433,7 @@
         "vote"
       ],
       "_content_hash": "cd56fa6f3ba5",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-tdlkpp7h2rs5k89pnmrvs64hd1t8f76b",
@@ -18517,7 +18558,7 @@
         "apache"
       ],
       "_content_hash": "c477dc28e3fe",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-jmnvlqkhmfv5lg5l1fw4gyq1xgsx92nw",
@@ -18544,7 +18585,7 @@
         "apache"
       ],
       "_content_hash": "b35686693544",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-04k62jn7k6dqhtov44yg9c6gkowyy47n",
@@ -21157,7 +21198,7 @@
         "spark"
       ],
       "_content_hash": "bb2e07d0a0dc",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-w3v4fjk9lvxvp3lr5tngg0hvhfrkl5b0",
@@ -21287,7 +21328,7 @@
         "discuss"
       ],
       "_content_hash": "fe2f594a7167",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-g9kj4zv7slct25fox0plxzcd1h8dvjm6",
@@ -22874,7 +22915,7 @@
         "disclaimer"
       ],
       "_content_hash": "5609edf4c0a9",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-hpkrbdwfrzq3r19z89zn4wd9gt0dhwvo",
@@ -22947,7 +22988,7 @@
         "commits"
       ],
       "_content_hash": "9462da0713bc",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-ht21nokxqd40bsjjt2w79r9w6rxv512o",
@@ -26921,7 +26962,7 @@
         "release"
       ],
       "_content_hash": "11ef119282b3",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt"
     },
     {
       "id": "spark-ml-y6hby3k9nqds4fgx0b1w5yhhlqb2f7gb",
@@ -27275,7 +27316,7 @@
         "yuming-wang"
       ],
       "_content_hash": "a0cd2e254ca8",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-n5zb2hj3rl15g8wnlvl9xn4ghosxgj4p",
@@ -27796,7 +27837,7 @@
         "pyspark"
       ],
       "_content_hash": "c62f327caf97",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-fyq8h9c7qd9y3jmm6kbo1n8ngdsh6f79",
@@ -28888,7 +28929,7 @@
         "api"
       ],
       "_content_hash": "2157e26a7e9e",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-yq6f5gv7gtdbk1ynwpd9hnc547bgz03m",
@@ -29967,7 +30008,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",
@@ -31415,7 +31456,7 @@
         "api"
       ],
       "_content_hash": "d05f73f56e42",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-c1j9zcycbwyh3hcdck7qlg7ppxpd68wc",
@@ -31537,7 +31578,7 @@
         "api"
       ],
       "_content_hash": "2cb82c94753c",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-7jjbhdz2njbk596rgckg1vvcsg07vksz",
@@ -31982,7 +32023,7 @@
         "spark"
       ],
       "_content_hash": "534ff7745efc",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-obcw512wvjdjkpf61wxj78tnc9jp71x2"
     },
     {
       "id": "spark-ml-9x911pqg44bdmrshqsyrr64t2ockjqpg",
@@ -32052,7 +32093,7 @@
         "release"
       ],
       "_content_hash": "a6ecaa36881f",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-obcw512wvjdjkpf61wxj78tnc9jp71x2"
     },
     {
       "id": "spark-ml-pwvytb3kw58tvkpdg897n1yw3hn5w0ph",
@@ -32404,7 +32445,7 @@
         "release"
       ],
       "_content_hash": "89c3c2fb0fa1",
-      "initiative_id": "spark-init-spark-ml-wh7flo2ov17g7novt8t4lxk2z7044y93"
+      "initiative_id": "spark-init-spark-jira-SPARK-34849"
     },
     {
       "id": "spark-ml-5bww6j9gmqr91xp2pd9w4h1fbkk3kh1n",

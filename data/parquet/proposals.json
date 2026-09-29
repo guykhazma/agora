@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-09-28T12:28:58.214683+00:00",
+  "generated_at": "2026-09-29T11:54:34.822082+00:00",
   "total": 295,
   "proposals": [
     {
@@ -2677,6 +2677,127 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations",
+      "url": "https://lists.apache.org/thread/94q6oh41sxjlkrhhhwn09c66nmtm1xt9",
+      "author": "PRATEEK GAUR <pr...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-09-18T14:53:51+00:00",
+      "updated_at": "2026-09-29T07:37:01+00:00",
+      "body": "Hi everyone,\n\nFastLanes has generated a lot of interest lately and came up a lot during\nrecent PFOR discussions [1]. It mostly gets talked about as one big\npackage, but in reality, it combines a few different ideas.\n\nTo see what actually makes sense for Parquet, I wrote up a performance\nstudy. The goal is to show how the FastLanes layout spec works under the\nhood, share actual benchmark numbers, and start a discussion on what we\nmight want to adopt. Please note that all benchmarking was done in the\narrow C++ repo.\n\nHere are our key observations:\n\n   1.\n\n   For plain PFOR, the layout advantage is highly hardware-dependent:\n   Parquet\u2019s current C++ reader is already vectorized and optimized. On our\n   test machine, simply changing the layout to use lane interleaving gave only\n   a minor speedup. While other hardware configurations [Kosta's super laptop]\n   show larger single-core gains, our multi-core tests suggest these\n   advantages can shrink when multiple CPUs compete for memory bandwidth. We\n   should discuss whether this hardware-dependent gain justifies a global\n   format change.\n   2.\n\n   For Delta encoding, the transposed layout looks highly promising:\n   Standard Delta encoding forces the CPU to calculate values sequentially,\n   which slows things down. The FastLanes container fundamentally breaks this\n   bottleneck by splitting the work into parallel streams. Using its\n   recommended layout (FL_ORDER), we saw a massive decoding speedup with\n   virtually no impact on file size.\n   3.\n\n   The baseline matters: Measuring these layout changes against basic,\n   unoptimized code makes them look like a huge leap forward. But when\n   measured against the highly optimized code Parquet (xsimd c++) already\n   ships today, the actual margins shrink significantly, giving us a more\n   realistic picture of the gains.\n\nI\u2019d love for the community to take a look at the document, check the\nmethodology, and share your thoughts!\n\nDocument:\nhttps://docs.google.com/document/d/1L2",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1L2pfrHfAZG4vKTHc-OD8p9alIUD-sUFg",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffPFOR + Fastlanes FOR PARQUET. MEASURED ON 128-BIT ARM"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1L2pfrHfAZG4vKTHc-OD8p9alIUD-sUFg?utm_source=gemini",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffPFOR + Fastlanes FOR PARQUET. MEASURED ON 128-BIT ARM"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA",
+          "kind": "google_doc",
+          "fetched": false
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/51296",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/51249",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/51250",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/51295",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "The goal is to show how the FastLanes layout spec works under the hood, share actual benchmark numbers, and start a discussion on what we might want to adopt. While other hardware configurations [Kosta's super laptop] show larger single-core gains, our multi-core tests suggest these advantages can shrink when multiple CPUs compete for memory bandwidth. But when measured against the highly optimized code Parquet (xsimd c++) already ships today, the actual margins shrink significantly, giving us a more realistic picture of the gains.",
+      "llm_status": "discussion",
+      "comment_count": 12,
+      "participant_count": 3,
+      "llm_key_points": [
+        "Le 18/09/2026 \u00e0 16:53, PRATEEK GAUR a \u00e9crit\u00a0:\n> \n>     For Delta encoding, the transposed layout looks highly promising:",
+        "Hi Antoine,\n\nYou hit the nail on the head.",
+        "When I read first about fastlanes I thought it would be great for parquet."
+      ],
+      "llm_topics": [
+        "benchmark-results",
+        "recent-pfor",
+        "lot",
+        "parquet"
+      ],
+      "_content_hash": "3227da0213db",
+      "initiative_id": "parquet-init-parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9"
+    },
+    {
+      "id": "parquet-ml-qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS][Encoding] PFOR Encoding",
+      "url": "https://lists.apache.org/thread/qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk",
+      "author": "PRATEEK GAUR <pr...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-09-08T15:07:22+00:00",
+      "updated_at": "2026-09-28T19:27:40+00:00",
+      "body": "Hi all,\n\nSince the earlier PFOR thread I have kept measuring and improved decoding\nspeed\nsignificantly, added a delta mode, and evaluated the encoding on real\ndictionary index runs.\nThe detailed write-up for all of this has been added to the original doc\nitself : [1] .\n\nFirst, decode.\nWith code changes and with no encoded byte changing, made PFOR\nabout 40% faster to decode at -O3.\n\nSecond, added delta mode.\nCertain data distributions definitely benefit from delta encoding and\nwanted to explore this\ncapability on top of PFOR's blocking + patching scheme and results looking\nquite promising\nfor the data distributions that can take advantage of it. Here I added it\nas a per block decision\nmode which selects delta mode if the values are close together. I see a\ncomparable compression\nratio to delta bit pack hybrid (same idea). And pretty good decompression\nspeed. Added details to\nthe same document. Code for the same is in [2].\n\nThird, PFOR for dictionary index runs.\nBased on the characteristics of PFOR and the dictionary index runs I was\nhopeful\nthat I'll get good results with PFOR on dictionary indices. So I did an\nevaluation of PFOR for dictionary\nindex runs and added the results on the same to the document. I do see\nvalue in using PFOR for\ndictionary index encoding.\n\nLooking for feedback from the team.\n\nBest\nPrateek\n\n[1]\nhttps://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/\n[2] https://github.com/apache/arrow/pull/50088 c++ (pfor+frame only)\n[3] https://github.com/apache/arrow/pull/51150 c++ (pfor + dynamic frame or\ndelta)\n[4] https://github.com/apache/arrow-rs/pull/10977 rust\n\nOn Mon, Jul 13, 2026 at 8:31\u202fAM PRATEEK GAUR <pr...@gmail.com> wrote:\n\n> Hi team,\n>\n> Just wanted to resurface the doc in your email folders, looking forward to\n> some suggestions.\n> I'll work towards adding a few more datasets to the comparison in the\n> coming days.\n>\n> Best\n> Prateek\n>\n> On Wed, Jul 1, 2026 at 9:01\u202fAM PRATEEK GAUR <pr...@gmail.com> wrote:\n>\n>> Hi Anto",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/",
+          "kind": "google_doc",
+          "fetched": false
+        },
+        {
+          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/edit?tab=t.0#heading=h.uzgoevv9ajp",
+          "kind": "google_doc",
+          "fetched": false
+        },
+        {
+          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": false
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/50088",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/51150",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow-rs/pull/10977",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Since the earlier PFOR thread I have kept measuring and improved decoding speed significantly, added a delta mode, and evaluated the encoding on real dictionary index runs. I see a comparable compression ratio to delta bit pack hybrid (same idea). So I did an evaluation of PFOR for dictionary index runs and added the results on the same to the document.",
+      "llm_status": "discussion",
+      "comment_count": 4,
+      "participant_count": 3,
+      "llm_key_points": [],
+      "llm_topics": [
+        "pfor",
+        "dictionary-index",
+        "improved-decoding",
+        "discuss"
+      ],
+      "_content_hash": "20730f857f21",
+      "llm_title": "",
+      "initiative_id": "parquet-init-parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9"
+    },
+    {
       "id": "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
       "source": "mailing_list",
       "kind": "thread",
@@ -2685,7 +2806,7 @@
       "author": "Rok Mihevc <ro...@gmail.com>",
       "state": "open",
       "created_at": "2026-09-08T18:42:14+00:00",
-      "updated_at": "2026-09-26T14:37:02+00:00",
+      "updated_at": "2026-09-28T16:17:42+00:00",
       "body": "Hi all,\n\nAs proposed during the general community call we held a focused call today\nto discuss the proposal for adding a logical vector type to parquet. This\nwas called because it seems:\n\n* Vectors (as in vector DB) storage needs are different to what we need for\nfixed size list applications we've been disucssing so far [0]. This is\ndriven also by Iceberg's need for Vector type [1]\n* We don't yet have a consensus of what physical representation of Vector\ntype should be.\n\n\nNotes from the call can be found here [2]. Short summary:\n\nWe have converged on two options that could work, but have not yet decided\nwhich one to propose:\n\n- Option A - FLBA as physical storage (FLBA(num_elements * element_width)).\nVector logical type would provide an enum specifying the element type, and\nthe element would be non-nullable. The element type enum could be\nindependent of the parquet type system, making evolution easier. Downside\nis loss of element-level encodings available today, though they can be\nadded later. Upside is simplicity and ease of evolution.\n\n- Option C1 - LIST with numeric parquet type elements as physical storage.\nNew float types (e.g. BF16) can be added in parquet proper as needed.\nDownside is we need to add new types to parquet, DL/RL overhead is likely\nnot a concern. Upside is we have encoding support now.\n\nRegarding NaN/Inf limitations, the consensus was that these should be\nhandled by statistics. This leads to a need for a new inf_count statustics.\n\nIt would be great to discuss the merits of these two proposals here on the\nmailing list for maximum visibility and participation.\nWe will likely continue to discuss this on tomorrow's community call too.\n\n\n[0] https://lists.apache.org/thread/xot5f3ghhtc82n1bf0wdl9zqwlrzqks3\n[1]\nhttps://docs.google.com/document/d/1zA8PskNDFKXXJpzWQr25CFoX_aIZHBNHbkxk0t3PteE/edit?tab=t.0#heading=h.j5pn3fef87b2\n[2]\nhttps://docs.google.com/document/d/1rPTjEJTwN97UfHvNlvdriX9XBQsW8PGwIHMXHvy-XlU/edit?tab=t.0\n\n\nBest,\nRok\n",
       "labels": [],
       "linked_resources": [
@@ -2718,8 +2839,8 @@
       ],
       "llm_summary": "Motivation Fixed-shape vector data is increasingly common in AI/ML workloads, especially embeddings and materialized model features. Parquet community is also discussing native support for fixed-size list/vector-like data, so Iceberg should decide how this should surface at the table-format layer. A native type would improve usability and interoperability with systems that already expose shape-declared vectors or fixed-size lists, such as Lance, pgvector, Snowflake, and emerging SQL standard.",
       "llm_status": "discussion",
-      "comment_count": 34,
-      "participant_count": 8,
+      "comment_count": 35,
+      "participant_count": 9,
       "llm_key_points": [
         "Le 08/09/2026 \u00e0 20:42, Rok Mihevc a \u00e9crit\u00a0:\n> Hi all,\n> \n> As proposed during the general community call we held a focus",
         "Hi all,\n\nAndrew's and Gunnar's results show that existing LIST storage can be read\nefficiently.",
@@ -2770,71 +2891,6 @@
       ],
       "_content_hash": "40f5a8fabd25",
       "initiative_id": "parquet-init-parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
-    },
-    {
-      "id": "parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations",
-      "url": "https://lists.apache.org/thread/94q6oh41sxjlkrhhhwn09c66nmtm1xt9",
-      "author": "PRATEEK GAUR <pr...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-09-18T14:53:51+00:00",
-      "updated_at": "2026-09-24T15:55:45+00:00",
-      "body": "Hi everyone,\n\nFastLanes has generated a lot of interest lately and came up a lot during\nrecent PFOR discussions [1]. It mostly gets talked about as one big\npackage, but in reality, it combines a few different ideas.\n\nTo see what actually makes sense for Parquet, I wrote up a performance\nstudy. The goal is to show how the FastLanes layout spec works under the\nhood, share actual benchmark numbers, and start a discussion on what we\nmight want to adopt. Please note that all benchmarking was done in the\narrow C++ repo.\n\nHere are our key observations:\n\n   1.\n\n   For plain PFOR, the layout advantage is highly hardware-dependent:\n   Parquet\u2019s current C++ reader is already vectorized and optimized. On our\n   test machine, simply changing the layout to use lane interleaving gave only\n   a minor speedup. While other hardware configurations [Kosta's super laptop]\n   show larger single-core gains, our multi-core tests suggest these\n   advantages can shrink when multiple CPUs compete for memory bandwidth. We\n   should discuss whether this hardware-dependent gain justifies a global\n   format change.\n   2.\n\n   For Delta encoding, the transposed layout looks highly promising:\n   Standard Delta encoding forces the CPU to calculate values sequentially,\n   which slows things down. The FastLanes container fundamentally breaks this\n   bottleneck by splitting the work into parallel streams. Using its\n   recommended layout (FL_ORDER), we saw a massive decoding speedup with\n   virtually no impact on file size.\n   3.\n\n   The baseline matters: Measuring these layout changes against basic,\n   unoptimized code makes them look like a huge leap forward. But when\n   measured against the highly optimized code Parquet (xsimd c++) already\n   ships today, the actual margins shrink significantly, giving us a more\n   realistic picture of the gains.\n\nI\u2019d love for the community to take a look at the document, check the\nmethodology, and share your thoughts!\n\nDocument:\nhttps://docs.google.com/document/d/1L2",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1L2pfrHfAZG4vKTHc-OD8p9alIUD-sUFg",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffPFOR + Fastlanes FOR PARQUET. MEASURED ON 128-BIT ARM"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1L2pfrHfAZG4vKTHc-OD8p9alIUD-sUFg?utm_source=gemini",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffPFOR + Fastlanes FOR PARQUET. MEASURED ON 128-BIT ARM"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA",
-          "kind": "google_doc",
-          "fetched": false
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/51296",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/51249",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/51250",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/51295",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "The goal is to show how the FastLanes layout spec works under the hood, share actual benchmark numbers, and start a discussion on what we might want to adopt. While other hardware configurations [Kosta's super laptop] show larger single-core gains, our multi-core tests suggest these advantages can shrink when multiple CPUs compete for memory bandwidth. But when measured against the highly optimized code Parquet (xsimd c++) already ships today, the actual margins shrink significantly, giving us a more realistic picture of the gains.",
-      "llm_status": "discussion",
-      "comment_count": 11,
-      "participant_count": 3,
-      "llm_key_points": [
-        "Le 18/09/2026 \u00e0 16:53, PRATEEK GAUR a \u00e9crit\u00a0:\n> \n>     For Delta encoding, the transposed layout looks highly promising:",
-        "Hi Antoine,\n\nYou hit the nail on the head.",
-        "When I read first about fastlanes I thought it would be great for parquet."
-      ],
-      "llm_topics": [
-        "benchmark-results",
-        "recent-pfor",
-        "lot",
-        "parquet"
-      ],
-      "_content_hash": "9a9001c57915",
-      "initiative_id": "parquet-init-parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9"
     },
     {
       "id": "parquet-ml-rd2x7c15dqwf8qkdl70r7zr1ykmwkmf5",
@@ -2960,62 +3016,6 @@
       "llm_title": "",
       "_content_hash": "7a564df9ef8b",
       "initiative_id": "parquet-init-parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm"
-    },
-    {
-      "id": "parquet-ml-qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "Re: [DISCUSS][Encoding] PFOR Encoding",
-      "url": "https://lists.apache.org/thread/qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk",
-      "author": "PRATEEK GAUR <pr...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-09-08T15:07:22+00:00",
-      "updated_at": "2026-09-22T18:28:06+00:00",
-      "body": "Hi all,\n\nSince the earlier PFOR thread I have kept measuring and improved decoding\nspeed\nsignificantly, added a delta mode, and evaluated the encoding on real\ndictionary index runs.\nThe detailed write-up for all of this has been added to the original doc\nitself : [1] .\n\nFirst, decode.\nWith code changes and with no encoded byte changing, made PFOR\nabout 40% faster to decode at -O3.\n\nSecond, added delta mode.\nCertain data distributions definitely benefit from delta encoding and\nwanted to explore this\ncapability on top of PFOR's blocking + patching scheme and results looking\nquite promising\nfor the data distributions that can take advantage of it. Here I added it\nas a per block decision\nmode which selects delta mode if the values are close together. I see a\ncomparable compression\nratio to delta bit pack hybrid (same idea). And pretty good decompression\nspeed. Added details to\nthe same document. Code for the same is in [2].\n\nThird, PFOR for dictionary index runs.\nBased on the characteristics of PFOR and the dictionary index runs I was\nhopeful\nthat I'll get good results with PFOR on dictionary indices. So I did an\nevaluation of PFOR for dictionary\nindex runs and added the results on the same to the document. I do see\nvalue in using PFOR for\ndictionary index encoding.\n\nLooking for feedback from the team.\n\nBest\nPrateek\n\n[1]\nhttps://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/\n[2] https://github.com/apache/arrow/pull/50088 c++ (pfor+frame only)\n[3] https://github.com/apache/arrow/pull/51150 c++ (pfor + dynamic frame or\ndelta)\n[4] https://github.com/apache/arrow-rs/pull/10977 rust\n\nOn Mon, Jul 13, 2026 at 8:31\u202fAM PRATEEK GAUR <pr...@gmail.com> wrote:\n\n> Hi team,\n>\n> Just wanted to resurface the doc in your email folders, looking forward to\n> some suggestions.\n> I'll work towards adding a few more datasets to the comparison in the\n> coming days.\n>\n> Best\n> Prateek\n>\n> On Wed, Jul 1, 2026 at 9:01\u202fAM PRATEEK GAUR <pr...@gmail.com> wrote:\n>\n>> Hi Anto",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/",
-          "kind": "google_doc",
-          "fetched": false
-        },
-        {
-          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/edit?tab=t.0#heading=h.uzgoevv9ajp",
-          "kind": "google_doc",
-          "fetched": false
-        },
-        {
-          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": false
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/50088",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/51150",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow-rs/pull/10977",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Since the earlier PFOR thread I have kept measuring and improved decoding speed significantly, added a delta mode, and evaluated the encoding on real dictionary index runs. I see a comparable compression ratio to delta bit pack hybrid (same idea). So I did an evaluation of PFOR for dictionary index runs and added the results on the same to the document.",
-      "llm_status": "discussion",
-      "comment_count": 3,
-      "participant_count": 3,
-      "llm_key_points": [],
-      "llm_topics": [
-        "pfor",
-        "dictionary-index",
-        "improved-decoding",
-        "discuss"
-      ],
-      "_content_hash": "20730f857f21",
-      "llm_title": "",
-      "initiative_id": "parquet-init-parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9"
     },
     {
       "id": "parquet-ml-v11pw7sbnkdxzjhkmcbsx06clyvjv0xx",
@@ -8566,7 +8566,7 @@
       ],
       "_content_hash": "735a1326fdb5",
       "llm_title": "Merge Implementation Status PR for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-4sl30sn36bvc8pwkyqlxxncn5p1wns0q"
+      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
     },
     {
       "id": "parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",

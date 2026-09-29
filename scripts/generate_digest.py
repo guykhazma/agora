@@ -115,7 +115,10 @@ def _extractive_digest_local(recent: list[dict], items_text: str) -> dict:
     try:
         from llm.local_nlp import _sumy_summarize
 
-        summary = _sumy_summarize(items_text[:8000], sentence_count=4)
+        # Use prose, not the dated/truncated cloud prompt (which can leak
+        # list markers and cut-off sentences into the dashboard).
+        prose = " ".join((p.get("llm_summary") or "").strip() for p in recent[:20])
+        summary = _sumy_summarize(prose[:8000], sentence_count=4)
     except Exception:
         summary = ""
     if not summary or len(summary.strip()) < 30:
@@ -205,9 +208,15 @@ def generate(project_id: str, llm_client) -> bool:
             raw = llm_client.complete(DIGEST_SYSTEM, user_msg, max_tokens=400, temperature=0)
             cleaned = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
             digest = json.loads(cleaned)
+            if (not isinstance(digest, dict)
+                    or not isinstance(digest.get("summary"), str)
+                    or not digest["summary"].strip()
+                    or not isinstance(digest.get("highlights"), list)
+                    or not all(isinstance(h, str) for h in digest["highlights"])):
+                raise ValueError("Invalid digest summary/highlights")
     except Exception as e:
-        logger.warning(f"Digest generation failed for {project_id}: {e}")
-        return False
+        logger.warning(f"Cloud digest failed for {project_id}; using local fallback: {e}")
+        digest = _extractive_digest_local(recent, items_text)
 
     if not digest or not digest.get("summary"):
         logger.warning(f"Digest missing summary for {project_id}")

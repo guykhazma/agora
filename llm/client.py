@@ -71,7 +71,7 @@ class LLMClient:
         "google":         "gemini-2.0-flash",
         "ollama":         "llama3",
         "llama_cpp":      "local",   # model is loaded server-side; any string works
-        "groq":           "llama-3.3-70b-versatile",    # free tier; 6k TPM → use 10s delay
+        "groq":           "openai/gpt-oss-20b",       # Groq free tier; override via LLM_MODEL
         # Retained only so an explicit misconfig fails clearly in _ensure_client.
         "github_models":  "gpt-4o-mini",
     }

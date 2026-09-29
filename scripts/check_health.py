@@ -11,6 +11,7 @@ the owner is told when something needs attention instead of the system rotting g
 
 Thresholds (override via env):
   AGORA_STALE_DAYS         project not crawled in N days           (default 3)
+  AGORA_REQUIRE_CLOUD_LLM  fail on optional cloud enrichment errors (default 0)
   AGORA_SOURCE_STALE_DAYS  a source hasn't succeeded in N days     (default 7)
 """
 from __future__ import annotations
@@ -64,7 +65,13 @@ def main() -> int:
             proj_issues.append("last run reported **error** (a critical source failed)")
 
         bad_sources = []
+        warnings = []
         for label, s in (p.get("sources") or {}).items():
+            if (label == "LLM enrichment" and not s.get("ok")
+                    and s.get("error") == "stage-2 provider failed; fell back to local baseline"
+                    and os.environ.get("AGORA_REQUIRE_CLOUD_LLM", "0") != "1"):
+                warnings.append("Cloud enrichment unavailable; using local summaries (optional).")
+                continue
             src_age = _age_days(s.get("last_success_at"))
             if not s.get("ok"):
                 detail = (s.get("error") or "").strip()
@@ -81,7 +88,8 @@ def main() -> int:
                 lines.append(f"- ⚠️ {it}")
                 problems.append(f"**{pid}**: {it}")
         else:
-            lines.append("- all sources healthy")
+            lines.append("- all required sources healthy")
+        lines.extend(f"- ⚠️ {warning}" for warning in warnings)
         lines.append("")
 
     report = "\n".join(lines)

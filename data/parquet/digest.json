@@ -1,8 +1,18 @@
 {
-  "summary": "The authors emphasize that results vary when compared to highly optimised baseline code and that the community is debating whether the complexity of a new layout is justified. They converged on a LIST-based vector with constraints on fixed dimension, non-null finite numeric elements, and opened a PR to formalize it. The WIRE proposal introduces a new Parquet logical type that preserves raw protobuf/thrift messages while shredding selected fields into columnar columns for efficient querying. Andrew reviews the FSST proposal, suggesting the inclusion of an optional inline symbol table and the removal of the dedicated SYMBOL_TABLE_PAGE type.",
+  "summary": "The results highlight that gains shrink when measured against highly optimized existing code and that adopting a new layout adds complexity to writers. The community is debating whether the performance benefits justify a global format change and how to decouple FastLanes from PFOR proposals. The discussion centers on creating a higher\u2011level document that compares several numeric encodings\u2014DELTA_BINARY_PACKED, PFOR, FastLanes, and potential optimizations\u2014across speed, storage efficiency, and development effort. Antoine apologizes for earlier harsh remarks and emphasizes the importance of evaluating maintenance effort to move ideas into production.",
   "highlights": [
     {
-      "text": "The discussion reviews a benchmark study of FastLanes layouts for Parquet, noting that plain PFOR gains are hardware\u2011dependent and modest, while a transposed la\u2026",
+      "text": "The community discussed adding a numeric vector logical type to Parquet",
+      "sources": [
+        {
+          "id": "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
+          "title": "[DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
+          "url": "https://lists.apache.org/thread/kgmgn2vmrz49thbfhv8b66lglsyd81xt"
+        }
+      ]
+    },
+    {
+      "text": "A performance study of FastLanes layouts for Parquet shows only modest gains for plain PFOR due to hardware dependence, while Delta encoding benefits significan\u2026",
       "sources": [
         {
           "id": "parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9",
@@ -12,12 +22,12 @@
       ]
     },
     {
-      "text": "The community discussed adding a logical vector type to Parquet, weighing two physical representations: a flat list of bytes (FLBA) and a LIST of numeric primit\u2026",
+      "text": "The discussion centers on creating a higher\u2011level document that compares several numeric encodings\u2014DELTA_BINARY_PACKED, PFOR, FastLanes, and potential optimizat\u2026",
       "sources": [
         {
-          "id": "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
-          "title": "[DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
-          "url": "https://lists.apache.org/thread/kgmgn2vmrz49thbfhv8b66lglsyd81xt"
+          "id": "parquet-ml-b3df16sx1ny1lrtzgbhmrpynq4hwztzz",
+          "title": "Re: [DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations (+ apologies)",
+          "url": "https://lists.apache.org/thread/b3df16sx1ny1lrtzgbhmrpynq4hwztzz"
         }
       ]
     },
@@ -30,16 +40,6 @@
           "url": "https://lists.apache.org/thread/qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk"
         }
       ]
-    },
-    {
-      "text": "The WIRE proposal introduces a new Parquet logical type that preserves raw protobuf/thrift messages while shredding selected fields into columnar columns for ef\u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-s0tmjgfnvwn793d7v8mor8r8sz0hb44t",
-          "title": "[DISCUSS] WIRE: a logical type for serialized wire-format messages",
-          "url": "https://lists.apache.org/thread/s0tmjgfnvwn793d7v8mor8r8sz0hb44t"
-        }
-      ]
     }
   ],
   "generation": {
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-09-30T11:49:14.052214+00:00",
+  "generated_at": "2026-10-01T12:17:33.524909+00:00",
   "item_count": 5,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-09-24",
-    "to": "2026-09-29",
+    "from": "2026-09-25",
+    "to": "2026-10-01",
     "thread_count": 5
   }
 }

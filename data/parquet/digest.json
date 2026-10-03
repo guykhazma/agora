@@ -1,6 +1,16 @@
 {
-  "summary": "The results highlight that gains shrink when measured against highly optimized existing code and that adopting a new layout adds complexity to writers. The community is debating whether the performance benefits justify a global format change and how to decouple FastLanes from PFOR proposals. The discussion centers on creating a higher\u2011level document that compares several numeric encodings\u2014DELTA_BINARY_PACKED, PFOR, FastLanes, and potential optimizations\u2014across speed, storage efficiency, and development effort. Antoine apologizes for earlier harsh remarks and emphasizes the importance of evaluating maintenance effort to move ideas into production.",
+  "summary": "The discussion proposes a new Parquet logical type, WIRE, to store serialized wire-format messages (e.g., protobuf) while preserving the original bytes and enabling selective columnar shredding of queried fields. It aims to keep the message intact, allow predicate pushdown on selected fields, and avoid breaking older readers, with a prototype in review and no current OSS engine support. The results highlight that gains shrink when measured against highly optimized existing code and that adopting a new layout adds complexity to writers. The discussion centers on creating a higher\u2011level document that compares several numeric encodings\u2014DELTA_BINARY_PACKED, PFOR, FastLanes, and potential optimizations\u2014across speed, storage efficiency, and development effort.",
   "highlights": [
+    {
+      "text": "The discussion proposes a new Parquet logical type, WIRE, to store serialized wire-format messages (e.g., protobuf) while preserving the original bytes and enab\u2026",
+      "sources": [
+        {
+          "id": "parquet-ml-qdm6zp767sqzg9nrwwml3yzcm109hxn4",
+          "title": "Re: [DISCUSS] WIRE: a logical type for serialized wire-format messages",
+          "url": "https://lists.apache.org/thread/qdm6zp767sqzg9nrwwml3yzcm109hxn4"
+        }
+      ]
+    },
     {
       "text": "The community discussed adding a numeric vector logical type to Parquet",
       "sources": [
@@ -30,16 +40,6 @@
           "url": "https://lists.apache.org/thread/b3df16sx1ny1lrtzgbhmrpynq4hwztzz"
         }
       ]
-    },
-    {
-      "text": "Prateek reports a 40% decoding speed boost for PFOR at -O3, introduces a per-block delta mode that matches compression ratios of hybrid schemes, and evaluates P\u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk",
-          "title": "Re: [DISCUSS][Encoding] PFOR Encoding",
-          "url": "https://lists.apache.org/thread/qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk"
-        }
-      ]
     }
   ],
   "generation": {
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-02T11:41:52.201414+00:00",
+  "generated_at": "2026-10-03T10:53:09.986644+00:00",
   "item_count": 5,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-09-25",
-    "to": "2026-10-01",
+    "from": "2026-09-28",
+    "to": "2026-10-02",
     "thread_count": 5
   }
 }

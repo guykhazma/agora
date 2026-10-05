@@ -1,8 +1,8 @@
 {
-  "summary": "The discussion proposes a new Parquet logical type, WIRE, that stores serialized wire-format messages (e.g., protobuf) as opaque bytes while allowing selected fields to be shredded into columnar form for efficient querying. The results highlight that gains shrink when measured against highly optimized existing code and that adopting a new layout adds complexity to writers. The discussion centers on creating a higher\u2011level document that compares several numeric encodings\u2014DELTA_BINARY_PACKED, PFOR, FastLanes, and potential optimizations\u2014across speed, storage efficiency, and development effort. Antoine apologizes for earlier harsh remarks and emphasizes the importance of evaluating maintenance effort to move ideas into production.",
+  "summary": "Over the past week the Parquet community has been active in proposing new logical types and refining encoding performance. Discussions introduced a WIRE logical type for opaque wire\u2011format messages and a numeric vector type, while benchmark studies on FastLanes and PFOR revealed modest gains for plain PFOR but significant benefits for Delta encoding, and a recent PFOR optimization at -O3 achieved a 40% decoding speed boost.",
   "highlights": [
     {
-      "text": "The discussion proposes a new Parquet logical type, WIRE, that stores serialized wire-format messages (e.g., protobuf) as opaque bytes while allowing selected f\u2026",
+      "text": "Proposal of a new Parquet logical type WIRE that stores serialized wire\u2011format messages as opaque bytes while enabling selective shredding of frequently queried fields.",
       "sources": [
         {
           "id": "parquet-ml-qdm6zp767sqzg9nrwwml3yzcm109hxn4",
@@ -12,7 +12,7 @@
       ]
     },
     {
-      "text": "The community discussed adding a numeric vector logical type to Parquet",
+      "text": "Discussion of adding a numeric vector logical type to Parquet.",
       "sources": [
         {
           "id": "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
@@ -22,7 +22,7 @@
       ]
     },
     {
-      "text": "A performance study of FastLanes layouts for Parquet shows only modest gains for plain PFOR due to hardware dependence, while Delta encoding benefits significan\u2026",
+      "text": "Benchmark results for FastLanes layouts show modest gains for plain PFOR but significant benefits for Delta encoding.",
       "sources": [
         {
           "id": "parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9",
@@ -32,27 +32,29 @@
       ]
     },
     {
-      "text": "The discussion centers on creating a higher\u2011level document that compares several numeric encodings\u2014DELTA_BINARY_PACKED, PFOR, FastLanes, and potential optimizat\u2026",
+      "text": "Optimizing PFOR at -O3 yields a 40% decoding speed boost and introduces a per-block delta mode matching compression ratios of hybrid schemes.",
       "sources": [
         {
-          "id": "parquet-ml-b3df16sx1ny1lrtzgbhmrpynq4hwztzz",
-          "title": "Re: [DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations (+ apologies)",
-          "url": "https://lists.apache.org/thread/b3df16sx1ny1lrtzgbhmrpynq4hwztzz"
+          "id": "parquet-ml-qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk",
+          "title": "Re: [DISCUSS][Encoding] PFOR Encoding",
+          "url": "https://lists.apache.org/thread/qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk"
         }
       ]
     }
   ],
   "generation": {
-    "method": "local",
+    "method": "llm",
+    "provider": "groq",
+    "model": "openai/gpt-oss-20b",
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-04T11:35:02.035253+00:00",
-  "item_count": 5,
+  "generated_at": "2026-10-05T13:07:15.956105+00:00",
+  "item_count": 6,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-09-28",
-    "to": "2026-10-02",
-    "thread_count": 5
+    "to": "2026-10-04",
+    "thread_count": 6
   }
 }

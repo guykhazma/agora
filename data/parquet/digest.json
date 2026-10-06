@@ -1,8 +1,28 @@
 {
-  "summary": "Over the past week the Parquet community has been active in proposing new logical types and refining encoding performance. Discussions introduced a WIRE logical type for opaque wire\u2011format messages and a numeric vector type, while benchmark studies on FastLanes and PFOR revealed modest gains for plain PFOR but significant benefits for Delta encoding, and a recent PFOR optimization at -O3 achieved a 40% decoding speed boost.",
+  "summary": "The discussion explores adding metadata or Thrift fields to Parquet to encode min/max length constraints for vector types 1.19.0 The discussion proposes a new Parquet logical type called WIRE that stores serialized wire-format messages as raw bytes while enabling selective columnar shredding of frequently queried fields. The results highlight that gains shrink when measured against highly optimized existing code and that adopting a new layout adds complexity to writers. The discussion centers on creating a higher\u2011level document that compares several numeric encodings\u2014DELTA_BINARY_PACKED, PFOR, FastLanes, and potential optimizations\u2014across speed, storage efficiency, and development effort. Antoine apologizes for earlier harsh remarks and emphasizes the importance of evaluating maintenance effort to move ideas into production.",
   "highlights": [
     {
-      "text": "Proposal of a new Parquet logical type WIRE that stores serialized wire\u2011format messages as opaque bytes while enabling selective shredding of frequently queried fields.",
+      "text": "The discussion explores adding metadata or Thrift fields to Parquet to encode min/max length constraints for vector types",
+      "sources": [
+        {
+          "id": "parquet-ml-pzkpypmcm5xql2fpxbdrdr45ndl1o5xn",
+          "title": "Re: [DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
+          "url": "https://lists.apache.org/thread/pzkpypmcm5xql2fpxbdrdr45ndl1o5xn"
+        }
+      ]
+    },
+    {
+      "text": "1.19.0",
+      "sources": [
+        {
+          "id": "parquet-gh-m35",
+          "title": "1.19.0",
+          "url": "https://github.com/apache/parquet-java/milestone/35"
+        }
+      ]
+    },
+    {
+      "text": "The discussion proposes a new Parquet logical type called WIRE that stores serialized wire-format messages as raw bytes while enabling selective columnar shredd\u2026",
       "sources": [
         {
           "id": "parquet-ml-qdm6zp767sqzg9nrwwml3yzcm109hxn4",
@@ -12,17 +32,7 @@
       ]
     },
     {
-      "text": "Discussion of adding a numeric vector logical type to Parquet.",
-      "sources": [
-        {
-          "id": "parquet-ml-kgmgn2vmrz49thbfhv8b66lglsyd81xt",
-          "title": "[DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
-          "url": "https://lists.apache.org/thread/kgmgn2vmrz49thbfhv8b66lglsyd81xt"
-        }
-      ]
-    },
-    {
-      "text": "Benchmark results for FastLanes layouts show modest gains for plain PFOR but significant benefits for Delta encoding.",
+      "text": "A performance study of FastLanes layouts for Parquet shows only modest gains for plain PFOR due to hardware dependence, while Delta encoding benefits significan\u2026",
       "sources": [
         {
           "id": "parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9",
@@ -30,31 +40,19 @@
           "url": "https://lists.apache.org/thread/94q6oh41sxjlkrhhhwn09c66nmtm1xt9"
         }
       ]
-    },
-    {
-      "text": "Optimizing PFOR at -O3 yields a 40% decoding speed boost and introduces a per-block delta mode matching compression ratios of hybrid schemes.",
-      "sources": [
-        {
-          "id": "parquet-ml-qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk",
-          "title": "Re: [DISCUSS][Encoding] PFOR Encoding",
-          "url": "https://lists.apache.org/thread/qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk"
-        }
-      ]
     }
   ],
   "generation": {
-    "method": "llm",
-    "provider": "groq",
-    "model": "openai/gpt-oss-20b",
+    "method": "local",
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-05T13:07:15.956105+00:00",
-  "item_count": 6,
+  "generated_at": "2026-10-06T12:32:01.673266+00:00",
+  "item_count": 5,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-09-28",
-    "to": "2026-10-04",
-    "thread_count": 6
+    "from": "2026-10-01",
+    "to": "2026-10-05",
+    "thread_count": 5
   }
 }

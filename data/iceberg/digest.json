@@ -1,5 +1,5 @@
 {
-  "summary": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Define RepairManifests action interface (#17399) - Implementation PR (#17622) is in review. Geospatial * WIP: End-to-end spatial file pruning from Spark SQL, ST_INTERSECTS pushdown (#17175) \u2014 DRAFT, now carries a stale label; last touched Aug 13. * Spark: Fix orphan file matching for sibling table prefixes (#17448) + repro test (#17449) \u2014 NEW Jul 31, overlaps #16999; consolidate. In contrast, HMS stores additional state (schema, properties, snapshot summary, partition spec, sort order) for Hive client interoperability.",
+  "summary": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Define RepairManifests action interface (#17399) - Implementation PR (#17622) is in review. Geospatial * WIP: End-to-end spatial file pruning from Spark SQL, ST_INTERSECTS pushdown (#17175) \u2014 DRAFT, now carries a stale label; last touched Aug 13. In contrast, HMS stores extensive metadata (properties, schema, partition spec, sort order, snapshot) to support Hive clients. Iceberg Index Support Sync   2026 09 28 The discussion proposes adding a new enum constant, \"local\" (or \"none\"), to the X-Iceberg-Access-Delegation header to indicate that a client can use its own credentials.",
   "highlights": [
     {
       "text": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Def\u2026",
@@ -12,17 +12,17 @@
       ]
     },
     {
-      "text": "The discussion reviewed the index region design, agreeing on non\u2011overlapping regions to boost point lookup performance while accepting higher write amplificatio\u2026",
+      "text": "The discussion proposes adding a spec clarification that readers should accept data file columns whose type can be promoted to the field's type, even if the fie\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-tvr8nsrl5srnslsxnk9thgt44m73y2ws",
-          "title": "Re: Dedicated sync for Iceberg Index Support",
-          "url": "https://lists.apache.org/thread/tvr8nsrl5srnslsxnk9thgt44m73y2ws"
+          "id": "iceberg-ml-c91ph82tnrlhj8qq9lj8n72b0s7qq5r0",
+          "title": "[DISCUSS] Spec clarification: readers must accept promotable types in any data file",
+          "url": "https://lists.apache.org/thread/c91ph82tnrlhj8qq9lj8n72b0s7qq5r0"
         }
       ]
     },
     {
-      "text": "The discussion focuses on how to represent stats tightness in Iceberg v4 when deletion vectors are present. While per-column tightness could be tracked, partici\u2026",
+      "text": "The discussion explores how to represent stats tightness in Iceberg v4 when deletion vectors invalidate bounds. While per-column tightness was considered, parti\u2026",
       "sources": [
         {
           "id": "iceberg-ml-tv7bvqctdfh5qng1sx5rp8r4r00nsv60",
@@ -32,12 +32,12 @@
       ]
     },
     {
-      "text": "The Apache Iceberg community is hosting a meetup in South Lake Union on October 21. Attendees are encouraged to register and submit session ideas via the provid\u2026",
+      "text": "The team agreed to use non\u2011overlapping index regions and sort keys to improve point lookup performance, while accepting higher write amplification. Explicit ind\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-883h6g1291cx53rspfy9p782vt2omc86",
-          "title": "Re: [Announce] Seattle Apache Iceberg Community Meetup: October 21",
-          "url": "https://lists.apache.org/thread/883h6g1291cx53rspfy9p782vt2omc86"
+          "id": "iceberg-ml-tvr8nsrl5srnslsxnk9thgt44m73y2ws",
+          "title": "Re: Dedicated sync for Iceberg Index Support",
+          "url": "https://lists.apache.org/thread/tvr8nsrl5srnslsxnk9thgt44m73y2ws"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-06T12:29:49.330455+00:00",
-  "item_count": 14,
+  "generated_at": "2026-10-07T12:22:20.093333+00:00",
+  "item_count": 13,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-09-30",
-    "to": "2026-10-06",
-    "thread_count": 14
+    "to": "2026-10-07",
+    "thread_count": 13
   }
 }

@@ -1,7 +1,7 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-06T12:34:21.997110+00:00",
-  "total": 669,
+  "generated_at": "2026-10-07T12:26:19.108934+00:00",
+  "total": 670,
   "proposals": [
     {
       "id": "spark-jira-SPARK-55278",
@@ -1864,6 +1864,51 @@
       "initiative_id": "spark-init-spark-jira-SPARK-56978"
     },
     {
+      "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] SPIP: External Lookup Join",
+      "url": "https://lists.apache.org/thread/7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
+      "author": "Jungtaek Lim <ka...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-10-07T08:30:22+00:00",
+      "updated_at": "2026-10-07T08:30:22+00:00",
+      "body": "Hi devs,\n\nI'm coming up with a proposal for a new join strategy, named \"External\nLookup Join\".\n\ntl;dr:\nAll existing join strategies require the static side (DataFrame/Relation)\nto be materialized before the join operator. This doesn't allow us to\nachieve low latency join where the storage of the static side is expected\nto produce low latency response over on-demand request. (e.g. OLTP\noptimized like RDBMS, in-memory storage, NoSQL, etc.) The new join strategy\nwill issue the query to the external storage \"on demand\", when processing\nthe data on the left side.\n\nThe most benefit will come with real-time mode, but it is not limited to\nreal-time mode. This join strategy would be useful as long as the external\nstorage of the static side is better suited for on-demand requests (rather\nthan bulk load with pruning). Both static-static and stream-static can be\nbenefited by this, though static-static join needs to be careful on doing\nthis.\n\nMore details are included in the SPIP doc.\n\nIssue: https://issues.apache.org/jira/browse/SPARK-60031\nSPIP doc:\nhttps://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0\n\nLooking forward to hearing from you.\n\nThanks!\nJungtaek Lim (HeartSaVioR)\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: External Lookup Join"
+        }
+      ],
+      "llm_summary": "A new join strategy that queries an external storage on demand for the static side, avoiding pre-materialization of the static dataset. This approach enables low\u2011latency joins for stream\u2011static and static\u2011static scenarios, improving throughput when the static side is better suited for lookup access patterns. The proposal defines an interface for third\u2011party connectors to support this functionality.",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [
+        "On\u2011demand lookup of static side to avoid pre\u2011materialization",
+        "Improves latency and throughput for stream\u2011static joins",
+        "Defines interface for third\u2011party connectors",
+        "Applicable to both stream\u2011static and static\u2011static joins"
+      ],
+      "llm_topics": [
+        "secondary-indexing",
+        "performance"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "afbd96a536cb",
+      "llm_title": "External Lookup Join",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+    },
+    {
       "id": "spark-ml-jr3gfsv3k2qq8f24w13rx3s44jm2j5r4",
       "source": "mailing_list",
       "kind": "thread",
@@ -1872,23 +1917,29 @@
       "author": "Uro\u0161 Bojani\u0107 <ur...@apache.org>",
       "state": "open",
       "created_at": "2026-10-01T07:15:07+00:00",
-      "updated_at": "2026-10-06T02:48:19+00:00",
+      "updated_at": "2026-10-06T20:04:00+00:00",
       "body": "Please vote on releasing the following candidate as Apache Spark version 4.1.4.\n\nThe vote is open until Sun, 04 Oct 2026 01:11:46 PDT and passes if a majority +1 PMC votes are cast, with\na minimum of 3 +1 votes.\n\n[ ] +1 Release this package as Apache Spark 4.1.4\n[ ] -1 Do not release this package because ...\n\nTo learn more about Apache Spark, please see https://spark.apache.org/\n\nThe tag to be voted on is v4.1.4-rc2 (commit 07af17464bf):\nhttps://github.com/apache/spark/tree/v4.1.4-rc2\n\nThe release files, including signatures, digests, etc. can be found at:\nhttps://dist.apache.org/repos/dist/dev/spark/v4.1.4-rc2-bin/\n\nSignatures used for Spark RCs can be found in this file:\nhttps://downloads.apache.org/spark/KEYS\n\nThe staging repository for this release can be found at:\nhttps://repository.apache.org/content/repositories/orgapachespark-1533/\n\nThe documentation corresponding to this release can be found at:\nhttps://dist.apache.org/repos/dist/dev/spark/v4.1.4-rc2-docs/\n\nThe list of bug fixes going into 4.1.4 can be found at the following URL:\nhttps://issues.apache.org/jira/projects/SPARK/versions/12357252\n\nFAQ\n\n=========================\nHow can I help test this release?\n=========================\n\nIf you are a Spark user, you can help us test this release by taking\nan existing Spark workload and running on this release candidate, then\nreporting any regressions.\n\nIf you're working in PySpark you can set up a virtual env and install\nthe current RC via \"pip install https://dist.apache.org/repos/dist/dev/spark/v4.1.4-rc2-bin/pyspark-4.1.4.tar.gz\"\nand see if anything important breaks.\nIn the Java/Scala, you can add the staging repository to your project's resolvers and test\nwith the RC (make sure to clean up the artifact cache before/after so\nyou don't end up building with an out of date RC going forward).\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
       "labels": [],
       "linked_resources": [],
-      "llm_summary": "Vote in progress: 0 binding +1",
-      "llm_status": "proposal",
-      "comment_count": 2,
-      "participant_count": 2,
+      "llm_summary": "Vote VETOED \u2014 1 veto(es) recorded",
+      "llm_status": "abandoned",
+      "comment_count": 4,
+      "participant_count": 4,
       "vote_data": {
         "binding_plus1": 0,
         "nonbinding_plus1": 0,
-        "vetoes": 0,
-        "result": "open",
-        "voters": []
+        "vetoes": 1,
+        "result": "vetoed",
+        "voters": [
+          {
+            "voter": "Holden Karau <ho...@gmail.com>",
+            "vote": "-1"
+          }
+        ]
       },
       "llm_key_points": [
-        "Please vote on releasing the following candidate as Apache Spark version 4.1.4."
+        "Please vote on releasing the following candidate as Apache Spark version 4.1.4.",
+        "Voters include: Holden Karau..."
       ],
       "llm_topics": [
         "apache-spark",
@@ -1900,8 +1951,16 @@
         "method": "local",
         "prompt_version": 1
       },
-      "_content_hash": "971d95648cad",
-      "observed_history": [],
+      "_content_hash": "70643c4c4c95",
+      "observed_history": [
+        {
+          "field": "vote_result",
+          "from": "open",
+          "to": "vetoed",
+          "observed_at": "2026-10-07T12:25:17.529194+00:00",
+          "source_updated_at": "2026-10-06T20:04:00+00:00"
+        }
+      ],
       "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
@@ -20342,7 +20401,7 @@
         "archives-archive"
       ],
       "_content_hash": "1c19076a1dd9",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
     },
     {
       "id": "spark-ml-oyogozm8y642w0bc5h1cx2xst7fyz3ms",
@@ -20595,7 +20654,7 @@
         "release"
       ],
       "_content_hash": "b1a212827551",
-      "initiative_id": "spark-init-spark-ml-chos58kswjg3x9cotp5rn0oc7hnfc6o4"
+      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
     },
     {
       "id": "spark-ml-1kr0hhx3c6ml132gqvy5424gz8qnnqd5",
@@ -20716,7 +20775,7 @@
         "release"
       ],
       "_content_hash": "984729e261a5",
-      "initiative_id": "spark-init-spark-ml-chos58kswjg3x9cotp5rn0oc7hnfc6o4"
+      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
     },
     {
       "id": "spark-ml-xqws8pbhhdtxg0s0s2g5q6mhxx2s80k5",
@@ -20796,7 +20855,7 @@
         "release"
       ],
       "_content_hash": "574d0aa54ae9",
-      "initiative_id": "spark-init-spark-ml-chos58kswjg3x9cotp5rn0oc7hnfc6o4"
+      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
     },
     {
       "id": "spark-ml-40d961d0yjnxkxfb4rnd7qjf45onxrxo",
@@ -20925,7 +20984,7 @@
         "release"
       ],
       "_content_hash": "bee538c767ff",
-      "initiative_id": "spark-init-spark-ml-chos58kswjg3x9cotp5rn0oc7hnfc6o4"
+      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
     },
     {
       "id": "spark-ml-ys7zsod8cs9c7qllmf0p0msk6z2mz2ym",
@@ -21110,7 +21169,7 @@
         "release"
       ],
       "_content_hash": "80a88ba1c22d",
-      "initiative_id": "spark-init-spark-ml-chos58kswjg3x9cotp5rn0oc7hnfc6o4"
+      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
     },
     {
       "id": "spark-ml-zctzq0gq22mdq7ycnfrxlypxtk537hwb",
@@ -27428,7 +27487,7 @@
         "release"
       ],
       "_content_hash": "11ef119282b3",
-      "initiative_id": "spark-init-spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-y6hby3k9nqds4fgx0b1w5yhhlqb2f7gb",
@@ -27782,7 +27841,7 @@
         "yuming-wang"
       ],
       "_content_hash": "a0cd2e254ca8",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-n5zb2hj3rl15g8wnlvl9xn4ghosxgj4p",
@@ -30480,7 +30539,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",

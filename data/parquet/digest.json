@@ -1,8 +1,18 @@
 {
-  "summary": "The discussion explores adding metadata or Thrift fields to Parquet to encode min/max length constraints for vector types 1.19.0 The discussion proposes a new Parquet logical type called WIRE that stores serialized wire-format messages as raw bytes while enabling selective columnar shredding of frequently queried fields. The results highlight that gains shrink when measured against highly optimized existing code and that adopting a new layout adds complexity to writers. The discussion centers on creating a higher\u2011level document that compares several numeric encodings\u2014DELTA_BINARY_PACKED, PFOR, FastLanes, and potential optimizations\u2014across speed, storage efficiency, and development effort. Antoine apologizes for earlier harsh remarks and emphasizes the importance of evaluating maintenance effort to move ideas into production.",
+  "summary": "The proposal introduces a WIRE logical type for Parquet that stores serialized wire-format messages as opaque bytes while enabling selective shredding of frequently queried fields. Participants also debate relaxing the finite element restriction, permitting all IEEE 754 values or delegating constraints to higher layers. The results highlight that gains shrink when measured against highly optimized existing code and that adopting a new layout adds complexity to writers. The discussion centers on creating a higher\u2011level document that compares several numeric encodings\u2014DELTA_BINARY_PACKED, PFOR, FastLanes, and potential optimizations\u2014across speed, storage efficiency, and development effort.",
   "highlights": [
     {
-      "text": "The discussion explores adding metadata or Thrift fields to Parquet to encode min/max length constraints for vector types",
+      "text": "The proposal introduces a WIRE logical type for Parquet that stores serialized wire-format messages as opaque bytes while enabling selective shredding of freque\u2026",
+      "sources": [
+        {
+          "id": "parquet-ml-qdm6zp767sqzg9nrwwml3yzcm109hxn4",
+          "title": "Re: [DISCUSS] WIRE: a logical type for serialized wire-format messages",
+          "url": "https://lists.apache.org/thread/qdm6zp767sqzg9nrwwml3yzcm109hxn4"
+        }
+      ]
+    },
+    {
+      "text": "The discussion centers on extending Parquet to support a numeric vector type by adding constraint metadata such as MIN_LENGTH and MAX_LENGTH, allowing VECTOR(N)\u2026",
       "sources": [
         {
           "id": "parquet-ml-pzkpypmcm5xql2fpxbdrdr45ndl1o5xn",
@@ -22,16 +32,6 @@
       ]
     },
     {
-      "text": "The discussion proposes a new Parquet logical type called WIRE that stores serialized wire-format messages as raw bytes while enabling selective columnar shredd\u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-qdm6zp767sqzg9nrwwml3yzcm109hxn4",
-          "title": "Re: [DISCUSS] WIRE: a logical type for serialized wire-format messages",
-          "url": "https://lists.apache.org/thread/qdm6zp767sqzg9nrwwml3yzcm109hxn4"
-        }
-      ]
-    },
-    {
       "text": "A performance study of FastLanes layouts for Parquet shows only modest gains for plain PFOR due to hardware dependence, while Delta encoding benefits significan\u2026",
       "sources": [
         {
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-06T12:32:01.673266+00:00",
+  "generated_at": "2026-10-07T12:24:07.726964+00:00",
   "item_count": 5,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-10-01",
-    "to": "2026-10-05",
+    "to": "2026-10-07",
     "thread_count": 5
   }
 }

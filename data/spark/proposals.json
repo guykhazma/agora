@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-07T12:26:19.108934+00:00",
+  "generated_at": "2026-10-08T12:36:26.478336+00:00",
   "total": 670,
   "proposals": [
     {
@@ -350,7 +350,7 @@
       ],
       "llm_title": "",
       "_content_hash": "c09cf2d9e12f",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-jira-SPARK-58455",
@@ -1418,7 +1418,7 @@
         "spip"
       ],
       "_content_hash": "783aa30b5d9c",
-      "initiative_id": "spark-init-spark-jira-SPARK-58455"
+      "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
       "id": "spark-jira-SPARK-34849",
@@ -1872,7 +1872,7 @@
       "author": "Jungtaek Lim <ka...@gmail.com>",
       "state": "open",
       "created_at": "2026-10-07T08:30:22+00:00",
-      "updated_at": "2026-10-07T08:30:22+00:00",
+      "updated_at": "2026-10-08T04:21:20+00:00",
       "body": "Hi devs,\n\nI'm coming up with a proposal for a new join strategy, named \"External\nLookup Join\".\n\ntl;dr:\nAll existing join strategies require the static side (DataFrame/Relation)\nto be materialized before the join operator. This doesn't allow us to\nachieve low latency join where the storage of the static side is expected\nto produce low latency response over on-demand request. (e.g. OLTP\noptimized like RDBMS, in-memory storage, NoSQL, etc.) The new join strategy\nwill issue the query to the external storage \"on demand\", when processing\nthe data on the left side.\n\nThe most benefit will come with real-time mode, but it is not limited to\nreal-time mode. This join strategy would be useful as long as the external\nstorage of the static side is better suited for on-demand requests (rather\nthan bulk load with pruning). Both static-static and stream-static can be\nbenefited by this, though static-static join needs to be careful on doing\nthis.\n\nMore details are included in the SPIP doc.\n\nIssue: https://issues.apache.org/jira/browse/SPARK-60031\nSPIP doc:\nhttps://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0\n\nLooking forward to hearing from you.\n\nThanks!\nJungtaek Lim (HeartSaVioR)\n",
       "labels": [],
       "linked_resources": [
@@ -1883,18 +1883,59 @@
           "title": "\ufeffSPIP: External Lookup Join"
         }
       ],
-      "llm_summary": "A new join strategy that queries an external storage on demand for the static side, avoiding pre-materialization of the static dataset. This approach enables low\u2011latency joins for stream\u2011static and static\u2011static scenarios, improving throughput when the static side is better suited for lookup access patterns. The proposal defines an interface for third\u2011party connectors to support this functionality.",
+      "llm_summary": "The discussion proposes an External Lookup Join for Spark, allowing stream data to be joined with external storage by querying the static side on demand, reducing latency. It addresses the limitation that current Spark joins require materializing the static side before processing. Feedback notes the need to define DSv2 interfaces and third\u2011party connector support.",
       "llm_status": "discussion",
-      "comment_count": 0,
-      "participant_count": 1,
+      "comment_count": 2,
+      "participant_count": 2,
       "llm_key_points": [
-        "On\u2011demand lookup of static side to avoid pre\u2011materialization",
-        "Improves latency and throughput for stream\u2011static joins",
-        "Defines interface for third\u2011party connectors",
-        "Applicable to both stream\u2011static and static\u2011static joins"
+        "Enable on-demand lookup join to reduce latency",
+        "Current Spark loads static side fully, causing inefficiencies",
+        "Feedback highlights missing DSv2 interface details and connector support"
       ],
       "llm_topics": [
-        "secondary-indexing",
+        "external-lookup",
+        "streaming",
+        "join"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "3b879852fcce",
+      "llm_title": "External Lookup Join",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1"
+    },
+    {
+      "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Automated AI code review on new Spark PRs (trial)",
+      "url": "https://lists.apache.org/thread/wb2821v85vn0lcbdzsbr8o672j8f53wj",
+      "author": "Hyukjin Kwon <gu...@apache.org>",
+      "state": "open",
+      "created_at": "2026-10-01T21:58:50+00:00",
+      "updated_at": "2026-10-08T01:54:07+00:00",
+      "body": "Hi all,\n\nI've been running a trial of automated AI code review on new apache/spark\nPRs, and I'd like to share how it works and get your feedback.\n\nFor now the reviews are posted from my own GitHub account (@HyukjinKwon)\nwhile I check that it behaves well. Once it's proven, I plan to move it to\nthe https://github.com/spark-test account, so the reviews are clearly\nseparate from my personal ones. I plan to run this for the next week.\n\n*What it does*\n\nEach review is a full, multi-pass review of the PR diff, run by Claude\n(via Claude Code). Findings are checked against the code before they're\nposted. They're posted as a normal GitHub review: a short summary plus\ninline comments, each labeled with a severity, e.g. \"Non-blocking (P2)\"\nor \"Nit (P3)\". Example:\nhttps://github.com/apache/spark/pull/59184#pullrequestreview-5379759787\n\n*No LGTM, no approvals*\n\n- It never approves a PR and never posts \"LGTM\". Every review is a plain\n  \"Comment\" review, so it doesn't count as an approval or a change\n  request, and it has no effect on merging.\n- If a review finds nothing new, it posts nothing at all: no \"no\n  findings\" or \"all comments addressed\" message.\n- It doesn't push commits or edit anyone's PR.\n- Human review and committer judgement are unchanged. Please treat its\n  comments like any other reviewer's: feel free to push back or ignore.\n\n*When a review is triggered*\n\n- A new PR is reviewed shortly after it's opened. Draft PRs are reviewed\n  once they're marked ready for review.\n- After a review posts findings, the bot waits. It reviews again only\n  when the author pushes new commits.\n- It also waits while a PR has open review comments from anyone that are\n  newer than the latest commit, so it doesn't pile on while the author is\n  still responding to reviewers.\n- Replying in a thread without pushing doesn't trigger a re-review.\n\n*When it stops*\n\n- When a review finds nothing new. The PR gets a fresh review if the\n  author pushes again later.\n- When the PR is merged or closed.\n\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/spark/pull/59184",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "A trial of automated AI code review using Claude was launched for new Apache Spark pull requests, posting only advisory comments without approvals. The bot triggers on new or updated PRs, respects open review comments, and can be disabled per PR via a GitHub label, with safeguards to limit Jira API usage.",
+      "llm_status": "discussion",
+      "comment_count": 6,
+      "participant_count": 5,
+      "llm_key_points": [
+        "Trial uses Claude to post advisory comments without approvals",
+        "Bot can be opt\u2011out per PR and limits excessive Jira API calls"
+      ],
+      "llm_topics": [
+        "automated-code-review",
         "performance"
       ],
       "summary_generation": {
@@ -1903,8 +1944,8 @@
         "model": "openai/gpt-oss-20b",
         "prompt_version": 1
       },
-      "_content_hash": "afbd96a536cb",
-      "llm_title": "External Lookup Join",
+      "_content_hash": "b58c68bae6e6",
+      "llm_title": "Automated AI code review for Spark PRs",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
@@ -2003,49 +2044,6 @@
       "_content_hash": "d053f365befe",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-ov7hfrb2jx17lt5xgs0zjqpmjotkm9bb"
-    },
-    {
-      "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Automated AI code review on new Spark PRs (trial)",
-      "url": "https://lists.apache.org/thread/wb2821v85vn0lcbdzsbr8o672j8f53wj",
-      "author": "Hyukjin Kwon <gu...@apache.org>",
-      "state": "open",
-      "created_at": "2026-10-01T21:58:50+00:00",
-      "updated_at": "2026-10-02T16:52:35+00:00",
-      "body": "Hi all,\n\nI've been running a trial of automated AI code review on new apache/spark\nPRs, and I'd like to share how it works and get your feedback.\n\nFor now the reviews are posted from my own GitHub account (@HyukjinKwon)\nwhile I check that it behaves well. Once it's proven, I plan to move it to\nthe https://github.com/spark-test account, so the reviews are clearly\nseparate from my personal ones. I plan to run this for the next week.\n\n*What it does*\n\nEach review is a full, multi-pass review of the PR diff, run by Claude\n(via Claude Code). Findings are checked against the code before they're\nposted. They're posted as a normal GitHub review: a short summary plus\ninline comments, each labeled with a severity, e.g. \"Non-blocking (P2)\"\nor \"Nit (P3)\". Example:\nhttps://github.com/apache/spark/pull/59184#pullrequestreview-5379759787\n\n*No LGTM, no approvals*\n\n- It never approves a PR and never posts \"LGTM\". Every review is a plain\n  \"Comment\" review, so it doesn't count as an approval or a change\n  request, and it has no effect on merging.\n- If a review finds nothing new, it posts nothing at all: no \"no\n  findings\" or \"all comments addressed\" message.\n- It doesn't push commits or edit anyone's PR.\n- Human review and committer judgement are unchanged. Please treat its\n  comments like any other reviewer's: feel free to push back or ignore.\n\n*When a review is triggered*\n\n- A new PR is reviewed shortly after it's opened. Draft PRs are reviewed\n  once they're marked ready for review.\n- After a review posts findings, the bot waits. It reviews again only\n  when the author pushes new commits.\n- It also waits while a PR has open review comments from anyone that are\n  newer than the latest commit, so it doesn't pile on while the author is\n  still responding to reviewers.\n- Replying in a thread without pushing doesn't trigger a re-review.\n\n*When it stops*\n\n- When a review finds nothing new. The PR gets a fresh review if the\n  author pushes again later.\n- When the PR is merged or closed.\n\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/spark/pull/59184",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "A trial of an AI-powered code review bot for new Apache Spark pull requests has been launched, posting non-approving comments with severity labels. The bot triggers on new or updated PRs, waits for author responses, and can be disabled via a GitHub label. Participants discuss safeguards, UI options, and the advisory nature of the reviews.",
-      "llm_status": "discussion",
-      "comment_count": 5,
-      "participant_count": 5,
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "llm_key_points": [
-        "Trial of AI review bot that posts non-approving comments with severity labels",
-        "Bot triggers on new or updated PRs and waits for author responses before re-reviewing",
-        "Discussion of safeguards such as opt-out labels and Jira API protection"
-      ],
-      "llm_topics": [
-        "automation",
-        "code-review",
-        "performance"
-      ],
-      "llm_title": "Automated AI code review on Spark PRs",
-      "_content_hash": "6932ec4fd85c",
-      "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
       "id": "spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b",
@@ -2320,7 +2318,7 @@
       "_content_hash": "10849487e050",
       "llm_title": "Apache Spark 4.2.1 Release",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-pjbnfycmp5lt28bc242rvl4ln2t4nof3"
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-96goypb9vq64h9t5jkmw8n8yo3xtrogv",
@@ -2397,7 +2395,7 @@
       "_content_hash": "f45f957d028a",
       "llm_title": "Add DECFLOAT data type to Spark",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-zxdn5hj7tb0zb21b4xxzfxz717sx31fj"
+      "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
       "id": "spark-ml-r3jyf1on98lgnxw6pdhjj0qrh09mnxvz",
@@ -3110,7 +3108,7 @@
       },
       "_content_hash": "d3774da4347d",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-zxdn5hj7tb0zb21b4xxzfxz717sx31fj"
+      "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
       "id": "spark-ml-vh21614wrjmr7cdd905qhwbwqd25lmjj",
@@ -3525,7 +3523,7 @@
       ],
       "_content_hash": "45c295998dc1",
       "llm_title": "",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-72dhvf0qmw4l8gzgogfth7v0cn5gcb6d",
@@ -6156,7 +6154,7 @@
         "security"
       ],
       "_content_hash": "046734127fcf",
-      "initiative_id": "spark-init-spark-ml-pjbnfycmp5lt28bc242rvl4ln2t4nof3",
+      "initiative_id": "spark-init-spark-jira-SPARK-51207",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -6558,7 +6556,7 @@
         "project-management"
       ],
       "_content_hash": "899712ff3a84",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249",
+      "initiative_id": "spark-init-spark-jira-SPARK-51207",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -8497,7 +8495,7 @@
         "vote-passes"
       ],
       "_content_hash": "fd32bebf9a67",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
       "id": "spark-ml-3h7nddnom2s6c0lqxptobjso1kyr0ynt",
@@ -8631,7 +8629,7 @@
         "partition-stats"
       ],
       "_content_hash": "daf27161289e",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
       "id": "spark-ml-90fnr43zpvl3r2n3c7px1vypj40ht6gv",
@@ -8767,7 +8765,7 @@
         "sources"
       ],
       "_content_hash": "b60b751a671f",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
       "id": "spark-ml-5c18gn3q3fkn9ol8o7zknwyrh8vqktoc",
@@ -8826,7 +8824,7 @@
         "result"
       ],
       "_content_hash": "184053a80a61",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-kv11qlr8j05cwqjoyddybclwcn0nv2n7",
@@ -8912,7 +8910,7 @@
         "open-github"
       ],
       "_content_hash": "5df4ec6ed9c2",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-ybxfxcxsjrprxc3175rn09bw4ov8n6xl",
@@ -10375,7 +10373,7 @@
         "spark"
       ],
       "_content_hash": "e091dadd9056",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-9k9dpt7xbyyfl7pkd4z0crloq2jdyy31",
@@ -10474,7 +10472,7 @@
         "release-cadence"
       ],
       "_content_hash": "194885704a91",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-2wsgvlzmkbc79k6hv6psww58mmhlo66l",
@@ -10695,7 +10693,7 @@
         "release-cadence"
       ],
       "_content_hash": "d7aaac6e8c85",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-d9x01l77hkys0so677m91mv9bb269rkj",
@@ -13097,7 +13095,7 @@
         "spip"
       ],
       "_content_hash": "4e572fa0845f",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-zhcv1og8767151zd9rdl1tpp53wz64pf",
@@ -13277,7 +13275,7 @@
         "automation"
       ],
       "_content_hash": "6d600aecc60b",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249",
+      "initiative_id": "spark-init-spark-jira-SPARK-51207",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -13641,7 +13639,7 @@
         "dependency-management"
       ],
       "_content_hash": "220ebb400088",
-      "initiative_id": "spark-init-spark-ml-pjbnfycmp5lt28bc242rvl4ln2t4nof3",
+      "initiative_id": "spark-init-spark-jira-SPARK-51207",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -16474,7 +16472,7 @@
         "include-vendor"
       ],
       "_content_hash": "544ece4b5e5f",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-fqn0x0r6txrpcv5b3zjxggjw6jssc9no",
@@ -16516,7 +16514,7 @@
         "vote"
       ],
       "_content_hash": "8889f8660299",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-fz2tdzc0100m146mtrk76zv1wg1bdzfk",
@@ -16563,7 +16561,7 @@
         "migration-logic"
       ],
       "_content_hash": "59f97ebb5fbd",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-n29v9y679x7b8ol4sr4c4b7s3wvtrdzz",
@@ -16626,7 +16624,7 @@
         "dongjoon-technical"
       ],
       "_content_hash": "314f9935f6a5",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-9pc9p36mzvb78md9zzs4j5hz63nqgc49",
@@ -16817,7 +16815,7 @@
         "vote"
       ],
       "_content_hash": "297049d9a616",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-1jlmkzlfjfsrjhygvjmsw2y48w9c6q1s",
@@ -16927,7 +16925,7 @@
         "config"
       ],
       "_content_hash": "7ea81adb1f55",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-7p1qblr92wls0wp5tyq04phvb73cf7sw",
@@ -17834,7 +17832,7 @@
         "artifact-management"
       ],
       "_content_hash": "e55e7513664b",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249",
+      "initiative_id": "spark-init-spark-jira-SPARK-51207",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -18592,7 +18590,7 @@
         "api"
       ],
       "_content_hash": "eda4f3ad4f74",
-      "initiative_id": "spark-init-spark-ml-pjbnfycmp5lt28bc242rvl4ln2t4nof3",
+      "initiative_id": "spark-init-spark-jira-SPARK-51207",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -20401,7 +20399,7 @@
         "archives-archive"
       ],
       "_content_hash": "1c19076a1dd9",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-oyogozm8y642w0bc5h1cx2xst7fyz3ms",
@@ -20654,7 +20652,7 @@
         "release"
       ],
       "_content_hash": "b1a212827551",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-1kr0hhx3c6ml132gqvy5424gz8qnnqd5",
@@ -20775,7 +20773,7 @@
         "release"
       ],
       "_content_hash": "984729e261a5",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-xqws8pbhhdtxg0s0s2g5q6mhxx2s80k5",
@@ -20855,7 +20853,7 @@
         "release"
       ],
       "_content_hash": "574d0aa54ae9",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-40d961d0yjnxkxfb4rnd7qjf45onxrxo",
@@ -20984,7 +20982,7 @@
         "release"
       ],
       "_content_hash": "bee538c767ff",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-ys7zsod8cs9c7qllmf0p0msk6z2mz2ym",
@@ -21169,7 +21167,7 @@
         "release"
       ],
       "_content_hash": "80a88ba1c22d",
-      "initiative_id": "spark-init-spark-ml-x010xgq26l85jcvhjtosqt4f3fh1khh6"
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-zctzq0gq22mdq7ycnfrxlypxtk537hwb",
@@ -28869,7 +28867,7 @@
         "dataframe-based"
       ],
       "_content_hash": "fbd26f4dc91c",
-      "initiative_id": "spark-init-spark-jira-SPARK-58455"
+      "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
       "id": "spark-ml-zg6k1spw6k1c7brgo6t7qldvsqbmfytm",
@@ -29170,7 +29168,7 @@
         "dataframe-api"
       ],
       "_content_hash": "b5ec356c79e0",
-      "initiative_id": "spark-init-spark-jira-SPARK-58455"
+      "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
       "id": "spark-ml-znpb9lgsrwrr1d733rmqbqp7w38ycs2z",
@@ -30472,7 +30470,7 @@
         "storage"
       ],
       "_content_hash": "635ba4346673",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-hdoo023600od62lgn8wx3j8kjy29l67c",
@@ -30508,7 +30506,7 @@
         "partitioned"
       ],
       "_content_hash": "5232f5d2202f",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-2z3rfzmq8bv01yrmchs87g82grbzfz0m",
@@ -30539,7 +30537,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",

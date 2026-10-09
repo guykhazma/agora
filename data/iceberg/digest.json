@@ -1,5 +1,5 @@
 {
-  "summary": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Define RepairManifests action interface (#17399) - Implementation PR (#17622) is in review. Geospatial * WIP: End-to-end spatial file pruning from Spark SQL, ST_INTERSECTS pushdown (#17175) \u2014 DRAFT, now carries a stale label; last touched Aug 13. In contrast, HMS stores extensive metadata (properties, schema, partition spec, sort order, snapshot) to support Hive clients. Daniel and Shawn discuss that GlueCatalog writes only a subset of Iceberg metadata to the Glue table, leading to split\u2011brain and consistency issues with HMS.",
+  "summary": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Define RepairManifests action interface (#17399) - Implementation PR (#17622) is in review. Geospatial * WIP: End-to-end spatial file pruning from Spark SQL, ST_INTERSECTS pushdown (#17175) \u2014 DRAFT, now carries a stale label; last touched Aug 13. * Spark: Fix orphan file matching for sibling table prefixes (#17448) + repro test (#17449) \u2014 NEW Jul 31, overlaps #16999; consolidate. It also suggests adding a getter for transactionOpts or an abstract PendingUpdate with a callback to set TableOperations, mirroring Spark's catalog approach.",
   "highlights": [
     {
       "text": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Def\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "Yan has drafted a PR to update the Iceberg spec for a new Vector type, building on recent Parquet community work. The biweekly sync will now cover both File and\u2026",
+      "text": "The discussion proposes making the appendUpdate method in BaseTransaction public to allow custom index implementations to inject PendingUpdates directly. It als\u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-28kw8cnzm835y2l8c6w8pp3m24551qlb",
+          "title": "[DISCUSS] make appendUpdate in BaseTransaction public",
+          "url": "https://lists.apache.org/thread/28kw8cnzm835y2l8c6w8pp3m24551qlb"
+        }
+      ]
+    },
+    {
+      "text": "The discussion centers on how to represent statistics tightness in Iceberg v4, especially when deletion vectors (DVs) are present. Participants converge on addi\u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-tv7bvqctdfh5qng1sx5rp8r4r00nsv60",
+          "title": "[DISCUSS] Iceberg v4 Stats Tightness",
+          "url": "https://lists.apache.org/thread/tv7bvqctdfh5qng1sx5rp8r4r00nsv60"
+        }
+      ]
+    },
+    {
+      "text": "The discussion focuses on adding the new Vector type to the biweekly sync schedule, starting October 8, to accelerate its development. Yan has drafted a PR to u\u2026",
       "sources": [
         {
           "id": "iceberg-ml-49bm2d8szbzkvtdog38s1o6zb04cj67o",
           "title": "Re: Extend Thur's biweekly sync to both File and Vector types (starting Oct 8)",
           "url": "https://lists.apache.org/thread/49bm2d8szbzkvtdog38s1o6zb04cj67o"
-        }
-      ]
-    },
-    {
-      "text": "The discussion centers on adding a new enum constant to the X-Iceberg-Access-Delegation header to clarify client intent. Participants debate between \"local\" and\u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-l02zjbx3j1pddqhj3wg8gkj10o90l2cp",
-          "title": "Re: [DISCUSS] REST spec: expected server behavior when X-Iceberg-Access-Delegation cannot be satisfied",
-          "url": "https://lists.apache.org/thread/l02zjbx3j1pddqhj3wg8gkj10o90l2cp"
-        }
-      ]
-    },
-    {
-      "text": "The discussion focuses on how REST servers should handle residuals while clients transition to the new expression syntax, proposing that servers omit residuals \u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-48pqzgp1x095yn7clrpbh1vb56gfbq1t",
-          "title": "[DISCUSS] Migrating to the new expression JSON forms, and conformance fixtures for it",
-          "url": "https://lists.apache.org/thread/48pqzgp1x095yn7clrpbh1vb56gfbq1t"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-08T12:32:01.113515+00:00",
+  "generated_at": "2026-10-09T12:20:36.434723+00:00",
   "item_count": 12,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-10-01",
-    "to": "2026-10-08",
+    "from": "2026-10-05",
+    "to": "2026-10-09",
     "thread_count": 12
   }
 }

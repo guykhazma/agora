@@ -1,7 +1,7 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-08T12:36:26.478336+00:00",
-  "total": 670,
+  "generated_at": "2026-10-09T12:25:36.538199+00:00",
+  "total": 671,
   "proposals": [
     {
       "id": "spark-jira-SPARK-55278",
@@ -12,7 +12,7 @@
       "author": "Haiyang Sun",
       "state": "open",
       "created_at": "2026-01-29T12:26:31+00:00",
-      "updated_at": "2026-10-04T13:49:22+00:00",
+      "updated_at": "2026-10-09T05:26:26+00:00",
       "body": "Run user-provided code in Spark {*}consistently across many programming languages{*}.\r\n\r\nToday, Spark Connect allows users to write queries from multiple languages, but support for user-defined functions is incomplete. In practice, only Python has a mature solution, and it relies on language-specific mechanisms that do not generalize to other languages such as [Go|https://github.com/apache/spark-connect-go] / [Rust|https://github.com/apache/spark-connect-rust] / [Swift|https://github.com/apache/spark-connect-swift] / [.NET|https://github.com/GoEddie/spark-connect-dotnet] (where UDF is not supported).\r\n\r\nOur objective is to define a *unified API and execution protocol* for user-defined functions that run outside the Spark engine process via inter-process communication (IPC). This allows Spark to interact with external workers in a consistent way, regardless of the language used to implement the function.\r\n\r\nSPIP doc: [https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0]\r\n\r\nWorker Specification doc: [https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0]\r\n\r\n\u00a0",
       "labels": [
         "SPIP",
@@ -22,8 +22,7 @@
         {
           "url": "https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0",
           "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSPIP: Language-agnostic UDF Protocol for Spark"
+          "fetched": false
         },
         {
           "url": "https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0",
@@ -33,15 +32,15 @@
         }
       ],
       "comment_count": 7,
-      "llm_summary": "The proposal introduces SPIP, a unified API and execution protocol that enables user-defined functions to run across multiple programming languages via inter-process communication. It decouples the Spark engine from language-specific runtimes, reuses Spark\u2019s planning logic, and expands UDF support beyond Python to Go, Rust, Swift, .NET, and more.",
+      "llm_summary": "The proposal introduces SPIP, a unified API and execution protocol for user-defined functions that run outside the Spark engine, enabling support across multiple languages such as Go, Rust, Swift, and .NET. It addresses current limitations in language-specific runtimes, planning, and worker provisioning by defining a common worker specification and connection model. The discussion focuses on how to provision, manage, and schedule UDF workers while abstracting language differences.",
       "llm_status": "discussion",
       "llm_key_points": [
-        "Unify UDF API across languages using IPC workers",
-        "Decouple Spark engine from language runtimes",
-        "Extend UDF support to Go, Rust, Swift, .NET"
+        "Unified API for cross-language UDF execution",
+        "Addressing language-specific runtime and scheduling limitations",
+        "Defining worker provisioning and connection protocols"
       ],
       "llm_topics": [
-        "udf-protocol",
+        "language-agnostic-udf",
         "inter-process-communication",
         "spark-connect"
       ],
@@ -840,7 +839,7 @@
         "spark-dataframes"
       ],
       "_content_hash": "001ad555ca35",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-56978"
     },
     {
       "id": "spark-jira-SPARK-24918",
@@ -1861,7 +1860,49 @@
         "spark-sub-project"
       ],
       "_content_hash": "e46e418f4ebe",
-      "initiative_id": "spark-init-spark-jira-SPARK-56978"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+    },
+    {
+      "id": "spark-ml-59kjtonswtv96n4313knhpjcfxxtmvol",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS][SQL] SPARK-59849: Fallback resolver for unknown V2 catalog names",
+      "url": "https://lists.apache.org/thread/59kjtonswtv96n4313knhpjcfxxtmvol",
+      "author": "Jie Hu <ja...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-10-09T02:35:08+00:00",
+      "updated_at": "2026-10-09T02:35:08+00:00",
+      "body": "Hi Spark developers,\n\nI'd like to get feedback on SPARK-59849, which proposes an optional\nfallback resolver for unknown V2 catalog names.\n\nWe use Spark with Apache Gravitino, managing over 1,300 catalogs.\nCurrently, the connector must list and register all visible catalog\nnames through spark.sql.catalog.<name> during driver initialization,\neven when an application accesses only one catalog.\n\nSpark supports lazy instantiation of configured catalogs, but an\nunconfigured catalog name cannot be discovered through an external\nresolver.\n\nThe proposed behavior is:\n- Keep existing catalog configuration as the first choice.\n- For an unconfigured name, consult an explicitly configured resolver.\n- Cache a successfully resolved catalog.\n- Preserve existing behavior when no resolver is configured.\n\nThis would allow external catalog services to resolve catalogs on\nfirst use and discover catalogs created after application startup.\n\nWould this extension be acceptable in principle? Is there an existing\nextension point or alternative approach that I should consider? If the\ndirection is welcome, I can work on a minimal implementation and\ntests.\n\nJIRA:\nhttps://issues.apache.org/jira/browse/SPARK-59849\n\nProposal:\nhttps://github.com/apache/spark/issues/58444\n\nThanks,\nJie Hu\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/spark/issues/58444",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "The discussion proposes an optional fallback resolver that will be consulted when an application references a V2 catalog name that has not been pre\u2011configured in Spark. The resolver would resolve the catalog on first use, cache the result, and otherwise fall back to the existing catalog configuration, enabling lazy discovery of catalogs created after startup.",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [
+        "Introduce optional fallback resolver for unknown V2 catalog names",
+        "Cache resolved catalogs and preserve existing behavior when no resolver is configured"
+      ],
+      "llm_topics": [
+        "catalog-resolution",
+        "lazy-instantiation",
+        "performance"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "19fca5fb7ed8",
+      "llm_title": "Fallback resolver for unknown V2 catalog names",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
       "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
@@ -1883,19 +1924,19 @@
           "title": "\ufeffSPIP: External Lookup Join"
         }
       ],
-      "llm_summary": "The discussion proposes an External Lookup Join for Spark, allowing stream data to be joined with external storage by querying the static side on demand, reducing latency. It addresses the limitation that current Spark joins require materializing the static side before processing. Feedback notes the need to define DSv2 interfaces and third\u2011party connector support.",
+      "llm_summary": "The discussion proposes a new on\u2011demand join strategy that queries an external storage for each row of the streaming side, avoiding pre\u2011materialization of the static side. It highlights benefits for low\u2011latency and throughput, especially in real\u2011time scenarios, and notes the need to extend the DSv2 interface for third\u2011party connectors. Participants raise concerns about missing interface details and the scope of the proposal.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
       "llm_key_points": [
-        "Enable on-demand lookup join to reduce latency",
-        "Current Spark loads static side fully, causing inefficiencies",
-        "Feedback highlights missing DSv2 interface details and connector support"
+        "introduces on\u2011demand join strategy",
+        "requires DSv2 interface extension",
+        "benefits low\u2011latency and throughput"
       ],
       "llm_topics": [
-        "external-lookup",
-        "streaming",
-        "join"
+        "join-strategy",
+        "performance",
+        "external-lookup"
       ],
       "summary_generation": {
         "method": "llm",
@@ -1906,7 +1947,7 @@
       "_content_hash": "3b879852fcce",
       "llm_title": "External Lookup Join",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1"
+      "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
       "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
@@ -1930,6 +1971,12 @@
       "llm_status": "discussion",
       "comment_count": 6,
       "participant_count": 5,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
       "llm_key_points": [
         "Trial uses Claude to post advisory comments without approvals",
         "Bot can be opt\u2011out per PR and limits excessive Jira API calls"
@@ -1938,14 +1985,8 @@
         "automated-code-review",
         "performance"
       ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "b58c68bae6e6",
       "llm_title": "Automated AI code review for Spark PRs",
+      "_content_hash": "b58c68bae6e6",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
@@ -2002,7 +2043,7 @@
           "source_updated_at": "2026-10-06T20:04:00+00:00"
         }
       ],
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-ov7hfrb2jx17lt5xgs0zjqpmjotkm9bb",
@@ -2084,7 +2125,7 @@
       },
       "_content_hash": "579bca591d91",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx",
@@ -3298,7 +3339,7 @@
       ],
       "llm_title": "",
       "_content_hash": "97cea4020d47",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-vgg3omvqqmyo2c8w5rnnhl78k1rzp2qg",
@@ -3599,7 +3640,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -5175,7 +5216,7 @@
         "uro-bojani"
       ],
       "_content_hash": "011b99573a32",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-92kjhnglm90z2n8v7hxn6d9nb2gzhq1z",
@@ -5468,7 +5509,7 @@
         "apache-spark"
       ],
       "_content_hash": "ec8146319b15",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv",
@@ -5499,7 +5540,7 @@
         "spark-project"
       ],
       "_content_hash": "af074b2503b6",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-c3sjlfos8d4o2859bjpltpgsf33wfnfh",
@@ -8059,7 +8100,7 @@
         "tian-gao"
       ],
       "_content_hash": "dacca48c4fa0",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-mqfysmjmkdnw0fxy9t5dp7bxpvo36jrv",
@@ -8495,7 +8536,7 @@
         "vote-passes"
       ],
       "_content_hash": "fd32bebf9a67",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-3h7nddnom2s6c0lqxptobjso1kyr0ynt",
@@ -8629,7 +8670,7 @@
         "partition-stats"
       ],
       "_content_hash": "daf27161289e",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-90fnr43zpvl3r2n3c7px1vypj40ht6gv",
@@ -8765,7 +8806,7 @@
         "sources"
       ],
       "_content_hash": "b60b751a671f",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-5c18gn3q3fkn9ol8o7zknwyrh8vqktoc",
@@ -28753,7 +28794,7 @@
         "spip"
       ],
       "_content_hash": "f3cf472da1c5",
-      "initiative_id": "spark-init-spark-ml-smpwykpoqr0y5r5xgc9jpt1fjm72fvck"
+      "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
       "id": "spark-ml-nbqj698v59skknrh7bp6ol0rrs9zsr6r",
@@ -30537,7 +30578,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",

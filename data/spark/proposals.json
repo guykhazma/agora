@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-09T12:25:36.538199+00:00",
+  "generated_at": "2026-10-10T11:42:39.263876+00:00",
   "total": 671,
   "proposals": [
     {
@@ -12,7 +12,7 @@
       "author": "Haiyang Sun",
       "state": "open",
       "created_at": "2026-01-29T12:26:31+00:00",
-      "updated_at": "2026-10-09T05:26:26+00:00",
+      "updated_at": "2026-10-09T19:38:05+00:00",
       "body": "Run user-provided code in Spark {*}consistently across many programming languages{*}.\r\n\r\nToday, Spark Connect allows users to write queries from multiple languages, but support for user-defined functions is incomplete. In practice, only Python has a mature solution, and it relies on language-specific mechanisms that do not generalize to other languages such as [Go|https://github.com/apache/spark-connect-go] / [Rust|https://github.com/apache/spark-connect-rust] / [Swift|https://github.com/apache/spark-connect-swift] / [.NET|https://github.com/GoEddie/spark-connect-dotnet] (where UDF is not supported).\r\n\r\nOur objective is to define a *unified API and execution protocol* for user-defined functions that run outside the Spark engine process via inter-process communication (IPC). This allows Spark to interact with external workers in a consistent way, regardless of the language used to implement the function.\r\n\r\nSPIP doc: [https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0]\r\n\r\nWorker Specification doc: [https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0]\r\n\r\n\u00a0",
       "labels": [
         "SPIP",
@@ -22,7 +22,8 @@
         {
           "url": "https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0",
           "kind": "google_doc",
-          "fetched": false
+          "fetched": true,
+          "title": "\ufeffSPIP: Language-agnostic UDF Protocol for Spark"
         },
         {
           "url": "https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0",
@@ -32,15 +33,15 @@
         }
       ],
       "comment_count": 7,
-      "llm_summary": "The proposal introduces SPIP, a unified API and execution protocol for user-defined functions that run outside the Spark engine, enabling support across multiple languages such as Go, Rust, Swift, and .NET. It addresses current limitations in language-specific runtimes, planning, and worker provisioning by defining a common worker specification and connection model. The discussion focuses on how to provision, manage, and schedule UDF workers while abstracting language differences.",
+      "llm_summary": "The discussion proposes SPIP, a unified API and execution protocol for user-defined functions that can run outside the Spark engine via IPC, enabling consistent support across multiple client languages such as Go, Rust, Swift, and .NET. It aims to decouple Spark from language-specific runtimes, preserve existing planning and optimization logic, and keep the engine lightweight. The proposal focuses on scalar UDFs and mapPartitions, leaving Java/Scala UDFs unchanged.",
       "llm_status": "discussion",
       "llm_key_points": [
-        "Unified API for cross-language UDF execution",
-        "Addressing language-specific runtime and scheduling limitations",
-        "Defining worker provisioning and connection protocols"
+        "Unified UDF API across languages",
+        "External worker execution via IPC",
+        "Preserve Spark planning and optimization"
       ],
       "llm_topics": [
-        "language-agnostic-udf",
+        "udf-protocol",
         "inter-process-communication",
         "spark-connect"
       ],
@@ -51,7 +52,7 @@
         "prompt_version": 1
       },
       "_content_hash": "effdf8738e47",
-      "llm_title": "Language-agnostic UDF Protocol for Spark",
+      "llm_title": "SPIP: Language-agnostic UDF Protocol",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
@@ -1884,6 +1885,12 @@
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
       "llm_key_points": [
         "Introduce optional fallback resolver for unknown V2 catalog names",
         "Cache resolved catalogs and preserve existing behavior when no resolver is configured"
@@ -1893,14 +1900,8 @@
         "lazy-instantiation",
         "performance"
       ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "19fca5fb7ed8",
       "llm_title": "Fallback resolver for unknown V2 catalog names",
+      "_content_hash": "19fca5fb7ed8",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
@@ -1924,19 +1925,20 @@
           "title": "\ufeffSPIP: External Lookup Join"
         }
       ],
-      "llm_summary": "The discussion proposes a new on\u2011demand join strategy that queries an external storage for each row of the streaming side, avoiding pre\u2011materialization of the static side. It highlights benefits for low\u2011latency and throughput, especially in real\u2011time scenarios, and notes the need to extend the DSv2 interface for third\u2011party connectors. Participants raise concerns about missing interface details and the scope of the proposal.",
+      "llm_summary": "The proposal introduces an External Lookup Join that performs on-demand lookups against an external static side, reducing latency by avoiding full materialization of the static dataset. It targets stream\u2011static and static\u2011static joins, encouraging third\u2011party connectors via DSv2 interfaces, while clarifying that it does not cover first\u2011party connectors or all join patterns. Current Spark practice loads the entire static side per micro\u2011batch, which the new strategy aims to improve.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
       "llm_key_points": [
-        "introduces on\u2011demand join strategy",
-        "requires DSv2 interface extension",
-        "benefits low\u2011latency and throughput"
+        "On\u2011demand lookup against external storage for low\u2011latency joins",
+        "Requires DSv2 interface and third\u2011party connector support",
+        "Does not replace first\u2011party connectors or all join patterns",
+        "Current Spark loads entire static side per micro\u2011batch"
       ],
       "llm_topics": [
-        "join-strategy",
-        "performance",
-        "external-lookup"
+        "stream-static-join",
+        "external-lookup",
+        "performance"
       ],
       "summary_generation": {
         "method": "llm",
@@ -1945,7 +1947,7 @@
         "prompt_version": 1
       },
       "_content_hash": "3b879852fcce",
-      "llm_title": "External Lookup Join",
+      "llm_title": "External Lookup Join Proposal",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
@@ -3640,7 +3642,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -30578,7 +30580,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",

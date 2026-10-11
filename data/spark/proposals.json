@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-10T11:42:39.263876+00:00",
+  "generated_at": "2026-10-11T11:56:32.347337+00:00",
   "total": 671,
   "proposals": [
     {
@@ -1925,20 +1925,19 @@
           "title": "\ufeffSPIP: External Lookup Join"
         }
       ],
-      "llm_summary": "The proposal introduces an External Lookup Join that performs on-demand lookups against an external static side, reducing latency by avoiding full materialization of the static dataset. It targets stream\u2011static and static\u2011static joins, encouraging third\u2011party connectors via DSv2 interfaces, while clarifying that it does not cover first\u2011party connectors or all join patterns. Current Spark practice loads the entire static side per micro\u2011batch, which the new strategy aims to improve.",
+      "llm_summary": "The discussion proposes a new join strategy that performs on\u2011demand lookups against an external storage for the static side, avoiding the need to materialize it before the join. It highlights the benefits for low\u2011latency stream\u2011static joins and the requirement to extend the DSv2 interface so third\u2011party connectors can support this capability. Participants note that the proposal focuses on equality lookups and does not introduce new connectors, but rather defines the public contract for future implementations.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
       "llm_key_points": [
-        "On\u2011demand lookup against external storage for low\u2011latency joins",
-        "Requires DSv2 interface and third\u2011party connector support",
-        "Does not replace first\u2011party connectors or all join patterns",
-        "Current Spark loads entire static side per micro\u2011batch"
+        "Proposes on\u2011demand lookup join to avoid pre\u2011materializing static side",
+        "Requires extending DSv2 interface for third\u2011party connector support",
+        "Aims to improve low\u2011latency stream\u2011static joins with equality lookups"
       ],
       "llm_topics": [
         "stream-static-join",
-        "external-lookup",
-        "performance"
+        "performance",
+        "external-lookup"
       ],
       "summary_generation": {
         "method": "llm",
@@ -1947,7 +1946,7 @@
         "prompt_version": 1
       },
       "_content_hash": "3b879852fcce",
-      "llm_title": "External Lookup Join Proposal",
+      "llm_title": "External Lookup Join",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },

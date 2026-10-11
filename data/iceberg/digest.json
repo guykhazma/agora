@@ -1,5 +1,5 @@
 {
-  "summary": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Define RepairManifests action interface (#17399) - Implementation PR (#17622) is in review. Geospatial * WIP: End-to-end spatial file pruning from Spark SQL, ST_INTERSECTS pushdown (#17175) \u2014 DRAFT, now carries a stale label; last touched Aug 13. * Spark: Fix orphan file matching for sibling table prefixes (#17448) + repro test (#17449) \u2014 NEW Jul 31, overlaps #16999; consolidate. The response notes that similar conflict\u2011resolution logic can be achieved via the SnapshotAncestryValidator and SnapshotUpdate public API, and references PR #13631 that introduced appendUpdate.",
+  "summary": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Define RepairManifests action interface (#17399) - Implementation PR (#17622) is in review. Geospatial * WIP: End-to-end spatial file pruning from Spark SQL, ST_INTERSECTS pushdown (#17175) \u2014 DRAFT, now carries a stale label; last touched Aug 13. The migration tool aims to convert Delta Lake tables to Apache Iceberg incrementally, preserving history and avoiding data rewrites. Participants weigh per-column tightness against a simpler file-wide flag, ultimately converging on the file-level approach to avoid writer complexity and potential errors.",
   "highlights": [
     {
       "text": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Def\u2026",
@@ -12,7 +12,17 @@
       ]
     },
     {
-      "text": "Two PyIceberg pull requests on the Azure side are pending committer review. PR #3886 corrects the storage account inference bug in FsspecFileIO, while PR #3936 \u2026",
+      "text": "The PR has addressed all recent review comments and now focuses on cleaning up internal API usage, particularly the shift from the old Table API to the new Tabl\u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-wl2m40rbs95f82sw0yhsp8rj58xr6qdf",
+          "title": "Re: Subject: [PR Review] Updating Delta Lake Migration to use Delta Kernel (PR #15407)",
+          "url": "https://lists.apache.org/thread/wl2m40rbs95f82sw0yhsp8rj58xr6qdf"
+        }
+      ]
+    },
+    {
+      "text": "Two small PRs for PyIceberg on Azure side are ready but waiting for committer review. PR #3886 corrects FsspecFileIO to write inferred storage account back, pre\u2026",
       "sources": [
         {
           "id": "iceberg-ml-kp41hjc76o3byrw4pp3599qf13p2ykhl",
@@ -30,16 +40,6 @@
           "url": "https://github.com/apache/iceberg/milestone/64"
         }
       ]
-    },
-    {
-      "text": "Dzeri proposes changing the visibility of BaseTransaction.appendUpdate to public so custom indexes can inject PendingUpdates directly. The response notes that s\u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-28kw8cnzm835y2l8c6w8pp3m24551qlb",
-          "title": "[DISCUSS] make appendUpdate in BaseTransaction public",
-          "url": "https://lists.apache.org/thread/28kw8cnzm835y2l8c6w8pp3m24551qlb"
-        }
-      ]
     }
   ],
   "generation": {
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-10T11:38:33.099549+00:00",
+  "generated_at": "2026-10-11T11:52:00.776647+00:00",
   "item_count": 12,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-10-05",
-    "to": "2026-10-10",
+    "to": "2026-10-11",
     "thread_count": 12
   }
 }

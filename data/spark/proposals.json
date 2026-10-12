@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-11T11:56:32.347337+00:00",
+  "generated_at": "2026-10-12T14:01:59.046984+00:00",
   "total": 671,
   "proposals": [
     {
@@ -1925,19 +1925,19 @@
           "title": "\ufeffSPIP: External Lookup Join"
         }
       ],
-      "llm_summary": "The discussion proposes a new join strategy that performs on\u2011demand lookups against an external storage for the static side, avoiding the need to materialize it before the join. It highlights the benefits for low\u2011latency stream\u2011static joins and the requirement to extend the DSv2 interface so third\u2011party connectors can support this capability. Participants note that the proposal focuses on equality lookups and does not introduce new connectors, but rather defines the public contract for future implementations.",
+      "llm_summary": "The discussion proposes a new join strategy that queries an external storage on demand, avoiding the need to materialize the static side before joining. This approach aims to reduce latency for stream\u2011static and static\u2011static joins, especially in real\u2011time scenarios. Participants highlight missing DSv2 interface details and the need for clear API contracts for third\u2011party connectors.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
       "llm_key_points": [
-        "Proposes on\u2011demand lookup join to avoid pre\u2011materializing static side",
-        "Requires extending DSv2 interface for third\u2011party connector support",
-        "Aims to improve low\u2011latency stream\u2011static joins with equality lookups"
+        "New join strategy queries external storage on demand to avoid materializing static side",
+        "Benefits low latency and better throughput for stream\u2011static joins",
+        "Discussion focuses on missing DSv2 interface and API design details"
       ],
       "llm_topics": [
+        "external-lookup-join",
         "stream-static-join",
-        "performance",
-        "external-lookup"
+        "performance"
       ],
       "summary_generation": {
         "method": "llm",
@@ -3641,7 +3641,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",

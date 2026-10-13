@@ -1,5 +1,5 @@
 {
-  "summary": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Define RepairManifests action interface (#17399) - Implementation PR (#17622) is in review. Geospatial * WIP: End-to-end spatial file pruning from Spark SQL, ST_INTERSECTS pushdown (#17175) \u2014 DRAFT, now carries a stale label; last touched Aug 13. The response notes that similar conflict\u2011resolution logic can be achieved via the SnapshotAncestryValidator and SnapshotUpdate public API, and references PR #13631 that introduced appendUpdate. The meeting notes highlight a 1D numeric vector type with fixed length and initial support for int, long, float, and double.",
+  "summary": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Define RepairManifests action interface (#17399) - Implementation PR (#17622) is in review. Geospatial * WIP: End-to-end spatial file pruning from Spark SQL, ST_INTERSECTS pushdown (#17175) \u2014 DRAFT, now carries a stale label; last touched Aug 13. Dzeri proposes making the appendUpdate method in BaseTransaction public to simplify custom index integration, avoiding reflection or wrapping. The discussion highlights an alternative using the SnapshotAncestryValidator hook introduced in 1.11 for conflict detection, and explains the use case of embedding a proprietary index into a statistics file.",
   "highlights": [
     {
       "text": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Def\u2026",
@@ -12,17 +12,17 @@
       ]
     },
     {
-      "text": "Iceberg 1.13.0",
+      "text": "Dzeri proposes making the appendUpdate method in BaseTransaction public to simplify custom index integration, avoiding reflection or wrapping. The discussion hi\u2026",
       "sources": [
         {
-          "id": "iceberg-gh-m64",
-          "title": "Iceberg 1.13.0",
-          "url": "https://github.com/apache/iceberg/milestone/64"
+          "id": "iceberg-ml-28kw8cnzm835y2l8c6w8pp3m24551qlb",
+          "title": "[DISCUSS] make appendUpdate in BaseTransaction public",
+          "url": "https://lists.apache.org/thread/28kw8cnzm835y2l8c6w8pp3m24551qlb"
         }
       ]
     },
     {
-      "text": "The discussion centers on adding a \"none\" enum value to the X-Iceberg-Access-Delegation header to let clients explicitly state they do not need delegated access\u2026",
+      "text": "The discussion focused on adding a \"none\" value to the X-Iceberg-Access-Delegation header to indicate clients do not require delegated access. Participants agre\u2026",
       "sources": [
         {
           "id": "iceberg-ml-l02zjbx3j1pddqhj3wg8gkj10o90l2cp",
@@ -32,12 +32,12 @@
       ]
     },
     {
-      "text": "The Iceberg index sync scheduled for Monday, Oct 12 has been cancelled due to many participants traveling for Community Over Code. Participants are encouraged t\u2026",
+      "text": "The discussion proposes adding a spec clause that readers must accept data file columns whose type can be promoted to the field\u2019s type, even if the field\u2019s type\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-ft12o55pl3x5m29kk2nndhk316o8bxnf",
-          "title": "Subject: Iceberg index sync on Monday, Oct 12 is cancelled",
-          "url": "https://lists.apache.org/thread/ft12o55pl3x5m29kk2nndhk316o8bxnf"
+          "id": "iceberg-ml-c91ph82tnrlhj8qq9lj8n72b0s7qq5r0",
+          "title": "[DISCUSS] Spec clarification: readers must accept promotable types in any data file",
+          "url": "https://lists.apache.org/thread/c91ph82tnrlhj8qq9lj8n72b0s7qq5r0"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-12T13:57:58.199537+00:00",
-  "item_count": 12,
+  "generated_at": "2026-10-13T13:15:00.820517+00:00",
+  "item_count": 10,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-10-05",
-    "to": "2026-10-12",
-    "thread_count": 12
+    "from": "2026-10-09",
+    "to": "2026-10-13",
+    "thread_count": 10
   }
 }

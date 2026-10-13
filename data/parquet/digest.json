@@ -1,6 +1,26 @@
 {
-  "summary": "1.19.0 The thread discusses adding a logical VECTOR type to Parquet, using metadata fields like MIN_LENGTH and MAX_LENGTH to encode fixed-size vectors without changing physical storage. Participants agree on introducing logical types first, while deferring physical changes, and debate whether to enforce finite values (no NaN/Inf) at the Parquet level. The goal is to enable vector functions across engines and improve interoperability. The WIRE logical type preserves the original binary message while enabling selective columnar shredding of frequently queried fields, leveraging Variant\u2019s shredding layout without re-encoding the data.",
+  "summary": "The discussion explores adding metadata or logical types to represent fixed-length numeric vectors in Parquet The proposal introduces a two-tier change model for the Parquet format: add\u2011everywhere changes that are forward compatible and compatibility level changes that require early failure for unsupported readers. It aims to accelerate feature rollout while ensuring readers either correctly interpret data or fail safely, with a preference for add\u2011everywhere changes whenever possible. 1.19.0 The discussion proposes a new Parquet logical type, WIRE, that preserves raw serialized message bytes (e.g., protobuf) while enabling selective shredding of frequently queried fields for columnar access. It reuses Variant\u2019s shredding layout without re\u2011encoding the message, keeping compatibility with older readers.",
   "highlights": [
+    {
+      "text": "The discussion explores adding metadata or logical types to represent fixed-length numeric vectors in Parquet",
+      "sources": [
+        {
+          "id": "parquet-ml-pzkpypmcm5xql2fpxbdrdr45ndl1o5xn",
+          "title": "Re: [DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
+          "url": "https://lists.apache.org/thread/pzkpypmcm5xql2fpxbdrdr45ndl1o5xn"
+        }
+      ]
+    },
+    {
+      "text": "The proposal introduces a two-tier change model for the Parquet format: add\u2011everywhere changes that are forward compatible and compatibility level changes that \u2026",
+      "sources": [
+        {
+          "id": "parquet-ml-qk8hxpvycy6161lqop1bynr3yt028m7t",
+          "title": "[DISCUSS] Parquet versioning: a concrete proposal",
+          "url": "https://lists.apache.org/thread/qk8hxpvycy6161lqop1bynr3yt028m7t"
+        }
+      ]
+    },
     {
       "text": "1.19.0",
       "sources": [
@@ -12,17 +32,7 @@
       ]
     },
     {
-      "text": "The thread discusses adding a logical VECTOR type to Parquet, using metadata fields like MIN_LENGTH and MAX_LENGTH to encode fixed-size vectors without changing\u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-pzkpypmcm5xql2fpxbdrdr45ndl1o5xn",
-          "title": "Re: [DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
-          "url": "https://lists.apache.org/thread/pzkpypmcm5xql2fpxbdrdr45ndl1o5xn"
-        }
-      ]
-    },
-    {
-      "text": "The WIRE logical type preserves the original binary message while enabling selective columnar shredding of frequently queried fields, leveraging Variant\u2019s shred\u2026",
+      "text": "The discussion proposes a new Parquet logical type, WIRE, that preserves raw serialized message bytes (e.g., protobuf) while enabling selective shredding of fre\u2026",
       "sources": [
         {
           "id": "parquet-ml-qdm6zp767sqzg9nrwwml3yzcm109hxn4",
@@ -37,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-12T13:59:38.822597+00:00",
-  "item_count": 3,
+  "generated_at": "2026-10-13T13:17:17.324446+00:00",
+  "item_count": 4,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-10-07",
-    "to": "2026-10-12",
-    "thread_count": 3
+    "to": "2026-10-13",
+    "thread_count": 4
   }
 }

@@ -1,7 +1,7 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-12T14:01:59.046984+00:00",
-  "total": 671,
+  "generated_at": "2026-10-13T13:19:18.984997+00:00",
+  "total": 674,
   "proposals": [
     {
       "id": "spark-jira-SPARK-55278",
@@ -12,7 +12,7 @@
       "author": "Haiyang Sun",
       "state": "open",
       "created_at": "2026-01-29T12:26:31+00:00",
-      "updated_at": "2026-10-09T19:38:05+00:00",
+      "updated_at": "2026-10-13T12:40:03+00:00",
       "body": "Run user-provided code in Spark {*}consistently across many programming languages{*}.\r\n\r\nToday, Spark Connect allows users to write queries from multiple languages, but support for user-defined functions is incomplete. In practice, only Python has a mature solution, and it relies on language-specific mechanisms that do not generalize to other languages such as [Go|https://github.com/apache/spark-connect-go] / [Rust|https://github.com/apache/spark-connect-rust] / [Swift|https://github.com/apache/spark-connect-swift] / [.NET|https://github.com/GoEddie/spark-connect-dotnet] (where UDF is not supported).\r\n\r\nOur objective is to define a *unified API and execution protocol* for user-defined functions that run outside the Spark engine process via inter-process communication (IPC). This allows Spark to interact with external workers in a consistent way, regardless of the language used to implement the function.\r\n\r\nSPIP doc: [https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0]\r\n\r\nWorker Specification doc: [https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0]\r\n\r\n\u00a0",
       "labels": [
         "SPIP",
@@ -33,15 +33,15 @@
         }
       ],
       "comment_count": 7,
-      "llm_summary": "The discussion proposes SPIP, a unified API and execution protocol for user-defined functions that can run outside the Spark engine via IPC, enabling consistent support across multiple client languages such as Go, Rust, Swift, and .NET. It aims to decouple Spark from language-specific runtimes, preserve existing planning and optimization logic, and keep the engine lightweight. The proposal focuses on scalar UDFs and mapPartitions, leaving Java/Scala UDFs unchanged.",
+      "llm_summary": "The discussion proposes a unified API and execution protocol for user-defined functions that can run in any language via external workers, enabling Spark Connect to support UDFs in Go, Rust, Swift, .NET, and more. It aims to decouple Spark from language-specific runtimes, reuse Spark\u2019s planning logic, keep the engine slim, and provide flexible runtime choices. The thread outlines objectives, scope, and design documents for the protocol.",
       "llm_status": "discussion",
       "llm_key_points": [
-        "Unified UDF API across languages",
+        "Unified API for UDFs across languages",
         "External worker execution via IPC",
-        "Preserve Spark planning and optimization"
+        "Decouple Spark engine from language runtimes"
       ],
       "llm_topics": [
-        "udf-protocol",
+        "language-agnostic-udf",
         "inter-process-communication",
         "spark-connect"
       ],
@@ -52,7 +52,7 @@
         "prompt_version": 1
       },
       "_content_hash": "effdf8738e47",
-      "llm_title": "SPIP: Language-agnostic UDF Protocol",
+      "llm_title": "Language-agnostic UDF Protocol for Spark",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
@@ -425,7 +425,7 @@
         "unified"
       ],
       "_content_hash": "b6589fc6ab0d",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
     },
     {
       "id": "spark-jira-SPARK-56599",
@@ -602,7 +602,7 @@
         "motivation"
       ],
       "_content_hash": "fbd70c369786",
-      "initiative_id": "spark-init-spark-jira-SPARK-56978"
+      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
     },
     {
       "id": "spark-jira-SPARK-51658",
@@ -812,7 +812,7 @@
         "popular-programming"
       ],
       "_content_hash": "cdb99f3d38f1",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-21190"
     },
     {
       "id": "spark-jira-SPARK-21866",
@@ -840,7 +840,7 @@
         "spark-dataframes"
       ],
       "_content_hash": "001ad555ca35",
-      "initiative_id": "spark-init-spark-jira-SPARK-56978"
+      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
     },
     {
       "id": "spark-jira-SPARK-24918",
@@ -927,7 +927,7 @@
         "accelerator-aware-task"
       ],
       "_content_hash": "85e275672969",
-      "initiative_id": "spark-init-spark-jira-SPARK-56978"
+      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
     },
     {
       "id": "spark-jira-SPARK-25501",
@@ -1861,7 +1861,202 @@
         "spark-sub-project"
       ],
       "_content_hash": "e46e418f4ebe",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+    },
+    {
+      "id": "spark-ml-fobrm61g0cm59sy1r4omvbbf7pn50zvl",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] Release Spark 4.0.5 (RC2)",
+      "url": "https://lists.apache.org/thread/fobrm61g0cm59sy1r4omvbbf7pn50zvl",
+      "author": "Uro\u0161 Bojani\u0107 <ur...@apache.org>",
+      "state": "open",
+      "created_at": "2026-10-12T18:55:39+00:00",
+      "updated_at": "2026-10-13T06:26:00+00:00",
+      "body": "Please vote on releasing the following candidate as Apache Spark version 4.0.5.\n\nThe vote is open until Thu, 15 Oct 2026 12:38:20 PDT and passes if a majority +1 PMC votes are cast, with\na minimum of 3 +1 votes.\n\n[ ] +1 Release this package as Apache Spark 4.0.5\n[ ] -1 Do not release this package because ...\n\nTo learn more about Apache Spark, please see https://spark.apache.org/\n\nThe tag to be voted on is v4.0.5-rc2 (commit 51d701c09de):\nhttps://github.com/apache/spark/tree/v4.0.5-rc2\n\nThe release files, including signatures, digests, etc. can be found at:\nhttps://dist.apache.org/repos/dist/dev/spark/v4.0.5-rc2-bin/\n\nSignatures used for Spark RCs can be found in this file:\nhttps://downloads.apache.org/spark/KEYS\n\nThe staging repository for this release can be found at:\nhttps://repository.apache.org/content/repositories/orgapachespark-1535/\n\nThe documentation corresponding to this release can be found at:\nhttps://dist.apache.org/repos/dist/dev/spark/v4.0.5-rc2-docs/\n\nThe list of bug fixes going into 4.0.5 can be found at the following URL:\nhttps://issues.apache.org/jira/projects/SPARK/versions/12357251\n\nFAQ\n\n=========================\nHow can I help test this release?\n=========================\n\nIf you are a Spark user, you can help us test this release by taking\nan existing Spark workload and running on this release candidate, then\nreporting any regressions.\n\nIf you're working in PySpark you can set up a virtual env and install\nthe current RC via \"pip install https://dist.apache.org/repos/dist/dev/spark/v4.0.5-rc2-bin/pyspark-4.0.5.tar.gz\"\nand see if anything important breaks.\nIn the Java/Scala, you can add the staging repository to your project's resolvers and test\nwith the RC (make sure to clean up the artifact cache before/after so\nyou don't end up building with an out of date RC going forward).\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "Vote in progress: 0 binding +1, 2 non-binding +1",
+      "llm_status": "proposal",
+      "comment_count": 3,
+      "participant_count": 4,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 2,
+        "vetoes": 0,
+        "result": "open",
+        "voters": [
+          {
+            "voter": "Senthil Kumar <se...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Wenchen Fan <cl...@gmail.com>",
+            "vote": "+1"
+          }
+        ]
+      },
+      "llm_key_points": [
+        "Please vote on releasing the following candidate as Apache Spark version 4.0.5.",
+        "Voters include: Senthil Kumar, Wenchen Fan..."
+      ],
+      "llm_topics": [
+        "apache-spark",
+        "spark-version",
+        "spark",
+        "release"
+      ],
+      "summary_generation": {
+        "method": "local",
+        "prompt_version": 1
+      },
+      "_content_hash": "383f7085d3e0",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-fobrm61g0cm59sy1r4omvbbf7pn50zvl"
+    },
+    {
+      "id": "spark-ml-y7h0v7km0814xb5fg57ght5wtfptn9lt",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] Release Spark 4.3.0 (RC2)",
+      "url": "https://lists.apache.org/thread/y7h0v7km0814xb5fg57ght5wtfptn9lt",
+      "author": "ka...@apache.org",
+      "state": "open",
+      "created_at": "2026-10-13T00:30:02+00:00",
+      "updated_at": "2026-10-13T00:30:02+00:00",
+      "body": "Please vote on releasing the following candidate as Apache Spark version 4.3.0.\n\nThe vote is open until Thu, 15 Oct 2026 18:30:01 PDT and passes if a majority +1 PMC votes are cast, with\na minimum of 3 +1 votes.\n\n[ ] +1 Release this package as Apache Spark 4.3.0\n[ ] -1 Do not release this package because ...\n\nTo learn more about Apache Spark, please see https://spark.apache.org/\n\nThe tag to be voted on is v4.3.0-rc2 (commit c0fd65d3f4f):\nhttps://github.com/apache/spark/tree/v4.3.0-rc2\n\nThe release files, including signatures, digests, etc. can be found at:\nhttps://dist.apache.org/repos/dist/dev/spark/v4.3.0-rc2-bin/\n\nSignatures used for Spark RCs can be found in this file:\nhttps://downloads.apache.org/spark/KEYS\n\nThe staging repository for this release can be found at:\nhttps://repository.apache.org/content/repositories/orgapachespark-1538/\n\nThe documentation corresponding to this release can be found at:\nhttps://dist.apache.org/repos/dist/dev/spark/v4.3.0-rc2-docs/\n\nThe list of bug fixes going into 4.3.0 can be found at the following URL:\nhttps://issues.apache.org/jira/projects/SPARK/versions/12356944\n\nFAQ\n\n=========================\nHow can I help test this release?\n=========================\n\nIf you are a Spark user, you can help us test this release by taking\nan existing Spark workload and running on this release candidate, then\nreporting any regressions.\n\nIf you're working in PySpark you can set up a virtual env and install\nthe current RC via \"pip install https://dist.apache.org/repos/dist/dev/spark/v4.3.0-rc2-bin/pyspark-4.3.0.tar.gz\"\nand see if anything important breaks.\nIn the Java/Scala, you can add the staging repository to your project's resolvers and test\nwith the RC (make sure to clean up the artifact cache before/after so\nyou don't end up building with an out of date RC going forward).\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "Vote in progress: 0 binding +1",
+      "llm_status": "proposal",
+      "comment_count": 0,
+      "participant_count": 1,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 0,
+        "vetoes": 0,
+        "result": "open",
+        "voters": []
+      },
+      "llm_key_points": [
+        "Please vote on releasing the following candidate as Apache Spark version 4.3.0."
+      ],
+      "llm_topics": [
+        "apache-spark",
+        "spark-version",
+        "spark",
+        "release"
+      ],
+      "summary_generation": {
+        "method": "local",
+        "prompt_version": 1
+      },
+      "_content_hash": "c4baecb0a43a",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-y7h0v7km0814xb5fg57ght5wtfptn9lt"
+    },
+    {
+      "id": "spark-ml-qwlxht60yr1qn6rlo6n2jt8g4zhocgfp",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] Release Spark 4.2.1 (RC2)",
+      "url": "https://lists.apache.org/thread/qwlxht60yr1qn6rlo6n2jt8g4zhocgfp",
+      "author": "sz...@apache.org",
+      "state": "open",
+      "created_at": "2026-10-12T23:58:57+00:00",
+      "updated_at": "2026-10-12T23:58:57+00:00",
+      "body": "Please vote on releasing the following candidate as Apache Spark version 4.2.1.\n\nThe vote is open until Thu, 15 Oct 2026 17:58:57 PDT and passes if a majority +1 PMC votes are cast, with\na minimum of 3 +1 votes.\n\n[ ] +1 Release this package as Apache Spark 4.2.1\n[ ] -1 Do not release this package because ...\n\nTo learn more about Apache Spark, please see https://spark.apache.org/\n\nThe tag to be voted on is v4.2.1-rc2 (commit cbae39b3562):\nhttps://github.com/apache/spark/tree/v4.2.1-rc2\n\nThe release files, including signatures, digests, etc. can be found at:\nhttps://dist.apache.org/repos/dist/dev/spark/v4.2.1-rc2-bin/\n\nSignatures used for Spark RCs can be found in this file:\nhttps://downloads.apache.org/spark/KEYS\n\nThe staging repository for this release can be found at:\nhttps://repository.apache.org/content/repositories/orgapachespark-1537/\n\nThe documentation corresponding to this release can be found at:\nhttps://dist.apache.org/repos/dist/dev/spark/v4.2.1-rc2-docs/\n\nThe list of bug fixes going into 4.2.1 can be found at the following URL:\nhttps://issues.apache.org/jira/projects/SPARK/versions/12357191\n\nFAQ\n\n=========================\nHow can I help test this release?\n=========================\n\nIf you are a Spark user, you can help us test this release by taking\nan existing Spark workload and running on this release candidate, then\nreporting any regressions.\n\nIf you're working in PySpark you can set up a virtual env and install\nthe current RC via \"pip install https://dist.apache.org/repos/dist/dev/spark/v4.2.1-rc2-bin/pyspark-4.2.1.tar.gz\"\nand see if anything important breaks.\nIn the Java/Scala, you can add the staging repository to your project's resolvers and test\nwith the RC (make sure to clean up the artifact cache before/after so\nyou don't end up building with an out of date RC going forward).\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "Vote in progress: 0 binding +1",
+      "llm_status": "proposal",
+      "comment_count": 0,
+      "participant_count": 1,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 0,
+        "vetoes": 0,
+        "result": "open",
+        "voters": []
+      },
+      "llm_key_points": [
+        "Please vote on releasing the following candidate as Apache Spark version 4.2.1."
+      ],
+      "llm_topics": [
+        "apache-spark",
+        "spark-version",
+        "spark",
+        "release"
+      ],
+      "summary_generation": {
+        "method": "local",
+        "prompt_version": 1
+      },
+      "_content_hash": "7d56b4823c14",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-qwlxht60yr1qn6rlo6n2jt8g4zhocgfp"
+    },
+    {
+      "id": "spark-ml-bmh1d8owfbjfwoh076w9p3gmj72lp7db",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [VOTE] Release Spark 4.2.1 (RC1)",
+      "url": "https://lists.apache.org/thread/bmh1d8owfbjfwoh076w9p3gmj72lp7db",
+      "author": "Szehon Ho <sz...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-10-01T03:28:20+00:00",
+      "updated_at": "2026-10-12T23:49:15+00:00",
+      "body": "I took a look at the recent 4.3 fixes/blockers.  We fixed two for 4.2, but\nwe decided not to do the other two for 4.2, as listed below.\n\n   - SPARK-59804 <https://issues.apache.org/jira/browse/SPARK-59804> \u2014 PR\n   #59074 <https://github.com/apache/spark/pull/59074> \u2014 *merged into 4.2*\n   - SPARK-51830 <https://issues.apache.org/jira/browse/SPARK-51830> \u2014 PR\n   #57994 <https://github.com/apache/spark/pull/57994>;    *merged into 4.2*\n   - SPARK-44462 <https://issues.apache.org/jira/browse/SPARK-44462> \u2014 PR\n   #55410 <https://github.com/apache/spark/pull/55410> \u2014 took a look.  it\n   is a complex fix with some risk, and there's some behavior change.  We are\n   leaning towards omitting it from 4.2.1.\n   - SPARK-59122 <https://issues.apache.org/jira/browse/SPARK-59122> \u2014 PR\n   #58419 <https://github.com/apache/spark/pull/58419> \u2014 took a look.  It\n   is also not so simple and also UNION codegen is disabled on 4.2, so also\n   leaning towards omitting it from 4.2.1.\n\nI am not sure we need to wait until 4.3 RC passes, as the scope of 4.2.1\nmaintenance release should be a more focused fix for 4.2 users hitting\nobvious issues (example, on Iceberg side).  As we see from some examples,\nsome 4.3 issues may not be appropriate for 4.2.  I would prefer to restart\nthe process and halt only if there is an unresolved 4.2 blocker, unless\nsomeone feels strongly otherwise.\n\nThanks,\nSzehon\n\nOn Mon, Sep 28, 2026 at 7:01\u202fPM Holden Karau <ho...@gmail.com> wrote:\n\n> I think it might be good to hold the point releases until the 4.3 RC\n> passes just incase we\u2019ve got any blockers we discover and want to backport?\n> I don\u2019t think it\u2019s a \u201cmust\u201d hold just it might make life easier.\n>\n>\n> Twitter: https://twitter.com/holdenkarau\n> Fight Health Insurance: https://www.fighthealthinsurance.com/\n> <https://www.fighthealthinsurance.com/?q=hk_email>\n> Books (Learning Spark, High Performance Spark, etc.):\n> https://amzn.to/2MaRAG9  <https://amzn.to/2MaRAG9>\n> YouTube Live Streams: https://www.youtube.com/us",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/spark/pull/59074",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/spark/pull/57994",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/spark/pull/55410",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/spark/pull/58419",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/spark/pull/58929",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Vote in progress: 0 binding +1",
+      "llm_status": "proposal",
+      "comment_count": 2,
+      "participant_count": 2,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 0,
+        "vetoes": 0,
+        "result": "open",
+        "voters": []
+      },
+      "llm_key_points": [
+        "I took a look at the recent 4.3 fixes/blockers."
+      ],
+      "llm_topics": [
+        "release-spark",
+        "vote",
+        "release",
+        "spark"
+      ],
+      "summary_generation": {
+        "method": "local",
+        "prompt_version": 1
+      },
+      "_content_hash": "2e7ce30ed456",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-y7h0v7km0814xb5fg57ght5wtfptn9lt"
     },
     {
       "id": "spark-ml-59kjtonswtv96n4313knhpjcfxxtmvol",
@@ -1925,18 +2120,18 @@
           "title": "\ufeffSPIP: External Lookup Join"
         }
       ],
-      "llm_summary": "The discussion proposes a new join strategy that queries an external storage on demand, avoiding the need to materialize the static side before joining. This approach aims to reduce latency for stream\u2011static and static\u2011static joins, especially in real\u2011time scenarios. Participants highlight missing DSv2 interface details and the need for clear API contracts for third\u2011party connectors.",
+      "llm_summary": "The discussion proposes a new join strategy that performs on-demand lookups to external storage rather than materializing the static side, aiming to reduce latency for stream-static joins, especially in real-time scenarios. Feedback highlights the need to define DSv2 interfaces and clarify the scope of the proposal, noting that it does not introduce new connectors but sets a contract for third\u2011party implementations.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
       "llm_key_points": [
-        "New join strategy queries external storage on demand to avoid materializing static side",
-        "Benefits low latency and better throughput for stream\u2011static joins",
-        "Discussion focuses on missing DSv2 interface and API design details"
+        "Introduce on\u2011demand lookup join strategy for external storage",
+        "Aim to reduce latency for stream\u2011static joins",
+        "Need to define DSv2 interfaces and clarify scope"
       ],
       "llm_topics": [
-        "external-lookup-join",
         "stream-static-join",
+        "external-lookup",
         "performance"
       ],
       "summary_generation": {
@@ -1946,7 +2141,7 @@
         "prompt_version": 1
       },
       "_content_hash": "3b879852fcce",
-      "llm_title": "External Lookup Join",
+      "llm_title": "External Lookup Join Proposal",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
@@ -2085,7 +2280,7 @@
       },
       "_content_hash": "d053f365befe",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-ov7hfrb2jx17lt5xgs0zjqpmjotkm9bb"
+      "initiative_id": "spark-init-spark-ml-fobrm61g0cm59sy1r4omvbbf7pn50zvl"
     },
     {
       "id": "spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b",
@@ -2165,68 +2360,6 @@
       "_content_hash": "9c6b5b82100b",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
-    },
-    {
-      "id": "spark-ml-bmh1d8owfbjfwoh076w9p3gmj72lp7db",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "Re: [VOTE] Release Spark 4.2.1 (RC1)",
-      "url": "https://lists.apache.org/thread/bmh1d8owfbjfwoh076w9p3gmj72lp7db",
-      "author": "Szehon Ho <sz...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-10-01T03:28:20+00:00",
-      "updated_at": "2026-10-01T05:07:22+00:00",
-      "body": "I took a look at the recent 4.3 fixes/blockers.  We fixed two for 4.2, but\nwe decided not to do the other two for 4.2, as listed below.\n\n   - SPARK-59804 <https://issues.apache.org/jira/browse/SPARK-59804> \u2014 PR\n   #59074 <https://github.com/apache/spark/pull/59074> \u2014 *merged into 4.2*\n   - SPARK-51830 <https://issues.apache.org/jira/browse/SPARK-51830> \u2014 PR\n   #57994 <https://github.com/apache/spark/pull/57994>;    *merged into 4.2*\n   - SPARK-44462 <https://issues.apache.org/jira/browse/SPARK-44462> \u2014 PR\n   #55410 <https://github.com/apache/spark/pull/55410> \u2014 took a look.  it\n   is a complex fix with some risk, and there's some behavior change.  We are\n   leaning towards omitting it from 4.2.1.\n   - SPARK-59122 <https://issues.apache.org/jira/browse/SPARK-59122> \u2014 PR\n   #58419 <https://github.com/apache/spark/pull/58419> \u2014 took a look.  It\n   is also not so simple and also UNION codegen is disabled on 4.2, so also\n   leaning towards omitting it from 4.2.1.\n\nI am not sure we need to wait until 4.3 RC passes, as the scope of 4.2.1\nmaintenance release should be a more focused fix for 4.2 users hitting\nobvious issues (example, on Iceberg side).  As we see from some examples,\nsome 4.3 issues may not be appropriate for 4.2.  I would prefer to restart\nthe process and halt only if there is an unresolved 4.2 blocker, unless\nsomeone feels strongly otherwise.\n\nThanks,\nSzehon\n\nOn Mon, Sep 28, 2026 at 7:01\u202fPM Holden Karau <ho...@gmail.com> wrote:\n\n> I think it might be good to hold the point releases until the 4.3 RC\n> passes just incase we\u2019ve got any blockers we discover and want to backport?\n> I don\u2019t think it\u2019s a \u201cmust\u201d hold just it might make life easier.\n>\n>\n> Twitter: https://twitter.com/holdenkarau\n> Fight Health Insurance: https://www.fighthealthinsurance.com/\n> <https://www.fighthealthinsurance.com/?q=hk_email>\n> Books (Learning Spark, High Performance Spark, etc.):\n> https://amzn.to/2MaRAG9  <https://amzn.to/2MaRAG9>\n> YouTube Live Streams: https://www.youtube.com/us",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/spark/pull/59074",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/spark/pull/57994",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/spark/pull/55410",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/spark/pull/58419",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/spark/pull/58929",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Vote in progress: 0 binding +1",
-      "llm_status": "proposal",
-      "comment_count": 1,
-      "participant_count": 2,
-      "vote_data": {
-        "binding_plus1": 0,
-        "nonbinding_plus1": 0,
-        "vetoes": 0,
-        "result": "open",
-        "voters": []
-      },
-      "llm_key_points": [
-        "I took a look at the recent 4.3 fixes/blockers."
-      ],
-      "llm_topics": [
-        "release-spark",
-        "vote",
-        "release",
-        "spark"
-      ],
-      "summary_generation": {
-        "method": "local",
-        "prompt_version": 1
-      },
-      "_content_hash": "d9f9239f2d06",
-      "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-bmh1d8owfbjfwoh076w9p3gmj72lp7db"
     },
     {
       "id": "spark-ml-3x26ywb5vfrkq6x9prcjl9bghd6y2wwn",
@@ -2983,7 +3116,7 @@
       },
       "_content_hash": "e8ed7c7eb085",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-bmh1d8owfbjfwoh076w9p3gmj72lp7db"
+      "initiative_id": "spark-init-spark-ml-y7h0v7km0814xb5fg57ght5wtfptn9lt"
     },
     {
       "id": "spark-ml-o9h87grjcot5foczfnz444qph2gg7w5q",
@@ -3641,7 +3774,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -5841,7 +5974,7 @@
         "local-laptop"
       ],
       "_content_hash": "8e8c054aef0e",
-      "initiative_id": "spark-init-spark-jira-SPARK-56978"
+      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
     },
     {
       "id": "spark-ml-ckpv8z0fqw42xkbrskqf3ggsl1yb81c4",
@@ -6052,7 +6185,7 @@
         "faster"
       ],
       "_content_hash": "234be0c22d25",
-      "initiative_id": "spark-init-spark-jira-SPARK-56978"
+      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
     },
     {
       "id": "spark-ml-036j2fhgcs1kmshbo3r6pcmqp1ro5kyk",
@@ -6491,7 +6624,7 @@
         "spip"
       ],
       "_content_hash": "9faf2e9d1ba4",
-      "initiative_id": "spark-init-spark-jira-SPARK-56978"
+      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
     },
     {
       "id": "spark-ml-cz8c347sm85s3wdwd6kzrs62dt8bmqt9",
@@ -7437,7 +7570,7 @@
         "discuss"
       ],
       "_content_hash": "7b80962ebca8",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-21190"
     },
     {
       "id": "spark-ml-glh5o31j977pvst3vntv9wc3rmh5odfp",
@@ -7843,7 +7976,7 @@
         "fyi"
       ],
       "_content_hash": "5ff9a0bd5144",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-21190"
     },
     {
       "id": "spark-ml-jrg0bpjwn278t8mfvlroy5v6pwkdjlcs",
@@ -10373,7 +10506,7 @@
         "discussion-thread"
       ],
       "_content_hash": "b48a91c6a396",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
     },
     {
       "id": "spark-ml-zzfcbv1jcv34s7kdgo3zp7q2k77zo3ld",
@@ -10598,7 +10731,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "b5de5bc714a0",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
     },
     {
       "id": "spark-ml-pnotsqhs3xprw7rgjh1w858m12d7gz1w",
@@ -12379,7 +12512,7 @@
         "binding"
       ],
       "_content_hash": "0cfb04e25f4e",
-      "initiative_id": "spark-init-spark-ml-tydpbkpx6wopy38kxqz7q889gf0qo5wm"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-rx5pqh01c86slpqv9161hqwgm5lwxxzq",
@@ -12575,7 +12708,7 @@
         "release"
       ],
       "_content_hash": "05d6213c6e90",
-      "initiative_id": "spark-init-spark-ml-tydpbkpx6wopy38kxqz7q889gf0qo5wm"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-4t4l9dfq9ozmo5b11govl2j9obt6vjb4",
@@ -12640,7 +12773,7 @@
         "discuss"
       ],
       "_content_hash": "c73481e96ce1",
-      "initiative_id": "spark-init-spark-ml-tydpbkpx6wopy38kxqz7q889gf0qo5wm"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-zxdn5hj7tb0zb21b4xxzfxz717sx31fj",
@@ -22402,7 +22535,7 @@
         "drop"
       ],
       "_content_hash": "76ac87ff5dbf",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-21190"
     },
     {
       "id": "spark-ml-921tz2y44c8oydfzy2fxddt5c1vjg8js",
@@ -23903,7 +24036,7 @@
         "python-versions"
       ],
       "_content_hash": "c49d84165c9b",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-21190"
     },
     {
       "id": "spark-ml-wzbxqlcyyo10cb8jfc8od81zhg18qpj2",
@@ -26253,7 +26386,7 @@
         "python"
       ],
       "_content_hash": "cadf86660661",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-21190"
     },
     {
       "id": "spark-ml-5hr90lz2w6xjpk25b41pkl4fxqlcms4x",
@@ -27000,7 +27133,7 @@
         "spark-documentation"
       ],
       "_content_hash": "618a00a1f947",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-21190"
     },
     {
       "id": "spark-ml-k8skf16wyn6rg9n0vd0t6l3bhw7c9svq",
@@ -27611,7 +27744,7 @@
         "maciej-szymkiewicz"
       ],
       "_content_hash": "85b3f677283f",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
     },
     {
       "id": "spark-ml-gh2oktrndxopqnyxbsvp2p0k6jk1n9fs",
@@ -27915,7 +28048,7 @@
         "spark"
       ],
       "_content_hash": "033d720f0836",
-      "initiative_id": "spark-init-spark-jira-SPARK-56978"
+      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
     },
     {
       "id": "spark-ml-zys6wylgmdq3gm47go306tsr0ovto0g3",
@@ -30040,7 +30173,7 @@
         "spark"
       ],
       "_content_hash": "731c9d014eea",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-21190"
     },
     {
       "id": "spark-ml-nvwfo0yo0q8997vs86o7wkjyby4tbp0m",
@@ -33035,7 +33168,7 @@
         "release"
       ],
       "_content_hash": "89c3c2fb0fa1",
-      "initiative_id": "spark-init-spark-ml-wh7flo2ov17g7novt8t4lxk2z7044y93"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-5bww6j9gmqr91xp2pd9w4h1fbkk3kh1n",
@@ -33071,7 +33204,7 @@
         "github-action"
       ],
       "_content_hash": "a3cac27e6bf7",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-21190"
     }
   ]
 }

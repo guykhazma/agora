@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-13T13:19:18.984997+00:00",
+  "generated_at": "2026-10-14T10:59:20.251822+00:00",
   "total": 674,
   "proposals": [
     {
@@ -1872,22 +1872,39 @@
       "author": "Uro\u0161 Bojani\u0107 <ur...@apache.org>",
       "state": "open",
       "created_at": "2026-10-12T18:55:39+00:00",
-      "updated_at": "2026-10-13T06:26:00+00:00",
+      "updated_at": "2026-10-14T09:07:28+00:00",
       "body": "Please vote on releasing the following candidate as Apache Spark version 4.0.5.\n\nThe vote is open until Thu, 15 Oct 2026 12:38:20 PDT and passes if a majority +1 PMC votes are cast, with\na minimum of 3 +1 votes.\n\n[ ] +1 Release this package as Apache Spark 4.0.5\n[ ] -1 Do not release this package because ...\n\nTo learn more about Apache Spark, please see https://spark.apache.org/\n\nThe tag to be voted on is v4.0.5-rc2 (commit 51d701c09de):\nhttps://github.com/apache/spark/tree/v4.0.5-rc2\n\nThe release files, including signatures, digests, etc. can be found at:\nhttps://dist.apache.org/repos/dist/dev/spark/v4.0.5-rc2-bin/\n\nSignatures used for Spark RCs can be found in this file:\nhttps://downloads.apache.org/spark/KEYS\n\nThe staging repository for this release can be found at:\nhttps://repository.apache.org/content/repositories/orgapachespark-1535/\n\nThe documentation corresponding to this release can be found at:\nhttps://dist.apache.org/repos/dist/dev/spark/v4.0.5-rc2-docs/\n\nThe list of bug fixes going into 4.0.5 can be found at the following URL:\nhttps://issues.apache.org/jira/projects/SPARK/versions/12357251\n\nFAQ\n\n=========================\nHow can I help test this release?\n=========================\n\nIf you are a Spark user, you can help us test this release by taking\nan existing Spark workload and running on this release candidate, then\nreporting any regressions.\n\nIf you're working in PySpark you can set up a virtual env and install\nthe current RC via \"pip install https://dist.apache.org/repos/dist/dev/spark/v4.0.5-rc2-bin/pyspark-4.0.5.tar.gz\"\nand see if anything important breaks.\nIn the Java/Scala, you can add the staging repository to your project's resolvers and test\nwith the RC (make sure to clean up the artifact cache before/after so\nyou don't end up building with an out of date RC going forward).\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
       "labels": [],
-      "linked_resources": [],
-      "llm_summary": "Vote in progress: 0 binding +1, 2 non-binding +1",
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/spark/pull/57645",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "Vote in progress: 0 binding +1, 5 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 3,
-      "participant_count": 4,
+      "comment_count": 7,
+      "participant_count": 7,
       "vote_data": {
         "binding_plus1": 0,
-        "nonbinding_plus1": 2,
+        "nonbinding_plus1": 5,
         "vetoes": 0,
         "result": "open",
         "voters": [
           {
+            "voter": "Cheng Pan <pa...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Nicholas Chammas <ni...@gmail.com>",
+            "vote": "+1"
+          },
+          {
             "voter": "Senthil Kumar <se...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Szehon Ho <sz...@gmail.com>",
             "vote": "+1"
           },
           {
@@ -1898,7 +1915,7 @@
       },
       "llm_key_points": [
         "Please vote on releasing the following candidate as Apache Spark version 4.0.5.",
-        "Voters include: Senthil Kumar, Wenchen Fan..."
+        "Voters include: Cheng Pan, Nicholas Chammas, Senthil Kumar..."
       ],
       "llm_topics": [
         "apache-spark",
@@ -1910,9 +1927,54 @@
         "method": "local",
         "prompt_version": 1
       },
-      "_content_hash": "383f7085d3e0",
+      "_content_hash": "c185f53c82e7",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-fobrm61g0cm59sy1r4omvbbf7pn50zvl"
+    },
+    {
+      "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] SPIP: External Lookup Join",
+      "url": "https://lists.apache.org/thread/7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
+      "author": "Jungtaek Lim <ka...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-10-07T08:30:22+00:00",
+      "updated_at": "2026-10-13T22:08:51+00:00",
+      "body": "Hi devs,\n\nI'm coming up with a proposal for a new join strategy, named \"External\nLookup Join\".\n\ntl;dr:\nAll existing join strategies require the static side (DataFrame/Relation)\nto be materialized before the join operator. This doesn't allow us to\nachieve low latency join where the storage of the static side is expected\nto produce low latency response over on-demand request. (e.g. OLTP\noptimized like RDBMS, in-memory storage, NoSQL, etc.) The new join strategy\nwill issue the query to the external storage \"on demand\", when processing\nthe data on the left side.\n\nThe most benefit will come with real-time mode, but it is not limited to\nreal-time mode. This join strategy would be useful as long as the external\nstorage of the static side is better suited for on-demand requests (rather\nthan bulk load with pruning). Both static-static and stream-static can be\nbenefited by this, though static-static join needs to be careful on doing\nthis.\n\nMore details are included in the SPIP doc.\n\nIssue: https://issues.apache.org/jira/browse/SPARK-60031\nSPIP doc:\nhttps://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0\n\nLooking forward to hearing from you.\n\nThanks!\nJungtaek Lim (HeartSaVioR)\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: External Lookup Join"
+        }
+      ],
+      "llm_summary": "The discussion proposes a new join strategy that performs on-demand lookups against external storage, avoiding pre-materialization of the static side and improving low-latency joins for stream and static data. It highlights benefits for real-time processing and stream-static joins, while noting the need to extend DSv2 interfaces and gather community feedback. The conversation includes concerns about interface design and the scope of the proposal.",
+      "llm_status": "discussion",
+      "comment_count": 3,
+      "participant_count": 3,
+      "llm_key_points": [
+        "On-demand lookup against external storage for low-latency joins",
+        "Benefits for stream-static and real-time modes",
+        "Need to extend DSv2 interfaces and gather community feedback"
+      ],
+      "llm_topics": [
+        "external-lookup",
+        "stream-static-join",
+        "performance"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "9368bf5e3998",
+      "llm_title": "External Lookup Join Proposal",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
       "id": "spark-ml-y7h0v7km0814xb5fg57ght5wtfptn9lt",
@@ -2101,51 +2163,6 @@
       "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
-      "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] SPIP: External Lookup Join",
-      "url": "https://lists.apache.org/thread/7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
-      "author": "Jungtaek Lim <ka...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-10-07T08:30:22+00:00",
-      "updated_at": "2026-10-08T04:21:20+00:00",
-      "body": "Hi devs,\n\nI'm coming up with a proposal for a new join strategy, named \"External\nLookup Join\".\n\ntl;dr:\nAll existing join strategies require the static side (DataFrame/Relation)\nto be materialized before the join operator. This doesn't allow us to\nachieve low latency join where the storage of the static side is expected\nto produce low latency response over on-demand request. (e.g. OLTP\noptimized like RDBMS, in-memory storage, NoSQL, etc.) The new join strategy\nwill issue the query to the external storage \"on demand\", when processing\nthe data on the left side.\n\nThe most benefit will come with real-time mode, but it is not limited to\nreal-time mode. This join strategy would be useful as long as the external\nstorage of the static side is better suited for on-demand requests (rather\nthan bulk load with pruning). Both static-static and stream-static can be\nbenefited by this, though static-static join needs to be careful on doing\nthis.\n\nMore details are included in the SPIP doc.\n\nIssue: https://issues.apache.org/jira/browse/SPARK-60031\nSPIP doc:\nhttps://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0\n\nLooking forward to hearing from you.\n\nThanks!\nJungtaek Lim (HeartSaVioR)\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSPIP: External Lookup Join"
-        }
-      ],
-      "llm_summary": "The discussion proposes a new join strategy that performs on-demand lookups to external storage rather than materializing the static side, aiming to reduce latency for stream-static joins, especially in real-time scenarios. Feedback highlights the need to define DSv2 interfaces and clarify the scope of the proposal, noting that it does not introduce new connectors but sets a contract for third\u2011party implementations.",
-      "llm_status": "discussion",
-      "comment_count": 2,
-      "participant_count": 2,
-      "llm_key_points": [
-        "Introduce on\u2011demand lookup join strategy for external storage",
-        "Aim to reduce latency for stream\u2011static joins",
-        "Need to define DSv2 interfaces and clarify scope"
-      ],
-      "llm_topics": [
-        "stream-static-join",
-        "external-lookup",
-        "performance"
-      ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "3b879852fcce",
-      "llm_title": "External Lookup Join Proposal",
-      "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
-    },
-    {
       "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
       "source": "mailing_list",
       "kind": "thread",
@@ -2239,7 +2256,7 @@
           "source_updated_at": "2026-10-06T20:04:00+00:00"
         }
       ],
-      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-ov7hfrb2jx17lt5xgs0zjqpmjotkm9bb",
@@ -2321,7 +2338,7 @@
       },
       "_content_hash": "579bca591d91",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx",
@@ -3473,7 +3490,7 @@
       ],
       "llm_title": "",
       "_content_hash": "97cea4020d47",
-      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-vgg3omvqqmyo2c8w5rnnhl78k1rzp2qg",
@@ -3774,7 +3791,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -5350,7 +5367,7 @@
         "uro-bojani"
       ],
       "_content_hash": "011b99573a32",
-      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-92kjhnglm90z2n8v7hxn6d9nb2gzhq1z",
@@ -5643,7 +5660,7 @@
         "apache-spark"
       ],
       "_content_hash": "ec8146319b15",
-      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv",
@@ -5674,7 +5691,7 @@
         "spark-project"
       ],
       "_content_hash": "af074b2503b6",
-      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-c3sjlfos8d4o2859bjpltpgsf33wfnfh",
@@ -8234,7 +8251,7 @@
         "tian-gao"
       ],
       "_content_hash": "dacca48c4fa0",
-      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-mqfysmjmkdnw0fxy9t5dp7bxpvo36jrv",
@@ -30712,7 +30729,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",

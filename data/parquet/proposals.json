@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-10-13T13:18:00.979877+00:00",
+  "generated_at": "2026-10-14T10:58:06.246862+00:00",
   "total": 299,
   "proposals": [
     {
@@ -251,7 +251,7 @@
         "add-parameter"
       ],
       "_content_hash": "c8629371ba39",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-gh-m36",
@@ -895,7 +895,7 @@
         "support-java"
       ],
       "_content_hash": "dd3b1222a7a9",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-17-0"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-gh-rel-apache-parquet-1-17-0-rc0",
@@ -982,7 +982,7 @@
         "add-comprehensive"
       ],
       "_content_hash": "c46f29b7069b",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-17-0"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-gh-m31",
@@ -2787,6 +2787,82 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-qk8hxpvycy6161lqop1bynr3yt028m7t",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Parquet versioning: a concrete proposal",
+      "url": "https://lists.apache.org/thread/qk8hxpvycy6161lqop1bynr3yt028m7t",
+      "author": "Alkis Evlogimenos via dev <de...@parquet.apache.org>",
+      "state": "open",
+      "created_at": "2026-10-13T10:18:26+00:00",
+      "updated_at": "2026-10-14T10:23:51+00:00",
+      "body": "Hi all,\n\nThe versioning threads have stalled. Here is a concrete proposal to\nrestart them.\n\nGoals\n\n1. Advance Parquet faster. A new feature should reach users when it is\nready, not when the next bundle ships.\n\n2. Keep it safe. A reader returns correctly interpreted results or\nfails. It never returns a false read.\n\nEvery change to the format is one of two kinds.\n\n1. Add-everywhere: all forward compatible changes and isolated forward\nincompatible (e.g. new encodings). The change is valid at every\ncompatibility level (PAR1 is compatibility level 1, PAR2 compatibility\nlevel 2, etc), including in today's files. It is safe when every\nreader that does not understand it either fails where it needs it or\nis unaffected. Example: a reader that does not know ALP fails on the\nALP column and reads every other column correctly. Readers adopt it at\ntheir own pace, and nobody loses what they could already read.\n\n2. Compatibility level: A reader that does not support the level fails\nbefore reading anything. This is for changes that existing readers\nwould misread instead of failing on: metadata redefinitions, removals\n(path_in_schema, converted types - even though not required removing\nthem might break older readers), or the new footer.\n\nThe two do not conflict. The compatibility level decides whether the\nmetadata can be trusted at all, so failing early is the only correct\nbehavior. An add-everywhere change only decides whether one column can\nbe decoded, so failing on that column alone is the correct behavior. A\nfile can be subject to both.\n\nWe should prefer add-everywhere changes whenever possible.\nCompatibility level changes are done only when necessary.\n\nWhat readers do today\n\nWhether something is add-everywhere depends on how deployed readers\nreact to it, so I checked eight of them against their current source:\nArrow C++, parquet-java, arrow-rs, DuckDB, Velox, arrow-go, cuDF and\nfastparquet:\n\n1. Unknown encodings --> mostly safe. Every reader fails when it has\nto decode one. Two f",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "The proposal defines two categories of format changes\u2014add\u2011everywhere and compatibility level\u2014to speed up feature rollout while keeping readers safe. It reviews how current readers handle unknown encodings and other changes, and recommends preferring add\u2011everywhere changes when possible. A reply notes a potential third category of forward\u2011compatible changes that older readers can ignore.",
+      "llm_status": "discussion",
+      "comment_count": 1,
+      "participant_count": 2,
+      "llm_key_points": [
+        "Introduce add\u2011everywhere vs compatibility level changes",
+        "Aim to accelerate feature release while maintaining safety",
+        "Review of current reader compatibility"
+      ],
+      "llm_topics": [
+        "parquet-format",
+        "versioning",
+        "compatibility"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "2eb4eb87220b",
+      "llm_title": "Parquet versioning proposal",
+      "observed_history": [],
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
+    },
+    {
+      "id": "parquet-ml-kxthjf063lvkgj8jcob8jd1djsztx03p",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] Anyone working on / want to help with new encoding proposals?",
+      "url": "https://lists.apache.org/thread/kxthjf063lvkgj8jcob8jd1djsztx03p",
+      "author": "Raz Luvaton <rl...@apache.org>",
+      "state": "open",
+      "created_at": "2026-10-13T15:15:58+00:00",
+      "updated_at": "2026-10-14T09:59:41+00:00",
+      "body": "\n\nOn 2025-10-01 18:11 UTC Andrew Lamb wrote:\n> I would like to start a discussion to help organize and rally anyone\n> interested in adding new encodings to Parquet.\n> \n> I am pretty sure there are many people interested in adding new encodings,\n> but there are only a few mentions on the mailing list, such as pcode [1]\n> and FSST/ALP/FastLanes [2]. Prateek mentioned on the sync call today\n> that he is working on evaluating some potential encodings and hopes to have\n> some information to share soon, and Julien mentioned he had spoken to\n> someone else who might be doing something similar.\n> \n> Now that Julien has defined a process to extend the spec[3] I think the\n> steps are much clearer.\n> \n> So, I would like to invite anyone interested in adding new encodings to\n> respond and let us know if you are willing to help evaluate new encodings\n> and prototype integrations into Parquet implementations?\n> \n> Andrew\n> \n> \n> [1]: https://lists.apache.org/thread/bdmfcj4g6y1ccd3mfgrp7d43d73s6zf6\n> [2]: https://lists.apache.org/thread/s3o9jk0hr942pv6ono4ymnvvj6pfdsdw\n> [3]:\n> https://github.com/apache/parquet-format/blob/master/proposals/README.md\n> \n\nShould we look at it again?\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "Andrew Lamb opens a discussion to gather contributors for adding new encodings to Parquet. He highlights ongoing efforts such as PFOR, FSST/OnPair, and mentions a process for extending the spec. The thread invites anyone interested in evaluating and prototyping new encodings to join.",
+      "llm_status": "discussion",
+      "comment_count": 4,
+      "participant_count": 2,
+      "llm_key_points": [
+        "Call for contributors to add new encodings to Parquet",
+        "Existing efforts include PFOR, FSST/OnPair, and pcode",
+        "Process for extending spec defined by Julien"
+      ],
+      "llm_topics": [
+        "encoding",
+        "spec-extension",
+        "parquet"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "f996f1f8dd9b",
+      "llm_title": "New encoding proposals discussion",
+      "observed_history": [],
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+    },
+    {
       "id": "parquet-ml-pzkpypmcm5xql2fpxbdrdr45ndl1o5xn",
       "source": "mailing_list",
       "kind": "thread",
@@ -2795,7 +2871,7 @@
       "author": "Will Edwards via dev <de...@parquet.apache.org>",
       "state": "open",
       "created_at": "2026-10-01T06:59:51+00:00",
-      "updated_at": "2026-10-13T10:25:58+00:00",
+      "updated_at": "2026-10-14T08:21:38+00:00",
       "body": "+1 Sebastian, a vector type suggests usage beyond normalized embeddings and\nengines really aren't going to be able to elide all the checks anyway.\n\nAntoine, you suggested we explore metadata solutions too :)\n\nToday, a database supporting CHAR(N) or VARCHAR(n) can't express this in\nParquet.  Engines can write opaque blobs they understand in the metadata\n(e.g. Arrow does) so the extra type info round-trips, but this isn't\nstandardized, portable, nor interoperable.\n\nSo perhaps standardizing constraint metadata or new Thrift fields (my pref)\ncan generically support VECTOR(N) whilst also being more broadly useful for\nother use cases and data types?\n\nImagine metadata or Thrift fields to tag the MIN_LENGTH and MAX_LENGTH for\nParquet's variable-length physcial types.  These would count logical units\n(e.g. UTF8 code points for STRING) rather than bytes.\n\nThen one engine's VECTOR(N) can be written to Parquet as LIST(N) with\nMIN_LENGTH = MAX_LENGTH = N and then readers - even different engines - can\npick up these constraints if they support doing so.  We don't actually need\na logical type to express a VECTOR then.\n\nThis also allows standard SQL's CHAR(N) and VARCHAR(N) to be expressed on\nUTF8 columns etc.\n\nThis also seems generally useful in the future as we approach expressing\nother tensor data shapes and types.\n\nThis won't change the mechanics: the storage type doesn't enforce these\nconstraints and engines must check them. It's previously established that\nperformance is just a software problem and there is no fundamental\nperformance advantage to the fixed size types in Dremel-like formats like\nParquet.\n\nBest,\nWill\n\nOn Wed, 30 Sept 2026 at 16:08, Sebastian Baunsgaard <ba...@apache.org>\nwrote:\n\n> After listening in on the last meeting Wednesday, I have been thinking\n> about this quite a bit, and thought I would share my 2 cents.\n>\n> I suggest not requiring VECTOR elements to be finite, as proposed in the PR\n> <https://github.com/apache/parquet-format/pull/624>.\n>\n> While Divjo",
       "labels": [],
       "linked_resources": [
@@ -2812,47 +2888,19 @@
           "kind": "github_issue"
         }
       ],
-      "llm_summary": "The discussion explores adding metadata or logical types to represent fixed-length numeric vectors in Parquet",
+      "llm_summary": "The discussion centers on adding a logical VECTOR type to Parquet, using metadata fields to encode length constraints and potentially finite element restrictions. Participants debate whether to enforce finiteness and whether to separate VECTOR from FIXED_LENGTH_LIST, ultimately agreeing to introduce a logical type first and refine physical representation later. The goal is to enable efficient vector operations across engines while maintaining portability.",
       "llm_status": "discussion",
-      "comment_count": 6,
-      "participant_count": 5,
-      "llm_key_points": [],
-      "llm_topics": [],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "ab7ed210c1fd",
-      "observed_history": [],
-      "initiative_id": "parquet-init-parquet-ml-pzkpypmcm5xql2fpxbdrdr45ndl1o5xn"
-    },
-    {
-      "id": "parquet-ml-qk8hxpvycy6161lqop1bynr3yt028m7t",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Parquet versioning: a concrete proposal",
-      "url": "https://lists.apache.org/thread/qk8hxpvycy6161lqop1bynr3yt028m7t",
-      "author": "Alkis Evlogimenos via dev <de...@parquet.apache.org>",
-      "state": "open",
-      "created_at": "2026-10-13T10:18:26+00:00",
-      "updated_at": "2026-10-13T10:18:26+00:00",
-      "body": "Hi all,\n\nThe versioning threads have stalled. Here is a concrete proposal to\nrestart them.\n\nGoals\n\n1. Advance Parquet faster. A new feature should reach users when it is\nready, not when the next bundle ships.\n\n2. Keep it safe. A reader returns correctly interpreted results or\nfails. It never returns a false read.\n\nEvery change to the format is one of two kinds.\n\n1. Add-everywhere: all forward compatible changes and isolated forward\nincompatible (e.g. new encodings). The change is valid at every\ncompatibility level (PAR1 is compatibility level 1, PAR2 compatibility\nlevel 2, etc), including in today's files. It is safe when every\nreader that does not understand it either fails where it needs it or\nis unaffected. Example: a reader that does not know ALP fails on the\nALP column and reads every other column correctly. Readers adopt it at\ntheir own pace, and nobody loses what they could already read.\n\n2. Compatibility level: A reader that does not support the level fails\nbefore reading anything. This is for changes that existing readers\nwould misread instead of failing on: metadata redefinitions, removals\n(path_in_schema, converted types - even though not required removing\nthem might break older readers), or the new footer.\n\nThe two do not conflict. The compatibility level decides whether the\nmetadata can be trusted at all, so failing early is the only correct\nbehavior. An add-everywhere change only decides whether one column can\nbe decoded, so failing on that column alone is the correct behavior. A\nfile can be subject to both.\n\nWe should prefer add-everywhere changes whenever possible.\nCompatibility level changes are done only when necessary.\n\nWhat readers do today\n\nWhether something is add-everywhere depends on how deployed readers\nreact to it, so I checked eight of them against their current source:\nArrow C++, parquet-java, arrow-rs, DuckDB, Velox, arrow-go, cuDF and\nfastparquet:\n\n1. Unknown encodings --> mostly safe. Every reader fails when it has\nto decode one. Two f",
-      "labels": [],
-      "linked_resources": [],
-      "llm_summary": "The proposal introduces a two-tier change model for the Parquet format: add\u2011everywhere changes that are forward compatible and compatibility level changes that require early failure for unsupported readers. It aims to accelerate feature rollout while ensuring readers either correctly interpret data or fail safely, with a preference for add\u2011everywhere changes whenever possible.",
-      "llm_status": "discussion",
-      "comment_count": 0,
-      "participant_count": 1,
+      "comment_count": 8,
+      "participant_count": 7,
       "llm_key_points": [
-        "Two change types: add\u2011everywhere and compatibility level",
-        "Goal to advance Parquet faster while maintaining safety"
+        "Propose metadata fields (MIN_LENGTH, MAX_LENGTH) to support VECTOR(N) in Parquet",
+        "Debate on enforcing finiteness and separating VECTOR from FIXED_LENGTH_LIST",
+        "Consensus to introduce a logical type first, with physical representation refined later"
       ],
       "llm_topics": [
-        "parquet-versioning",
-        "compatibility",
-        "performance"
+        "logical-types",
+        "metadata",
+        "vector-types"
       ],
       "summary_generation": {
         "method": "llm",
@@ -2860,10 +2908,10 @@
         "model": "openai/gpt-oss-20b",
         "prompt_version": 1
       },
-      "_content_hash": "204a08393f02",
-      "llm_title": "Parquet versioning concrete proposal",
+      "_content_hash": "e6d7c630281a",
+      "llm_title": "Numeric Vector type representation",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
     },
     {
       "id": "parquet-ml-qdm6zp767sqzg9nrwwml3yzcm109hxn4",
@@ -2902,12 +2950,20 @@
           "kind": "github_issue"
         }
       ],
-      "llm_summary": "The discussion proposes a new Parquet logical type, WIRE, that preserves raw serialized message bytes (e.g., protobuf) while enabling selective shredding of frequently queried fields for columnar access. It reuses Variant\u2019s shredding layout without re\u2011encoding the message, keeping compatibility with older readers. However, no OSS engine currently supports querying this type, and participants caution against proceeding until engine support is available.",
+      "llm_summary": "The proposal introduces a new Parquet logical type, WIRE, that stores serialized wire-format messages (e.g., protobuf) as opaque bytes while enabling selective columnar shredding of frequently queried fields. It preserves the original message, avoids full decoding or re-encoding, and remains compatible with existing readers. The discussion highlights the lack of current OSS engine support and concerns about dependencies, keeping the proposal in review.",
       "llm_status": "discussion",
       "comment_count": 1,
       "participant_count": 2,
-      "llm_key_points": [],
-      "llm_topics": [],
+      "llm_key_points": [
+        "Preserves original message bytes while allowing selective shredding",
+        "Avoids full decoding or re-encoding, maintaining compatibility",
+        "Engine support is currently lacking, raising dependency concerns"
+      ],
+      "llm_topics": [
+        "wire-type",
+        "serialization",
+        "parquet"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -2915,8 +2971,9 @@
         "prompt_version": 1
       },
       "_content_hash": "a3eae6a5957a",
+      "llm_title": "WIRE logical type for wire-format messages",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-ml-qdm6zp767sqzg9nrwwml3yzcm109hxn4"
+      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
     },
     {
       "id": "parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9",
@@ -3331,7 +3388,7 @@
       },
       "_content_hash": "77db5732b161",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-ml-v11pw7sbnkdxzjhkmcbsx06clyvjv0xx"
+      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
     },
     {
       "id": "parquet-ml-ovo7vhh2gp31v32xzq6wm5f0grk97bs3",
@@ -3568,7 +3625,7 @@
       },
       "_content_hash": "5f1ca8ac2fed",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-35gq1hkn3kdtjvzyq6d0yvordgwsccqk",
@@ -3702,7 +3759,7 @@
       "llm_title": "Inline parquet.thrift into parquet-java",
       "_content_hash": "2ea785cacaf5",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
     {
       "id": "parquet-ml-d5t1qphb8lj0qqltrv57bknx18fwbf2l",
@@ -3837,7 +3894,7 @@
       "_content_hash": "70dfc1b80500",
       "llm_title": "Finalizing the versioning proposal",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-jxhzrk4tbx9ynthcskgo75fyzvqz0hrh",
@@ -4015,7 +4072,7 @@
       ],
       "llm_title": "",
       "_content_hash": "1df47b2ce9de",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-bdd0qt6n4po26nx9yx55q63bdz8pcgb0",
@@ -4052,7 +4109,7 @@
       ],
       "llm_title": "",
       "_content_hash": "658e2aed8edf",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-ott9f9rtdtwpr2pxfhrnb8g27ksnxmsl",
@@ -4349,7 +4406,7 @@
         "communicating-compatibility"
       ],
       "_content_hash": "17ea39d1d355",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-3d7mf3l749r7d77f3lsr4jjqk10gjm92",
@@ -4445,7 +4502,7 @@
         "versioning-ad-hoc"
       ],
       "_content_hash": "d993fb44e629",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-o8bwmqdy1wf0z459h65x43lnsrldrvhq",
@@ -4511,7 +4568,7 @@
         "version"
       ],
       "_content_hash": "a626d4254ef3",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-fx96wnmkbmx7pcz2h89t592ztc8bcrn1",
@@ -5080,7 +5137,7 @@
         "proposal"
       ],
       "_content_hash": "1b3bcdefdf20",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-q6wbom1q9pndv2nj6wcynxjcjxxkc1hm",
@@ -5132,7 +5189,7 @@
         "discuss"
       ],
       "_content_hash": "4762e0d84d23",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-st8l40z5n4cx5c22rcog50ws4pkzdc3s",
@@ -5202,7 +5259,7 @@
         "parquet-community"
       ],
       "_content_hash": "14ac086b9447",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5",
@@ -5628,7 +5685,7 @@
       ],
       "_content_hash": "0f49ada5841e",
       "llm_title": "INT96 stats",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1",
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -6491,7 +6548,7 @@
       ],
       "_content_hash": "8b885a936178",
       "llm_title": "Proposal for AGENTS.md in Parquet Repo",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-6nm94o4wmvwfgdpg1kxd5wlw5tlzng28",
@@ -6650,7 +6707,7 @@
         "community-sync"
       ],
       "_content_hash": "c01c4f7bb1bd",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-ml-obn1yzhgm5zlznwrdpg7f66mswwooxw7"
     },
     {
       "id": "parquet-ml-vpm212t9lgp603sx3r0b16jlb0zzlp39",
@@ -7059,7 +7116,7 @@
       ],
       "_content_hash": "b406ddca3a9c",
       "llm_title": "flatbuf footer proposal",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533",
+      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -7354,7 +7411,7 @@
       ],
       "_content_hash": "6518e83b27ec",
       "llm_title": "Release of Parquet-Java 1.17.0",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-xlmp7cq638ht7n6c9f1vqlc6qgs4j4y4",
@@ -7632,7 +7689,7 @@
       ],
       "_content_hash": "2f829c188e0e",
       "llm_title": "Discussion on Parquet 2.0 Closure",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-01k7z2lg9qh3cj4p7gk95z6cphssk85d",
@@ -7790,7 +7847,7 @@
       ],
       "_content_hash": "e08701ee20f6",
       "llm_title": "New page layouts for byte arrays",
-      "initiative_id": "parquet-init-parquet-ml-w63ol39dob2jh2cmomh9plz8tt5ctnol"
+      "initiative_id": "parquet-init-parquet-ml-85712vy5cn170gh9g9r00g98gzjtjxj9"
     },
     {
       "id": "parquet-ml-8tlhnk2rrqo72onsr45on1zs1mhmcytj",
@@ -7832,7 +7889,7 @@
       ],
       "_content_hash": "287489beafd6",
       "llm_title": "Discussion on Flatbuf Footer Offsets",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
     },
     {
       "id": "parquet-ml-vfzx2651y4p86zt5d8pnhk4n2y4bf0l7",
@@ -7866,36 +7923,7 @@
       ],
       "_content_hash": "7345b8314cbd",
       "llm_title": "Improving Versioning Communication for Parquet",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
-    },
-    {
-      "id": "parquet-ml-djnbbcnft0fqm9ldby2q96nbtrwqz477",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Anyone working on / want to help with new encoding proposals?",
-      "url": "https://lists.apache.org/thread/djnbbcnft0fqm9ldby2q96nbtrwqz477",
-      "author": "Andrew Lamb <an...@gmail.com>",
-      "state": "open",
-      "created_at": "2025-10-01T18:11:51+00:00",
-      "updated_at": "2025-10-16T02:41:03+00:00",
-      "body": "I would like to start a discussion to help organize and rally anyone\ninterested in adding new encodings to Parquet.\n\nI am pretty sure there are many people interested in adding new encodings,\nbut there are only a few mentions on the mailing list, such as pcode [1]\nand FSST/ALP/FastLanes [2]. Prateek mentioned on the sync call today\nthat he is working on evaluating some potential encodings and hopes to have\nsome information to share soon, and Julien mentioned he had spoken to\nsomeone else who might be doing something similar.\n\nNow that Julien has defined a process to extend the spec[3] I think the\nsteps are much clearer.\n\nSo, I would like to invite anyone interested in adding new encodings to\nrespond and let us know if you are willing to help evaluate new encodings\nand prototype integrations into Parquet implementations?\n\nAndrew\n\n\n[1]: https://lists.apache.org/thread/bdmfcj4g6y1ccd3mfgrp7d43d73s6zf6\n[2]: https://lists.apache.org/thread/s3o9jk0hr942pv6ono4ymnvvj6pfdsdw\n[3]:\nhttps://github.com/apache/parquet-format/blob/master/proposals/README.md\n",
-      "labels": [],
-      "linked_resources": [],
-      "llm_summary": "A discussion has been initiated to gather interest in adding new encodings to the Parquet format. Participants are encouraged to evaluate potential encodings and prototype integrations, with references to existing frameworks like OpenZL that may enhance compatibility and performance.",
-      "llm_status": "discussion",
-      "comment_count": 3,
-      "participant_count": 4,
-      "llm_key_points": [
-        "Interest in new encodings for Parquet",
-        "OpenZL framework could be beneficial"
-      ],
-      "llm_topics": [
-        "encoding-proposals",
-        "performance"
-      ],
-      "_content_hash": "7f90735f922d",
-      "llm_title": "Discussion on New Encoding Proposals for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-w63ol39dob2jh2cmomh9plz8tt5ctnol"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-hxqpjg5yflr2dqmdtc4z55kl1s9p8rzh",
@@ -7929,7 +7957,7 @@
       ],
       "_content_hash": "e8388865309e",
       "llm_title": "Improving Parquet Documentation and Cookbook",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-hms38c0807r3qpst7ykf4b42xwpb23g7",
@@ -8006,7 +8034,7 @@
       ],
       "_content_hash": "e052341bfb35",
       "llm_title": "Bloom Filter Properties Discussion",
-      "initiative_id": "parquet-init-parquet-ml-lsf425yk0h0pzvq41kz8z92qffg8mmf8"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-ygtv1t2klfmchh99ybkggwn066nskvpt",
@@ -8199,7 +8227,7 @@
         "java"
       ],
       "_content_hash": "8f99f4131daf",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-17-0"
+      "initiative_id": "parquet-init-parquet-ml-k534codwcdtgy5pzz9mts784sgywspv7"
     },
     {
       "id": "parquet-ml-fdtt4o4cp5thntwwhzbzm00n5070g9hz",
@@ -8403,7 +8431,7 @@
       ],
       "_content_hash": "94ebecbb8232",
       "llm_title": "Parquet Java 1.16.0 Release",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1",
+      "initiative_id": "parquet-init-parquet-ml-obn1yzhgm5zlznwrdpg7f66mswwooxw7",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -8532,7 +8560,7 @@
       ],
       "_content_hash": "5a99a8681f98",
       "llm_title": "Example VARIANT parquet files",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533",
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -8995,7 +9023,7 @@
       ],
       "_content_hash": "10d9dbcc9844",
       "llm_title": "Merge Implementation Status Page PR",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533",
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -9053,7 +9081,7 @@
       ],
       "_content_hash": "30797310e12c",
       "llm_title": "Integration Testing for Parquet Implementations",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd",
+      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -9134,7 +9162,7 @@
         "vote-thread"
       ],
       "_content_hash": "5b089dd0f010",
-      "initiative_id": "parquet-init-parquet-ml-tgkomrqsynzd5tm3385wm4tfk933lx6w"
+      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
     },
     {
       "id": "parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo",
@@ -9218,7 +9246,7 @@
         "geospatial-data"
       ],
       "_content_hash": "e206d626ef2e",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
     },
     {
       "id": "parquet-ml-p6jq3rgdqkqhx0xj8wjt7ldrpyrktw20",
@@ -9409,7 +9437,7 @@
       ],
       "_content_hash": "a936be3b69a6",
       "llm_title": "Add geometry logical type",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd",
+      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -9606,7 +9634,7 @@
       ],
       "_content_hash": "bd410895bf53",
       "llm_title": "Apache Parquet-Java 1.15.0 Release Discussion",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-scdq9t2gvvs4glhq0qx4qcvfp62j793s",
@@ -9851,7 +9879,7 @@
       ],
       "_content_hash": "a33cf297101f",
       "llm_title": "Parquet 1.14.4 Release Discussion",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-s6b25j3x26009v054yqjov0f1z49ctqj",
@@ -10315,7 +10343,7 @@
       ],
       "_content_hash": "209f31a55ed8",
       "llm_title": "Clarify min-max truncation in Parquet statistics",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-zfnmg5p51b7oylft5w5k4670wgkd4zv4"
     },
     {
       "id": "parquet-ml-6h58hj39lhqtcyd2hlsyvqm4lzdh4b9z",
@@ -10626,7 +10654,7 @@
       ],
       "_content_hash": "c242c64ce298",
       "llm_title": "Clarify null_counts and distinct_counts in Parquet",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-zfnmg5p51b7oylft5w5k4670wgkd4zv4"
     },
     {
       "id": "parquet-ml-t9bbdft69rgk4jotmx26259m1vxhx83v",
@@ -10838,7 +10866,7 @@
         "proposed-release"
       ],
       "_content_hash": "f2a42b8fd8ce",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-3zyfhc3r4b5sh61mb6nwsxx5fp3r18qn",
@@ -11080,7 +11108,7 @@
       ],
       "_content_hash": "e5389cab138e",
       "llm_title": "Guidance on Parquet Format Features",
-      "initiative_id": "parquet-init-parquet-ml-bcc13dtdvnxvg55nhyowbwzqomfljgvb"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-sc9zoxd3pd10odtgbrsh5qh7szhl2lhg",
@@ -11173,7 +11201,7 @@
       ],
       "_content_hash": "ac69a2df9309",
       "llm_title": "Migrate parquet-cpp issues to GitHub",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd",
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -11502,7 +11530,7 @@
       ],
       "_content_hash": "48cbc9c83c2b",
       "llm_title": "Unify Record and Row Terminology",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-h589zkwnpo592gc9n17v0y7qvd9jv1z4",
@@ -11531,7 +11559,7 @@
       ],
       "_content_hash": "74fa9464f266",
       "llm_title": "Patch release for parquet-java 1.14.1",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-8xmxc76nd00624qqps6s1qw6lhv1qwv5",
@@ -11595,7 +11623,7 @@
       ],
       "_content_hash": "8845fed2b8c7",
       "llm_title": "Improvements to File Footer metadata",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533",
+      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -11680,7 +11708,7 @@
       ],
       "_content_hash": "e846f3b62275",
       "llm_title": "Improving Parquet Infrastructure and Documentation",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
     },
     {
       "id": "parquet-ml-xjg1zrhll5ztqr4n5lv92f6tfwvfb8rm",
@@ -11714,7 +11742,7 @@
       ],
       "_content_hash": "2a08a456c011",
       "llm_title": "Integration Testing for Parquet Implementations",
-      "initiative_id": "parquet-init-parquet-ml-xjg1zrhll5ztqr4n5lv92f6tfwvfb8rm"
+      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
     },
     {
       "id": "parquet-ml-w6r0fwj42wvpm5yflwxhtm2ss3z2hrl3",
@@ -11840,7 +11868,7 @@
       ],
       "_content_hash": "22e086d3b13a",
       "llm_title": "Improve Bloom Filter documentation",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533",
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -11889,7 +11917,7 @@
       ],
       "_content_hash": "b35fb5bac405",
       "llm_title": "Parquet Extensibility Discussion",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533",
+      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -11940,7 +11968,7 @@
       ],
       "_content_hash": "75c535865422",
       "llm_title": "Encoding improvements follow-up",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533",
+      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -12025,7 +12053,7 @@
       ],
       "_content_hash": "bee13f973008",
       "llm_title": "Parquet Metadata Evolution Proposal",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
     },
     {
       "id": "parquet-ml-vs3w2z5bk6s3c975rrkqdttr1dpsdn7h",
@@ -12088,7 +12116,7 @@
       ],
       "_content_hash": "4ad4d1b14c0a",
       "llm_title": "Parquet 3 Wide Schema Metadata Discussion",
-      "initiative_id": "parquet-init-parquet-ml-vs3w2z5bk6s3c975rrkqdttr1dpsdn7h"
+      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
     },
     {
       "id": "parquet-ml-m911chzz5pz8o8fb1y0x49h96g8w29d7",
@@ -12198,7 +12226,7 @@
       ],
       "_content_hash": "5ffbdcc3cd14",
       "llm_title": "Repo documentation improvements proposal",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-f9379yx0lf5gtpkgyv922pvowtzy4kmm",
@@ -12282,7 +12310,7 @@
       ],
       "_content_hash": "08f21075a213",
       "llm_title": "Parquet C++ Governance Discussion",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-2gggm938z0x9fx3wtwctfm5htsxlf3z4",
@@ -12984,7 +13012,7 @@
         "support-finer"
       ],
       "_content_hash": "20a49614491d",
-      "initiative_id": "parquet-init-parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd"
+      "initiative_id": "parquet-init-parquet-ml-4btkkqo0qkq34tqfj0gtbzbgrqoowxdm"
     },
     {
       "id": "parquet-ml-m6o68jl7fosfxq66p8c85cqr2t2gv611",
@@ -13049,7 +13077,7 @@
       ],
       "_content_hash": "ccc71f2d9b82",
       "llm_title": "Discussion on Parquet Format 2.10.0 Release",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-gyvqcx9ssxkjlrwogqwy7n4z6ofdm871",
@@ -13321,7 +13349,7 @@
       ],
       "_content_hash": "b5c03aefd7ef",
       "llm_title": "Discussion on Apache Parquet 1.13.1 Release",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7"
     },
     {
       "id": "parquet-ml-21f6xotkqstk81jcsk1t3r94g718jbzc",

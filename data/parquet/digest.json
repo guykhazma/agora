@@ -1,23 +1,33 @@
 {
-  "summary": "The discussion explores adding metadata or logical types to represent fixed-length numeric vectors in Parquet The proposal introduces a two-tier change model for the Parquet format: add\u2011everywhere changes that are forward compatible and compatibility level changes that require early failure for unsupported readers. It aims to accelerate feature rollout while ensuring readers either correctly interpret data or fail safely, with a preference for add\u2011everywhere changes whenever possible. 1.19.0 The discussion proposes a new Parquet logical type, WIRE, that preserves raw serialized message bytes (e.g., protobuf) while enabling selective shredding of frequently queried fields for columnar access. It reuses Variant\u2019s shredding layout without re\u2011encoding the message, keeping compatibility with older readers.",
+  "summary": "The proposal defines two categories of format changes\u2014add\u2011everywhere and compatibility level\u2014to speed up feature rollout while keeping readers safe. Andrew Lamb opens a discussion to gather contributors for adding new encodings to Parquet. The discussion centers on adding a logical VECTOR type to Parquet, using metadata fields to encode length constraints and potentially finite element restrictions. Participants debate whether to enforce finiteness and whether to separate VECTOR from FIXED_LENGTH_LIST, ultimately agreeing to introduce a logical type first and refine physical representation later.",
   "highlights": [
     {
-      "text": "The discussion explores adding metadata or logical types to represent fixed-length numeric vectors in Parquet",
-      "sources": [
-        {
-          "id": "parquet-ml-pzkpypmcm5xql2fpxbdrdr45ndl1o5xn",
-          "title": "Re: [DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
-          "url": "https://lists.apache.org/thread/pzkpypmcm5xql2fpxbdrdr45ndl1o5xn"
-        }
-      ]
-    },
-    {
-      "text": "The proposal introduces a two-tier change model for the Parquet format: add\u2011everywhere changes that are forward compatible and compatibility level changes that \u2026",
+      "text": "The proposal defines two categories of format changes\u2014add\u2011everywhere and compatibility level\u2014to speed up feature rollout while keeping readers safe. It reviews \u2026",
       "sources": [
         {
           "id": "parquet-ml-qk8hxpvycy6161lqop1bynr3yt028m7t",
           "title": "[DISCUSS] Parquet versioning: a concrete proposal",
           "url": "https://lists.apache.org/thread/qk8hxpvycy6161lqop1bynr3yt028m7t"
+        }
+      ]
+    },
+    {
+      "text": "Andrew Lamb opens a discussion to gather contributors for adding new encodings to Parquet. He highlights ongoing efforts such as PFOR, FSST/OnPair, and mentions\u2026",
+      "sources": [
+        {
+          "id": "parquet-ml-kxthjf063lvkgj8jcob8jd1djsztx03p",
+          "title": "Re: [DISCUSS] Anyone working on / want to help with new encoding proposals?",
+          "url": "https://lists.apache.org/thread/kxthjf063lvkgj8jcob8jd1djsztx03p"
+        }
+      ]
+    },
+    {
+      "text": "The discussion centers on adding a logical VECTOR type to Parquet, using metadata fields to encode length constraints and potentially finite element restriction\u2026",
+      "sources": [
+        {
+          "id": "parquet-ml-pzkpypmcm5xql2fpxbdrdr45ndl1o5xn",
+          "title": "Re: [DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
+          "url": "https://lists.apache.org/thread/pzkpypmcm5xql2fpxbdrdr45ndl1o5xn"
         }
       ]
     },
@@ -30,16 +40,6 @@
           "url": "https://github.com/apache/parquet-java/milestone/35"
         }
       ]
-    },
-    {
-      "text": "The discussion proposes a new Parquet logical type, WIRE, that preserves raw serialized message bytes (e.g., protobuf) while enabling selective shredding of fre\u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-qdm6zp767sqzg9nrwwml3yzcm109hxn4",
-          "title": "Re: [DISCUSS] WIRE: a logical type for serialized wire-format messages",
-          "url": "https://lists.apache.org/thread/qdm6zp767sqzg9nrwwml3yzcm109hxn4"
-        }
-      ]
     }
   ],
   "generation": {
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-13T13:17:17.324446+00:00",
+  "generated_at": "2026-10-14T10:57:19.465427+00:00",
   "item_count": 4,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-10-07",
-    "to": "2026-10-13",
+    "from": "2026-10-13",
+    "to": "2026-10-14",
     "thread_count": 4
   }
 }

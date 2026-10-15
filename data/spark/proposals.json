@@ -1,8 +1,61 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-14T10:59:20.251822+00:00",
-  "total": 674,
+  "generated_at": "2026-10-15T10:42:24.991284+00:00",
+  "total": 676,
   "proposals": [
+    {
+      "id": "spark-jira-SPARK-60255",
+      "source": "jira",
+      "kind": "issue",
+      "title": "[SPIP] ADBC Data Source",
+      "url": "https://issues.apache.org/jira/browse/SPARK-60255",
+      "author": "Tornike Gurgenidze",
+      "state": "open",
+      "created_at": "2026-10-15T03:53:48+00:00",
+      "updated_at": "2026-10-15T03:53:48+00:00",
+      "body": "Summary\r\n\r\nAdd a built-in ADBC (Arrow Database Connectivity) data source to Spark, alongside the existing JDBC data source. It reads and writes through any ADBC driver and passes Arrow column batches straight into Spark as ColumnarBatches, so data stays in columns from the database to Spark.\r\n\r\n*SPIP document:* [SPIP: ADBC Data Source|https://docs.google.com/document/d/1hewLmAc8yFCY4PYepE02Yz8iACCAWkRUZuhzHyyMqBY/edit?tab=t.0]\r\n*Prototype:* [tokoko/spark-adbc|https://github.com/tokoko/spark-adbc]\r\n\r\nMotivation\r\n\r\nJDBC returns data one row at a time, and Spark reads each value separately. For analytical databases that store or send data in columns, results are converted from columns to rows at the driver, read value by value in Spark, and often converted back to columns by vectorized engines (Comet, Gluten). On large reads this conversion dominates. The spark-adbc prototype shows 3-10x read throughput over JDBC on column-oriented databases.\r\n\r\nProposal\r\n\r\n* New optional data source: \\{{spark.read.format(\"adbc\")}}. No public API changes; JDBC is unchanged.\r\n* Reads: Arrow batches wrapped as ColumnarBatch via ArrowColumnVector, without copying.\r\n* Pushdown of column pruning, filters, limit, Top-N and aggregates.\r\n* Partitioning: JDBC-style range partitioning, plus driver partitioning through ADBC executePartitioned.\r\n* Writes: per-task appends through ADBC bulk ingest (same at-least-once guarantee as the JDBC writer).\r\n* Pushdown semantics without per-database dialect code in Spark: SQL generated from driver-reported metadata, with an optional Substrait-based mode.\r\n\r\nNon-goals\r\n\r\n* Replacing or changing the JDBC data source.\r\n* Atomic distributed writes in the first version (depends on apache/arrow-adbc#4317).\r\n* Structured Streaming.\r\n\r\nRelated upstream work\r\n\r\n* [apache/arrow-adbc#4317|https://github.com/apache/arrow-adbc/pull/4317] - partitioned bulk ingest\r\n* [apache/arrow#49796|https://github.com/apache/arrow/pull/49796] - dialect-related Flight SQL SqlInfo codes",
+      "labels": [
+        "SPIP"
+      ],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1hewLmAc8yFCY4PYepE02Yz8iACCAWkRUZuhzHyyMqBY/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: ADBC Data Source"
+        },
+        {
+          "url": "https://github.com/apache/arrow-adbc/pull/4317",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/49796",
+          "kind": "github_pr"
+        }
+      ],
+      "comment_count": 0,
+      "llm_summary": "Spark proposes adding a built-in ADBC data source to complement the existing JDBC source, enabling columnar reads and writes via Arrow without copying data. The new source supports pushdown of column pruning, filters, limits, aggregates, and partitioning, and writes through ADBC bulk ingest. It does not replace JDBC and initially lacks atomic distributed writes.",
+      "llm_status": "discussion",
+      "llm_key_points": [
+        "Adds a built-in ADBC data source to Spark for columnar reads and writes via Arrow",
+        "Supports pushdown of column pruning, filters, limits, aggregates, and partitioning",
+        "Does not replace JDBC and initially lacks atomic distributed writes"
+      ],
+      "llm_topics": [
+        "adbc",
+        "performance"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "2af87f79b2e6",
+      "llm_title": "ADBC Data Source",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
+    },
     {
       "id": "spark-jira-SPARK-55278",
       "source": "jira",
@@ -132,7 +185,7 @@
       ],
       "_content_hash": "a64daec31b06",
       "llm_title": "Add DECFLOAT data type",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249",
+      "initiative_id": "spark-init-spark-jira-SPARK-60255",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -178,7 +231,7 @@
       ],
       "_content_hash": "14bafd27cfd3",
       "llm_title": "Auto CDC support",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249",
+      "initiative_id": "spark-init-spark-jira-SPARK-60255",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -283,7 +336,7 @@
       ],
       "_content_hash": "c6b5395e09dd",
       "llm_title": "Nanosecond precision timestamps",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249",
+      "initiative_id": "spark-init-spark-jira-SPARK-60255",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -461,7 +514,7 @@
         "ingestion-errors"
       ],
       "_content_hash": "02a9e590106b",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-jira-SPARK-54783",
@@ -531,7 +584,7 @@
         "row-level"
       ],
       "_content_hash": "29aa4f01a2d9",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-jira-SPARK-55668",
@@ -1418,7 +1471,7 @@
         "spip"
       ],
       "_content_hash": "783aa30b5d9c",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-jira-SPARK-34849",
@@ -1609,7 +1662,7 @@
         "performance-improvement"
       ],
       "_content_hash": "9d9f4fb1df66",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-jira-SPARK-27067",
@@ -1864,6 +1917,92 @@
       "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
     },
     {
+      "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] SPIP: External Lookup Join",
+      "url": "https://lists.apache.org/thread/7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
+      "author": "Jungtaek Lim <ka...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-10-07T08:30:22+00:00",
+      "updated_at": "2026-10-15T06:34:57+00:00",
+      "body": "Hi devs,\n\nI'm coming up with a proposal for a new join strategy, named \"External\nLookup Join\".\n\ntl;dr:\nAll existing join strategies require the static side (DataFrame/Relation)\nto be materialized before the join operator. This doesn't allow us to\nachieve low latency join where the storage of the static side is expected\nto produce low latency response over on-demand request. (e.g. OLTP\noptimized like RDBMS, in-memory storage, NoSQL, etc.) The new join strategy\nwill issue the query to the external storage \"on demand\", when processing\nthe data on the left side.\n\nThe most benefit will come with real-time mode, but it is not limited to\nreal-time mode. This join strategy would be useful as long as the external\nstorage of the static side is better suited for on-demand requests (rather\nthan bulk load with pruning). Both static-static and stream-static can be\nbenefited by this, though static-static join needs to be careful on doing\nthis.\n\nMore details are included in the SPIP doc.\n\nIssue: https://issues.apache.org/jira/browse/SPARK-60031\nSPIP doc:\nhttps://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0\n\nLooking forward to hearing from you.\n\nThanks!\nJungtaek Lim (HeartSaVioR)\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: External Lookup Join"
+        }
+      ],
+      "llm_summary": "The discussion centers on a proposal to enable on\u2011demand lookups of a static side during joins, aiming to reduce latency for real\u2011time and streaming workloads. Participants raise concerns about the missing DSv2 interface, test coverage, executor\u2011level caching, and extending support beyond simple OLTP lookups. The conversation also touches on how third\u2011party connectors should implement the new capabilities.",
+      "llm_status": "discussion",
+      "comment_count": 6,
+      "participant_count": 5,
+      "llm_key_points": [
+        "On\u2011demand lookup of static side to reduce latency",
+        "Discussion on DSv2 interface and third\u2011party connector support",
+        "Considerations for test coverage and caching"
+      ],
+      "llm_topics": [
+        "external-lookup",
+        "performance"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "69d34f78b8d8",
+      "llm_title": "External Lookup Join Proposal",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
+    },
+    {
+      "id": "spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] SPARK-42411: Opt-in executor headless Service for Istio strict mTLS on K8s",
+      "url": "https://lists.apache.org/thread/44mf222b9cpgkksfyxhhnpoohl7qmjo7",
+      "author": "Tariq Hasan <mm...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-10-15T02:32:10+00:00",
+      "updated_at": "2026-10-15T02:32:10+00:00",
+      "body": "Hello all,\n\nI am interested in reviving SPARK-42411 and wanted to check in to see\nif maintainers would be open to it before I write the code.\n\nThe problem is that, in the sidecar mode for Istio with STRICT mTLS,\ntraffic to a pod IP that is not backed by a Service gets rejected. So\nalthough the driver is covered by a headless Service the executors are not\nand executor-to-executor block and shuffle fetches fail.\n\nIstio seems to have also closed its tracking issue (\nhttps://github.com/istio/istio/issues/37431) without a fix and recommends\nheadless Services.\n\nI am wondering if we can solve this issue by having an opt-in headless\nService per application that is created by the driver and that selects the\napp's executor pods. I am happy to take any feedback to understand the\nfeasibility of reviving the issue and implementing a fix.\n\nSincerely,\n\nTariq Hasan\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/istio/istio/issues/37431",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "The discussion addresses an issue where Istio\u2019s STRICT mTLS mode rejects traffic to pod IPs not backed by a Service, causing executor-to-executor communication failures in Spark. The proposal suggests creating an opt\u2011in headless Service per application, generated by the driver, to select executor pods and restore connectivity. Maintainers are asked for feedback on feasibility before implementation.",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [
+        "Istio STRICT mTLS rejects pod IP traffic without a Service",
+        "Proposed opt\u2011in headless Service per application to enable executor communication"
+      ],
+      "llm_topics": [
+        "service-discovery",
+        "networking",
+        "istio"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "f4169d6112d8",
+      "llm_title": "Opt-in executor headless Service for Istio mTLS",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7"
+    },
+    {
       "id": "spark-ml-fobrm61g0cm59sy1r4omvbbf7pn50zvl",
       "source": "mailing_list",
       "kind": "thread",
@@ -1930,51 +2069,6 @@
       "_content_hash": "c185f53c82e7",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-fobrm61g0cm59sy1r4omvbbf7pn50zvl"
-    },
-    {
-      "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] SPIP: External Lookup Join",
-      "url": "https://lists.apache.org/thread/7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
-      "author": "Jungtaek Lim <ka...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-10-07T08:30:22+00:00",
-      "updated_at": "2026-10-13T22:08:51+00:00",
-      "body": "Hi devs,\n\nI'm coming up with a proposal for a new join strategy, named \"External\nLookup Join\".\n\ntl;dr:\nAll existing join strategies require the static side (DataFrame/Relation)\nto be materialized before the join operator. This doesn't allow us to\nachieve low latency join where the storage of the static side is expected\nto produce low latency response over on-demand request. (e.g. OLTP\noptimized like RDBMS, in-memory storage, NoSQL, etc.) The new join strategy\nwill issue the query to the external storage \"on demand\", when processing\nthe data on the left side.\n\nThe most benefit will come with real-time mode, but it is not limited to\nreal-time mode. This join strategy would be useful as long as the external\nstorage of the static side is better suited for on-demand requests (rather\nthan bulk load with pruning). Both static-static and stream-static can be\nbenefited by this, though static-static join needs to be careful on doing\nthis.\n\nMore details are included in the SPIP doc.\n\nIssue: https://issues.apache.org/jira/browse/SPARK-60031\nSPIP doc:\nhttps://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0\n\nLooking forward to hearing from you.\n\nThanks!\nJungtaek Lim (HeartSaVioR)\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSPIP: External Lookup Join"
-        }
-      ],
-      "llm_summary": "The discussion proposes a new join strategy that performs on-demand lookups against external storage, avoiding pre-materialization of the static side and improving low-latency joins for stream and static data. It highlights benefits for real-time processing and stream-static joins, while noting the need to extend DSv2 interfaces and gather community feedback. The conversation includes concerns about interface design and the scope of the proposal.",
-      "llm_status": "discussion",
-      "comment_count": 3,
-      "participant_count": 3,
-      "llm_key_points": [
-        "On-demand lookup against external storage for low-latency joins",
-        "Benefits for stream-static and real-time modes",
-        "Need to extend DSv2 interfaces and gather community feedback"
-      ],
-      "llm_topics": [
-        "external-lookup",
-        "stream-static-join",
-        "performance"
-      ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "9368bf5e3998",
-      "llm_title": "External Lookup Join Proposal",
-      "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
     },
     {
       "id": "spark-ml-y7h0v7km0814xb5fg57ght5wtfptn9lt",
@@ -2160,7 +2254,7 @@
       "llm_title": "Fallback resolver for unknown V2 catalog names",
       "_content_hash": "19fca5fb7ed8",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
@@ -2201,7 +2295,7 @@
       "llm_title": "Automated AI code review for Spark PRs",
       "_content_hash": "b58c68bae6e6",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-jr3gfsv3k2qq8f24w13rx3s44jm2j5r4",
@@ -2256,7 +2350,7 @@
           "source_updated_at": "2026-10-06T20:04:00+00:00"
         }
       ],
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-ov7hfrb2jx17lt5xgs0zjqpmjotkm9bb",
@@ -2338,7 +2432,7 @@
       },
       "_content_hash": "579bca591d91",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx",
@@ -2587,7 +2681,7 @@
       "_content_hash": "f45f957d028a",
       "llm_title": "Add DECFLOAT data type to Spark",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-r3jyf1on98lgnxw6pdhjj0qrh09mnxvz",
@@ -2919,7 +3013,7 @@
       },
       "_content_hash": "3a9d7d6cf9e8",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-52nvp22lnppbdrcxzv7y2vwwch449n4t",
@@ -3251,7 +3345,7 @@
       "_content_hash": "46c611004c73",
       "llm_title": "SPIP: FileType for unstructured data in Spark",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-n8ghxkjtwc289tvffb8sy0s99sp52orh",
@@ -3300,7 +3394,7 @@
       },
       "_content_hash": "d3774da4347d",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-vh21614wrjmr7cdd905qhwbwqd25lmjj",
@@ -3490,7 +3584,7 @@
       ],
       "llm_title": "",
       "_content_hash": "97cea4020d47",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-vgg3omvqqmyo2c8w5rnnhl78k1rzp2qg",
@@ -3791,7 +3885,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -4778,7 +4872,7 @@
         "update"
       ],
       "_content_hash": "ce1ba8ddf27c",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-qll2rg9q7y97q1yjtgcybwoodsh2g7to",
@@ -4910,7 +5004,7 @@
         "data-connector"
       ],
       "_content_hash": "23e5573d775b",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249",
+      "initiative_id": "spark-init-spark-jira-SPARK-60255",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -5367,7 +5461,7 @@
         "uro-bojani"
       ],
       "_content_hash": "011b99573a32",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-92kjhnglm90z2n8v7hxn6d9nb2gzhq1z",
@@ -5660,7 +5754,7 @@
         "apache-spark"
       ],
       "_content_hash": "ec8146319b15",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv",
@@ -5691,7 +5785,7 @@
         "spark-project"
       ],
       "_content_hash": "af074b2503b6",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-c3sjlfos8d4o2859bjpltpgsf33wfnfh",
@@ -7435,7 +7529,7 @@
         "cdc-support"
       ],
       "_content_hash": "123d8c3bfe8c",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-sjmsbpdp4q6op466c4l0jb869frzth0f",
@@ -7549,7 +7643,7 @@
         "support"
       ],
       "_content_hash": "fd8e221acadf",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-mmnn5bcbzdd89l775tt0qv5coc947n2y",
@@ -8251,7 +8345,7 @@
         "tian-gao"
       ],
       "_content_hash": "dacca48c4fa0",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-mqfysmjmkdnw0fxy9t5dp7bxpvo36jrv",
@@ -13041,7 +13135,7 @@
         "approximate-aggregation"
       ],
       "_content_hash": "d2166ba0dda9",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249",
+      "initiative_id": "spark-init-spark-jira-SPARK-60255",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -25149,7 +25243,7 @@
         "performance"
       ],
       "_content_hash": "8c4f7a136428",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249",
+      "initiative_id": "spark-init-spark-jira-SPARK-60255",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -27223,7 +27317,7 @@
         "performance-improvement"
       ],
       "_content_hash": "8b09357127ec",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-tdgf4gd4copzxjdoldkf1n2gn5m0kdkc",
@@ -27305,7 +27399,7 @@
         "performance-improvement"
       ],
       "_content_hash": "48429bc6df81",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-l6tprb580lrq1118c83kt9fst30jp8n3",
@@ -27496,7 +27590,7 @@
         "lazy-evaluation"
       ],
       "_content_hash": "48424c48251a",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249",
+      "initiative_id": "spark-init-spark-jira-SPARK-60255",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -28945,7 +29039,7 @@
         "spip"
       ],
       "_content_hash": "f3cf472da1c5",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-ml-smpwykpoqr0y5r5xgc9jpt1fjm72fvck"
     },
     {
       "id": "spark-ml-nbqj698v59skknrh7bp6ol0rrs9zsr6r",
@@ -29059,7 +29153,7 @@
         "dataframe-based"
       ],
       "_content_hash": "fbd26f4dc91c",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-zg6k1spw6k1c7brgo6t7qldvsqbmfytm",
@@ -29360,7 +29454,7 @@
         "dataframe-api"
       ],
       "_content_hash": "b5ec356c79e0",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-znpb9lgsrwrr1d733rmqbqp7w38ycs2z",
@@ -30436,7 +30530,7 @@
         "data"
       ],
       "_content_hash": "0a4ef1127992",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-w0px7hdzqko5lt4ryv5yvxtny5jmgh9t",
@@ -30541,7 +30635,7 @@
         "data-source-v2"
       ],
       "_content_hash": "dd4d5e42208f",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249",
+      "initiative_id": "spark-init-spark-jira-SPARK-60255",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -30729,7 +30823,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",
@@ -31871,7 +31965,7 @@
         "performance"
       ],
       "_content_hash": "af14f08a0ae7",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249",
+      "initiative_id": "spark-init-spark-jira-SPARK-60255",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -31916,7 +32010,7 @@
         "performance"
       ],
       "_content_hash": "7421d572bb62",
-      "initiative_id": "spark-init-spark-jira-SPARK-56249",
+      "initiative_id": "spark-init-spark-jira-SPARK-60255",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",

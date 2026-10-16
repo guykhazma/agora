@@ -1,8 +1,8 @@
 {
-  "summary": "The discussion centers on a proposal to enable on\u2011demand lookups of a static side during joins, aiming to reduce latency for real\u2011time and streaming workloads. The discussion addresses an issue where Istio\u2019s STRICT mTLS mode rejects traffic to pod IPs not backed by a Service, causing executor-to-executor communication failures in Spark. The discussion proposes a unified API and execution protocol for user-defined functions that can run in any language via external workers, enabling Spark Connect to support UDFs in Go, Rust, Swift, .NET, and more. Vote in progress: 0 binding +1 The discussion proposes an optional fallback resolver that will be consulted when an application references a V2 catalog name that has not been pre\u2011configured in Spark.",
+  "summary": "Recent discussions cover a new external lookup join strategy, an AI code review bot for pull requests, and proposals to add an ADBC data source and a language\u2011agnostic UDF protocol. Other topics include a fix for Istio strict mTLS communication failures and a vote on Spark 4.2.1 RC1.",
   "highlights": [
     {
-      "text": "The discussion centers on a proposal to enable on\u2011demand lookups of a static side during joins, aiming to reduce latency for real\u2011time and streaming workloads. \u2026",
+      "text": "Proposed external lookup join strategy to perform on\u2011demand lookups against external storage, reducing latency for stream joins",
       "sources": [
         {
           "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
@@ -12,7 +12,17 @@
       ]
     },
     {
-      "text": "Spark proposes adding a built-in ADBC data source to complement the existing JDBC source, enabling columnar reads and writes via Arrow without copying data. The\u2026",
+      "text": "Trial AI code review bot using Claude that posts advisory comments on new or updated Spark pull requests",
+      "sources": [
+        {
+          "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
+          "title": "[DISCUSS] Automated AI code review on new Spark PRs (trial)",
+          "url": "https://lists.apache.org/thread/wb2821v85vn0lcbdzsbr8o672j8f53wj"
+        }
+      ]
+    },
+    {
+      "text": "Proposal to add a built\u2011in ADBC data source for columnar Arrow reads and writes, complementing the existing JDBC source",
       "sources": [
         {
           "id": "spark-jira-SPARK-60255",
@@ -22,17 +32,7 @@
       ]
     },
     {
-      "text": "The discussion addresses an issue where Istio\u2019s STRICT mTLS mode rejects traffic to pod IPs not backed by a Service, causing executor-to-executor communication \u2026",
-      "sources": [
-        {
-          "id": "spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7",
-          "title": "[DISCUSS] SPARK-42411: Opt-in executor headless Service for Istio strict mTLS on K8s",
-          "url": "https://lists.apache.org/thread/44mf222b9cpgkksfyxhhnpoohl7qmjo7"
-        }
-      ]
-    },
-    {
-      "text": "The discussion proposes a unified API and execution protocol for user-defined functions that can run in any language via external workers, enabling Spark Connec\u2026",
+      "text": "Language\u2011agnostic UDF protocol to enable user\u2011defined functions in any language via external workers, supporting Spark Connect",
       "sources": [
         {
           "id": "spark-jira-SPARK-55278",
@@ -43,16 +43,18 @@
     }
   ],
   "generation": {
-    "method": "local",
+    "method": "llm",
+    "provider": "groq",
+    "model": "openai/gpt-oss-20b",
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-15T10:41:41.937578+00:00",
+  "generated_at": "2026-10-16T10:28:20.726793+00:00",
   "item_count": 6,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-10-09",
-    "to": "2026-10-15",
+    "from": "2026-10-12",
+    "to": "2026-10-16",
     "thread_count": 6
   }
 }

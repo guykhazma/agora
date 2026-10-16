@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-15T10:42:24.991284+00:00",
+  "generated_at": "2026-10-16T10:29:07.480936+00:00",
   "total": 676,
   "proposals": [
     {
@@ -1925,7 +1925,7 @@
       "author": "Jungtaek Lim <ka...@gmail.com>",
       "state": "open",
       "created_at": "2026-10-07T08:30:22+00:00",
-      "updated_at": "2026-10-15T06:34:57+00:00",
+      "updated_at": "2026-10-16T04:47:45+00:00",
       "body": "Hi devs,\n\nI'm coming up with a proposal for a new join strategy, named \"External\nLookup Join\".\n\ntl;dr:\nAll existing join strategies require the static side (DataFrame/Relation)\nto be materialized before the join operator. This doesn't allow us to\nachieve low latency join where the storage of the static side is expected\nto produce low latency response over on-demand request. (e.g. OLTP\noptimized like RDBMS, in-memory storage, NoSQL, etc.) The new join strategy\nwill issue the query to the external storage \"on demand\", when processing\nthe data on the left side.\n\nThe most benefit will come with real-time mode, but it is not limited to\nreal-time mode. This join strategy would be useful as long as the external\nstorage of the static side is better suited for on-demand requests (rather\nthan bulk load with pruning). Both static-static and stream-static can be\nbenefited by this, though static-static join needs to be careful on doing\nthis.\n\nMore details are included in the SPIP doc.\n\nIssue: https://issues.apache.org/jira/browse/SPARK-60031\nSPIP doc:\nhttps://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0\n\nLooking forward to hearing from you.\n\nThanks!\nJungtaek Lim (HeartSaVioR)\n",
       "labels": [],
       "linked_resources": [
@@ -1936,17 +1936,18 @@
           "title": "\ufeffSPIP: External Lookup Join"
         }
       ],
-      "llm_summary": "The discussion centers on a proposal to enable on\u2011demand lookups of a static side during joins, aiming to reduce latency for real\u2011time and streaming workloads. Participants raise concerns about the missing DSv2 interface, test coverage, executor\u2011level caching, and extending support beyond simple OLTP lookups. The conversation also touches on how third\u2011party connectors should implement the new capabilities.",
+      "llm_summary": "The discussion proposes a new join strategy that performs on\u2011demand lookups against external storage instead of materializing the static side, aiming to reduce latency for stream\u2011static and static\u2011static joins. Participants focus on defining DSv2 interfaces, third\u2011party connector support, test coverage, and caching strategies. The proposal is still in the discussion phase with active feedback on design details.",
       "llm_status": "discussion",
-      "comment_count": 6,
+      "comment_count": 8,
       "participant_count": 5,
       "llm_key_points": [
-        "On\u2011demand lookup of static side to reduce latency",
-        "Discussion on DSv2 interface and third\u2011party connector support",
-        "Considerations for test coverage and caching"
+        "On\u2011demand external lookups to reduce join latency",
+        "DSv2 interface and third\u2011party connector integration",
+        "Testing and caching considerations"
       ],
       "llm_topics": [
         "external-lookup",
+        "streaming",
         "performance"
       ],
       "summary_generation": {
@@ -1955,10 +1956,56 @@
         "model": "openai/gpt-oss-20b",
         "prompt_version": 1
       },
-      "_content_hash": "69d34f78b8d8",
-      "llm_title": "External Lookup Join Proposal",
+      "_content_hash": "5ef5acd64095",
+      "llm_title": "External Lookup Join",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60255"
+    },
+    {
+      "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Automated AI code review on new Spark PRs (trial)",
+      "url": "https://lists.apache.org/thread/wb2821v85vn0lcbdzsbr8o672j8f53wj",
+      "author": "Hyukjin Kwon <gu...@apache.org>",
+      "state": "open",
+      "created_at": "2026-10-01T21:58:50+00:00",
+      "updated_at": "2026-10-15T22:05:26+00:00",
+      "body": "Hi all,\n\nI've been running a trial of automated AI code review on new apache/spark\nPRs, and I'd like to share how it works and get your feedback.\n\nFor now the reviews are posted from my own GitHub account (@HyukjinKwon)\nwhile I check that it behaves well. Once it's proven, I plan to move it to\nthe https://github.com/spark-test account, so the reviews are clearly\nseparate from my personal ones. I plan to run this for the next week.\n\n*What it does*\n\nEach review is a full, multi-pass review of the PR diff, run by Claude\n(via Claude Code). Findings are checked against the code before they're\nposted. They're posted as a normal GitHub review: a short summary plus\ninline comments, each labeled with a severity, e.g. \"Non-blocking (P2)\"\nor \"Nit (P3)\". Example:\nhttps://github.com/apache/spark/pull/59184#pullrequestreview-5379759787\n\n*No LGTM, no approvals*\n\n- It never approves a PR and never posts \"LGTM\". Every review is a plain\n  \"Comment\" review, so it doesn't count as an approval or a change\n  request, and it has no effect on merging.\n- If a review finds nothing new, it posts nothing at all: no \"no\n  findings\" or \"all comments addressed\" message.\n- It doesn't push commits or edit anyone's PR.\n- Human review and committer judgement are unchanged. Please treat its\n  comments like any other reviewer's: feel free to push back or ignore.\n\n*When a review is triggered*\n\n- A new PR is reviewed shortly after it's opened. Draft PRs are reviewed\n  once they're marked ready for review.\n- After a review posts findings, the bot waits. It reviews again only\n  when the author pushes new commits.\n- It also waits while a PR has open review comments from anyone that are\n  newer than the latest commit, so it doesn't pile on while the author is\n  still responding to reviewers.\n- Replying in a thread without pushing doesn't trigger a re-review.\n\n*When it stops*\n\n- When a review finds nothing new. The PR gets a fresh review if the\n  author pushes again later.\n- When the PR is merged or closed.\n\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/spark/pull/59184",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/spark/pull/59502",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "A trial bot using Claude reviews new Apache Spark pull requests, posting only advisory comments without approvals or LGTM. It triggers on new or updated PRs, waits for author responses, and can be disabled per PR via a label. Safeguards such as opt\u2011out labels and limits on Jira API calls are being considered.",
+      "llm_status": "discussion",
+      "comment_count": 7,
+      "participant_count": 5,
+      "llm_key_points": [
+        "Trial bot posts only advisory comments, never approves or LGTM",
+        "Reviews trigger on new or updated PRs and wait for author responses",
+        "Safeguards include opt\u2011out labels and Jira API call limits"
+      ],
+      "llm_topics": [
+        "automated-code-review",
+        "ai-review"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "23f06b119d0d",
+      "llm_title": "Automated AI code review for Spark PRs",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj"
     },
     {
       "id": "spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7",
@@ -1982,6 +2029,12 @@
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
       "llm_key_points": [
         "Istio STRICT mTLS rejects pod IP traffic without a Service",
         "Proposed opt\u2011in headless Service per application to enable executor communication"
@@ -1991,14 +2044,8 @@
         "networking",
         "istio"
       ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "f4169d6112d8",
       "llm_title": "Opt-in executor headless Service for Istio mTLS",
+      "_content_hash": "f4169d6112d8",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7"
     },
@@ -2253,47 +2300,6 @@
       ],
       "llm_title": "Fallback resolver for unknown V2 catalog names",
       "_content_hash": "19fca5fb7ed8",
-      "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-60255"
-    },
-    {
-      "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Automated AI code review on new Spark PRs (trial)",
-      "url": "https://lists.apache.org/thread/wb2821v85vn0lcbdzsbr8o672j8f53wj",
-      "author": "Hyukjin Kwon <gu...@apache.org>",
-      "state": "open",
-      "created_at": "2026-10-01T21:58:50+00:00",
-      "updated_at": "2026-10-08T01:54:07+00:00",
-      "body": "Hi all,\n\nI've been running a trial of automated AI code review on new apache/spark\nPRs, and I'd like to share how it works and get your feedback.\n\nFor now the reviews are posted from my own GitHub account (@HyukjinKwon)\nwhile I check that it behaves well. Once it's proven, I plan to move it to\nthe https://github.com/spark-test account, so the reviews are clearly\nseparate from my personal ones. I plan to run this for the next week.\n\n*What it does*\n\nEach review is a full, multi-pass review of the PR diff, run by Claude\n(via Claude Code). Findings are checked against the code before they're\nposted. They're posted as a normal GitHub review: a short summary plus\ninline comments, each labeled with a severity, e.g. \"Non-blocking (P2)\"\nor \"Nit (P3)\". Example:\nhttps://github.com/apache/spark/pull/59184#pullrequestreview-5379759787\n\n*No LGTM, no approvals*\n\n- It never approves a PR and never posts \"LGTM\". Every review is a plain\n  \"Comment\" review, so it doesn't count as an approval or a change\n  request, and it has no effect on merging.\n- If a review finds nothing new, it posts nothing at all: no \"no\n  findings\" or \"all comments addressed\" message.\n- It doesn't push commits or edit anyone's PR.\n- Human review and committer judgement are unchanged. Please treat its\n  comments like any other reviewer's: feel free to push back or ignore.\n\n*When a review is triggered*\n\n- A new PR is reviewed shortly after it's opened. Draft PRs are reviewed\n  once they're marked ready for review.\n- After a review posts findings, the bot waits. It reviews again only\n  when the author pushes new commits.\n- It also waits while a PR has open review comments from anyone that are\n  newer than the latest commit, so it doesn't pile on while the author is\n  still responding to reviewers.\n- Replying in a thread without pushing doesn't trigger a re-review.\n\n*When it stops*\n\n- When a review finds nothing new. The PR gets a fresh review if the\n  author pushes again later.\n- When the PR is merged or closed.\n\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/spark/pull/59184",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "A trial of automated AI code review using Claude was launched for new Apache Spark pull requests, posting only advisory comments without approvals. The bot triggers on new or updated PRs, respects open review comments, and can be disabled per PR via a GitHub label, with safeguards to limit Jira API usage.",
-      "llm_status": "discussion",
-      "comment_count": 6,
-      "participant_count": 5,
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "llm_key_points": [
-        "Trial uses Claude to post advisory comments without approvals",
-        "Bot can be opt\u2011out per PR and limits excessive Jira API calls"
-      ],
-      "llm_topics": [
-        "automated-code-review",
-        "performance"
-      ],
-      "llm_title": "Automated AI code review for Spark PRs",
-      "_content_hash": "b58c68bae6e6",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
@@ -29039,7 +29045,7 @@
         "spip"
       ],
       "_content_hash": "f3cf472da1c5",
-      "initiative_id": "spark-init-spark-ml-smpwykpoqr0y5r5xgc9jpt1fjm72fvck"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-nbqj698v59skknrh7bp6ol0rrs9zsr6r",

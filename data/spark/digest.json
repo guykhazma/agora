@@ -1,8 +1,8 @@
 {
-  "summary": "Recent discussions cover a new external lookup join strategy, an AI code review bot for pull requests, and proposals to add an ADBC data source and a language\u2011agnostic UDF protocol. Other topics include a fix for Istio strict mTLS communication failures and a vote on Spark 4.2.1 RC1.",
+  "summary": "A trial bot using Claude reviews new Apache Spark pull requests, posting only advisory comments without approvals or LGTM. The new source supports pushdown of column pruning, filters, limits, aggregates, and partitioning, and writes through ADBC bulk ingest. The discussion addresses an issue where Istio\u2019s STRICT mTLS mode rejects traffic to pod IPs not backed by a Service, causing executor-to-executor communication failures in Spark. The discussion proposes a unified API and execution protocol for user-defined functions that can run in any language via external workers, enabling Spark Connect to support UDFs in Go, Rust, Swift, .NET, and more.",
   "highlights": [
     {
-      "text": "Proposed external lookup join strategy to perform on\u2011demand lookups against external storage, reducing latency for stream joins",
+      "text": "The discussion proposes a new join strategy that performs on\u2011demand lookups against external storage rather than materializing the static side before the join. \u2026",
       "sources": [
         {
           "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
@@ -12,7 +12,7 @@
       ]
     },
     {
-      "text": "Trial AI code review bot using Claude that posts advisory comments on new or updated Spark pull requests",
+      "text": "A trial bot using Claude reviews new Apache Spark pull requests, posting only advisory comments without approvals or LGTM. It triggers on new or updated PRs, wa\u2026",
       "sources": [
         {
           "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
@@ -22,7 +22,7 @@
       ]
     },
     {
-      "text": "Proposal to add a built\u2011in ADBC data source for columnar Arrow reads and writes, complementing the existing JDBC source",
+      "text": "Spark proposes adding a built-in ADBC data source to complement the existing JDBC source, enabling columnar reads and writes via Arrow without copying data. The\u2026",
       "sources": [
         {
           "id": "spark-jira-SPARK-60255",
@@ -32,24 +32,22 @@
       ]
     },
     {
-      "text": "Language\u2011agnostic UDF protocol to enable user\u2011defined functions in any language via external workers, supporting Spark Connect",
+      "text": "The discussion addresses an issue where Istio\u2019s STRICT mTLS mode rejects traffic to pod IPs not backed by a Service, causing executor-to-executor communication \u2026",
       "sources": [
         {
-          "id": "spark-jira-SPARK-55278",
-          "title": "SPIP: Language-agnostic UDF Protocol for Spark",
-          "url": "https://issues.apache.org/jira/browse/SPARK-55278"
+          "id": "spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7",
+          "title": "[DISCUSS] SPARK-42411: Opt-in executor headless Service for Istio strict mTLS on K8s",
+          "url": "https://lists.apache.org/thread/44mf222b9cpgkksfyxhhnpoohl7qmjo7"
         }
       ]
     }
   ],
   "generation": {
-    "method": "llm",
-    "provider": "groq",
-    "model": "openai/gpt-oss-20b",
+    "method": "local",
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-16T10:28:20.726793+00:00",
+  "generated_at": "2026-10-17T10:01:33.691002+00:00",
   "item_count": 6,
   "period": "last_7_days",
   "coverage": {

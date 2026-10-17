@@ -1,5 +1,5 @@
 {
-  "summary": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Define RepairManifests action interface (#17399) - Implementation PR (#17622) is in review. Geospatial * WIP: End-to-end spatial file pruning from Spark SQL, ST_INTERSECTS pushdown (#17175) \u2014 DRAFT, now carries a stale label; last touched Aug 13. The discussion explores using derived (virtual) columns to represent non-materialized fields in Iceberg v4, leveraging sort order and cluster specifications to index and prune data. The discussion highlights an alternative using the SnapshotAncestryValidator hook introduced in 1.11 for conflict detection, and explains the use case of embedding a proprietary index into a statistics file.",
+  "summary": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Define RepairManifests action interface (#17399) - Implementation PR (#17622) is in review. Geospatial * WIP: End-to-end spatial file pruning from Spark SQL, ST_INTERSECTS pushdown (#17175) \u2014 DRAFT, now carries a stale label; last touched Aug 13. The discussion explores using derived (virtual) columns to represent non-materialized fields in Iceberg v4, leveraging the expression spec to store deterministic transformations in metadata. Participants consider reusing sort order and group statistics for indexing, and emphasize that the metadata must fully describe the function\u2019s operation so optimizers can rewrite queries.",
   "highlights": [
     {
       "text": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Def\u2026",
@@ -12,7 +12,17 @@
       ]
     },
     {
-      "text": "Iceberg is extending its biweekly sync to include both File and Vector types, with a focus on efficient storage of fixed-size vectors for AI workloads. The disc\u2026",
+      "text": "The discussion converged on adding a file-level tightness flag to indicate whether stats are tight or wide, especially in the presence of deletion vectors. Per-\u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-tv7bvqctdfh5qng1sx5rp8r4r00nsv60",
+          "title": "[DISCUSS] Iceberg v4 Stats Tightness",
+          "url": "https://lists.apache.org/thread/tv7bvqctdfh5qng1sx5rp8r4r00nsv60"
+        }
+      ]
+    },
+    {
+      "text": "The discussion focuses on extending the biweekly sync to cover both File and Vector types, with Yan Yan proposing spec changes and a draft PR. Participants deba\u2026",
       "sources": [
         {
           "id": "iceberg-ml-49bm2d8szbzkvtdog38s1o6zb04cj67o",
@@ -22,22 +32,12 @@
       ]
     },
     {
-      "text": "The discussion reviews progress on adding derived column support to Iceberg, referencing prior work on non-materialized columns and secondary indexes. Participa\u2026",
+      "text": "The discussion centers on adding derived (generated) column support to Iceberg, exploring use cases such as non-materialized columns and secondary indexes. Part\u2026",
       "sources": [
         {
           "id": "iceberg-ml-7otnzpb2lwcw1ck520y7qcgz570occo3",
           "title": "Re: Support for derived columns in Iceberg.",
           "url": "https://lists.apache.org/thread/7otnzpb2lwcw1ck520y7qcgz570occo3"
-        }
-      ]
-    },
-    {
-      "text": "The discussion explores using derived (virtual) columns to represent non-materialized fields in Iceberg v4, leveraging sort order and cluster specifications to \u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-sq52zcsmc7ls7gzv6o10r9r5m4kobvx4",
-          "title": "Re: [DISCUSS] Field ID tracking for non-materialized columns in v4",
-          "url": "https://lists.apache.org/thread/sq52zcsmc7ls7gzv6o10r9r5m4kobvx4"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-16T10:23:58.495506+00:00",
+  "generated_at": "2026-10-17T09:57:18.977035+00:00",
   "item_count": 11,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-10-12",
-    "to": "2026-10-16",
+    "to": "2026-10-17",
     "thread_count": 11
   }
 }

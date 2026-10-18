@@ -1,5 +1,5 @@
 {
-  "summary": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Define RepairManifests action interface (#17399) - Implementation PR (#17622) is in review. Geospatial * WIP: End-to-end spatial file pruning from Spark SQL, ST_INTERSECTS pushdown (#17175) \u2014 DRAFT, now carries a stale label; last touched Aug 13. The discussion explores using derived (virtual) columns to represent non-materialized fields in Iceberg v4, leveraging the expression spec to store deterministic transformations in metadata. Participants consider reusing sort order and group statistics for indexing, and emphasize that the metadata must fully describe the function\u2019s operation so optimizers can rewrite queries.",
+  "summary": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Define RepairManifests action interface (#17399) - Implementation PR (#17622) is in review. Geospatial * WIP: End-to-end spatial file pruning from Spark SQL, ST_INTERSECTS pushdown (#17175) \u2014 DRAFT, now carries a stale label; last touched Aug 13. Participants discussed upcoming roadmap items, integration with other data lake tools, and shared community feedback on feature requests. The discussion highlights an alternative using the SnapshotAncestryValidator hook introduced in 1.11 for conflict detection, and explains the use case of embedding a proprietary index into a statistics file.",
   "highlights": [
     {
       "text": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Def\u2026",
@@ -12,7 +12,7 @@
       ]
     },
     {
-      "text": "The discussion converged on adding a file-level tightness flag to indicate whether stats are tight or wide, especially in the presence of deletion vectors. Per-\u2026",
+      "text": "The discussion converged on adding a file-level tightness flag to indicate whether stats are tight or wide, simplifying handling of deletion vectors. Per-column\u2026",
       "sources": [
         {
           "id": "iceberg-ml-tv7bvqctdfh5qng1sx5rp8r4r00nsv60",
@@ -22,7 +22,7 @@
       ]
     },
     {
-      "text": "The discussion focuses on extending the biweekly sync to cover both File and Vector types, with Yan Yan proposing spec changes and a draft PR. Participants deba\u2026",
+      "text": "The discussion focuses on adding a new Vector type to Iceberg",
       "sources": [
         {
           "id": "iceberg-ml-49bm2d8szbzkvtdog38s1o6zb04cj67o",
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "text": "The discussion centers on adding derived (generated) column support to Iceberg, exploring use cases such as non-materialized columns and secondary indexes. Part\u2026",
+      "text": "The thread discusses progress on adding derived column support to Iceberg, reviewing a draft spec that defines generated and virtual columns with determinism an\u2026",
       "sources": [
         {
           "id": "iceberg-ml-7otnzpb2lwcw1ck520y7qcgz570occo3",
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-17T09:57:18.977035+00:00",
+  "generated_at": "2026-10-18T10:09:29.170970+00:00",
   "item_count": 11,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-10-12",
-    "to": "2026-10-17",
+    "to": "2026-10-18",
     "thread_count": 11
   }
 }

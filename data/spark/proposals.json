@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-17T10:02:20.406791+00:00",
+  "generated_at": "2026-10-18T10:13:52.227155+00:00",
   "total": 676,
   "proposals": [
     {
@@ -1936,20 +1936,19 @@
           "title": "\ufeffSPIP: External Lookup Join"
         }
       ],
-      "llm_summary": "The discussion proposes a new join strategy that performs on\u2011demand lookups against external storage rather than materializing the static side before the join. It aims to improve low\u2011latency and throughput for stream\u2011static and static\u2011static joins, especially when the static side is best accessed via OLTP\u2011style queries. The proposal highlights the need for DSv2 interface changes and seeks community feedback on design and testing.",
+      "llm_summary": "The discussion proposes an External Lookup Join strategy that performs on-demand lookups of a static side during stream processing, aiming to reduce latency and improve throughput for real-time workloads. It highlights the need for DSv2 interface updates, test coverage, and potential executor-level caching, while noting that third\u2011party connectors will implement the new contract. The community is evaluating feasibility and integration details.",
       "llm_status": "discussion",
-      "comment_count": 9,
+      "comment_count": 10,
       "participant_count": 6,
       "llm_key_points": [
-        "introduces on\u2011demand external lookup join strategy",
-        "addresses limitations of current stream\u2011static join",
-        "requires DSv2 interface updates",
-        "seeks community feedback on design and testing"
+        "On-demand lookup of static side to reduce latency",
+        "Requires DSv2 interface changes and third\u2011party connector support",
+        "Discussion on test coverage and caching strategies"
       ],
       "llm_topics": [
         "external-lookup",
-        "streaming",
-        "performance"
+        "performance",
+        "stream-static-join"
       ],
       "summary_generation": {
         "method": "llm",
@@ -1957,8 +1956,8 @@
         "model": "openai/gpt-oss-20b",
         "prompt_version": 1
       },
-      "_content_hash": "763422f08428",
-      "llm_title": "External Lookup Join",
+      "_content_hash": "4b64177482c4",
+      "llm_title": "External Lookup Join Proposal",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
@@ -1984,29 +1983,28 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "A trial bot using Claude reviews new Apache Spark pull requests, posting only advisory comments without approvals or LGTM. It triggers on new or updated PRs, waits for author responses, and can be disabled per PR via a label. Safeguards such as opt\u2011out labels and limits on Jira API calls are being considered.",
+      "llm_summary": "The discussion covers a trial of an AI\u2011powered code review bot for Apache Spark PRs that uses Claude to generate inline comments with severity labels, but never approves or LGTM. The bot triggers on new PRs or new commits, can be opt\u2011out via a label, and is currently in a one\u2011week test phase. Participants are asked for feedback on its usefulness and safeguards.",
       "llm_status": "discussion",
-      "comment_count": 7,
+      "comment_count": 8,
       "participant_count": 5,
+      "llm_key_points": [
+        "The bot performs multi\u2011pass AI reviews with severity labels and never approves or posts LGTM",
+        "It triggers on new PRs or new commits and can be disabled via a GitHub label"
+      ],
+      "llm_topics": [
+        "ai-code-review",
+        "automation"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
         "model": "openai/gpt-oss-20b",
         "prompt_version": 1
       },
-      "llm_key_points": [
-        "Trial bot posts only advisory comments, never approves or LGTM",
-        "Reviews trigger on new or updated PRs and wait for author responses",
-        "Safeguards include opt\u2011out labels and Jira API call limits"
-      ],
-      "llm_topics": [
-        "automated-code-review",
-        "ai-review"
-      ],
-      "llm_title": "Automated AI code review for Spark PRs",
-      "_content_hash": "23f06b119d0d",
+      "_content_hash": "dca5de49bee7",
+      "llm_title": "Automated AI code review on new Spark PRs (trial)",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj"
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7",
@@ -2357,7 +2355,7 @@
           "source_updated_at": "2026-10-06T20:04:00+00:00"
         }
       ],
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-ov7hfrb2jx17lt5xgs0zjqpmjotkm9bb",
@@ -2439,7 +2437,7 @@
       },
       "_content_hash": "579bca591d91",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx",
@@ -3591,7 +3589,7 @@
       ],
       "llm_title": "",
       "_content_hash": "97cea4020d47",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-vgg3omvqqmyo2c8w5rnnhl78k1rzp2qg",
@@ -3892,7 +3890,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-jira-SPARK-54783"
+      "initiative_id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -5468,7 +5466,7 @@
         "uro-bojani"
       ],
       "_content_hash": "011b99573a32",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-92kjhnglm90z2n8v7hxn6d9nb2gzhq1z",
@@ -5761,7 +5759,7 @@
         "apache-spark"
       ],
       "_content_hash": "ec8146319b15",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv",
@@ -5792,7 +5790,7 @@
         "spark-project"
       ],
       "_content_hash": "af074b2503b6",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-c3sjlfos8d4o2859bjpltpgsf33wfnfh",
@@ -8352,7 +8350,7 @@
         "tian-gao"
       ],
       "_content_hash": "dacca48c4fa0",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-mqfysmjmkdnw0fxy9t5dp7bxpvo36jrv",
@@ -9593,7 +9591,7 @@
         "apache"
       ],
       "_content_hash": "3e3df829f2cf",
-      "initiative_id": "spark-init-spark-ml-n6t46mp9x00cmb2csfgf8t76kchw2h1h"
+      "initiative_id": "spark-init-spark-ml-7t82jvvdy1c57vzm5drztygfb39mk1bz"
     },
     {
       "id": "spark-ml-s1szvkkw7krshx8kht1bnzbq8h3cmyft",
@@ -21980,7 +21978,7 @@
         "spark"
       ],
       "_content_hash": "bb2e07d0a0dc",
-      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-w3v4fjk9lvxvp3lr5tngg0hvhfrkl5b0",
@@ -24919,7 +24917,7 @@
         "correct-documentation"
       ],
       "_content_hash": "79b78b3086f6",
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+      "initiative_id": "spark-init-spark-ml-2x8nvb5sbzyld4l4c0r8jfftp5ygkh1c"
     },
     {
       "id": "spark-ml-ljronxf6bymvqjmlwpzy84gzgvnqrmoh",

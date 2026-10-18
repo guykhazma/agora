@@ -1,8 +1,8 @@
 {
-  "summary": "A trial bot using Claude reviews new Apache Spark pull requests, posting only advisory comments without approvals or LGTM. The new source supports pushdown of column pruning, filters, limits, aggregates, and partitioning, and writes through ADBC bulk ingest. The discussion addresses an issue where Istio\u2019s STRICT mTLS mode rejects traffic to pod IPs not backed by a Service, causing executor-to-executor communication failures in Spark. The discussion proposes a unified API and execution protocol for user-defined functions that can run in any language via external workers, enabling Spark Connect to support UDFs in Go, Rust, Swift, .NET, and more.",
+  "summary": "Recent discussions cover a new External Lookup Join strategy to reduce latency in stream processing, a trial of an AI\u2011powered code review bot for Spark PRs, and proposals to add a built\u2011in ADBC data source and address Istio strict mTLS communication failures. These topics reflect ongoing efforts to improve performance, tooling, and security in Spark.",
   "highlights": [
     {
-      "text": "The discussion proposes a new join strategy that performs on\u2011demand lookups against external storage rather than materializing the static side before the join. \u2026",
+      "text": "Proposed External Lookup Join strategy for on\u2011demand lookups of a static side during stream processing to lower latency and boost throughput",
       "sources": [
         {
           "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
@@ -12,7 +12,7 @@
       ]
     },
     {
-      "text": "A trial bot using Claude reviews new Apache Spark pull requests, posting only advisory comments without approvals or LGTM. It triggers on new or updated PRs, wa\u2026",
+      "text": "Trial of an AI\u2011powered code review bot using Claude to generate inline comments with severity labels for new Spark PRs",
       "sources": [
         {
           "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
@@ -22,7 +22,7 @@
       ]
     },
     {
-      "text": "Spark proposes adding a built-in ADBC data source to complement the existing JDBC source, enabling columnar reads and writes via Arrow without copying data. The\u2026",
+      "text": "Proposal to add a built\u2011in ADBC data source enabling columnar Arrow reads and writes without copying data",
       "sources": [
         {
           "id": "spark-jira-SPARK-60255",
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "text": "The discussion addresses an issue where Istio\u2019s STRICT mTLS mode rejects traffic to pod IPs not backed by a Service, causing executor-to-executor communication \u2026",
+      "text": "Discussion on Istio strict mTLS mode rejecting traffic to pod IPs not backed by a Service, causing executor\u2011to\u2011executor communication failures",
       "sources": [
         {
           "id": "spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7",
@@ -43,11 +43,13 @@
     }
   ],
   "generation": {
-    "method": "local",
+    "method": "llm",
+    "provider": "groq",
+    "model": "openai/gpt-oss-20b",
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-17T10:01:33.691002+00:00",
+  "generated_at": "2026-10-18T10:12:57.973906+00:00",
   "item_count": 6,
   "period": "last_7_days",
   "coverage": {

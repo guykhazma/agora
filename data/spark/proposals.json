@@ -1,8 +1,83 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-18T10:13:52.227155+00:00",
+  "generated_at": "2026-10-19T11:49:39.322658+00:00",
   "total": 676,
   "proposals": [
+    {
+      "id": "spark-jira-SPARK-55278",
+      "source": "jira",
+      "kind": "issue",
+      "title": "SPIP: Language-agnostic UDF Protocol for Spark",
+      "url": "https://issues.apache.org/jira/browse/SPARK-55278",
+      "author": "Haiyang Sun",
+      "state": "open",
+      "created_at": "2026-01-29T12:26:31+00:00",
+      "updated_at": "2026-10-19T05:27:35+00:00",
+      "body": "Run user-provided code in Spark {*}consistently across many programming languages{*}.\r\n\r\nToday, Spark Connect allows users to write queries from multiple languages, but support for user-defined functions is incomplete. In practice, only Python has a mature solution, and it relies on language-specific mechanisms that do not generalize to other languages such as [Go|https://github.com/apache/spark-connect-go] / [Rust|https://github.com/apache/spark-connect-rust] / [Swift|https://github.com/apache/spark-connect-swift] / [.NET|https://github.com/GoEddie/spark-connect-dotnet] (where UDF is not supported).\r\n\r\nOur objective is to define a *unified API and execution protocol* for user-defined functions that run outside the Spark engine process via inter-process communication (IPC). This allows Spark to interact with external workers in a consistent way, regardless of the language used to implement the function.\r\n\r\nSPIP doc: [https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0]\r\n\r\nWorker Specification doc: [https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0]\r\n\r\n\u00a0",
+      "labels": [
+        "SPIP",
+        "pull-request-available"
+      ],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: Language-agnostic UDF Protocol for Spark"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffLanguage-agnostic UDF Worker Specification"
+        }
+      ],
+      "comment_count": 7,
+      "llm_summary": "The proposal seeks to create a unified API and execution protocol for user-defined functions across all Spark Connect client languages, enabling consistent inter-process communication (IPC) with external workers. It decouples the Spark engine from language-specific runtimes, focusing on scalar UDFs, aggregations, and other UDF types while leaving Java/Scala UDFs unchanged. The discussion outlines objectives, scope, and design documents for the new protocol.",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "effdf8738e47",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+    },
+    {
+      "id": "spark-jira-SPARK-58787",
+      "source": "jira",
+      "kind": "issue",
+      "title": "SPIP: Add a fixed-dimension numeric VECTOR data type",
+      "url": "https://issues.apache.org/jira/browse/SPARK-58787",
+      "author": "Uros Stankovic",
+      "state": "open",
+      "created_at": "2026-08-14T23:48:30+00:00",
+      "updated_at": "2026-10-19T00:32:12+00:00",
+      "body": "*Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.*\r\n\r\nAdd a new Spark SQL data type for storing a fixed number of numeric values.\r\n\r\nFor example:\r\n\r\n{code:sql}\r\nCREATE TABLE documents (\r\n  id BIGINT,\r\n  embedding VECTOR(768, FLOAT)\r\n);\r\n{code}\r\n\r\n{{VECTOR(768, FLOAT)}} means that every non-null value contains exactly 768 non-null FLOAT coordinates. The vector column itself may be nullable, but a present vector value with the wrong number of coordinates or a null coordinate is invalid.\r\n\r\nThe initial supported coordinate types will be:\r\n* INT\r\n* BIGINT\r\n* FLOAT\r\n* DOUBLE\r\n\r\nThe dimension must be a positive integer and is part of the data type. For example, {{VECTOR(768, FLOAT)}} and {{VECTOR(1536, FLOAT)}} are different types.\r\n\r\nThe new type represents dense vectors. It is intended for embeddings, numerical feature vectors, count vectors, and interoperability with systems and storage formats that have a fixed-dimension vector type.\r\n\r\nThe SQL syntax follows the emerging SQL standard proposal, which places the dimension before the coordinate type:\r\n\r\n{code:sql}\r\nVECTOR(<dimension>, <coordinate type>)\r\n{code}\r\n\r\nThe corresponding programmatic Spark type will be {{VectorType(FloatType, 768)}}.\r\n\r\nThe type will use Spark's existing array representation during execution. This proposal introduces a new logical type and schema contract, not a new packed in-memory representation.\r\n\r\n*Q2. What problem is this proposal NOT designed to solve?*\r\n\r\nThis proposal does not attempt to:\r\n* Add a generic fixed-size array for arbitrary element types.\r\n* Represent matrices or multidimensional tensors.\r\n* Represent sparse vectors.\r\n* Replace the existing MLlib {{VectorUDT}}.\r\n* Add a vector index or approximate-nearest-neighbor search engine.\r\n* Add a complete library of vector distance and similarity functions.\r\n* Introduce a specialized UnsafeRow or columnar representation.\r\n* Add FP16, BF16, INT8, INT4, or binary coordinate types in the first vers",
+      "labels": [
+        "SPIP",
+        "releasenotes"
+      ],
+      "linked_resources": [],
+      "comment_count": 0,
+      "llm_summary": "Add a new Spark SQL data type for storing a fixed number of numeric values. This proposal introduces a new logical type and schema contract, not a new packed in-memory representation. This proposal does not attempt to: * Add a generic fixed-size array for arbitrary element types.",
+      "llm_status": "discussion",
+      "llm_key_points": [],
+      "llm_topics": [
+        "add",
+        "vector",
+        "float",
+        "type"
+      ],
+      "llm_title": "",
+      "_content_hash": "ba4301289695",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-zxdn5hj7tb0zb21b4xxzfxz717sx31fj"
+    },
     {
       "id": "spark-jira-SPARK-60255",
       "source": "jira",
@@ -55,59 +130,6 @@
       "llm_title": "ADBC Data Source",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60255"
-    },
-    {
-      "id": "spark-jira-SPARK-55278",
-      "source": "jira",
-      "kind": "issue",
-      "title": "SPIP: Language-agnostic UDF Protocol for Spark",
-      "url": "https://issues.apache.org/jira/browse/SPARK-55278",
-      "author": "Haiyang Sun",
-      "state": "open",
-      "created_at": "2026-01-29T12:26:31+00:00",
-      "updated_at": "2026-10-13T12:40:03+00:00",
-      "body": "Run user-provided code in Spark {*}consistently across many programming languages{*}.\r\n\r\nToday, Spark Connect allows users to write queries from multiple languages, but support for user-defined functions is incomplete. In practice, only Python has a mature solution, and it relies on language-specific mechanisms that do not generalize to other languages such as [Go|https://github.com/apache/spark-connect-go] / [Rust|https://github.com/apache/spark-connect-rust] / [Swift|https://github.com/apache/spark-connect-swift] / [.NET|https://github.com/GoEddie/spark-connect-dotnet] (where UDF is not supported).\r\n\r\nOur objective is to define a *unified API and execution protocol* for user-defined functions that run outside the Spark engine process via inter-process communication (IPC). This allows Spark to interact with external workers in a consistent way, regardless of the language used to implement the function.\r\n\r\nSPIP doc: [https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0]\r\n\r\nWorker Specification doc: [https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0]\r\n\r\n\u00a0",
-      "labels": [
-        "SPIP",
-        "pull-request-available"
-      ],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSPIP: Language-agnostic UDF Protocol for Spark"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffLanguage-agnostic UDF Worker Specification"
-        }
-      ],
-      "comment_count": 7,
-      "llm_summary": "The discussion proposes a unified API and execution protocol for user-defined functions that can run in any language via external workers, enabling Spark Connect to support UDFs in Go, Rust, Swift, .NET, and more. It aims to decouple Spark from language-specific runtimes, reuse Spark\u2019s planning logic, keep the engine slim, and provide flexible runtime choices. The thread outlines objectives, scope, and design documents for the protocol.",
-      "llm_status": "discussion",
-      "llm_key_points": [
-        "Unified API for UDFs across languages",
-        "External worker execution via IPC",
-        "Decouple Spark engine from language runtimes"
-      ],
-      "llm_topics": [
-        "language-agnostic-udf",
-        "inter-process-communication",
-        "spark-connect"
-      ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "effdf8738e47",
-      "llm_title": "Language-agnostic UDF Protocol for Spark",
-      "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-jira-SPARK-57703",
@@ -346,36 +368,6 @@
       "observed_history": []
     },
     {
-      "id": "spark-jira-SPARK-58787",
-      "source": "jira",
-      "kind": "issue",
-      "title": "SPIP: Add a fixed-dimension numeric VECTOR data type",
-      "url": "https://issues.apache.org/jira/browse/SPARK-58787",
-      "author": "Uros Stankovic",
-      "state": "open",
-      "created_at": "2026-08-14T23:48:30+00:00",
-      "updated_at": "2026-09-03T20:31:01+00:00",
-      "body": "*Q1. What are you trying to do? Articulate your objectives using absolutely no jargon.*\r\n\r\nAdd a new Spark SQL data type for storing a fixed number of numeric values.\r\n\r\nFor example:\r\n\r\n{code:sql}\r\nCREATE TABLE documents (\r\n  id BIGINT,\r\n  embedding VECTOR(768, FLOAT)\r\n);\r\n{code}\r\n\r\n{{VECTOR(768, FLOAT)}} means that every non-null value contains exactly 768 non-null FLOAT coordinates. The vector column itself may be nullable, but a present vector value with the wrong number of coordinates or a null coordinate is invalid.\r\n\r\nThe initial supported coordinate types will be:\r\n* INT\r\n* BIGINT\r\n* FLOAT\r\n* DOUBLE\r\n\r\nThe dimension must be a positive integer and is part of the data type. For example, {{VECTOR(768, FLOAT)}} and {{VECTOR(1536, FLOAT)}} are different types.\r\n\r\nThe new type represents dense vectors. It is intended for embeddings, numerical feature vectors, count vectors, and interoperability with systems and storage formats that have a fixed-dimension vector type.\r\n\r\nThe SQL syntax follows the emerging SQL standard proposal, which places the dimension before the coordinate type:\r\n\r\n{code:sql}\r\nVECTOR(<dimension>, <coordinate type>)\r\n{code}\r\n\r\nThe corresponding programmatic Spark type will be {{VectorType(FloatType, 768)}}.\r\n\r\nThe type will use Spark's existing array representation during execution. This proposal introduces a new logical type and schema contract, not a new packed in-memory representation.\r\n\r\n*Q2. What problem is this proposal NOT designed to solve?*\r\n\r\nThis proposal does not attempt to:\r\n* Add a generic fixed-size array for arbitrary element types.\r\n* Represent matrices or multidimensional tensors.\r\n* Represent sparse vectors.\r\n* Replace the existing MLlib {{VectorUDT}}.\r\n* Add a vector index or approximate-nearest-neighbor search engine.\r\n* Add a complete library of vector distance and similarity functions.\r\n* Introduce a specialized UnsafeRow or columnar representation.\r\n* Add FP16, BF16, INT8, INT4, or binary coordinate types in the first vers",
-      "labels": [
-        "SPIP",
-        "releasenotes"
-      ],
-      "linked_resources": [],
-      "comment_count": 0,
-      "llm_summary": "Add a new Spark SQL data type for storing a fixed number of numeric values. This proposal introduces a new logical type and schema contract, not a new packed in-memory representation. This proposal does not attempt to: * Add a generic fixed-size array for arbitrary element types.",
-      "llm_status": "discussion",
-      "llm_key_points": [],
-      "llm_topics": [
-        "add",
-        "vector",
-        "float",
-        "type"
-      ],
-      "llm_title": "",
-      "_content_hash": "ba4301289695",
-      "initiative_id": "spark-init-spark-ml-zxdn5hj7tb0zb21b4xxzfxz717sx31fj"
-    },
-    {
       "id": "spark-jira-SPARK-57487",
       "source": "jira",
       "kind": "issue",
@@ -478,7 +470,7 @@
         "unified"
       ],
       "_content_hash": "b6589fc6ab0d",
-      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-jira-SPARK-56599",
@@ -655,7 +647,7 @@
         "motivation"
       ],
       "_content_hash": "fbd70c369786",
-      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+      "initiative_id": "spark-init-spark-jira-SPARK-56978"
     },
     {
       "id": "spark-jira-SPARK-51658",
@@ -865,7 +857,7 @@
         "popular-programming"
       ],
       "_content_hash": "cdb99f3d38f1",
-      "initiative_id": "spark-init-spark-jira-SPARK-21190"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-jira-SPARK-21866",
@@ -893,7 +885,7 @@
         "spark-dataframes"
       ],
       "_content_hash": "001ad555ca35",
-      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-jira-SPARK-24918",
@@ -980,7 +972,7 @@
         "accelerator-aware-task"
       ],
       "_content_hash": "85e275672969",
-      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+      "initiative_id": "spark-init-spark-jira-SPARK-56978"
     },
     {
       "id": "spark-jira-SPARK-25501",
@@ -1914,7 +1906,7 @@
         "spark-sub-project"
       ],
       "_content_hash": "e46e418f4ebe",
-      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+      "initiative_id": "spark-init-spark-jira-SPARK-56978"
     },
     {
       "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
@@ -1936,19 +1928,18 @@
           "title": "\ufeffSPIP: External Lookup Join"
         }
       ],
-      "llm_summary": "The discussion proposes an External Lookup Join strategy that performs on-demand lookups of a static side during stream processing, aiming to reduce latency and improve throughput for real-time workloads. It highlights the need for DSv2 interface updates, test coverage, and potential executor-level caching, while noting that third\u2011party connectors will implement the new contract. The community is evaluating feasibility and integration details.",
+      "llm_summary": "The discussion proposes a new join strategy that performs on-demand lookups against external storage instead of pre-materializing the static side, aiming to reduce latency for stream and static joins. Participants highlight the need to define DSv2 interfaces, test coverage, and caching strategies, while noting the proposal focuses on equality lookups and encourages third\u2011party connector support. The conversation remains in the discussion phase, with feedback on documentation and implementation details.",
       "llm_status": "discussion",
       "comment_count": 10,
       "participant_count": 6,
       "llm_key_points": [
-        "On-demand lookup of static side to reduce latency",
-        "Requires DSv2 interface changes and third\u2011party connector support",
-        "Discussion on test coverage and caching strategies"
+        "Proposes on-demand lookup join to avoid pre-loading static side",
+        "Discussion includes DSv2 interface, test coverage, and caching considerations"
       ],
       "llm_topics": [
         "external-lookup",
         "performance",
-        "stream-static-join"
+        "streaming"
       ],
       "summary_generation": {
         "method": "llm",
@@ -1987,6 +1978,12 @@
       "llm_status": "discussion",
       "comment_count": 8,
       "participant_count": 5,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
       "llm_key_points": [
         "The bot performs multi\u2011pass AI reviews with severity labels and never approves or posts LGTM",
         "It triggers on new PRs or new commits and can be disabled via a GitHub label"
@@ -1995,14 +1992,8 @@
         "ai-code-review",
         "automation"
       ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "dca5de49bee7",
       "llm_title": "Automated AI code review on new Spark PRs (trial)",
+      "_content_hash": "dca5de49bee7",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
@@ -2355,7 +2346,7 @@
           "source_updated_at": "2026-10-06T20:04:00+00:00"
         }
       ],
-      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-ov7hfrb2jx17lt5xgs0zjqpmjotkm9bb",
@@ -2437,7 +2428,7 @@
       },
       "_content_hash": "579bca591d91",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx",
@@ -2686,7 +2677,7 @@
       "_content_hash": "f45f957d028a",
       "llm_title": "Add DECFLOAT data type to Spark",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-60255"
+      "initiative_id": "spark-init-spark-ml-zxdn5hj7tb0zb21b4xxzfxz717sx31fj"
     },
     {
       "id": "spark-ml-r3jyf1on98lgnxw6pdhjj0qrh09mnxvz",
@@ -3399,7 +3390,7 @@
       },
       "_content_hash": "d3774da4347d",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-60255"
+      "initiative_id": "spark-init-spark-ml-zxdn5hj7tb0zb21b4xxzfxz717sx31fj"
     },
     {
       "id": "spark-ml-vh21614wrjmr7cdd905qhwbwqd25lmjj",
@@ -3589,7 +3580,7 @@
       ],
       "llm_title": "",
       "_content_hash": "97cea4020d47",
-      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-vgg3omvqqmyo2c8w5rnnhl78k1rzp2qg",
@@ -5466,7 +5457,7 @@
         "uro-bojani"
       ],
       "_content_hash": "011b99573a32",
-      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-92kjhnglm90z2n8v7hxn6d9nb2gzhq1z",
@@ -5759,7 +5750,7 @@
         "apache-spark"
       ],
       "_content_hash": "ec8146319b15",
-      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv",
@@ -5790,7 +5781,7 @@
         "spark-project"
       ],
       "_content_hash": "af074b2503b6",
-      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-c3sjlfos8d4o2859bjpltpgsf33wfnfh",
@@ -6090,7 +6081,7 @@
         "local-laptop"
       ],
       "_content_hash": "8e8c054aef0e",
-      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+      "initiative_id": "spark-init-spark-jira-SPARK-56978"
     },
     {
       "id": "spark-ml-ckpv8z0fqw42xkbrskqf3ggsl1yb81c4",
@@ -6301,7 +6292,7 @@
         "faster"
       ],
       "_content_hash": "234be0c22d25",
-      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+      "initiative_id": "spark-init-spark-jira-SPARK-56978"
     },
     {
       "id": "spark-ml-036j2fhgcs1kmshbo3r6pcmqp1ro5kyk",
@@ -6740,7 +6731,7 @@
         "spip"
       ],
       "_content_hash": "9faf2e9d1ba4",
-      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+      "initiative_id": "spark-init-spark-jira-SPARK-56978"
     },
     {
       "id": "spark-ml-cz8c347sm85s3wdwd6kzrs62dt8bmqt9",
@@ -7686,7 +7677,7 @@
         "discuss"
       ],
       "_content_hash": "7b80962ebca8",
-      "initiative_id": "spark-init-spark-jira-SPARK-21190"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-glh5o31j977pvst3vntv9wc3rmh5odfp",
@@ -8092,7 +8083,7 @@
         "fyi"
       ],
       "_content_hash": "5ff9a0bd5144",
-      "initiative_id": "spark-init-spark-jira-SPARK-21190"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-jrg0bpjwn278t8mfvlroy5v6pwkdjlcs",
@@ -8350,7 +8341,7 @@
         "tian-gao"
       ],
       "_content_hash": "dacca48c4fa0",
-      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
+      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
     },
     {
       "id": "spark-ml-mqfysmjmkdnw0fxy9t5dp7bxpvo36jrv",
@@ -8786,7 +8777,7 @@
         "vote-passes"
       ],
       "_content_hash": "fd32bebf9a67",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-3h7nddnom2s6c0lqxptobjso1kyr0ynt",
@@ -8920,7 +8911,7 @@
         "partition-stats"
       ],
       "_content_hash": "daf27161289e",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-90fnr43zpvl3r2n3c7px1vypj40ht6gv",
@@ -9056,7 +9047,7 @@
         "sources"
       ],
       "_content_hash": "b60b751a671f",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-5c18gn3q3fkn9ol8o7zknwyrh8vqktoc",
@@ -10622,7 +10613,7 @@
         "discussion-thread"
       ],
       "_content_hash": "b48a91c6a396",
-      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-zzfcbv1jcv34s7kdgo3zp7q2k77zo3ld",
@@ -10847,7 +10838,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "b5de5bc714a0",
-      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-pnotsqhs3xprw7rgjh1w858m12d7gz1w",
@@ -12628,7 +12619,7 @@
         "binding"
       ],
       "_content_hash": "0cfb04e25f4e",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-ml-tydpbkpx6wopy38kxqz7q889gf0qo5wm"
     },
     {
       "id": "spark-ml-rx5pqh01c86slpqv9161hqwgm5lwxxzq",
@@ -12824,7 +12815,7 @@
         "release"
       ],
       "_content_hash": "05d6213c6e90",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-ml-tydpbkpx6wopy38kxqz7q889gf0qo5wm"
     },
     {
       "id": "spark-ml-4t4l9dfq9ozmo5b11govl2j9obt6vjb4",
@@ -12889,7 +12880,7 @@
         "discuss"
       ],
       "_content_hash": "c73481e96ce1",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-ml-tydpbkpx6wopy38kxqz7q889gf0qo5wm"
     },
     {
       "id": "spark-ml-zxdn5hj7tb0zb21b4xxzfxz717sx31fj",
@@ -21978,7 +21969,7 @@
         "spark"
       ],
       "_content_hash": "bb2e07d0a0dc",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-w3v4fjk9lvxvp3lr5tngg0hvhfrkl5b0",
@@ -22651,7 +22642,7 @@
         "drop"
       ],
       "_content_hash": "76ac87ff5dbf",
-      "initiative_id": "spark-init-spark-jira-SPARK-21190"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-921tz2y44c8oydfzy2fxddt5c1vjg8js",
@@ -24152,7 +24143,7 @@
         "python-versions"
       ],
       "_content_hash": "c49d84165c9b",
-      "initiative_id": "spark-init-spark-jira-SPARK-21190"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-wzbxqlcyyo10cb8jfc8od81zhg18qpj2",
@@ -26502,7 +26493,7 @@
         "python"
       ],
       "_content_hash": "cadf86660661",
-      "initiative_id": "spark-init-spark-jira-SPARK-21190"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-5hr90lz2w6xjpk25b41pkl4fxqlcms4x",
@@ -27249,7 +27240,7 @@
         "spark-documentation"
       ],
       "_content_hash": "618a00a1f947",
-      "initiative_id": "spark-init-spark-jira-SPARK-21190"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-k8skf16wyn6rg9n0vd0t6l3bhw7c9svq",
@@ -27776,7 +27767,7 @@
         "release"
       ],
       "_content_hash": "11ef119282b3",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt"
     },
     {
       "id": "spark-ml-y6hby3k9nqds4fgx0b1w5yhhlqb2f7gb",
@@ -27860,7 +27851,7 @@
         "maciej-szymkiewicz"
       ],
       "_content_hash": "85b3f677283f",
-      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
     },
     {
       "id": "spark-ml-gh2oktrndxopqnyxbsvp2p0k6jk1n9fs",
@@ -28130,7 +28121,7 @@
         "yuming-wang"
       ],
       "_content_hash": "a0cd2e254ca8",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
     },
     {
       "id": "spark-ml-n5zb2hj3rl15g8wnlvl9xn4ghosxgj4p",
@@ -28164,7 +28155,7 @@
         "spark"
       ],
       "_content_hash": "033d720f0836",
-      "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
+      "initiative_id": "spark-init-spark-jira-SPARK-56978"
     },
     {
       "id": "spark-ml-zys6wylgmdq3gm47go306tsr0ovto0g3",
@@ -29044,7 +29035,7 @@
         "spip"
       ],
       "_content_hash": "f3cf472da1c5",
-      "initiative_id": "spark-init-spark-jira-SPARK-60255"
+      "initiative_id": "spark-init-spark-ml-smpwykpoqr0y5r5xgc9jpt1fjm72fvck"
     },
     {
       "id": "spark-ml-nbqj698v59skknrh7bp6ol0rrs9zsr6r",
@@ -30289,7 +30280,7 @@
         "spark"
       ],
       "_content_hash": "731c9d014eea",
-      "initiative_id": "spark-init-spark-jira-SPARK-21190"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-nvwfo0yo0q8997vs86o7wkjyby4tbp0m",
@@ -33284,7 +33275,7 @@
         "release"
       ],
       "_content_hash": "89c3c2fb0fa1",
-      "initiative_id": "spark-init-spark-ml-oj4ogzqztb5n0wdhob2s6k4dctdzvpmm"
+      "initiative_id": "spark-init-spark-ml-wh7flo2ov17g7novt8t4lxk2z7044y93"
     },
     {
       "id": "spark-ml-5bww6j9gmqr91xp2pd9w4h1fbkk3kh1n",
@@ -33320,7 +33311,7 @@
         "github-action"
       ],
       "_content_hash": "a3cac27e6bf7",
-      "initiative_id": "spark-init-spark-jira-SPARK-21190"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
-  "summary": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Define RepairManifests action interface (#17399) - Implementation PR (#17622) is in review. Geospatial * WIP: End-to-end spatial file pruning from Spark SQL, ST_INTERSECTS pushdown (#17175) \u2014 DRAFT, now carries a stale label; last touched Aug 13. Iceberg 1.13.0 The discussion converged on adding a file\u2011level tightness flag to indicate whether min/max bounds are guaranteed to exist in live rows, simplifying handling of deletion vectors. The discussion proposes using derived (virtual) columns to represent non-materialized fields in Iceberg v4, leveraging the existing expression and UDF framework to store deterministic transformations in metadata.",
+  "summary": "Contributors are refining definitions, expression support, portability across engines, determinism, and backward compatibility while the proposal remains in discussion. V4 manifests are now required to be written in Parquet A pull request adds per-task scanDuration metrics to the Spark\u2011Iceberg reader, enabling measurement of scan time per task. Participants consider reusing existing cluster spec and group stats, and debate compatibility and expression specification. Participants discussed upcoming roadmap items, integration with other data lake tools, and shared community feedback on feature requests.",
   "highlights": [
     {
-      "text": "* Core: Add max-file-group-input-files to valid rewrite options (#17544) * Data, Spark: Support byte[] binary values in InternalRowConverter (#17482) * API: Def\u2026",
+      "text": "The document records the outcomes of the Iceberg Spark integration sync meetings, covering recent Spark 4.2 enhancements such as schema evolution, default value\u2026",
       "sources": [
         {
           "id": "iceberg-doc-19nno1RoPznb",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "Iceberg 1.13.0",
+      "text": "The thread discusses adding derived (generated) columns to Iceberg, aligning with the SQL standard and exploring its use as a consumer of non\u2011materialized colum\u2026",
       "sources": [
         {
-          "id": "iceberg-gh-m64",
-          "title": "Iceberg 1.13.0",
-          "url": "https://github.com/apache/iceberg/milestone/64"
+          "id": "iceberg-ml-7otnzpb2lwcw1ck520y7qcgz570occo3",
+          "title": "Re: Support for derived columns in Iceberg.",
+          "url": "https://lists.apache.org/thread/7otnzpb2lwcw1ck520y7qcgz570occo3"
         }
       ]
     },
     {
-      "text": "The discussion converged on adding a file\u2011level tightness flag to indicate whether min/max bounds are guaranteed to exist in live rows, simplifying handling of \u2026",
+      "text": "V4 manifests are now required to be written in Parquet",
       "sources": [
         {
-          "id": "iceberg-ml-tv7bvqctdfh5qng1sx5rp8r4r00nsv60",
-          "title": "[DISCUSS] Iceberg v4 Stats Tightness",
-          "url": "https://lists.apache.org/thread/tv7bvqctdfh5qng1sx5rp8r4r00nsv60"
+          "id": "iceberg-ml-l703q6mcyzbgkfczs91mj5bffk1k5pj4",
+          "title": "Re: [DISCUSS] should V4 manifests be Parquet-only?",
+          "url": "https://lists.apache.org/thread/l703q6mcyzbgkfczs91mj5bffk1k5pj4"
         }
       ]
     },
     {
-      "text": "The discussion focuses on extending the biweekly sync to cover both File and Vector types, with a particular emphasis on a 1D numeric vector type and adding int\u2026",
+      "text": "A pull request adds per-task scanDuration metrics to the Spark\u2011Iceberg reader, enabling measurement of scan time per task. This helps distinguish cross\u2011region f\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-49bm2d8szbzkvtdog38s1o6zb04cj67o",
-          "title": "Re: Extend Thur's biweekly sync to both File and Vector types (starting Oct 8)",
-          "url": "https://lists.apache.org/thread/49bm2d8szbzkvtdog38s1o6zb04cj67o"
+          "id": "iceberg-ml-3yw54r12mxvh4tbrwm1mbyhsz0b6b1lj",
+          "title": "Spark 4.1: Add per-task scanDuration metric",
+          "url": "https://lists.apache.org/thread/3yw54r12mxvh4tbrwm1mbyhsz0b6b1lj"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-19T11:43:55.844192+00:00",
-  "item_count": 11,
+  "generated_at": "2026-10-20T10:44:46.441136+00:00",
+  "item_count": 13,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-10-13",
-    "to": "2026-10-19",
-    "thread_count": 11
+    "from": "2026-10-14",
+    "to": "2026-10-20",
+    "thread_count": 13
   }
 }

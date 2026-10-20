@@ -1,7 +1,7 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-19T11:49:39.322658+00:00",
-  "total": 676,
+  "generated_at": "2026-10-20T10:49:18.107126+00:00",
+  "total": 677,
   "proposals": [
     {
       "id": "spark-jira-SPARK-55278",
@@ -33,10 +33,18 @@
         }
       ],
       "comment_count": 7,
-      "llm_summary": "The proposal seeks to create a unified API and execution protocol for user-defined functions across all Spark Connect client languages, enabling consistent inter-process communication (IPC) with external workers. It decouples the Spark engine from language-specific runtimes, focusing on scalar UDFs, aggregations, and other UDF types while leaving Java/Scala UDFs unchanged. The discussion outlines objectives, scope, and design documents for the new protocol.",
+      "llm_summary": "The discussion proposes SPIP, a unified API and execution protocol for user-defined functions that can run outside the Spark engine via IPC, enabling consistent support across languages such as Go, Rust, Swift, and .NET. It addresses the current gap where only Python has mature UDF support in Spark Connect. The proposal includes documentation for the protocol and worker specification.",
       "llm_status": "discussion",
-      "llm_key_points": [],
-      "llm_topics": [],
+      "llm_key_points": [
+        "Unified API for UDF across languages",
+        "Execution via IPC outside Spark engine",
+        "Current lack of support for non-Python UDFs"
+      ],
+      "llm_topics": [
+        "udf-protocol",
+        "inter-process-communication",
+        "spark-connect"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -45,7 +53,8 @@
       },
       "_content_hash": "effdf8738e47",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278",
+      "llm_title": "Language-agnostic UDF Protocol for Spark"
     },
     {
       "id": "spark-jira-SPARK-58787",
@@ -1909,6 +1918,100 @@
       "initiative_id": "spark-init-spark-jira-SPARK-56978"
     },
     {
+      "id": "spark-ml-rc7f5f9ogggv6rqy7w5m2753yq5n5ckq",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] SPIP: External Lookup Join",
+      "url": "https://lists.apache.org/thread/rc7f5f9ogggv6rqy7w5m2753yq5n5ckq",
+      "author": "Jungtaek Lim <ka...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-10-20T03:04:13+00:00",
+      "updated_at": "2026-10-20T03:04:13+00:00",
+      "body": "Hi devs,\n\nI would live to start a vote on introducing external lookup join, as\nproposed.\n\nJIRA ticket: https://issues.apache.org/jira/browse/SPARK-60031\nSPIP doc:\nhttps://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0\nDiscussion thread:\nhttps://lists.apache.org/thread.html/7s6tgy9cm18jnzykr8htrtrw4nxyrhp1\n\nThe vote will be open for at least 72 hours, and passes if a majority +1 PMC\nvotes are cast, with a minimum of 3 +1 votes.\n\nPlease vote:\n[ ] +1: Accept the proposal as an official SPIP\n[ ] +0\n[ ] -1: I don't think this is a good idea because ...\n\nThanks,\nJungtaek Lim (HeartSaVioR)\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: External Lookup Join"
+        }
+      ],
+      "llm_summary": "Vote in progress: 0 binding +1",
+      "llm_status": "proposal",
+      "comment_count": 0,
+      "participant_count": 1,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 0,
+        "vetoes": 0,
+        "result": "open",
+        "voters": [],
+        "closes_at": "2026-10-23T03:04:13+00:00"
+      },
+      "llm_key_points": [
+        "Hi devs,\n\nI would live to start a vote on introducing external lookup join, as\nproposed."
+      ],
+      "llm_topics": [
+        "external-lookup",
+        "lookup-join",
+        "introducing-external",
+        "lookup"
+      ],
+      "summary_generation": {
+        "method": "local",
+        "prompt_version": 1
+      },
+      "_content_hash": "3f545cc0aa20",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
+    },
+    {
+      "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Automated AI code review on new Spark PRs (trial)",
+      "url": "https://lists.apache.org/thread/wb2821v85vn0lcbdzsbr8o672j8f53wj",
+      "author": "Hyukjin Kwon <gu...@apache.org>",
+      "state": "open",
+      "created_at": "2026-10-01T21:58:50+00:00",
+      "updated_at": "2026-10-19T23:29:40+00:00",
+      "body": "Hi all,\n\nI've been running a trial of automated AI code review on new apache/spark\nPRs, and I'd like to share how it works and get your feedback.\n\nFor now the reviews are posted from my own GitHub account (@HyukjinKwon)\nwhile I check that it behaves well. Once it's proven, I plan to move it to\nthe https://github.com/spark-test account, so the reviews are clearly\nseparate from my personal ones. I plan to run this for the next week.\n\n*What it does*\n\nEach review is a full, multi-pass review of the PR diff, run by Claude\n(via Claude Code). Findings are checked against the code before they're\nposted. They're posted as a normal GitHub review: a short summary plus\ninline comments, each labeled with a severity, e.g. \"Non-blocking (P2)\"\nor \"Nit (P3)\". Example:\nhttps://github.com/apache/spark/pull/59184#pullrequestreview-5379759787\n\n*No LGTM, no approvals*\n\n- It never approves a PR and never posts \"LGTM\". Every review is a plain\n  \"Comment\" review, so it doesn't count as an approval or a change\n  request, and it has no effect on merging.\n- If a review finds nothing new, it posts nothing at all: no \"no\n  findings\" or \"all comments addressed\" message.\n- It doesn't push commits or edit anyone's PR.\n- Human review and committer judgement are unchanged. Please treat its\n  comments like any other reviewer's: feel free to push back or ignore.\n\n*When a review is triggered*\n\n- A new PR is reviewed shortly after it's opened. Draft PRs are reviewed\n  once they're marked ready for review.\n- After a review posts findings, the bot waits. It reviews again only\n  when the author pushes new commits.\n- It also waits while a PR has open review comments from anyone that are\n  newer than the latest commit, so it doesn't pile on while the author is\n  still responding to reviewers.\n- Replying in a thread without pushing doesn't trigger a re-review.\n\n*When it stops*\n\n- When a review finds nothing new. The PR gets a fresh review if the\n  author pushes again later.\n- When the PR is merged or closed.\n\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/spark/pull/59184",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/spark/pull/59502",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "A trial of an AI-powered code review bot using Claude is being run on new Apache Spark pull requests. The bot posts severity\u2011labeled comments without approving or LGTM, and triggers on new commits or when a PR is marked ready. The discussion covers adding an opt\u2011out label, safeguards against excessive Jira API calls, and current issues with the label not functioning.",
+      "llm_status": "discussion",
+      "comment_count": 10,
+      "participant_count": 5,
+      "llm_key_points": [
+        "AI bot reviews PR diffs and posts severity\u2011labeled comments without approving",
+        "Discussion on adding an opt\u2011out label and safeguards for Jira API usage"
+      ],
+      "llm_topics": [
+        "ai-code-review",
+        "automation"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "fb8ad54d4907",
+      "llm_title": "Automated AI code review on new Spark PRs (trial)",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+    },
+    {
       "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
       "source": "mailing_list",
       "kind": "thread",
@@ -1928,18 +2031,17 @@
           "title": "\ufeffSPIP: External Lookup Join"
         }
       ],
-      "llm_summary": "The discussion proposes a new join strategy that performs on-demand lookups against external storage instead of pre-materializing the static side, aiming to reduce latency for stream and static joins. Participants highlight the need to define DSv2 interfaces, test coverage, and caching strategies, while noting the proposal focuses on equality lookups and encourages third\u2011party connector support. The conversation remains in the discussion phase, with feedback on documentation and implementation details.",
+      "llm_summary": "A proposal introduces an on\u2011demand external lookup join strategy that queries a static side from external storage during stream processing, aiming to reduce latency and improve throughput. The discussion highlights missing DSv2 interface details, test coverage plans, and potential executor\u2011level caching support.",
       "llm_status": "discussion",
       "comment_count": 10,
       "participant_count": 6,
       "llm_key_points": [
-        "Proposes on-demand lookup join to avoid pre-loading static side",
-        "Discussion includes DSv2 interface, test coverage, and caching considerations"
+        "Proposal introduces on\u2011demand external lookup join strategy to reduce latency",
+        "Discussion includes missing DSv2 interface, test coverage, and executor caching"
       ],
       "llm_topics": [
         "external-lookup",
-        "performance",
-        "streaming"
+        "performance"
       ],
       "summary_generation": {
         "method": "llm",
@@ -1948,54 +2050,9 @@
         "prompt_version": 1
       },
       "_content_hash": "4b64177482c4",
-      "llm_title": "External Lookup Join Proposal",
+      "llm_title": "External Lookup Join",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60255"
-    },
-    {
-      "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Automated AI code review on new Spark PRs (trial)",
-      "url": "https://lists.apache.org/thread/wb2821v85vn0lcbdzsbr8o672j8f53wj",
-      "author": "Hyukjin Kwon <gu...@apache.org>",
-      "state": "open",
-      "created_at": "2026-10-01T21:58:50+00:00",
-      "updated_at": "2026-10-15T22:05:26+00:00",
-      "body": "Hi all,\n\nI've been running a trial of automated AI code review on new apache/spark\nPRs, and I'd like to share how it works and get your feedback.\n\nFor now the reviews are posted from my own GitHub account (@HyukjinKwon)\nwhile I check that it behaves well. Once it's proven, I plan to move it to\nthe https://github.com/spark-test account, so the reviews are clearly\nseparate from my personal ones. I plan to run this for the next week.\n\n*What it does*\n\nEach review is a full, multi-pass review of the PR diff, run by Claude\n(via Claude Code). Findings are checked against the code before they're\nposted. They're posted as a normal GitHub review: a short summary plus\ninline comments, each labeled with a severity, e.g. \"Non-blocking (P2)\"\nor \"Nit (P3)\". Example:\nhttps://github.com/apache/spark/pull/59184#pullrequestreview-5379759787\n\n*No LGTM, no approvals*\n\n- It never approves a PR and never posts \"LGTM\". Every review is a plain\n  \"Comment\" review, so it doesn't count as an approval or a change\n  request, and it has no effect on merging.\n- If a review finds nothing new, it posts nothing at all: no \"no\n  findings\" or \"all comments addressed\" message.\n- It doesn't push commits or edit anyone's PR.\n- Human review and committer judgement are unchanged. Please treat its\n  comments like any other reviewer's: feel free to push back or ignore.\n\n*When a review is triggered*\n\n- A new PR is reviewed shortly after it's opened. Draft PRs are reviewed\n  once they're marked ready for review.\n- After a review posts findings, the bot waits. It reviews again only\n  when the author pushes new commits.\n- It also waits while a PR has open review comments from anyone that are\n  newer than the latest commit, so it doesn't pile on while the author is\n  still responding to reviewers.\n- Replying in a thread without pushing doesn't trigger a re-review.\n\n*When it stops*\n\n- When a review finds nothing new. The PR gets a fresh review if the\n  author pushes again later.\n- When the PR is merged or closed.\n\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/spark/pull/59184",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/spark/pull/59502",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "The discussion covers a trial of an AI\u2011powered code review bot for Apache Spark PRs that uses Claude to generate inline comments with severity labels, but never approves or LGTM. The bot triggers on new PRs or new commits, can be opt\u2011out via a label, and is currently in a one\u2011week test phase. Participants are asked for feedback on its usefulness and safeguards.",
-      "llm_status": "discussion",
-      "comment_count": 8,
-      "participant_count": 5,
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "llm_key_points": [
-        "The bot performs multi\u2011pass AI reviews with severity labels and never approves or posts LGTM",
-        "It triggers on new PRs or new commits and can be disabled via a GitHub label"
-      ],
-      "llm_topics": [
-        "ai-code-review",
-        "automation"
-      ],
-      "llm_title": "Automated AI code review on new Spark PRs (trial)",
-      "_content_hash": "dca5de49bee7",
-      "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7",
@@ -2346,7 +2403,7 @@
           "source_updated_at": "2026-10-06T20:04:00+00:00"
         }
       ],
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-ov7hfrb2jx17lt5xgs0zjqpmjotkm9bb",
@@ -2428,7 +2485,7 @@
       },
       "_content_hash": "579bca591d91",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx",
@@ -3580,7 +3637,7 @@
       ],
       "llm_title": "",
       "_content_hash": "97cea4020d47",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-vgg3omvqqmyo2c8w5rnnhl78k1rzp2qg",
@@ -3881,7 +3938,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
+      "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -5457,7 +5514,7 @@
         "uro-bojani"
       ],
       "_content_hash": "011b99573a32",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-92kjhnglm90z2n8v7hxn6d9nb2gzhq1z",
@@ -5750,7 +5807,7 @@
         "apache-spark"
       ],
       "_content_hash": "ec8146319b15",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv",
@@ -5781,7 +5838,7 @@
         "spark-project"
       ],
       "_content_hash": "af074b2503b6",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-c3sjlfos8d4o2859bjpltpgsf33wfnfh",
@@ -8341,7 +8398,7 @@
         "tian-gao"
       ],
       "_content_hash": "dacca48c4fa0",
-      "initiative_id": "spark-init-spark-ml-hwk5x16h0r40qz4h1c3qtpklwrtz6nlv"
+      "initiative_id": "spark-init-spark-ml-28m2p98kqrm3q413cr9dbbl8yqt0c55b"
     },
     {
       "id": "spark-ml-mqfysmjmkdnw0fxy9t5dp7bxpvo36jrv",
@@ -8777,7 +8834,7 @@
         "vote-passes"
       ],
       "_content_hash": "fd32bebf9a67",
-      "initiative_id": "spark-init-spark-jira-SPARK-60255"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-3h7nddnom2s6c0lqxptobjso1kyr0ynt",
@@ -8911,7 +8968,7 @@
         "partition-stats"
       ],
       "_content_hash": "daf27161289e",
-      "initiative_id": "spark-init-spark-jira-SPARK-60255"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-90fnr43zpvl3r2n3c7px1vypj40ht6gv",
@@ -9047,7 +9104,7 @@
         "sources"
       ],
       "_content_hash": "b60b751a671f",
-      "initiative_id": "spark-init-spark-jira-SPARK-60255"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-5c18gn3q3fkn9ol8o7zknwyrh8vqktoc",
@@ -29035,7 +29092,7 @@
         "spip"
       ],
       "_content_hash": "f3cf472da1c5",
-      "initiative_id": "spark-init-spark-ml-smpwykpoqr0y5r5xgc9jpt1fjm72fvck"
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
     {
       "id": "spark-ml-nbqj698v59skknrh7bp6ol0rrs9zsr6r",

@@ -1,6 +1,26 @@
 {
-  "summary": "Recent discussions in the Spark community highlight a trial of an AI-powered code review bot using Claude on new pull requests, several SPIP proposals\u2014including a language\u2011agnostic UDF protocol and a fixed\u2011dimension numeric VECTOR data type\u2014and an issue with Istio\u2019s strict mTLS mode affecting executor communication.",
+  "summary": "Recent discussions in the Spark community focus on the SPIP family of proposals, including a language\u2011agnostic UDF protocol and an on\u2011demand external lookup join strategy.  Parallel to these feature ideas, a trial of an AI\u2011powered code review bot is underway, and new data type and data source extensions\u2014fixed\u2011dimension numeric VECTOR and an ADBC source\u2014are being proposed.  Infrastructure concerns are also highlighted, with a discussion on enabling Istio strict mTLS for executor communication on Kubernetes.",
   "highlights": [
+    {
+      "text": "SPIP: Language\u2011agnostic UDF Protocol proposes a unified API and execution protocol for running user\u2011defined functions outside the Spark engine via inter\u2011process communication.",
+      "sources": [
+        {
+          "id": "spark-jira-SPARK-55278",
+          "title": "SPIP: Language-agnostic UDF Protocol for Spark",
+          "url": "https://issues.apache.org/jira/browse/SPARK-55278"
+        }
+      ]
+    },
+    {
+      "text": "SPIP: External Lookup Join introduces an on\u2011demand strategy to reduce latency by querying external storage for each stream record instead of pre\u2011materializing the static side.",
+      "sources": [
+        {
+          "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
+          "title": "[DISCUSS] SPIP: External Lookup Join",
+          "url": "https://lists.apache.org/thread/7s6tgy9cm18jnzykr8htrtrw4nxyrhp1"
+        }
+      ]
+    },
     {
       "text": "A trial of an AI\u2011powered code review bot using Claude is running on new Apache Spark pull requests, posting severity\u2011labeled comments without approving or LGTM.",
       "sources": [
@@ -12,27 +32,7 @@
       ]
     },
     {
-      "text": "The SPIP proposal for a Language\u2011agnostic UDF Protocol aims to provide a unified API and execution protocol for user\u2011defined functions that can run outside the Spark engine via IPC.",
-      "sources": [
-        {
-          "id": "spark-jira-SPARK-55278",
-          "title": "SPIP: Language-agnostic UDF Protocol for Spark",
-          "url": "https://issues.apache.org/jira/browse/SPARK-55278"
-        }
-      ]
-    },
-    {
-      "text": "A SPIP proposal introduces a new Spark SQL data type for storing a fixed number of numeric values, adding a fixed\u2011dimension numeric VECTOR type to the logical type system.",
-      "sources": [
-        {
-          "id": "spark-jira-SPARK-58787",
-          "title": "SPIP: Add a fixed-dimension numeric VECTOR data type",
-          "url": "https://issues.apache.org/jira/browse/SPARK-58787"
-        }
-      ]
-    },
-    {
-      "text": "An issue with Istio\u2019s STRICT mTLS mode rejecting traffic to pod IPs not backed by a Service is causing executor\u2011to\u2011executor communication failures in Spark, prompting a discussion on an opt\u2011in executor headless Service.",
+      "text": "Discussion on enabling Istio strict mTLS for executor communication on Kubernetes addresses failures caused by pod IPs not backed by a Service.",
       "sources": [
         {
           "id": "spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7",
@@ -49,12 +49,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-20T10:48:16.649253+00:00",
+  "generated_at": "2026-10-21T10:58:40.372781+00:00",
   "item_count": 6,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-10-15",
-    "to": "2026-10-19",
+    "to": "2026-10-21",
     "thread_count": 6
   }
 }

@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-20T10:49:18.107126+00:00",
+  "generated_at": "2026-10-21T10:59:32.645860+00:00",
   "total": 677,
   "proposals": [
     {
@@ -12,7 +12,7 @@
       "author": "Haiyang Sun",
       "state": "open",
       "created_at": "2026-01-29T12:26:31+00:00",
-      "updated_at": "2026-10-19T05:27:35+00:00",
+      "updated_at": "2026-10-21T06:23:24+00:00",
       "body": "Run user-provided code in Spark {*}consistently across many programming languages{*}.\r\n\r\nToday, Spark Connect allows users to write queries from multiple languages, but support for user-defined functions is incomplete. In practice, only Python has a mature solution, and it relies on language-specific mechanisms that do not generalize to other languages such as [Go|https://github.com/apache/spark-connect-go] / [Rust|https://github.com/apache/spark-connect-rust] / [Swift|https://github.com/apache/spark-connect-swift] / [.NET|https://github.com/GoEddie/spark-connect-dotnet] (where UDF is not supported).\r\n\r\nOur objective is to define a *unified API and execution protocol* for user-defined functions that run outside the Spark engine process via inter-process communication (IPC). This allows Spark to interact with external workers in a consistent way, regardless of the language used to implement the function.\r\n\r\nSPIP doc: [https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0]\r\n\r\nWorker Specification doc: [https://docs.google.com/document/d/1Dx9NqHRNuUpatH9DYoFF9cmvUl2fqHT4Rjbyw4EGLHs/edit?tab=t.0]\r\n\r\n\u00a0",
       "labels": [
         "SPIP",
@@ -33,17 +33,16 @@
         }
       ],
       "comment_count": 7,
-      "llm_summary": "The discussion proposes SPIP, a unified API and execution protocol for user-defined functions that can run outside the Spark engine via IPC, enabling consistent support across languages such as Go, Rust, Swift, and .NET. It addresses the current gap where only Python has mature UDF support in Spark Connect. The proposal includes documentation for the protocol and worker specification.",
+      "llm_summary": "The proposal introduces SPIP, a unified API and execution protocol that allows user-defined functions to run outside the Spark engine via inter-process communication, enabling consistent support across languages such as Go, Rust, Swift, and .NET. It aims to decouple Spark from language-specific runtimes, preserve existing planning logic, and keep the engine lightweight while extending Spark Connect\u2019s UDF capabilities beyond Python.",
       "llm_status": "discussion",
       "llm_key_points": [
-        "Unified API for UDF across languages",
-        "Execution via IPC outside Spark engine",
-        "Current lack of support for non-Python UDFs"
+        "Unified API for UDFs across multiple languages via IPC",
+        "Decouples Spark engine from language runtimes to keep it slim"
       ],
       "llm_topics": [
-        "udf-protocol",
-        "inter-process-communication",
-        "spark-connect"
+        "language-agnostic-udf",
+        "spark-connect",
+        "ipc"
       ],
       "summary_generation": {
         "method": "llm",
@@ -52,9 +51,9 @@
         "prompt_version": 1
       },
       "_content_hash": "effdf8738e47",
+      "llm_title": "Language-agnostic UDF Protocol for Spark",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-55278",
-      "llm_title": "Language-agnostic UDF Protocol for Spark"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-jira-SPARK-58787",
@@ -894,7 +893,7 @@
         "spark-dataframes"
       ],
       "_content_hash": "001ad555ca35",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-jira-SPARK-56978"
     },
     {
       "id": "spark-jira-SPARK-24918",
@@ -1915,7 +1914,7 @@
         "spark-sub-project"
       ],
       "_content_hash": "e46e418f4ebe",
-      "initiative_id": "spark-init-spark-jira-SPARK-56978"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-rc7f5f9ogggv6rqy7w5m2753yq5n5ckq",
@@ -1926,7 +1925,7 @@
       "author": "Jungtaek Lim <ka...@gmail.com>",
       "state": "open",
       "created_at": "2026-10-20T03:04:13+00:00",
-      "updated_at": "2026-10-20T03:04:13+00:00",
+      "updated_at": "2026-10-21T08:28:52+00:00",
       "body": "Hi devs,\n\nI would live to start a vote on introducing external lookup join, as\nproposed.\n\nJIRA ticket: https://issues.apache.org/jira/browse/SPARK-60031\nSPIP doc:\nhttps://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0\nDiscussion thread:\nhttps://lists.apache.org/thread.html/7s6tgy9cm18jnzykr8htrtrw4nxyrhp1\n\nThe vote will be open for at least 72 hours, and passes if a majority +1 PMC\nvotes are cast, with a minimum of 3 +1 votes.\n\nPlease vote:\n[ ] +1: Accept the proposal as an official SPIP\n[ ] +0\n[ ] -1: I don't think this is a good idea because ...\n\nThanks,\nJungtaek Lim (HeartSaVioR)\n",
       "labels": [],
       "linked_resources": [
@@ -1937,20 +1936,42 @@
           "title": "\ufeffSPIP: External Lookup Join"
         }
       ],
-      "llm_summary": "Vote in progress: 0 binding +1",
+      "llm_summary": "Vote in progress: 1 binding +1, 4 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 0,
-      "participant_count": 1,
+      "comment_count": 6,
+      "participant_count": 6,
       "vote_data": {
-        "binding_plus1": 0,
-        "nonbinding_plus1": 0,
+        "binding_plus1": 1,
+        "nonbinding_plus1": 4,
         "vetoes": 0,
         "result": "open",
-        "voters": [],
+        "voters": [
+          {
+            "voter": "Anish Shrigondekar via dev <de...@spark.apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Dongjoon Hyun <do...@apache.org>",
+            "vote": "+1 (binding)"
+          },
+          {
+            "voter": "Kousuke Saruta <sa...@apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Peter Toth <pe...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Yang Jie <ya...@apache.org>",
+            "vote": "+1"
+          }
+        ],
         "closes_at": "2026-10-23T03:04:13+00:00"
       },
       "llm_key_points": [
-        "Hi devs,\n\nI would live to start a vote on introducing external lookup join, as\nproposed."
+        "Hi devs,\n\nI would live to start a vote on introducing external lookup join, as\nproposed.",
+        "Voters include: Anish Shrigondekar via dev, Dongjoon Hyun, Kousuke Saruta..."
       ],
       "llm_topics": [
         "external-lookup",
@@ -1962,54 +1983,9 @@
         "method": "local",
         "prompt_version": 1
       },
-      "_content_hash": "3f545cc0aa20",
+      "_content_hash": "7b3a0b70cf9d",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60255"
-    },
-    {
-      "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Automated AI code review on new Spark PRs (trial)",
-      "url": "https://lists.apache.org/thread/wb2821v85vn0lcbdzsbr8o672j8f53wj",
-      "author": "Hyukjin Kwon <gu...@apache.org>",
-      "state": "open",
-      "created_at": "2026-10-01T21:58:50+00:00",
-      "updated_at": "2026-10-19T23:29:40+00:00",
-      "body": "Hi all,\n\nI've been running a trial of automated AI code review on new apache/spark\nPRs, and I'd like to share how it works and get your feedback.\n\nFor now the reviews are posted from my own GitHub account (@HyukjinKwon)\nwhile I check that it behaves well. Once it's proven, I plan to move it to\nthe https://github.com/spark-test account, so the reviews are clearly\nseparate from my personal ones. I plan to run this for the next week.\n\n*What it does*\n\nEach review is a full, multi-pass review of the PR diff, run by Claude\n(via Claude Code). Findings are checked against the code before they're\nposted. They're posted as a normal GitHub review: a short summary plus\ninline comments, each labeled with a severity, e.g. \"Non-blocking (P2)\"\nor \"Nit (P3)\". Example:\nhttps://github.com/apache/spark/pull/59184#pullrequestreview-5379759787\n\n*No LGTM, no approvals*\n\n- It never approves a PR and never posts \"LGTM\". Every review is a plain\n  \"Comment\" review, so it doesn't count as an approval or a change\n  request, and it has no effect on merging.\n- If a review finds nothing new, it posts nothing at all: no \"no\n  findings\" or \"all comments addressed\" message.\n- It doesn't push commits or edit anyone's PR.\n- Human review and committer judgement are unchanged. Please treat its\n  comments like any other reviewer's: feel free to push back or ignore.\n\n*When a review is triggered*\n\n- A new PR is reviewed shortly after it's opened. Draft PRs are reviewed\n  once they're marked ready for review.\n- After a review posts findings, the bot waits. It reviews again only\n  when the author pushes new commits.\n- It also waits while a PR has open review comments from anyone that are\n  newer than the latest commit, so it doesn't pile on while the author is\n  still responding to reviewers.\n- Replying in a thread without pushing doesn't trigger a re-review.\n\n*When it stops*\n\n- When a review finds nothing new. The PR gets a fresh review if the\n  author pushes again later.\n- When the PR is merged or closed.\n\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/spark/pull/59184",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/spark/pull/59502",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "A trial of an AI-powered code review bot using Claude is being run on new Apache Spark pull requests. The bot posts severity\u2011labeled comments without approving or LGTM, and triggers on new commits or when a PR is marked ready. The discussion covers adding an opt\u2011out label, safeguards against excessive Jira API calls, and current issues with the label not functioning.",
-      "llm_status": "discussion",
-      "comment_count": 10,
-      "participant_count": 5,
-      "llm_key_points": [
-        "AI bot reviews PR diffs and posts severity\u2011labeled comments without approving",
-        "Discussion on adding an opt\u2011out label and safeguards for Jira API usage"
-      ],
-      "llm_topics": [
-        "ai-code-review",
-        "automation"
-      ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "fb8ad54d4907",
-      "llm_title": "Automated AI code review on new Spark PRs (trial)",
-      "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-51207"
     },
     {
       "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
@@ -2020,7 +1996,7 @@
       "author": "Jungtaek Lim <ka...@gmail.com>",
       "state": "open",
       "created_at": "2026-10-07T08:30:22+00:00",
-      "updated_at": "2026-10-16T15:46:06+00:00",
+      "updated_at": "2026-10-21T01:07:41+00:00",
       "body": "Hi devs,\n\nI'm coming up with a proposal for a new join strategy, named \"External\nLookup Join\".\n\ntl;dr:\nAll existing join strategies require the static side (DataFrame/Relation)\nto be materialized before the join operator. This doesn't allow us to\nachieve low latency join where the storage of the static side is expected\nto produce low latency response over on-demand request. (e.g. OLTP\noptimized like RDBMS, in-memory storage, NoSQL, etc.) The new join strategy\nwill issue the query to the external storage \"on demand\", when processing\nthe data on the left side.\n\nThe most benefit will come with real-time mode, but it is not limited to\nreal-time mode. This join strategy would be useful as long as the external\nstorage of the static side is better suited for on-demand requests (rather\nthan bulk load with pruning). Both static-static and stream-static can be\nbenefited by this, though static-static join needs to be careful on doing\nthis.\n\nMore details are included in the SPIP doc.\n\nIssue: https://issues.apache.org/jira/browse/SPARK-60031\nSPIP doc:\nhttps://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0\n\nLooking forward to hearing from you.\n\nThanks!\nJungtaek Lim (HeartSaVioR)\n",
       "labels": [],
       "linked_resources": [
@@ -2031,17 +2007,19 @@
           "title": "\ufeffSPIP: External Lookup Join"
         }
       ],
-      "llm_summary": "A proposal introduces an on\u2011demand external lookup join strategy that queries a static side from external storage during stream processing, aiming to reduce latency and improve throughput. The discussion highlights missing DSv2 interface details, test coverage plans, and potential executor\u2011level caching support.",
+      "llm_summary": "A proposal introduces an on\u2011demand external lookup join strategy to reduce latency by querying external storage for each stream record instead of pre\u2011materializing the static side. The discussion covers missing DSv2 interface details, test coverage plans, and potential executor\u2011level caching. The community is evaluating the feasibility and integration effort for this new join type.",
       "llm_status": "discussion",
-      "comment_count": 10,
-      "participant_count": 6,
+      "comment_count": 12,
+      "participant_count": 7,
       "llm_key_points": [
-        "Proposal introduces on\u2011demand external lookup join strategy to reduce latency",
-        "Discussion includes missing DSv2 interface, test coverage, and executor caching"
+        "Proposal introduces on\u2011demand external lookup join to reduce latency",
+        "Discussion highlights missing DSv2 interface and test coverage strategy",
+        "Consideration of executor\u2011level caching for the first version"
       ],
       "llm_topics": [
         "external-lookup",
-        "performance"
+        "performance",
+        "streaming"
       ],
       "summary_generation": {
         "method": "llm",
@@ -2049,52 +2027,10 @@
         "model": "openai/gpt-oss-20b",
         "prompt_version": 1
       },
-      "_content_hash": "4b64177482c4",
+      "_content_hash": "997aa99169b9",
       "llm_title": "External Lookup Join",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60255"
-    },
-    {
-      "id": "spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] SPARK-42411: Opt-in executor headless Service for Istio strict mTLS on K8s",
-      "url": "https://lists.apache.org/thread/44mf222b9cpgkksfyxhhnpoohl7qmjo7",
-      "author": "Tariq Hasan <mm...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-10-15T02:32:10+00:00",
-      "updated_at": "2026-10-15T02:32:10+00:00",
-      "body": "Hello all,\n\nI am interested in reviving SPARK-42411 and wanted to check in to see\nif maintainers would be open to it before I write the code.\n\nThe problem is that, in the sidecar mode for Istio with STRICT mTLS,\ntraffic to a pod IP that is not backed by a Service gets rejected. So\nalthough the driver is covered by a headless Service the executors are not\nand executor-to-executor block and shuffle fetches fail.\n\nIstio seems to have also closed its tracking issue (\nhttps://github.com/istio/istio/issues/37431) without a fix and recommends\nheadless Services.\n\nI am wondering if we can solve this issue by having an opt-in headless\nService per application that is created by the driver and that selects the\napp's executor pods. I am happy to take any feedback to understand the\nfeasibility of reviving the issue and implementing a fix.\n\nSincerely,\n\nTariq Hasan\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/istio/istio/issues/37431",
-          "kind": "github_issue"
-        }
-      ],
-      "llm_summary": "The discussion addresses an issue where Istio\u2019s STRICT mTLS mode rejects traffic to pod IPs not backed by a Service, causing executor-to-executor communication failures in Spark. The proposal suggests creating an opt\u2011in headless Service per application, generated by the driver, to select executor pods and restore connectivity. Maintainers are asked for feedback on feasibility before implementation.",
-      "llm_status": "discussion",
-      "comment_count": 0,
-      "participant_count": 1,
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "llm_key_points": [
-        "Istio STRICT mTLS rejects pod IP traffic without a Service",
-        "Proposed opt\u2011in headless Service per application to enable executor communication"
-      ],
-      "llm_topics": [
-        "service-discovery",
-        "networking",
-        "istio"
-      ],
-      "llm_title": "Opt-in executor headless Service for Istio mTLS",
-      "_content_hash": "f4169d6112d8",
-      "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7"
     },
     {
       "id": "spark-ml-fobrm61g0cm59sy1r4omvbbf7pn50zvl",
@@ -2105,7 +2041,7 @@
       "author": "Uro\u0161 Bojani\u0107 <ur...@apache.org>",
       "state": "open",
       "created_at": "2026-10-12T18:55:39+00:00",
-      "updated_at": "2026-10-14T09:07:28+00:00",
+      "updated_at": "2026-10-20T12:56:59+00:00",
       "body": "Please vote on releasing the following candidate as Apache Spark version 4.0.5.\n\nThe vote is open until Thu, 15 Oct 2026 12:38:20 PDT and passes if a majority +1 PMC votes are cast, with\na minimum of 3 +1 votes.\n\n[ ] +1 Release this package as Apache Spark 4.0.5\n[ ] -1 Do not release this package because ...\n\nTo learn more about Apache Spark, please see https://spark.apache.org/\n\nThe tag to be voted on is v4.0.5-rc2 (commit 51d701c09de):\nhttps://github.com/apache/spark/tree/v4.0.5-rc2\n\nThe release files, including signatures, digests, etc. can be found at:\nhttps://dist.apache.org/repos/dist/dev/spark/v4.0.5-rc2-bin/\n\nSignatures used for Spark RCs can be found in this file:\nhttps://downloads.apache.org/spark/KEYS\n\nThe staging repository for this release can be found at:\nhttps://repository.apache.org/content/repositories/orgapachespark-1535/\n\nThe documentation corresponding to this release can be found at:\nhttps://dist.apache.org/repos/dist/dev/spark/v4.0.5-rc2-docs/\n\nThe list of bug fixes going into 4.0.5 can be found at the following URL:\nhttps://issues.apache.org/jira/projects/SPARK/versions/12357251\n\nFAQ\n\n=========================\nHow can I help test this release?\n=========================\n\nIf you are a Spark user, you can help us test this release by taking\nan existing Spark workload and running on this release candidate, then\nreporting any regressions.\n\nIf you're working in PySpark you can set up a virtual env and install\nthe current RC via \"pip install https://dist.apache.org/repos/dist/dev/spark/v4.0.5-rc2-bin/pyspark-4.0.5.tar.gz\"\nand see if anything important breaks.\nIn the Java/Scala, you can add the staging repository to your project's resolvers and test\nwith the RC (make sure to clean up the artifact cache before/after so\nyou don't end up building with an out of date RC going forward).\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
       "labels": [],
       "linked_resources": [
@@ -2116,7 +2052,7 @@
       ],
       "llm_summary": "Vote in progress: 0 binding +1, 5 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 7,
+      "comment_count": 8,
       "participant_count": 7,
       "vote_data": {
         "binding_plus1": 0,
@@ -2160,9 +2096,96 @@
         "method": "local",
         "prompt_version": 1
       },
-      "_content_hash": "c185f53c82e7",
+      "_content_hash": "dad16ba0ec52",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-fobrm61g0cm59sy1r4omvbbf7pn50zvl"
+    },
+    {
+      "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Automated AI code review on new Spark PRs (trial)",
+      "url": "https://lists.apache.org/thread/wb2821v85vn0lcbdzsbr8o672j8f53wj",
+      "author": "Hyukjin Kwon <gu...@apache.org>",
+      "state": "open",
+      "created_at": "2026-10-01T21:58:50+00:00",
+      "updated_at": "2026-10-19T23:29:40+00:00",
+      "body": "Hi all,\n\nI've been running a trial of automated AI code review on new apache/spark\nPRs, and I'd like to share how it works and get your feedback.\n\nFor now the reviews are posted from my own GitHub account (@HyukjinKwon)\nwhile I check that it behaves well. Once it's proven, I plan to move it to\nthe https://github.com/spark-test account, so the reviews are clearly\nseparate from my personal ones. I plan to run this for the next week.\n\n*What it does*\n\nEach review is a full, multi-pass review of the PR diff, run by Claude\n(via Claude Code). Findings are checked against the code before they're\nposted. They're posted as a normal GitHub review: a short summary plus\ninline comments, each labeled with a severity, e.g. \"Non-blocking (P2)\"\nor \"Nit (P3)\". Example:\nhttps://github.com/apache/spark/pull/59184#pullrequestreview-5379759787\n\n*No LGTM, no approvals*\n\n- It never approves a PR and never posts \"LGTM\". Every review is a plain\n  \"Comment\" review, so it doesn't count as an approval or a change\n  request, and it has no effect on merging.\n- If a review finds nothing new, it posts nothing at all: no \"no\n  findings\" or \"all comments addressed\" message.\n- It doesn't push commits or edit anyone's PR.\n- Human review and committer judgement are unchanged. Please treat its\n  comments like any other reviewer's: feel free to push back or ignore.\n\n*When a review is triggered*\n\n- A new PR is reviewed shortly after it's opened. Draft PRs are reviewed\n  once they're marked ready for review.\n- After a review posts findings, the bot waits. It reviews again only\n  when the author pushes new commits.\n- It also waits while a PR has open review comments from anyone that are\n  newer than the latest commit, so it doesn't pile on while the author is\n  still responding to reviewers.\n- Replying in a thread without pushing doesn't trigger a re-review.\n\n*When it stops*\n\n- When a review finds nothing new. The PR gets a fresh review if the\n  author pushes again later.\n- When the PR is merged or closed.\n\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/spark/pull/59184",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/spark/pull/59502",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "A trial of an AI-powered code review bot using Claude is being run on new Apache Spark pull requests. The bot posts severity\u2011labeled comments without approving or LGTM, and triggers on new commits or when a PR is marked ready. The discussion covers adding an opt\u2011out label, safeguards against excessive Jira API calls, and current issues with the label not functioning.",
+      "llm_status": "discussion",
+      "comment_count": 10,
+      "participant_count": 5,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "llm_key_points": [
+        "AI bot reviews PR diffs and posts severity\u2011labeled comments without approving",
+        "Discussion on adding an opt\u2011out label and safeguards for Jira API usage"
+      ],
+      "llm_topics": [
+        "ai-code-review",
+        "automation"
+      ],
+      "llm_title": "Automated AI code review on new Spark PRs (trial)",
+      "_content_hash": "fb8ad54d4907",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-jira-SPARK-51207"
+    },
+    {
+      "id": "spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] SPARK-42411: Opt-in executor headless Service for Istio strict mTLS on K8s",
+      "url": "https://lists.apache.org/thread/44mf222b9cpgkksfyxhhnpoohl7qmjo7",
+      "author": "Tariq Hasan <mm...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-10-15T02:32:10+00:00",
+      "updated_at": "2026-10-15T02:32:10+00:00",
+      "body": "Hello all,\n\nI am interested in reviving SPARK-42411 and wanted to check in to see\nif maintainers would be open to it before I write the code.\n\nThe problem is that, in the sidecar mode for Istio with STRICT mTLS,\ntraffic to a pod IP that is not backed by a Service gets rejected. So\nalthough the driver is covered by a headless Service the executors are not\nand executor-to-executor block and shuffle fetches fail.\n\nIstio seems to have also closed its tracking issue (\nhttps://github.com/istio/istio/issues/37431) without a fix and recommends\nheadless Services.\n\nI am wondering if we can solve this issue by having an opt-in headless\nService per application that is created by the driver and that selects the\napp's executor pods. I am happy to take any feedback to understand the\nfeasibility of reviving the issue and implementing a fix.\n\nSincerely,\n\nTariq Hasan\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/istio/istio/issues/37431",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "The discussion addresses an issue where Istio\u2019s STRICT mTLS mode rejects traffic to pod IPs not backed by a Service, causing executor-to-executor communication failures in Spark. The proposal suggests creating an opt\u2011in headless Service per application, generated by the driver, to select executor pods and restore connectivity. Maintainers are asked for feedback on feasibility before implementation.",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "llm_key_points": [
+        "Istio STRICT mTLS rejects pod IP traffic without a Service",
+        "Proposed opt\u2011in headless Service per application to enable executor communication"
+      ],
+      "llm_topics": [
+        "service-discovery",
+        "networking",
+        "istio"
+      ],
+      "llm_title": "Opt-in executor headless Service for Istio mTLS",
+      "_content_hash": "f4169d6112d8",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7"
     },
     {
       "id": "spark-ml-y7h0v7km0814xb5fg57ght5wtfptn9lt",
@@ -9639,7 +9662,7 @@
         "apache"
       ],
       "_content_hash": "3e3df829f2cf",
-      "initiative_id": "spark-init-spark-ml-7t82jvvdy1c57vzm5drztygfb39mk1bz"
+      "initiative_id": "spark-init-spark-ml-n6t46mp9x00cmb2csfgf8t76kchw2h1h"
     },
     {
       "id": "spark-ml-s1szvkkw7krshx8kht1bnzbq8h3cmyft",
@@ -27824,7 +27847,7 @@
         "release"
       ],
       "_content_hash": "11ef119282b3",
-      "initiative_id": "spark-init-spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-y6hby3k9nqds4fgx0b1w5yhhlqb2f7gb",
@@ -28178,7 +28201,7 @@
         "yuming-wang"
       ],
       "_content_hash": "a0cd2e254ca8",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
     },
     {
       "id": "spark-ml-n5zb2hj3rl15g8wnlvl9xn4ghosxgj4p",

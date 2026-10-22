@@ -1,8 +1,8 @@
 {
-  "summary": "Recent discussions in the Spark community focus on the SPIP family of proposals, including a language\u2011agnostic UDF protocol and an on\u2011demand external lookup join strategy.  Parallel to these feature ideas, a trial of an AI\u2011powered code review bot is underway, and new data type and data source extensions\u2014fixed\u2011dimension numeric VECTOR and an ADBC source\u2014are being proposed.  Infrastructure concerns are also highlighted, with a discussion on enabling Istio strict mTLS for executor communication on Kubernetes.",
+  "summary": "The proposal introduces a unified API and execution protocol for user-defined functions (UDFs) that can run across multiple programming languages in Spark Connect, enabling external workers via inter-process communication (IPC). A user encountered an error when attempting to alter a VARCHAR column from length 10 to 25 in Spark SQL, receiving a NOT_SUPPORTED_CHANGE_COLUMN exception. The discussion centers on whether Spark should support type expansion for VARCHAR columns, with the user expressing willingness to work on a solution. Participants raised concerns about missing DSv2 interface details, test coverage, and potential support for executor-level caching and broader API use cases.",
   "highlights": [
     {
-      "text": "SPIP: Language\u2011agnostic UDF Protocol proposes a unified API and execution protocol for running user\u2011defined functions outside the Spark engine via inter\u2011process communication.",
+      "text": "The proposal introduces a unified API and execution protocol for user-defined functions (UDFs) that can run across multiple programming languages in Spark Conne\u2026",
       "sources": [
         {
           "id": "spark-jira-SPARK-55278",
@@ -12,7 +12,17 @@
       ]
     },
     {
-      "text": "SPIP: External Lookup Join introduces an on\u2011demand strategy to reduce latency by querying external storage for each stream record instead of pre\u2011materializing the static side.",
+      "text": "A user encountered an error when attempting to alter a VARCHAR column from length 10 to 25 in Spark SQL, receiving a NOT_SUPPORTED_CHANGE_COLUMN exception. The \u2026",
+      "sources": [
+        {
+          "id": "spark-ml-b2mzdn5ygvn3ynq261vkr6c1xj3phckc",
+          "title": "[DISCUSS] SPARK-44437 Regarding the type expansion issue",
+          "url": "https://lists.apache.org/thread/b2mzdn5ygvn3ynq261vkr6c1xj3phckc"
+        }
+      ]
+    },
+    {
+      "text": "The discussion proposes an External Lookup Join strategy that performs on-demand lookups against external storage instead of materializing the static side, aimi\u2026",
       "sources": [
         {
           "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
@@ -22,7 +32,7 @@
       ]
     },
     {
-      "text": "A trial of an AI\u2011powered code review bot using Claude is running on new Apache Spark pull requests, posting severity\u2011labeled comments without approving or LGTM.",
+      "text": "A trial of an AI-powered code review bot using Claude is being run on new Apache Spark pull requests. The bot posts severity\u2011labeled comments without approving \u2026",
       "sources": [
         {
           "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
@@ -30,31 +40,19 @@
           "url": "https://lists.apache.org/thread/wb2821v85vn0lcbdzsbr8o672j8f53wj"
         }
       ]
-    },
-    {
-      "text": "Discussion on enabling Istio strict mTLS for executor communication on Kubernetes addresses failures caused by pod IPs not backed by a Service.",
-      "sources": [
-        {
-          "id": "spark-ml-44mf222b9cpgkksfyxhhnpoohl7qmjo7",
-          "title": "[DISCUSS] SPARK-42411: Opt-in executor headless Service for Istio strict mTLS on K8s",
-          "url": "https://lists.apache.org/thread/44mf222b9cpgkksfyxhhnpoohl7qmjo7"
-        }
-      ]
     }
   ],
   "generation": {
-    "method": "llm",
-    "provider": "groq",
-    "model": "openai/gpt-oss-20b",
+    "method": "local",
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-21T10:58:40.372781+00:00",
-  "item_count": 6,
+  "generated_at": "2026-10-22T10:53:28.936352+00:00",
+  "item_count": 5,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-10-15",
+    "from": "2026-10-19",
     "to": "2026-10-21",
-    "thread_count": 6
+    "thread_count": 5
   }
 }

@@ -1,5 +1,5 @@
 {
-  "summary": "The thread discusses adding a new Apache DataSketches HLL blob type to the Puffin spec to support NDV statistics. The discussion notes that V4 manifests are now Parquet-only and considers dropping ORC and Avro as data file formats. Interest from multiple contributors and alignment with SQL standards are noted, but the feature remains in the discussion phase. A pull request adds per-task scanDuration metrics to the Spark\u2011Iceberg reader, enabling measurement of scan time per task.",
+  "summary": "The discussion concluded that the X-Iceberg-Access-Delegation header should include a new enum value, \"none\", to indicate that the client does not require delegated access from the catalog. Draft PRs and a design document outline the proposed changes, while participants debate whether these types should be general primitives or vector\u2011specific, and whether a separate discussion thread is warranted. The discussion notes that V4 manifests have been switched to Parquet-only, and proposes dropping ORC and Avro data file formats. Participants agree that a separate thread is needed to address data file format changes and that the spec should remain flexible.",
   "highlights": [
     {
       "text": "The document records the outcomes of the Iceberg Spark integration sync meetings, covering recent Spark 4.2 enhancements such as schema evolution, default value\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "The thread discusses adding a new Apache DataSketches HLL blob type to the Puffin spec to support NDV statistics. The current spec only supports a Theta sketch,\u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-vlcv3ft4mw0d3nzvgr6xg34p3zrq1xb7",
-          "title": "[DISCUSS] Add HLL sketch blob type to Puffin spec",
-          "url": "https://lists.apache.org/thread/vlcv3ft4mw0d3nzvgr6xg34p3zrq1xb7"
-        }
-      ]
-    },
-    {
-      "text": "The discussion highlights low attendance at the Iceberg Spark community sync meetings, with many participants citing the 7pm-8pm CET time slot as inconvenient a\u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-58hj4fjyxnh7or9zbl96c1hbzrjdv9t4",
-          "title": "Re: Iceberg / Spark syncs",
-          "url": "https://lists.apache.org/thread/58hj4fjyxnh7or9zbl96c1hbzrjdv9t4"
-        }
-      ]
-    },
-    {
-      "text": "The discussion highlights that Iceberg\u2019s OpenAPI spec, used by Apache Polaris, is invalid under OpenAPI 3.1 because it still uses the `nullable` keyword. A pull\u2026",
+      "text": "Yong Zheng identified that Iceberg's OpenAPI spec uses the deprecated 'nullable' keyword, which is invalid in OpenAPI 3.1. He submitted a pull request to replac\u2026",
       "sources": [
         {
           "id": "iceberg-ml-6y4txojozlrhoslkkygcp3lkdyv2sktf",
           "title": "[DISCUSSION] Replace nullable with type arrays in rest catalog openapi spec",
           "url": "https://lists.apache.org/thread/6y4txojozlrhoslkkygcp3lkdyv2sktf"
+        }
+      ]
+    },
+    {
+      "text": "The discussion concluded that the X-Iceberg-Access-Delegation header should include a new enum value, \"none\", to indicate that the client does not require deleg\u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-l02zjbx3j1pddqhj3wg8gkj10o90l2cp",
+          "title": "Re: [DISCUSS] REST spec: expected server behavior when X-Iceberg-Access-Delegation cannot be satisfied",
+          "url": "https://lists.apache.org/thread/l02zjbx3j1pddqhj3wg8gkj10o90l2cp"
+        }
+      ]
+    },
+    {
+      "text": "A pull request proposes adding a standard HyperLogLog (HLL) blob type to the Puffin specification to replace the current single Theta sketch type, aiming to red\u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-vlcv3ft4mw0d3nzvgr6xg34p3zrq1xb7",
+          "title": "[DISCUSS] Add HLL sketch blob type to Puffin spec",
+          "url": "https://lists.apache.org/thread/vlcv3ft4mw0d3nzvgr6xg34p3zrq1xb7"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-21T10:55:07.175655+00:00",
+  "generated_at": "2026-10-22T10:58:52.184985+00:00",
   "item_count": 13,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-10-19",
-    "to": "2026-10-21",
+    "to": "2026-10-22",
     "thread_count": 13
   }
 }

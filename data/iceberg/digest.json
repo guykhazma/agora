@@ -1,5 +1,5 @@
 {
-  "summary": "The discussion concluded that the X-Iceberg-Access-Delegation header should include a new enum value, \"none\", to indicate that the client does not require delegated access from the catalog. Draft PRs and a design document outline the proposed changes, while participants debate whether these types should be general primitives or vector\u2011specific, and whether a separate discussion thread is warranted. The discussion notes that V4 manifests have been switched to Parquet-only, and proposes dropping ORC and Avro data file formats. Participants agree that a separate thread is needed to address data file format changes and that the spec should remain flexible.",
+  "summary": "The thread discusses adding a new HLL blob type to the Puffin spec to improve NDV statistics performance. The proposal introduces apache-datasketches-hll-v1, but raises questions about handling tables that mix Theta and HLL blobs and whether readers can merge them. The discussion centers on whether to keep reading statistics for non-equality columns in equality delete files, as these stats can cause incorrect pruning and leave undeleted rows. The discussion concluded that the X-Iceberg-Access-Delegation header should include a new enum value, \"none\", to indicate that the client does not require delegated access from the catalog.",
   "highlights": [
     {
       "text": "The document records the outcomes of the Iceberg Spark integration sync meetings, covering recent Spark 4.2 enhancements such as schema evolution, default value\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "Yong Zheng identified that Iceberg's OpenAPI spec uses the deprecated 'nullable' keyword, which is invalid in OpenAPI 3.1. He submitted a pull request to replac\u2026",
+      "text": "The discussion centers on a new spec for stats-only fields, a form of non-materialized columns in Iceberg v4. The PR proposes adding these fields to schemas, wi\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-6y4txojozlrhoslkkygcp3lkdyv2sktf",
-          "title": "[DISCUSSION] Replace nullable with type arrays in rest catalog openapi spec",
-          "url": "https://lists.apache.org/thread/6y4txojozlrhoslkkygcp3lkdyv2sktf"
+          "id": "iceberg-ml-t4nm0blbo33y5fnkcok6lrmdc4k4toxr",
+          "title": "[DISCUSS] Stats-only fields",
+          "url": "https://lists.apache.org/thread/t4nm0blbo33y5fnkcok6lrmdc4k4toxr"
         }
       ]
     },
     {
-      "text": "The discussion concluded that the X-Iceberg-Access-Delegation header should include a new enum value, \"none\", to indicate that the client does not require deleg\u2026",
+      "text": "Iceberg 1.13.0",
       "sources": [
         {
-          "id": "iceberg-ml-l02zjbx3j1pddqhj3wg8gkj10o90l2cp",
-          "title": "Re: [DISCUSS] REST spec: expected server behavior when X-Iceberg-Access-Delegation cannot be satisfied",
-          "url": "https://lists.apache.org/thread/l02zjbx3j1pddqhj3wg8gkj10o90l2cp"
+          "id": "iceberg-gh-m64",
+          "title": "Iceberg 1.13.0",
+          "url": "https://github.com/apache/iceberg/milestone/64"
         }
       ]
     },
     {
-      "text": "A pull request proposes adding a standard HyperLogLog (HLL) blob type to the Puffin specification to replace the current single Theta sketch type, aiming to red\u2026",
+      "text": "The Iceberg spec allows NaN and Infinity for float/double, but JSON numbers cannot represent them, leading to inconsistent client behavior. Java serializes them\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-vlcv3ft4mw0d3nzvgr6xg34p3zrq1xb7",
-          "title": "[DISCUSS] Add HLL sketch blob type to Puffin spec",
-          "url": "https://lists.apache.org/thread/vlcv3ft4mw0d3nzvgr6xg34p3zrq1xb7"
+          "id": "iceberg-ml-98ojhwbw1wswst5pfxg0r7wgyrb966pf",
+          "title": "[DISCUSS] NaN and Infinity in JSON single-value serialization",
+          "url": "https://lists.apache.org/thread/98ojhwbw1wswst5pfxg0r7wgyrb966pf"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-22T10:58:52.184985+00:00",
+  "generated_at": "2026-10-23T10:47:48.413473+00:00",
   "item_count": 13,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-10-19",
-    "to": "2026-10-22",
+    "to": "2026-10-23",
     "thread_count": 13
   }
 }

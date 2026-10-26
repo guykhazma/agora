@@ -1,7 +1,7 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-10-25T10:34:30.542219+00:00",
-  "total": 682,
+  "generated_at": "2026-10-26T12:02:57.061157+00:00",
+  "total": 683,
   "proposals": [
     {
       "id": "spark-jira-SPARK-55278",
@@ -404,7 +404,7 @@
       ],
       "llm_title": "",
       "_content_hash": "c09cf2d9e12f",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-57487"
     },
     {
       "id": "spark-jira-SPARK-58455",
@@ -1918,6 +1918,55 @@
       "initiative_id": "spark-init-spark-ml-yg009gdq35m1z6tvv1s22wv3ovg7mohl"
     },
     {
+      "id": "spark-ml-vz0s8nok4mgyfmcz1wmoc9ko14xkts9o",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] SPIP: ADBC Data Source",
+      "url": "https://lists.apache.org/thread/vz0s8nok4mgyfmcz1wmoc9ko14xkts9o",
+      "author": "Tornike Gurgenidze <to...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-10-25T13:28:18+00:00",
+      "updated_at": "2026-10-25T13:28:18+00:00",
+      "body": "Hi all,\n\nI'd like to start a discussion on a SPIP to add a built-in ADBC (Arrow\nDatabase Connectivity) data source to Spark, alongside the existing JDBC\none.\n\n- SPIP doc:\nhttps://docs.google.com/document/d/1hewLmAc8yFCY4PYepE02Yz8iACCAWkRUZuhzHyyMqBY\n- JIRA: https://issues.apache.org/jira/browse/SPARK-60255\n- Earlier discussion: https://github.com/apache/spark/issues/54603\n- Prototype: https://github.com/tokoko/spark-adbc\n\nMotivation\n\nJDBC returns data one row at a time, and Spark reads each value with a\nseparate getXxx call. Many analytical databases store and send data in\ncolumns. Reading them through JDBC means converting columns to rows in the\ndriver, reading each value one by one in Spark, and then converting back to\ncolumns again if Comet or Gluten is used. ADBC drivers return Arrow record\nbatches instead. Spark can wrap those as ColumnarBatches through\nArrowColumnVector, almost without copying. On the prototype, reads from\ncolumnar databases are 3-10x faster than JDBC, and the gap grows on wider\ntables.\n\nWhat's proposed\n\n- A new optional \"adbc\" format. There are no public API changes, and the\nJDBC source is unchanged. ADBC complements JDBC; it doesn't replace it.\n- Pushdown of column pruning, filters, limit, Top-N and aggregates\n(COUNT/SUM/MIN/MAX/AVG).\n- Two kinds of partitioning that can be combined:\n  - JDBC-style range partitioning\n(partitionColumn/lowerBound/upperBound/numPartitions).\n  - Driver partitioning through ADBC's executePartitioned, where each\ndescriptor the driver returns becomes one Spark task. Flight SQL servers\nalready split results this way.\n- Appending writes through ADBC bulk ingest, one transaction per task where\nthe driver supports it. This is the same at-least-once guarantee as the\nJDBC writer.\n- No per-database dialect classes in Spark. The driver reports the few\nsyntax choices pushdown needs through GetInfo/SqlInfo, and filter values\nare sent as bound Arrow parameters, not literals. As a second path,\nSubstrait plans can be handed to",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1hewLmAc8yFCY4PYepE02Yz8iACCAWkRUZuhzHyyMqBY",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: ADBC Data Source"
+        },
+        {
+          "url": "https://github.com/apache/spark/issues/54603",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "The discussion proposes adding a built\u2011in ADBC data source to Spark, complementing the existing JDBC source without changing public APIs. By returning Arrow record batches, the new source enables columnar reads that are 3\u201110\u00d7 faster and supports pushdown of column pruning, filters, limits, Top\u2011N and aggregates, as well as partitioned reads and writes. The proposal also outlines two partitioning strategies and a bulk ingest write path, aiming to improve analytical database performance while keeping JDBC as the fallback.",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [
+        "Adds optional ADBC format alongside JDBC",
+        "Supports pushdown of column pruning, filters, aggregates",
+        "Provides columnar reads 3\u201110\u00d7 faster"
+      ],
+      "llm_topics": [
+        "adbc",
+        "performance",
+        "data-source"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "c73f8b08dc26",
+      "llm_title": "Spark ADBC Data Source Proposal",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-jira-SPARK-60255"
+    },
+    {
       "id": "spark-ml-678vpc4x475sjsn2lmfhwbdd4r0cxrjc",
       "source": "mailing_list",
       "kind": "thread",
@@ -2287,18 +2336,19 @@
           "title": "\ufeffSPIP: External Lookup Join"
         }
       ],
-      "llm_summary": "The discussion proposes an External Lookup Join strategy that performs on-demand lookups against external storage instead of pre-materializing static data, aiming to reduce latency for stream and static joins. Participants raised concerns about DSv2 interface details, test coverage, executor caching, and broader applicability beyond OLTP. The proposal is still in discussion, with feedback being collected on design and implementation aspects.",
+      "llm_summary": "The discussion centers on a proposed External Lookup Join strategy that performs on-demand lookups to external storage instead of pre-materializing the static side, aiming to reduce latency for streaming and static joins. Participants raise points about missing DSv2 interface details, test coverage plans, executor-level caching, and potential support for external APIs beyond OLTP. The proposal is still in the discussion phase, with ongoing refinement of the SPIP document and interface sketches.",
       "llm_status": "discussion",
       "comment_count": 12,
       "participant_count": 7,
       "llm_key_points": [
-        "On-demand lookup join to reduce latency",
-        "Missing DSv2 interface details",
-        "Test coverage and executor caching concerns",
-        "Applicability beyond OLTP"
+        "on-demand external lookup for joins",
+        "missing DSv2 interface details",
+        "test coverage strategy",
+        "executor-level caching",
+        "support for external APIs"
       ],
       "llm_topics": [
-        "external-lookup-join",
+        "external-lookup",
         "performance",
         "streaming"
       ],
@@ -2309,7 +2359,7 @@
         "prompt_version": 1
       },
       "_content_hash": "997aa99169b9",
-      "llm_title": "External Lookup Join Proposal",
+      "llm_title": "External Lookup Join",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60255"
     },
@@ -4121,7 +4171,7 @@
       ],
       "_content_hash": "45c295998dc1",
       "llm_title": "",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-57487"
     },
     {
       "id": "spark-ml-72dhvf0qmw4l8gzgogfth7v0cn5gcb6d",
@@ -7119,7 +7169,7 @@
         "spip"
       ],
       "_content_hash": "10946fbe99e5",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-57487"
     },
     {
       "id": "spark-ml-31rx0xmwbhloljsowc9ksl6kk5vbb3r4",
@@ -7244,7 +7294,7 @@
         "ranking-join"
       ],
       "_content_hash": "5519545493ff",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-57487"
     },
     {
       "id": "spark-ml-4c43vymcx0g7o22dwtm0ow7kvjdroxnp",
@@ -9093,7 +9143,7 @@
         "vote-passes"
       ],
       "_content_hash": "fd32bebf9a67",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-57487"
     },
     {
       "id": "spark-ml-3h7nddnom2s6c0lqxptobjso1kyr0ynt",
@@ -9227,7 +9277,7 @@
         "partition-stats"
       ],
       "_content_hash": "daf27161289e",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-57487"
     },
     {
       "id": "spark-ml-90fnr43zpvl3r2n3c7px1vypj40ht6gv",
@@ -9363,7 +9413,7 @@
         "sources"
       ],
       "_content_hash": "b60b751a671f",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-57487"
     },
     {
       "id": "spark-ml-5c18gn3q3fkn9ol8o7zknwyrh8vqktoc",
@@ -24957,7 +25007,7 @@
         "result"
       ],
       "_content_hash": "5d7cd7c98203",
-      "initiative_id": "spark-init-spark-jira-SPARK-60255"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-7ohctj1gmqbhds56bntf4s2zst5qpll1",
@@ -31068,7 +31118,7 @@
         "storage"
       ],
       "_content_hash": "635ba4346673",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-57487"
     },
     {
       "id": "spark-ml-hdoo023600od62lgn8wx3j8kjy29l67c",
@@ -31104,7 +31154,7 @@
         "partitioned"
       ],
       "_content_hash": "5232f5d2202f",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-57487"
     },
     {
       "id": "spark-ml-2z3rfzmq8bv01yrmchs87g82grbzfz0m",
@@ -31135,7 +31185,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz"
+      "initiative_id": "spark-init-spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",

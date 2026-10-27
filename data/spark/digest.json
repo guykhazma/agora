@@ -1,8 +1,8 @@
 {
-  "summary": "The proposal also outlines two partitioning strategies and a bulk ingest write path, aiming to improve analytical database performance while keeping JDBC as the fallback. Hyukjin Kwon is running a trial of an AI code review bot for new Apache Spark pull requests, using Claude to analyze diffs and post inline comments without approving or LGTM. The proposal introduces a unified API and execution protocol for user-defined functions (UDFs) that can run across multiple programming languages in Spark Connect, enabling external workers via inter-process communication (IPC). Participants raise points about missing DSv2 interface details, test coverage plans, executor-level caching, and potential support for external APIs beyond OLTP.",
+  "summary": "Recent discussions in the Spark community focus on expanding data source capabilities with a proposed built\u2011in ADBC data source, while an AI\u2011driven code review bot is being trialed for new pull requests.  Parallel proposals aim to unify UDF execution across languages and to optimize joins by performing on\u2011demand lookups against external storage.  A separate thread addresses a type\u2011expansion limitation in Spark SQL when altering VARCHAR column lengths.",
   "highlights": [
     {
-      "text": "The discussion proposes adding a built\u2011in ADBC data source to Spark, complementing the existing JDBC source without changing public APIs. By returning Arrow rec\u2026",
+      "text": "Proposal to add a built\u2011in ADBC data source to Spark, complementing the existing JDBC source and enabling columnar reads and writes",
       "sources": [
         {
           "id": "spark-ml-vz0s8nok4mgyfmcz1wmoc9ko14xkts9o",
@@ -12,7 +12,7 @@
       ]
     },
     {
-      "text": "Hyukjin Kwon is running a trial of an AI code review bot for new Apache Spark pull requests, using Claude to analyze diffs and post inline comments without appr\u2026",
+      "text": "Trial of an AI code review bot using Claude to analyze diffs and post inline comments on new Spark pull requests",
       "sources": [
         {
           "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
@@ -22,7 +22,7 @@
       ]
     },
     {
-      "text": "The proposal introduces a unified API and execution protocol for user-defined functions (UDFs) that can run across multiple programming languages in Spark Conne\u2026",
+      "text": "Introduction of a language\u2011agnostic UDF protocol for Spark Connect, allowing UDFs to run across multiple programming languages",
       "sources": [
         {
           "id": "spark-jira-SPARK-55278",
@@ -32,22 +32,24 @@
       ]
     },
     {
-      "text": "A user encountered an error when attempting to alter a VARCHAR column from length 10 to 25 in Spark SQL, receiving a NOT_SUPPORTED_CHANGE_COLUMN exception. The \u2026",
+      "text": "Proposal for an External Lookup Join strategy that performs on\u2011demand lookups against external storage to reduce latency",
       "sources": [
         {
-          "id": "spark-ml-b2mzdn5ygvn3ynq261vkr6c1xj3phckc",
-          "title": "[DISCUSS] SPARK-44437 Regarding the type expansion issue",
-          "url": "https://lists.apache.org/thread/b2mzdn5ygvn3ynq261vkr6c1xj3phckc"
+          "id": "spark-ml-7s6tgy9cm18jnzykr8htrtrw4nxyrhp1",
+          "title": "[DISCUSS] SPIP: External Lookup Join",
+          "url": "https://lists.apache.org/thread/7s6tgy9cm18jnzykr8htrtrw4nxyrhp1"
         }
       ]
     }
   ],
   "generation": {
-    "method": "local",
+    "method": "llm",
+    "provider": "groq",
+    "model": "openai/gpt-oss-20b",
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-26T12:02:13.794459+00:00",
+  "generated_at": "2026-10-27T11:26:10.740370+00:00",
   "item_count": 5,
   "period": "last_7_days",
   "coverage": {

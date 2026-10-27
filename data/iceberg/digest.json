@@ -1,5 +1,5 @@
 {
-  "summary": "The sync covered the imminent 0.11 release, a proposed quarterly community roadmap to manage AI\u2011generated PRs, and the first DataFusion Iceberg integration under DF governance. This approach avoids the performance penalty of equality deletes, handles concurrency via RowDelta validation, and eliminates the need for keyed state or per-table indexes. The discussion focuses on implementing stats-only fields as non-materialized columns in Iceberg v4, with a PR proposing the spec changes. The thread discusses adding a new HLL blob type to the Puffin spec to improve NDV statistics performance.",
+  "summary": "It also introduces min/max code point fields as independent expr\u2011value stats, allowing readers to prune files when bounds match their collation version or fall back to scanning. It also debates whether CDC should be handled by the sink or left to downstream engines like Spark, highlighting performance concerns and the need for testing and indexing. Iceberg 1.13.0 The discussion proposes adding a batch signing endpoint to the REST catalog spec to address scalability issues when many external objects are referenced by rows. A proof of concept demonstrates multi-table, multi-statement transactions in Apache Polaris, leveraging Iceberg\u2019s existing primitives and adding an optional loadTable parameter to the REST API.",
   "highlights": [
     {
       "text": "The document records the outcomes of the Iceberg Spark integration sync meetings, covering recent Spark 4.2 enhancements such as schema evolution, default value\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "The sync covered the imminent 0.11 release, a proposed quarterly community roadmap to manage AI\u2011generated PRs, and the first DataFusion Iceberg integration unde\u2026",
+      "text": "The discussion concluded that each data file should store bounds for multiple ICU collation versions to enable pruning across upgrades. The benefits include con\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-5bhmtqwwg1wkh0c40tho394jz38tcgd6",
-          "title": "Iceberg Rust sync 2026-10-22",
-          "url": "https://lists.apache.org/thread/5bhmtqwwg1wkh0c40tho394jz38tcgd6"
+          "id": "iceberg-ml-8f89jt50p53xkorh3z39dtz13jchd0gx",
+          "title": "Re: [DISCUSS] Collation: one vs many collation versions per data file",
+          "url": "https://lists.apache.org/thread/8f89jt50p53xkorh3z39dtz13jchd0gx"
         }
       ]
     },
     {
-      "text": "The discussion proposes that Kafka Connect\u2019s sink coordinator will resolve equality deletes against the base snapshot before committing, converting them into de\u2026",
+      "text": "The discussion proposes storing collation bounds as a new stats\u2011only field type, separate from content stats, to avoid schema changes and keep bounds per collat\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-gmkj55oc0k1k72gobsylgfc9ngk9lyxn",
-          "title": "[DISCUSS] Kafka Connect CDC writes without equality deletes",
-          "url": "https://lists.apache.org/thread/gmkj55oc0k1k72gobsylgfc9ngk9lyxn"
+          "id": "iceberg-ml-t3r68d7mrpjxdlfv8brttr692os2jryc",
+          "title": "[DISCUSS] Collation bounds in stats-only fields",
+          "url": "https://lists.apache.org/thread/t3r68d7mrpjxdlfv8brttr692os2jryc"
         }
       ]
     },
     {
-      "text": "The thread discusses extending the biweekly sync to cover both File and Vector types, focusing on adding support for int8, float16, and potentially bf16/bf8 vec\u2026",
+      "text": "The discussion centers on adding a standard HyperLogLog (HLL) blob type to the Puffin spec to replace or complement the existing Theta sketch type, motivated by\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-49bm2d8szbzkvtdog38s1o6zb04cj67o",
-          "title": "Re: Extend Thur's biweekly sync to both File and Vector types (starting Oct 8)",
-          "url": "https://lists.apache.org/thread/49bm2d8szbzkvtdog38s1o6zb04cj67o"
+          "id": "iceberg-ml-vlcv3ft4mw0d3nzvgr6xg34p3zrq1xb7",
+          "title": "[DISCUSS] Add HLL sketch blob type to Puffin spec",
+          "url": "https://lists.apache.org/thread/vlcv3ft4mw0d3nzvgr6xg34p3zrq1xb7"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-26T11:58:37.450755+00:00",
-  "item_count": 13,
+  "generated_at": "2026-10-27T11:22:08.047782+00:00",
+  "item_count": 11,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-10-19",
-    "to": "2026-10-26",
-    "thread_count": 13
+    "from": "2026-10-20",
+    "to": "2026-10-27",
+    "thread_count": 11
   }
 }

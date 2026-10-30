@@ -1,5 +1,5 @@
 {
-  "summary": "Feedback prompted a shift to 9:00\u202fAM PST, but engagement remains uncertain, and participants suggest keeping the Slack channel active for asynchronous collaboration. The discussion highlights concerns over a decline in first-to-second contributors, the impact of AI-generated pull requests on review flow, and the potential use of the dashboard for release planning and quarterly reports. Community members express enthusiasm, suggest adding the dashboard to agenda items, and note infrastructure issues with email delivery. The proposal clarifies that these should not be merged with generated columns, which remain separate schema elements, and explores using stats\u2011only fields for collation support.",
+  "summary": "It proposes adding a catalogName method to the action and explores alternatives like querying FileIO for configuration, with tests covering various catalog scenarios. Equality deletes avoid conflicts because they do not alter data sequence numbers, whereas DVs are file\u2011scoped and can cause failures if a compaction rewrites the same file. The pull request proposes enabling aggregate pushdown for queries that GROUP BY identity partition columns in Spark. Currently Iceberg only pushes down aggregates for non\u2011GROUP BY queries, so this change would allow faster execution by using file metadata for grouped results.",
   "highlights": [
     {
       "text": "The document records the outcomes of the Iceberg Spark integration sync meetings, covering recent Spark 4.2 enhancements such as schema evolution, default value\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "The discussion highlights that Apache Iceberg\u2019s OpenAPI spec still uses the singular \"example\" keyword, which is deprecated in OpenAPI 3.1 where it should be re\u2026",
+      "text": "The PR replaces GCSFileIO.deleteFiles with StorageBatch to provide per-object outcome reporting. Missing objects are treated as successful deletions, while real\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-1w67w09tjzgos8lbw98moyyyc2zm34q9",
-          "title": "[DISCUSSION] Replace example with examples in rest catalog openapi spec",
-          "url": "https://lists.apache.org/thread/1w67w09tjzgos8lbw98moyyyc2zm34q9"
+          "id": "iceberg-ml-6jg89899o7j968wjss7vordchp1m00l1",
+          "title": "[DISCUSS] Review request: GCP: Differentiate real deleteFiles failures from missing objects (#18463)",
+          "url": "https://lists.apache.org/thread/6jg89899o7j968wjss7vordchp1m00l1"
         }
       ]
     },
     {
-      "text": "Iceberg Community Sync 10/28/2026: a community meeting to discuss updates and upcoming plans.",
+      "text": "The discussion centers on a PR that addresses a credentials mismatch in Spark's orphan file removal by using catalog-specific Hadoop configuration overrides dur\u2026",
       "sources": [
         {
-          "id": "iceberg-yt-fPTtFTNf_Tc",
-          "title": "Iceberg Community Sync 10 28 2026",
-          "url": "https://www.youtube.com/watch?v=fPTtFTNf_Tc"
+          "id": "iceberg-ml-5f40shqmwc2l647oskjg1vv8pq7q8od7",
+          "title": "[DISCUSS] Spark: use the catalog's Hadoop configuration when listing orphan files (#17862)",
+          "url": "https://lists.apache.org/thread/5f40shqmwc2l647oskjg1vv8pq7q8od7"
         }
       ]
     },
     {
-      "text": "Orest proposes dropping Python 3.10 support for PyIceberg, raising the required Python version to >=3.11 and bumping dependency floors to match pyarrow\u2019s wheel \u2026",
+      "text": "The TornadoVM team has built a proof\u2011of\u2011concept library that offloads Iceberg merge\u2011on\u2011read scans and table maintenance to NVIDIA GPUs, achieving 3\u20135\u00d7 speedups \u2026",
       "sources": [
         {
-          "id": "iceberg-ml-967dbjpjqt6kl9pnwv39vkvlvxv9rkcn",
-          "title": "[DISCUSS] Drop PyIceberg Python 3.10 support",
-          "url": "https://lists.apache.org/thread/967dbjpjqt6kl9pnwv39vkvlvxv9rkcn"
+          "id": "iceberg-ml-sm9mwhs7qlgfw250l36bh2m0k29rhdn7",
+          "title": "[DISCUSS] GPU-accelerated merge-on-read scans and table maintenance via TornadoVM",
+          "url": "https://lists.apache.org/thread/sm9mwhs7qlgfw250l36bh2m0k29rhdn7"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-29T12:08:01.246071+00:00",
+  "generated_at": "2026-10-30T12:03:52.248331+00:00",
   "item_count": 12,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-10-26",
-    "to": "2026-10-29",
+    "to": "2026-10-30",
     "thread_count": 12
   }
 }

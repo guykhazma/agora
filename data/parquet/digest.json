@@ -1,5 +1,5 @@
 {
-  "summary": "1.18.2 1.19.0 Manu proposes a patch release of Parquet Java 1.18.2 to include several critical fixes and dependency updates. The community, including Fokko and Steve, supports the release and is ready to review the backport PRs. Participants propose using metadata fields MIN_LENGTH and MAX_LENGTH to capture vector length and suggest that performance gains are unlikely, so enforcement must be handled by engines. The consensus leans toward introducing the logical type first, with potential future separation of finite and fixed-length variants.",
+  "summary": "Participants debate whether to enforce NaN/Inf restrictions, whether to separate finite vectors from fixed\u2011length lists, and how best to express these constraints without changing the underlying physical storage. The consensus leans toward a logical type that can be read by multiple engines while keeping implementation complexity manageable. 1.19.0 Manu proposes a patch release of Parquet Java 1.18.2 to include several critical fixes and dependency updates. The community, including Fokko and Steve, supports the release and is ready to review the backport PRs.",
   "highlights": [
     {
       "text": "1.18.2",
@@ -8,6 +8,16 @@
           "id": "parquet-gh-m37",
           "title": "1.18.2",
           "url": "https://github.com/apache/parquet-java/milestone/37"
+        }
+      ]
+    },
+    {
+      "text": "The discussion centers on adding a logical type, VECTOR (or FINITE_VECTOR), to Parquet to represent fixed\u2011length numeric vectors, potentially using metadata con\u2026",
+      "sources": [
+        {
+          "id": "parquet-ml-pzkpypmcm5xql2fpxbdrdr45ndl1o5xn",
+          "title": "Re: [DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
+          "url": "https://lists.apache.org/thread/pzkpypmcm5xql2fpxbdrdr45ndl1o5xn"
         }
       ]
     },
@@ -30,16 +40,6 @@
           "url": "https://lists.apache.org/thread/j5pv20npbgx1t5lnr4w85d21jz55hcng"
         }
       ]
-    },
-    {
-      "text": "The discussion centers on adding a logical type, VECTOR (or FINITE_VECTOR), to Parquet to represent fixed-length numeric vectors and enforce constraints such as\u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-pzkpypmcm5xql2fpxbdrdr45ndl1o5xn",
-          "title": "Re: [DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
-          "url": "https://lists.apache.org/thread/pzkpypmcm5xql2fpxbdrdr45ndl1o5xn"
-        }
-      ]
     }
   ],
   "generation": {
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-29T12:01:49.540306+00:00",
+  "generated_at": "2026-10-30T11:57:08.127258+00:00",
   "item_count": 4,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-10-24",
-    "to": "2026-10-29",
+    "from": "2026-10-27",
+    "to": "2026-10-30",
     "thread_count": 4
   }
 }

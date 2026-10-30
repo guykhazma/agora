@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-10-29T12:02:44.717083+00:00",
+  "generated_at": "2026-10-30T11:57:50.028601+00:00",
   "total": 301,
   "proposals": [
     {
@@ -12,7 +12,7 @@
       "author": "community",
       "state": "open",
       "created_at": "2026-10-28T14:33:20Z",
-      "updated_at": "2026-10-29T08:58:44Z",
+      "updated_at": "2026-10-30T11:48:48Z",
       "due_on": null,
       "body": "",
       "labels": [],
@@ -25,12 +25,13 @@
       },
       "llm_summary": "1.18.2",
       "llm_status": "discussion",
-      "llm_key_points": [],
-      "llm_topics": [],
       "summary_generation": {
         "method": "local",
         "prompt_version": 1
       },
+      "llm_key_points": [],
+      "llm_topics": [],
+      "llm_title": "",
       "_content_hash": "b6589fc6ab0d",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-gh-m37"
@@ -2819,6 +2820,48 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-pzkpypmcm5xql2fpxbdrdr45ndl1o5xn",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
+      "url": "https://lists.apache.org/thread/pzkpypmcm5xql2fpxbdrdr45ndl1o5xn",
+      "author": "Will Edwards via dev <de...@parquet.apache.org>",
+      "state": "open",
+      "created_at": "2026-10-01T06:59:51+00:00",
+      "updated_at": "2026-10-29T21:27:39+00:00",
+      "body": "+1 Sebastian, a vector type suggests usage beyond normalized embeddings and\nengines really aren't going to be able to elide all the checks anyway.\n\nAntoine, you suggested we explore metadata solutions too :)\n\nToday, a database supporting CHAR(N) or VARCHAR(n) can't express this in\nParquet.  Engines can write opaque blobs they understand in the metadata\n(e.g. Arrow does) so the extra type info round-trips, but this isn't\nstandardized, portable, nor interoperable.\n\nSo perhaps standardizing constraint metadata or new Thrift fields (my pref)\ncan generically support VECTOR(N) whilst also being more broadly useful for\nother use cases and data types?\n\nImagine metadata or Thrift fields to tag the MIN_LENGTH and MAX_LENGTH for\nParquet's variable-length physcial types.  These would count logical units\n(e.g. UTF8 code points for STRING) rather than bytes.\n\nThen one engine's VECTOR(N) can be written to Parquet as LIST(N) with\nMIN_LENGTH = MAX_LENGTH = N and then readers - even different engines - can\npick up these constraints if they support doing so.  We don't actually need\na logical type to express a VECTOR then.\n\nThis also allows standard SQL's CHAR(N) and VARCHAR(N) to be expressed on\nUTF8 columns etc.\n\nThis also seems generally useful in the future as we approach expressing\nother tensor data shapes and types.\n\nThis won't change the mechanics: the storage type doesn't enforce these\nconstraints and engines must check them. It's previously established that\nperformance is just a software problem and there is no fundamental\nperformance advantage to the fixed size types in Dremel-like formats like\nParquet.\n\nBest,\nWill\n\nOn Wed, 30 Sept 2026 at 16:08, Sebastian Baunsgaard <ba...@apache.org>\nwrote:\n\n> After listening in on the last meeting Wednesday, I have been thinking\n> about this quite a bit, and thought I would share my 2 cents.\n>\n> I suggest not requiring VECTOR elements to be finite, as proposed in the PR\n> <https://github.com/apache/parquet-format/pull/624>.\n>\n> While Divjo",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/parquet-format/pull/624",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/lance-format/lance/pull/3648",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/lance-format/lance/issues/8607",
+          "kind": "github_issue"
+        }
+      ],
+      "llm_summary": "The discussion centers on adding a logical type, VECTOR (or FINITE_VECTOR), to Parquet to represent fixed\u2011length numeric vectors, potentially using metadata constraints such as MIN_LENGTH and MAX_LENGTH to enforce size and finiteness. Participants debate whether to enforce NaN/Inf restrictions, whether to separate finite vectors from fixed\u2011length lists, and how best to express these constraints without changing the underlying physical storage. The consensus leans toward a logical type that can be read by multiple engines while keeping implementation complexity manageable.",
+      "llm_status": "discussion",
+      "comment_count": 27,
+      "participant_count": 13,
+      "llm_key_points": [],
+      "llm_topics": [],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "6c97091f7654",
+      "observed_history": [],
+      "initiative_id": "parquet-init-parquet-ml-pzkpypmcm5xql2fpxbdrdr45ndl1o5xn"
+    },
+    {
       "id": "parquet-ml-j5pv20npbgx1t5lnr4w85d21jz55hcng",
       "source": "mailing_list",
       "kind": "thread",
@@ -2886,59 +2929,6 @@
       ],
       "llm_title": "Parquet Java 1.18.2 release",
       "_content_hash": "6174c43f26af",
-      "observed_history": [],
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
-    },
-    {
-      "id": "parquet-ml-pzkpypmcm5xql2fpxbdrdr45ndl1o5xn",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "Re: [DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
-      "url": "https://lists.apache.org/thread/pzkpypmcm5xql2fpxbdrdr45ndl1o5xn",
-      "author": "Will Edwards via dev <de...@parquet.apache.org>",
-      "state": "open",
-      "created_at": "2026-10-01T06:59:51+00:00",
-      "updated_at": "2026-10-24T00:07:41+00:00",
-      "body": "+1 Sebastian, a vector type suggests usage beyond normalized embeddings and\nengines really aren't going to be able to elide all the checks anyway.\n\nAntoine, you suggested we explore metadata solutions too :)\n\nToday, a database supporting CHAR(N) or VARCHAR(n) can't express this in\nParquet.  Engines can write opaque blobs they understand in the metadata\n(e.g. Arrow does) so the extra type info round-trips, but this isn't\nstandardized, portable, nor interoperable.\n\nSo perhaps standardizing constraint metadata or new Thrift fields (my pref)\ncan generically support VECTOR(N) whilst also being more broadly useful for\nother use cases and data types?\n\nImagine metadata or Thrift fields to tag the MIN_LENGTH and MAX_LENGTH for\nParquet's variable-length physcial types.  These would count logical units\n(e.g. UTF8 code points for STRING) rather than bytes.\n\nThen one engine's VECTOR(N) can be written to Parquet as LIST(N) with\nMIN_LENGTH = MAX_LENGTH = N and then readers - even different engines - can\npick up these constraints if they support doing so.  We don't actually need\na logical type to express a VECTOR then.\n\nThis also allows standard SQL's CHAR(N) and VARCHAR(N) to be expressed on\nUTF8 columns etc.\n\nThis also seems generally useful in the future as we approach expressing\nother tensor data shapes and types.\n\nThis won't change the mechanics: the storage type doesn't enforce these\nconstraints and engines must check them. It's previously established that\nperformance is just a software problem and there is no fundamental\nperformance advantage to the fixed size types in Dremel-like formats like\nParquet.\n\nBest,\nWill\n\nOn Wed, 30 Sept 2026 at 16:08, Sebastian Baunsgaard <ba...@apache.org>\nwrote:\n\n> After listening in on the last meeting Wednesday, I have been thinking\n> about this quite a bit, and thought I would share my 2 cents.\n>\n> I suggest not requiring VECTOR elements to be finite, as proposed in the PR\n> <https://github.com/apache/parquet-format/pull/624>.\n>\n> While Divjo",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/parquet-format/pull/624",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/lance-format/lance/pull/3648",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/lance-format/lance/issues/8607",
-          "kind": "github_issue"
-        }
-      ],
-      "llm_summary": "The discussion centers on adding a logical type, VECTOR (or FINITE_VECTOR), to Parquet to represent fixed-length numeric vectors and enforce constraints such as non-null and finite values. Participants propose using metadata fields MIN_LENGTH and MAX_LENGTH to capture vector length and suggest that performance gains are unlikely, so enforcement must be handled by engines. The consensus leans toward introducing the logical type first, with potential future separation of finite and fixed-length variants.",
-      "llm_status": "discussion",
-      "comment_count": 25,
-      "participant_count": 13,
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "llm_key_points": [
-        "Introduce logical type VECTOR to represent fixed-length numeric vectors",
-        "Use MIN_LENGTH and MAX_LENGTH metadata to encode vector constraints",
-        "No inherent performance advantage; enforcement is software",
-        "Debate on naming: VECTOR vs FINITE_VECTOR",
-        "Consensus to add logical type first, with future refinement"
-      ],
-      "llm_topics": [
-        "vector-type",
-        "parquet",
-        "metadata"
-      ],
-      "llm_title": "Numeric Vector type representation",
-      "_content_hash": "e63b17255d46",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
@@ -3076,7 +3066,7 @@
       "llm_title": "WIRE logical type for serialized wire-format messages",
       "_content_hash": "a3eae6a5957a",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
     {
       "id": "parquet-ml-94q6oh41sxjlkrhhhwn09c66nmtm1xt9",
@@ -3402,7 +3392,7 @@
       "llm_title": "",
       "_content_hash": "7a564df9ef8b",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm"
     },
     {
       "id": "parquet-ml-v11pw7sbnkdxzjhkmcbsx06clyvjv0xx",
@@ -3491,7 +3481,7 @@
       },
       "_content_hash": "77db5732b161",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z"
     },
     {
       "id": "parquet-ml-ovo7vhh2gp31v32xzq6wm5f0grk97bs3",
@@ -5194,7 +5184,7 @@
         "design-document"
       ],
       "_content_hash": "4fcaccce739f",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
     {
       "id": "parquet-ml-qc031s9vp07bpkrvlnz3v3gn0qhn5l91",
@@ -5558,7 +5548,7 @@
         "active-thread"
       ],
       "_content_hash": "ef5b859d6d35",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
     {
       "id": "parquet-ml-lobpt63hjml246mlxy7ro1vllo80pofk",
@@ -6009,7 +5999,7 @@
       ],
       "_content_hash": "1dfb7d08bbc4",
       "llm_title": "New File logical type for Parquet",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7",
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -6263,7 +6253,7 @@
       ],
       "_content_hash": "61d280495409",
       "llm_title": "Lightweight Byte-Offset Index for FlatBuffer",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7",
+      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -6324,7 +6314,7 @@
         "encountering-future"
       ],
       "_content_hash": "6c4edbae8b4b",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-417cjw83tt28cdg28vvo23hy6y74dymm"
     },
     {
       "id": "parquet-ml-sssbt86dxbo2tn7nfr2gvy71hfg1rqyw",
@@ -6879,7 +6869,7 @@
       ],
       "_content_hash": "2cc5937bb2f0",
       "llm_title": "Allow Page-level GEO statistics",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7",
+      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -7083,7 +7073,7 @@
       ],
       "_content_hash": "3da80b3b5bcb",
       "llm_title": "Deterministic Column Metadata Encoding in Parquet",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-417cjw83tt28cdg28vvo23hy6y74dymm"
     },
     {
       "id": "parquet-ml-75050877rf16bolg39cyvg7lw71927nc",
@@ -7219,7 +7209,7 @@
       ],
       "_content_hash": "b406ddca3a9c",
       "llm_title": "flatbuf footer proposal",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7",
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -7339,7 +7329,7 @@
       ],
       "_content_hash": "41514225ff19",
       "llm_title": "Deprecate file_path field in column chunk",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
     },
     {
       "id": "parquet-ml-7xq85j6rd8som3y6cqxtk6n6ddhdy3wm",
@@ -7857,7 +7847,7 @@
       ],
       "_content_hash": "13f71bfdc7e9",
       "llm_title": "Nested/Composite Encodings for Parquet",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-w63ol39dob2jh2cmomh9plz8tt5ctnol"
     },
     {
       "id": "parquet-ml-nbksq32cs8h1ldj8762y6wh9zzp8gqx6",
@@ -7950,7 +7940,7 @@
       ],
       "_content_hash": "e08701ee20f6",
       "llm_title": "New page layouts for byte arrays",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
     },
     {
       "id": "parquet-ml-8tlhnk2rrqo72onsr45on1zs1mhmcytj",
@@ -7992,7 +7982,7 @@
       ],
       "_content_hash": "287489beafd6",
       "llm_title": "Discussion on Flatbuf Footer Offsets",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
     },
     {
       "id": "parquet-ml-vfzx2651y4p86zt5d8pnhk4n2y4bf0l7",
@@ -9184,7 +9174,7 @@
       ],
       "_content_hash": "30797310e12c",
       "llm_title": "Integration Testing for Parquet Implementations",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7",
+      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -9265,7 +9255,7 @@
         "vote-thread"
       ],
       "_content_hash": "5b089dd0f010",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z"
     },
     {
       "id": "parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo",
@@ -9349,7 +9339,7 @@
         "geospatial-data"
       ],
       "_content_hash": "e206d626ef2e",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z"
     },
     {
       "id": "parquet-ml-p6jq3rgdqkqhx0xj8wjt7ldrpyrktw20",
@@ -9540,7 +9530,7 @@
       ],
       "_content_hash": "a936be3b69a6",
       "llm_title": "Add geometry logical type",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7",
+      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -10332,7 +10322,7 @@
       ],
       "_content_hash": "c2295ec268fe",
       "llm_title": "Extension types in Parquet",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7",
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -10446,7 +10436,7 @@
       ],
       "_content_hash": "209f31a55ed8",
       "llm_title": "Clarify min-max truncation in Parquet statistics",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
     {
       "id": "parquet-ml-6h58hj39lhqtcyd2hlsyvqm4lzdh4b9z",
@@ -10521,7 +10511,7 @@
         "protocol-extensions"
       ],
       "_content_hash": "8358ace6eb1c",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-x3472kldrq5kjnld9ztj1jozz25f40hg"
     },
     {
       "id": "parquet-ml-x3472kldrq5kjnld9ztj1jozz25f40hg",
@@ -10590,7 +10580,7 @@
         "vote"
       ],
       "_content_hash": "e2c9d1da81a6",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-x3472kldrq5kjnld9ztj1jozz25f40hg"
     },
     {
       "id": "parquet-ml-p7794pko2vbjorq04z05zx6np7fv6rc6",
@@ -10715,7 +10705,7 @@
       ],
       "_content_hash": "591e84c23278",
       "llm_title": "New Parquet Footer Experiments",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-x3472kldrq5kjnld9ztj1jozz25f40hg"
     },
     {
       "id": "parquet-ml-oqd9lt7p0jtf217hg0667xhk0zvwbgvt",
@@ -10757,7 +10747,7 @@
       ],
       "_content_hash": "c242c64ce298",
       "llm_title": "Clarify null_counts and distinct_counts in Parquet",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
     {
       "id": "parquet-ml-t9bbdft69rgk4jotmx26259m1vxhx83v",
@@ -10841,7 +10831,7 @@
       ],
       "_content_hash": "e95b0dd3a7f4",
       "llm_title": "Parquet extensions",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533",
+      "initiative_id": "parquet-init-parquet-ml-x3472kldrq5kjnld9ztj1jozz25f40hg",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -11173,7 +11163,7 @@
       ],
       "_content_hash": "bfe68a604a3f",
       "llm_title": "Deprecate file_offset in ColumnChunk struct",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
     },
     {
       "id": "parquet-ml-bcc13dtdvnxvg55nhyowbwzqomfljgvb",
@@ -11633,7 +11623,7 @@
       ],
       "_content_hash": "48cbc9c83c2b",
       "llm_title": "Unify Record and Row Terminology",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
     {
       "id": "parquet-ml-h589zkwnpo592gc9n17v0y7qvd9jv1z4",
@@ -11845,7 +11835,7 @@
       ],
       "_content_hash": "2a08a456c011",
       "llm_title": "Integration Testing for Parquet Implementations",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z"
     },
     {
       "id": "parquet-ml-w6r0fwj42wvpm5yflwxhtm2ss3z2hrl3",
@@ -12219,7 +12209,7 @@
       ],
       "_content_hash": "4ad4d1b14c0a",
       "llm_title": "Parquet 3 Wide Schema Metadata Discussion",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-1-rc1"
+      "initiative_id": "parquet-init-parquet-ml-vs3w2z5bk6s3c975rrkqdttr1dpsdn7h"
     },
     {
       "id": "parquet-ml-m911chzz5pz8o8fb1y0x49h96g8w29d7",
@@ -13115,7 +13105,7 @@
         "support-finer"
       ],
       "_content_hash": "20a49614491d",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z"
     },
     {
       "id": "parquet-ml-m6o68jl7fosfxq66p8c85cqr2t2gv611",
@@ -13151,7 +13141,7 @@
         "gidon-gershinsky"
       ],
       "_content_hash": "6cbbd5930920",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
+      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z"
     },
     {
       "id": "parquet-ml-5hnr6r45rg8wpvnq0psq7gb5895nwcb2",
@@ -13487,7 +13477,7 @@
       ],
       "_content_hash": "e40bb1dde355",
       "llm_title": "Add Plain Encoding Size Bytes to Parquet",
-      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7",
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",

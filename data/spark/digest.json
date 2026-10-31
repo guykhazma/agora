@@ -1,8 +1,28 @@
 {
-  "summary": "The idea is to add optional barrier functionality, support parallel reads, and limit operations on the trusted side, building on ADBC and JDBC concepts. Participants raise concerns about capacity limits, budget constraints, and the potential negative impact on committers\u2019 productivity, while also considering alternatives such as pre-merge CI against the latest master or a merge queue. The proposal introduces an on-demand lookup join that streams data can use to retrieve matching records from external storage, avoiding full static side loads. It supports pushdown of column pruning, filters, limits, aggregates, and offers two partitioning options while keeping the public API unchanged.",
+  "summary": "By allowing external sources to execute these operations natively, the proposal aims to reduce network traffic and improve query performance. It calls for small additions to Spark Connect to support parallel reads, avoid driver bottlenecks, and leverage the ADBC spec for multiple readers and mTLS. Participants raise concerns about capacity limits, budget constraints, and the potential negative impact on committers\u2019 productivity, while also considering alternatives such as pre-merge CI against the latest master or a merge queue. The proposal introduces an on-demand lookup join that streams data can use to retrieve matching records from external storage, avoiding full static side loads.",
   "highlights": [
     {
-      "text": "The proposal suggests dropping Java 17 support in Spark 5.0.0 and making Java 21 the minimum supported version. This change is driven by Java 21\u2019s maturity, red\u2026",
+      "text": "The discussion proposes extending Spark\u2019s Data Source V2 push-down framework to support additional operators such as full outer, semi, and anti joins, alias tol\u2026",
+      "sources": [
+        {
+          "id": "spark-ml-t7y7ooz680olqldoh2lb321n956ht2h5",
+          "title": "[DISCUSS] SPIP: Extend DSv2 push-down with join, set operation, and window function support",
+          "url": "https://lists.apache.org/thread/t7y7ooz680olqldoh2lb321n956ht2h5"
+        }
+      ]
+    },
+    {
+      "text": "The proposal extends Spark\u2019s Data Source V2 push-down framework to include joins, set operations, and window functions, allowing external data sources to execut\u2026",
+      "sources": [
+        {
+          "id": "spark-jira-SPARK-60765",
+          "title": "SPIP: Extend DSv2 push-down with join, set operation, and window function support",
+          "url": "https://issues.apache.org/jira/browse/SPARK-60765"
+        }
+      ]
+    },
+    {
+      "text": "The discussion proposes dropping Java 17 support in Apache Spark 5.0.0, making Java 21 the minimum supported version. Reasons include Java 21\u2019s maturity, reduce\u2026",
       "sources": [
         {
           "id": "spark-ml-3qqpjrc8k2k5sm657808v6slggz574dl",
@@ -12,32 +32,12 @@
       ]
     },
     {
-      "text": "Holden proposes extending Spark Connect to serve as a security boundary between trusted and untrusted Spark code, enabling fine\u2011grained access controls (FGAC) a\u2026",
+      "text": "The proposal suggests extending Spark Connect to act as a security boundary between trusted and untrusted Spark code, enabling fine\u2011grained access controls (FGA\u2026",
       "sources": [
         {
           "id": "spark-ml-2ym2k633sd7kr1zsx86q9ccg6qn9h039",
           "title": "[DISCUSS] Spark Connect Data Source for Spark FGAC",
           "url": "https://lists.apache.org/thread/2ym2k633sd7kr1zsx86q9ccg6qn9h039"
-        }
-      ]
-    },
-    {
-      "text": "The discussion centers on the fact that more than half of CI resources are spent on post-merge builds, and a proposal has been made to run these builds in commi\u2026",
-      "sources": [
-        {
-          "id": "spark-ml-t1c05ojyd5bpwxgn87l2mb7tslk97l0q",
-          "title": "[DISCUSS] Run post merge builds in committers' fork",
-          "url": "https://lists.apache.org/thread/t1c05ojyd5bpwxgn87l2mb7tslk97l0q"
-        }
-      ]
-    },
-    {
-      "text": "The proposal introduces an on-demand lookup join that streams data can use to retrieve matching records from external storage, avoiding full static side loads. \u2026",
-      "sources": [
-        {
-          "id": "spark-jira-SPARK-60031",
-          "title": "SPIP: External Lookup Join",
-          "url": "https://issues.apache.org/jira/browse/SPARK-60031"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-30T11:55:01.793679+00:00",
-  "item_count": 6,
+  "generated_at": "2026-10-31T11:28:07.620503+00:00",
+  "item_count": 8,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-10-25",
     "to": "2026-10-30",
-    "thread_count": 6
+    "thread_count": 8
   }
 }

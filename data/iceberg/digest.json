@@ -1,5 +1,5 @@
 {
-  "summary": "It proposes adding a catalogName method to the action and explores alternatives like querying FileIO for configuration, with tests covering various catalog scenarios. Equality deletes avoid conflicts because they do not alter data sequence numbers, whereas DVs are file\u2011scoped and can cause failures if a compaction rewrites the same file. The pull request proposes enabling aggregate pushdown for queries that GROUP BY identity partition columns in Spark. Currently Iceberg only pushes down aggregates for non\u2011GROUP BY queries, so this change would allow faster execution by using file metadata for grouped results.",
+  "summary": "This milestone tracks going proposals for the fourth version of the Table Spec The PR replaces GCSFileIO.deleteFiles with StorageBatch to provide per-object outcome reporting. It proposes adding a catalogName method to the action and explores alternatives like querying FileIO for configuration, with tests covering various catalog scenarios. The pull request proposes enabling aggregate pushdown for queries that GROUP BY identity partition columns in Spark. Currently Iceberg only pushes down aggregates for non\u2011GROUP BY queries, so this change would allow faster execution by using file metadata for grouped results.",
   "highlights": [
     {
       "text": "The document records the outcomes of the Iceberg Spark integration sync meetings, covering recent Spark 4.2 enhancements such as schema evolution, default value\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
+      "text": "The discussion addresses a bug where remove_orphan_files incorrectly matches sibling directories due to a startsWith filter. PR #16498 proposes changing the fil\u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-cgsbm3rbplyo8wnm6281dwp0rx5vrtbn",
+          "title": "[DISCUSS] Treat the remove_orphan_files location as a directory for file_list_view",
+          "url": "https://lists.apache.org/thread/cgsbm3rbplyo8wnm6281dwp0rx5vrtbn"
+        }
+      ]
+    },
+    {
+      "text": "This milestone tracks going proposals for the fourth version of the Table Spec",
+      "sources": [
+        {
+          "id": "iceberg-gh-m58",
+          "title": "Iceberg V4 Spec",
+          "url": "https://github.com/apache/iceberg/milestone/58"
+        }
+      ]
+    },
+    {
       "text": "The PR replaces GCSFileIO.deleteFiles with StorageBatch to provide per-object outcome reporting. Missing objects are treated as successful deletions, while real\u2026",
       "sources": [
         {
           "id": "iceberg-ml-6jg89899o7j968wjss7vordchp1m00l1",
           "title": "[DISCUSS] Review request: GCP: Differentiate real deleteFiles failures from missing objects (#18463)",
           "url": "https://lists.apache.org/thread/6jg89899o7j968wjss7vordchp1m00l1"
-        }
-      ]
-    },
-    {
-      "text": "The discussion centers on a PR that addresses a credentials mismatch in Spark's orphan file removal by using catalog-specific Hadoop configuration overrides dur\u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-5f40shqmwc2l647oskjg1vv8pq7q8od7",
-          "title": "[DISCUSS] Spark: use the catalog's Hadoop configuration when listing orphan files (#17862)",
-          "url": "https://lists.apache.org/thread/5f40shqmwc2l647oskjg1vv8pq7q8od7"
-        }
-      ]
-    },
-    {
-      "text": "The TornadoVM team has built a proof\u2011of\u2011concept library that offloads Iceberg merge\u2011on\u2011read scans and table maintenance to NVIDIA GPUs, achieving 3\u20135\u00d7 speedups \u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-sm9mwhs7qlgfw250l36bh2m0k29rhdn7",
-          "title": "[DISCUSS] GPU-accelerated merge-on-read scans and table maintenance via TornadoVM",
-          "url": "https://lists.apache.org/thread/sm9mwhs7qlgfw250l36bh2m0k29rhdn7"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-30T12:03:52.248331+00:00",
-  "item_count": 12,
+  "generated_at": "2026-10-31T11:36:05.646308+00:00",
+  "item_count": 13,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-10-26",
-    "to": "2026-10-30",
-    "thread_count": 12
+    "to": "2026-10-31",
+    "thread_count": 13
   }
 }

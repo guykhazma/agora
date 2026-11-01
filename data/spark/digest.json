@@ -1,8 +1,8 @@
 {
-  "summary": "By allowing external sources to execute these operations natively, the proposal aims to reduce network traffic and improve query performance. It calls for small additions to Spark Connect to support parallel reads, avoid driver bottlenecks, and leverage the ADBC spec for multiple readers and mTLS. Participants raise concerns about capacity limits, budget constraints, and the potential negative impact on committers\u2019 productivity, while also considering alternatives such as pre-merge CI against the latest master or a merge queue. The proposal introduces an on-demand lookup join that streams data can use to retrieve matching records from external storage, avoiding full static side loads.",
+  "summary": "It introduces opt\u2011in interfaces that allow sources to decline specific push\u2011downs, and considers making the join push\u2011down configuration public and possibly enabled by default. This SPIP extends push-down to include missing join types, set operations, and window functions, allowing the source to decline any push and have Spark execute locally if needed. Participants raise concerns about capacity limits, budget constraints, and the potential negative impact on committers\u2019 productivity, while also considering alternatives such as pre-merge CI against the latest master or a merge queue. The proposal introduces an on-demand lookup join that streams data can use to retrieve matching records from external storage, avoiding full static side loads.",
   "highlights": [
     {
-      "text": "The discussion proposes extending Spark\u2019s Data Source V2 push-down framework to support additional operators such as full outer, semi, and anti joins, alias tol\u2026",
+      "text": "The discussion proposes extending Spark\u2019s Data Source V2 push-down framework to support additional relational operators such as full outer, semi, and anti joins\u2026",
       "sources": [
         {
           "id": "spark-ml-t7y7ooz680olqldoh2lb321n956ht2h5",
@@ -12,7 +12,7 @@
       ]
     },
     {
-      "text": "The proposal extends Spark\u2019s Data Source V2 push-down framework to include joins, set operations, and window functions, allowing external data sources to execut\u2026",
+      "text": "DSv2 currently pushes filters, aggregates, and some joins to the source, but joins, aggregates, and unions from the same database still pull raw rows into Spark\u2026",
       "sources": [
         {
           "id": "spark-jira-SPARK-60765",
@@ -22,7 +22,7 @@
       ]
     },
     {
-      "text": "The discussion proposes dropping Java 17 support in Apache Spark 5.0.0, making Java 21 the minimum supported version. Reasons include Java 21\u2019s maturity, reduce\u2026",
+      "text": "The discussion proposes dropping Java 17 support in Apache Spark 5.0.0 and setting Java 21 as the minimum supported version, citing maturity, maintenance costs,\u2026",
       "sources": [
         {
           "id": "spark-ml-3qqpjrc8k2k5sm657808v6slggz574dl",
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "text": "The proposal suggests extending Spark Connect to act as a security boundary between trusted and untrusted Spark code, enabling fine\u2011grained access controls (FGA\u2026",
+      "text": "The discussion proposes extending Spark Connect to act as a security barrier between trusted and untrusted Spark code, enabling fine\u2011grained access controls (FG\u2026",
       "sources": [
         {
           "id": "spark-ml-2ym2k633sd7kr1zsx86q9ccg6qn9h039",
@@ -47,7 +47,7 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-10-31T11:28:07.620503+00:00",
+  "generated_at": "2026-11-01T12:22:20.547589+00:00",
   "item_count": 8,
   "period": "last_7_days",
   "coverage": {

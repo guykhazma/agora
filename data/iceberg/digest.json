@@ -1,5 +1,5 @@
 {
-  "summary": "It proposes a namespace, machine-readable descriptors, and a service-provider interface so engines can handle new blob types without compile-time knowledge, enabling incremental adoption without format changes. Vote in progress: 1 binding +1, 1 non-binding +1 The meeting will discuss adopting Iceberg v4 in the Go client, prioritizing which features to implement first, and planning the transition to a stable 1.0 release. Attendees will review remaining breaking changes, set a target tag, and identify any overlapping work that must be resolved before the 1.0 cut. The thread asks whether Iceberg V4 should cease writing new ORC and Avro files because these formats lack support for recent V4 features such as variant shredding and vector types.",
+  "summary": "The proposal introduces a framework for defining and managing Puffin blob types that store statistics and indexes outside data files, with metadata about configuration, scope, and lifecycle. It specifies a registry, descriptors, and a data\u2011file\u2011scoped model that ties blobs to their source file and records the build configuration, ensuring safe handling during compaction. A Java service\u2011provider interface allows engines to support new blob types without compile\u2011time dependencies, enabling incremental adoption without format version changes. The meeting will cover how to adopt v4 in the Iceberg Go client, plan the transition to a 1.0 release, and resolve any API changes that overlap between the two milestones.",
   "highlights": [
     {
       "text": "The document records the outcomes of the Iceberg Spark integration sync meetings, covering recent Spark 4.2 enhancements such as schema evolution, default value\u2026",
@@ -12,17 +12,7 @@
       ]
     },
     {
-      "text": "The discussion proposes simplifying the OAuth2 AuthManager v2 to a single client_credentials grant, two authentication methods, and reduced legacy support, aimi\u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-vk1yzvdnr4t8c6kywf4s2npwfkz6nvpz",
-          "title": "[DISCUSS] Downscoping the OAuth2 AuthManager v2 proposal",
-          "url": "https://lists.apache.org/thread/vk1yzvdnr4t8c6kywf4s2npwfkz6nvpz"
-        }
-      ]
-    },
-    {
-      "text": "The discussion centers on whether the metrics reporting endpoint should be treated as best\u2011effort, allowing the server to drop reports without signaling failure\u2026",
+      "text": "The discussion centers on whether the metrics reporting endpoint should be treated as best\u2011effort and how a server should respond when it cannot persist a repor\u2026",
       "sources": [
         {
           "id": "iceberg-ml-1nfwnk1j8sppmsry675ygr1jbxyhvrdx",
@@ -32,12 +22,22 @@
       ]
     },
     {
-      "text": "The discussion highlights ambiguity in the spec regarding Parquet files that contain field IDs for only some fields",
+      "text": "Vote PASSED with 4 binding +1 votes and 4 non-binding +1",
       "sources": [
         {
-          "id": "iceberg-ml-tct2yp45ytsb6dqw1tq7b8gnfnp7jndo",
-          "title": "[DISCUSS] Name mapping for data files that carry only some field IDs",
-          "url": "https://lists.apache.org/thread/tct2yp45ytsb6dqw1tq7b8gnfnp7jndo"
+          "id": "iceberg-ml-rtxfssrwwjdo04h6q78n1n74wxp5toss",
+          "title": "Re: [VOTE] Spec: Add _last_updated_time row lineage metadata column in v4",
+          "url": "https://lists.apache.org/thread/rtxfssrwwjdo04h6q78n1n74wxp5toss"
+        }
+      ]
+    },
+    {
+      "text": "Iceberg 1.13.0",
+      "sources": [
+        {
+          "id": "iceberg-gh-m64",
+          "title": "Iceberg 1.13.0",
+          "url": "https://github.com/apache/iceberg/milestone/64"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-03T13:21:51.314666+00:00",
-  "item_count": 14,
+  "generated_at": "2026-11-04T13:31:31.895089+00:00",
+  "item_count": 13,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-10-27",
-    "to": "2026-11-03",
-    "thread_count": 14
+    "from": "2026-10-28",
+    "to": "2026-11-04",
+    "thread_count": 13
   }
 }

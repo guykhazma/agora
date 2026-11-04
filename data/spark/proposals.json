@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-11-03T13:17:52.443609+00:00",
+  "generated_at": "2026-11-04T13:35:23.460307+00:00",
   "total": 698,
   "proposals": [
     {
@@ -2009,6 +2009,89 @@
       "initiative_id": "spark-init-spark-ml-31rx0xmwbhloljsowc9ksl6kk5vbb3r4"
     },
     {
+      "id": "spark-ml-mpjb2ndql6k1dqyx6y1hr7d3f9rmnmz1",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] SPIP: Extend DSv2 push-down with join, set operation, and window function support",
+      "url": "https://lists.apache.org/thread/mpjb2ndql6k1dqyx6y1hr7d3f9rmnmz1",
+      "author": "Holden Karau <ho...@pigscanfly.ca>",
+      "state": "open",
+      "created_at": "2026-11-03T23:54:19+00:00",
+      "updated_at": "2026-11-03T23:54:19+00:00",
+      "body": "I like this proposal, I think we're at a good point to modernize some of\nthe DSv2 pushdowns.\n\nOn Fri, Oct 30, 2026 at 3:03\u202fPM Jing Zhan <jz...@gmail.com> wrote:\n\n> Hi all,\n>\n> I'd like to start a discussion on a SPIP to extend DSv2 operator push-down.\n>\n> JIRA: https://issues.apache.org/jira/browse/SPARK-60765\n> Design:\n> https://docs.google.com/document/d/1ah8u-1vxPvgqpjw0qzRNXz0Oo-X8tEzlK9ngmg7EPXU/edit\n> Builds on SPARK-52187 (DSv2 join push-down).\n> Shepherd: Holden Karau\n>\n> Today DSv2 can push filters, column pruning, aggregates, limit/TopN,\n> sample, and INNER/LEFT/RIGHT joins. Those joins are off unless\n> spark.sql.optimizer.datasourceV2JoinPushdown is set. A query that uses\n> other join types, a set operation, or a window function over the same\n> database still pulls the raw rows into Spark.\n>\n> The proposal adds opt-in interfaces, each of which a source can decline:\n> 1. FULL OUTER / SEMI / ANTI join types\n> 2. Alias tolerance in join push-down\n> 3. Make the join push-down config public, and evaluate enabling it by\n> default\n> 4. Join + aggregate composition\n> 5. Set operations (UNION / INTERSECT / EXCEPT)\n> 6. Window functions\n>\n> JDBC/H2 is the reference implementation. This does not cover cross-source\n> push-down or file-based sources.\n>\n> Please reply to this thread. A [VOTE] will follow once the discussion\n> settles.\n>\n> Thanks,\n> Jing Zhan\n>\n\n\n-- \nTwitter: https://twitter.com/holdenkarau\nFight Health Insurance: https://www.fighthealthinsurance.com\nBooks (Learning Spark, High Performance Spark, etc.):\nhttps://amzn.to/2MaRAG9  <https://amzn.to/2MaRAG9>\nYouTube Live Streams: https://www.youtube.com/user/holdenkarau\nPronouns: she/her\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1ah8u-1vxPvgqpjw0qzRNXz0Oo-X8tEzlK9ngmg7EPXU/edit",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: Extend DSv2 Push-Downs including Join, Set Operation, and Window Function Support"
+        }
+      ],
+      "llm_summary": "The discussion proposes extending Spark's Data Source V2 push-down framework to include joins (full outer",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [],
+      "llm_topics": [],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "5a727cc81e92",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-jira-SPARK-60031"
+    },
+    {
+      "id": "spark-ml-8qwojcsfshkdcnqrqckrc8f8lndg16ds",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] Automated AI code review on new Spark PRs (trial)",
+      "url": "https://lists.apache.org/thread/8qwojcsfshkdcnqrqckrc8f8lndg16ds",
+      "author": "Hyukjin Kwon via dev <de...@spark.apache.org>",
+      "state": "open",
+      "created_at": "2026-11-03T22:50:32+00:00",
+      "updated_at": "2026-11-03T23:46:56+00:00",
+      "body": "Just FYI. Now, the bot is reviewing 4 at a time. The review takes around 1\nhour. So sometimes it takes time. I am still monitoring.\n\nOn Fri, 23 Oct 2026 at 07:09, Hyukjin Kwon <gu...@apache.org> wrote:\n\n> FYI, I am monitoring and controlling details now. Effort, timeout,\n> security stuff.\n>\n> On Thu, 22 Oct 2026 at 22:51, Dongjoon Hyun <do...@apache.org> wrote:\n>\n>> Got it. Thank you!\n>>\n>> Dongjoon.\n>>\n>> On 2026/10/22 11:44:04 Hyukjin Kwon wrote:\n>> > Just to reduce any surprise, I set another bot to monitor the bot\n>> itself.\n>> > If it does anything wrong, it halts immediately, and removes/reverts\n>> > whatever was wrong.\n>> >\n>> > For committers, please directly remove the `ai-review-requested` label\n>> if\n>> > there seems anything wrong. That would make the bot stop too.\n>> >\n>> > On Thu, 22 Oct 2026 at 20:21, Hyukjin Kwon <gu...@apache.org>\n>> wrote:\n>> >\n>> > > Ok .. I managed to enable the bots. Please try `ai-review-requested`\n>> label\n>> > > out (only commiters can do). and please let me know if there are\n>> anything\n>> > > suspicious or not working well \ud83d\udc4d\n>> > >\n>> > > On Tue, 20 Oct 2026 at 08:31, Dongjoon Hyun <do...@apache.org>\n>> wrote:\n>> > >\n>> > >> Thank you so much for keeping working and sharing the status,\n>> Hyukjin.\n>> > >>\n>> > >> Dongjoon.\n>> > >>\n>> > >> On 2026/10/19 21:50:36 Hyukjin Kwon wrote:\n>> > >> > update: I am still struggling / testing. `ai-review-requested`\n>> label\n>> > >> does\n>> > >> > not work for now.\n>> > >> >\n>> > >> > On Fri, 16 Oct 2026 at 07:05, Hyukjin Kwon <gu...@apache.org>\n>> > >> wrote:\n>> > >> >\n>> > >> > > headsup. I will stop the bot today. Will likely introduce\n>> > >> > > `ai-review-requested` label (only committers can set) to trigger\n>> the\n>> > >> review\n>> > >> > > most likely today for testing it out, see\n>> > >> > > https://github.com/apache/spark/pull/59502\n>> > >> > >\n>> > >> > > On Mon, 12 Oct 2026 at 08:14, Hyukjin Kwon <gurwls223@apache.org\n>> >\n>> > >> wrote:\n>> > >> > >\n>> > >> > >> Another quick",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/spark/pull/59502",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/spark/pull/59184",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "The discussion covers the status of an automated AI code review bot for Spark pull requests, noting that it processes four PRs concurrently and takes roughly an hour per review. The team is actively monitoring the bot, implementing safety mechanisms to halt and revert if issues arise, and refining the trigger via the ai-review-requested label.",
+      "llm_status": "discussion",
+      "comment_count": 15,
+      "participant_count": 2,
+      "llm_key_points": [
+        "Bot reviews four PRs at a time, taking about an hour each",
+        "A monitoring bot halts and reverts if the review bot misbehaves",
+        "The ai-review-requested label triggers the review and is restricted to committers"
+      ],
+      "llm_topics": [
+        "automated-code-review",
+        "bot-monitoring",
+        "security"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "5c21a674aa04",
+      "llm_title": "Automated AI code review on Spark PRs",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
+    },
+    {
       "id": "spark-ml-vp8oyflk401dfvlrwl87w8nbr8v7ysvn",
       "source": "mailing_list",
       "kind": "thread",
@@ -2025,6 +2108,12 @@
       "llm_status": "discussion",
       "comment_count": 1,
       "participant_count": 2,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
       "llm_key_points": [
         "Proposal to drop Java 17 support and set Java 21 as minimum with full Java 25 support",
         "Debate over the necessity of requiring Java 25, citing maintenance and performance concerns",
@@ -2035,64 +2124,10 @@
         "spark-5",
         "compatibility"
       ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "64125f8a5442",
       "llm_title": "Drop Java 17 support in Spark 5.0",
+      "_content_hash": "64125f8a5442",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-vp8oyflk401dfvlrwl87w8nbr8v7ysvn"
-    },
-    {
-      "id": "spark-ml-t7y7ooz680olqldoh2lb321n956ht2h5",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] SPIP: Extend DSv2 push-down with join, set operation, and window function support",
-      "url": "https://lists.apache.org/thread/t7y7ooz680olqldoh2lb321n956ht2h5",
-      "author": "Jing Zhan <jz...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-10-30T22:03:46+00:00",
-      "updated_at": "2026-10-30T22:03:46+00:00",
-      "body": "Hi all,\n\nI'd like to start a discussion on a SPIP to extend DSv2 operator push-down.\n\nJIRA: https://issues.apache.org/jira/browse/SPARK-60765\nDesign:\nhttps://docs.google.com/document/d/1ah8u-1vxPvgqpjw0qzRNXz0Oo-X8tEzlK9ngmg7EPXU/edit\nBuilds on SPARK-52187 (DSv2 join push-down).\nShepherd: Holden Karau\n\nToday DSv2 can push filters, column pruning, aggregates, limit/TopN,\nsample, and INNER/LEFT/RIGHT joins. Those joins are off unless\nspark.sql.optimizer.datasourceV2JoinPushdown is set. A query that uses\nother join types, a set operation, or a window function over the same\ndatabase still pulls the raw rows into Spark.\n\nThe proposal adds opt-in interfaces, each of which a source can decline:\n1. FULL OUTER / SEMI / ANTI join types\n2. Alias tolerance in join push-down\n3. Make the join push-down config public, and evaluate enabling it by\ndefault\n4. Join + aggregate composition\n5. Set operations (UNION / INTERSECT / EXCEPT)\n6. Window functions\n\nJDBC/H2 is the reference implementation. This does not cover cross-source\npush-down or file-based sources.\n\nPlease reply to this thread. A [VOTE] will follow once the discussion\nsettles.\n\nThanks,\nJing Zhan\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1ah8u-1vxPvgqpjw0qzRNXz0Oo-X8tEzlK9ngmg7EPXU/edit",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSPIP: Extend DSv2 Push-Downs including Join, Set Operation, and Window Function Support"
-        }
-      ],
-      "llm_summary": "The discussion proposes extending Spark\u2019s Data Source V2 push-down framework to support additional relational operators such as full outer, semi, and anti joins, set operations (UNION, INTERSECT, EXCEPT), and window functions. It introduces opt\u2011in interfaces that allow sources to decline specific push\u2011downs, and considers making the join push\u2011down configuration public and possibly enabled by default. The goal is to reduce network traffic and leverage remote engines for larger query workloads.",
-      "llm_status": "discussion",
-      "comment_count": 0,
-      "participant_count": 1,
-      "llm_key_points": [
-        "Add support for full outer, semi, and anti joins",
-        "Introduce alias tolerance in join push\u2011down",
-        "Make join push\u2011down config public and evaluate default enablement",
-        "Enable join + aggregate composition",
-        "Add set operation push\u2011down (UNION, INTERSECT, EXCEPT)",
-        "Add window function push\u2011down"
-      ],
-      "llm_topics": [
-        "data-source-v2",
-        "push-down",
-        "performance"
-      ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "2c35d83d9000",
-      "llm_title": "Extend DSv2 push-down with joins, sets, windows",
-      "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
     {
       "id": "spark-ml-631wfyhswlz9361pm3y466g04f7lk6sm",
@@ -2856,51 +2891,6 @@
         "prompt_version": 1
       },
       "_content_hash": "888e802fe564",
-      "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-60031"
-    },
-    {
-      "id": "spark-ml-wb2821v85vn0lcbdzsbr8o672j8f53wj",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Automated AI code review on new Spark PRs (trial)",
-      "url": "https://lists.apache.org/thread/wb2821v85vn0lcbdzsbr8o672j8f53wj",
-      "author": "Hyukjin Kwon <gu...@apache.org>",
-      "state": "open",
-      "created_at": "2026-10-01T21:58:50+00:00",
-      "updated_at": "2026-10-22T22:09:30+00:00",
-      "body": "Hi all,\n\nI've been running a trial of automated AI code review on new apache/spark\nPRs, and I'd like to share how it works and get your feedback.\n\nFor now the reviews are posted from my own GitHub account (@HyukjinKwon)\nwhile I check that it behaves well. Once it's proven, I plan to move it to\nthe https://github.com/spark-test account, so the reviews are clearly\nseparate from my personal ones. I plan to run this for the next week.\n\n*What it does*\n\nEach review is a full, multi-pass review of the PR diff, run by Claude\n(via Claude Code). Findings are checked against the code before they're\nposted. They're posted as a normal GitHub review: a short summary plus\ninline comments, each labeled with a severity, e.g. \"Non-blocking (P2)\"\nor \"Nit (P3)\". Example:\nhttps://github.com/apache/spark/pull/59184#pullrequestreview-5379759787\n\n*No LGTM, no approvals*\n\n- It never approves a PR and never posts \"LGTM\". Every review is a plain\n  \"Comment\" review, so it doesn't count as an approval or a change\n  request, and it has no effect on merging.\n- If a review finds nothing new, it posts nothing at all: no \"no\n  findings\" or \"all comments addressed\" message.\n- It doesn't push commits or edit anyone's PR.\n- Human review and committer judgement are unchanged. Please treat its\n  comments like any other reviewer's: feel free to push back or ignore.\n\n*When a review is triggered*\n\n- A new PR is reviewed shortly after it's opened. Draft PRs are reviewed\n  once they're marked ready for review.\n- After a review posts findings, the bot waits. It reviews again only\n  when the author pushes new commits.\n- It also waits while a PR has open review comments from anyone that are\n  newer than the latest commit, so it doesn't pile on while the author is\n  still responding to reviewers.\n- Replying in a thread without pushing doesn't trigger a re-review.\n\n*When it stops*\n\n- When a review finds nothing new. The PR gets a fresh review if the\n  author pushes again later.\n- When the PR is merged or closed.\n\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/spark/pull/59184",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/spark/pull/59502",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "Hyukjin Kwon is running a trial of an AI code review bot for new Apache Spark pull requests, using Claude to analyze diffs and post inline comments without approving or LGTM. The bot triggers on new commits, respects open review comments, and can be disabled per PR via an `ai-review-requested` label, with safeguards against excessive Jira API calls. The discussion covers implementation details, opt\u2011out mechanisms, and ongoing testing of the label functionality.",
-      "llm_status": "discussion",
-      "comment_count": 14,
-      "participant_count": 5,
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "llm_key_points": [
-        "Trial of AI review bot that posts comments without approvals",
-        "Opt\u2011out label and safeguards for Jira API usage"
-      ],
-      "llm_topics": [
-        "automated-code-review",
-        "performance"
-      ],
-      "llm_title": "Automated AI code review on Spark PRs",
-      "_content_hash": "17debc04c163",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
@@ -4911,7 +4901,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -5828,7 +5818,7 @@
         "peter-toth"
       ],
       "_content_hash": "2943026d2e40",
-      "initiative_id": "spark-init-spark-ml-jo46380xglltc06rrfmdyv3k7r7x6sxw"
+      "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
     {
       "id": "spark-ml-sgq3c866w29mgw1ox1vbzmocm16fqskt",
@@ -17826,7 +17816,7 @@
         "vote"
       ],
       "_content_hash": "8889f8660299",
-      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-fz2tdzc0100m146mtrk76zv1wg1bdzfk",

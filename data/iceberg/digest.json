@@ -1,5 +1,5 @@
 {
-  "summary": "The proposal introduces a framework for defining and managing Puffin blob types that store statistics and indexes outside data files, with metadata about configuration, scope, and lifecycle. It specifies a registry, descriptors, and a data\u2011file\u2011scoped model that ties blobs to their source file and records the build configuration, ensuring safe handling during compaction. A Java service\u2011provider interface allows engines to support new blob types without compile\u2011time dependencies, enabling incremental adoption without format version changes. The meeting will cover how to adopt v4 in the Iceberg Go client, plan the transition to a 1.0 release, and resolve any API changes that overlap between the two milestones.",
+  "summary": "Iceberg 1.13.0 The discussion centers on whether to nest indexes under tables or keep them under namespaces, with a preference for the former to mirror current usage. Participants agree that failures can be silently dropped, but the spec does not explicitly document this, leading to ambiguity about whether a 204 or a 5xx should be returned. The proposal introduces a pluggable ecosystem of Puffin blob types that carry lightweight metadata about configuration, scope, and lifecycle, enabling progressive indexing for data files. It focuses on filter\u2011based (negative) indexes and defines a compaction\u2011aware lifecycle that ensures blobs survive rewrites and deletions without compromising query correctness.",
   "highlights": [
     {
       "text": "The document records the outcomes of the Iceberg Spark integration sync meetings, covering recent Spark 4.2 enhancements such as schema evolution, default value\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "The discussion centers on whether the metrics reporting endpoint should be treated as best\u2011effort and how a server should respond when it cannot persist a repor\u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-1nfwnk1j8sppmsry675ygr1jbxyhvrdx",
-          "title": "[DISCUSS] REST catalog spec: semantics of the metrics reporting endpoint when the server fails to process a report",
-          "url": "https://lists.apache.org/thread/1nfwnk1j8sppmsry675ygr1jbxyhvrdx"
-        }
-      ]
-    },
-    {
-      "text": "Vote PASSED with 4 binding +1 votes and 4 non-binding +1",
-      "sources": [
-        {
-          "id": "iceberg-ml-rtxfssrwwjdo04h6q78n1n74wxp5toss",
-          "title": "Re: [VOTE] Spec: Add _last_updated_time row lineage metadata column in v4",
-          "url": "https://lists.apache.org/thread/rtxfssrwwjdo04h6q78n1n74wxp5toss"
-        }
-      ]
-    },
-    {
       "text": "Iceberg 1.13.0",
       "sources": [
         {
           "id": "iceberg-gh-m64",
           "title": "Iceberg 1.13.0",
           "url": "https://github.com/apache/iceberg/milestone/64"
+        }
+      ]
+    },
+    {
+      "text": "The discussion centers on whether to nest indexes under tables or keep them under namespaces, with a preference for the former to mirror current usage. While ne\u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-5blqm0r5wc8d9mnqcs0y3m5xs2dtbxx8",
+          "title": "Re: Dedicated sync for Iceberg Index Support",
+          "url": "https://lists.apache.org/thread/5blqm0r5wc8d9mnqcs0y3m5xs2dtbxx8"
+        }
+      ]
+    },
+    {
+      "text": "The discussion centers on whether the metrics reporting endpoint should be treated as best\u2011effort and how a server should respond when it cannot persist a repor\u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-1nfwnk1j8sppmsry675ygr1jbxyhvrdx",
+          "title": "[DISCUSS] REST catalog spec: semantics of the metrics reporting endpoint when the server fails to process a report",
+          "url": "https://lists.apache.org/thread/1nfwnk1j8sppmsry675ygr1jbxyhvrdx"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-04T13:31:31.895089+00:00",
-  "item_count": 13,
+  "generated_at": "2026-11-05T13:45:58.718493+00:00",
+  "item_count": 12,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-10-28",
-    "to": "2026-11-04",
-    "thread_count": 13
+    "from": "2026-10-30",
+    "to": "2026-11-05",
+    "thread_count": 12
   }
 }

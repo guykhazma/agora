@@ -1,9 +1,19 @@
 {
-  "summary": "Apache Parquet has just released the 1.18.2 RC2 version, following the RC1 and RC0 releases earlier in the week.  Community discussions this week focused on codec performance, with PFOR emerging as the fastest and most compressed option, and on schema evolution topics such as adding a FINITE_VECTOR type and clarifying the FILE logical type\u2019s inline versus URI semantics.",
+  "summary": "Apache Parquet Java has advanced through its 1.18.2 release cycle, with RC0, RC1, and RC2 now available, each noting minor fixes and dependency updates. Meanwhile, the community is debating new features such as a FINITE_VECTOR type, clarifying the FILE logical type semantics, and evaluating compression schemes, with benchmarks favoring plain PFOR for decode throughput and compression ratio.",
   "highlights": [
     {
-      "text": "Apache Parquet 1.18.2 RC2 released with a full changelog",
+      "text": "Apache Parquet Java released RC0, RC1, and RC2 for version 1.18.2, each detailing minor fixes and dependency updates.",
       "sources": [
+        {
+          "id": "parquet-gh-rel-apache-parquet-1-18-2-rc0",
+          "title": "Apache Parquet 1.18.2 RC0",
+          "url": "https://github.com/apache/parquet-java/releases/tag/apache-parquet-1.18.2-rc0"
+        },
+        {
+          "id": "parquet-gh-rel-apache-parquet-1-18-2-rc1",
+          "title": "Apache Parquet 1.18.2 RC1",
+          "url": "https://github.com/apache/parquet-java/releases/tag/apache-parquet-1.18.2-rc1"
+        },
         {
           "id": "parquet-gh-rel-apache-parquet-1-18-2-rc2",
           "title": "Apache Parquet 1.18.2 RC2",
@@ -12,7 +22,7 @@
       ]
     },
     {
-      "text": "Benchmarking FastLanes shows PFOR outperforms other codecs in decode speed and compression",
+      "text": "Benchmark results show plain PFOR delivers the best decode throughput and compression ratio, recommending inclusion of PFOR-Delta.",
       "sources": [
         {
           "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
@@ -22,12 +32,22 @@
       ]
     },
     {
-      "text": "Discussion on adding a FINITE_VECTOR type and Iceberg handling of unannotated list data raises backward\u2011compatibility concerns",
+      "text": "A discussion proposes adding a new FINITE_VECTOR type to Parquet, raising backward\u2011compatibility concerns and how Iceberg should handle unannotated list data.",
       "sources": [
         {
           "id": "parquet-ml-l74wtjl9qtxy5dozvo236dsx885zto0f",
           "title": "Re: [DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
           "url": "https://lists.apache.org/thread/l74wtjl9qtxy5dozvo236dsx885zto0f"
+        }
+      ]
+    },
+    {
+      "text": "The FILE logical type ambiguity when both inline data and a URI are set is addressed, with a proposal to treat inline data as authoritative.",
+      "sources": [
+        {
+          "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
+          "title": "[DISCUSS] Ambiguity in the FILE logical type when inline and uri are both set",
+          "url": "https://lists.apache.org/thread/yrghnfgghh6l86vg8hfhovo655c9qwtq"
         }
       ]
     }
@@ -39,7 +59,7 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-05T13:47:39.372690+00:00",
+  "generated_at": "2026-11-06T13:29:57.478866+00:00",
   "item_count": 8,
   "period": "last_7_days",
   "coverage": {

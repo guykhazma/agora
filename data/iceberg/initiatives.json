@@ -1,14 +1,18 @@
 {
   "project_id": "iceberg",
-  "generated_at": "2026-11-07T12:13:50.267091+00:00",
-  "total": 331,
+  "generated_at": "2026-11-08T12:35:27.232477+00:00",
+  "total": 333,
   "initiatives": [
     {
-      "id": "iceberg-init-iceberg-ml-bmq9bk11lko9rtqx5x139080llmjhglq",
-      "title": "Pluggable Puffin blob types and compaction lifecycle",
-      "summary": "The initiative focuses on extending Iceberg\u2019s v4 specification with new file and vector types, while adding secondary indexing and performance improvements across engines. It includes GPU\u2011accelerated merge\u2011on\u2011read scans, enhanced metrics, and streamlined delete handling. The work has progressed to a released status with community consensus.",
-      "status": "discussion",
-      "key_points": [],
+      "id": "iceberg-init-iceberg-ml-5blqm0r5wc8d9mnqcs0y3m5xs2dtbxx8",
+      "title": "Iceberg File Type & Indexing",
+      "summary": "The initiative focuses on extending Iceberg\u2019s V4 specification with a new File type, enabling richer metadata handling and URI relativization. It also advances secondary indexing through Puffin blob types and Bloom filter skipping, while integrating equality delete conversion to delete vectors for CDC and query efficiency.",
+      "status": "released",
+      "key_points": [
+        "Added File type to V4 spec with URI relativization and batch signing support",
+        "Introduced secondary indexes via Puffin and Bloom filters for file\u2011skipping",
+        "Implemented equality delete to delete vector conversion for CDC and maintenance tasks"
+      ],
       "proposal_ids": [
         "iceberg-doc-19nno1RoPznb",
         "iceberg-gh-p17918",
@@ -108,7 +112,7 @@
           "title": "\ufeffSep 24, 2026"
         }
       ],
-      "last_activity": "2026-11-07T12:10:41.405277+00:00",
+      "last_activity": "2026-11-08T12:32:25.679628+00:00",
       "signals": [
         "shared_doc",
         "cross_source",
@@ -120,16 +124,20 @@
     },
     {
       "id": "iceberg-init-iceberg-ml-0m2gc9yqt77cpy2nvcthm9vkvgsgwrqq",
-      "title": "Spark: use the catalog's Hadoop configuration when listing o",
-      "summary": "The discussion proposes replacing the catalogName(String) method with hadoopConf(Configuration) in DeleteOrphanFilesSparkAction to use the catalog's Hadoop configuration when listing orphan files. The default behavior would",
+      "title": "Spark orphan file listing Hadoop config",
+      "summary": "The thread discusses a proposal to replace the catalogName(String) parameter in DeleteOrphanFilesSparkAction with a Hadoop configuration, defaulting to the table's FileIO configuration when available. The change aims to avoid catalog lookups and side effects, but some participants question whether it should be opt\u2011in and note that it does not address all use cases, such as non\u2011Hadoop FileIOs in Glue.",
       "status": "discussion",
-      "key_points": [],
+      "key_points": [
+        "Replace catalogName with hadoopConf to use table's FileIO config",
+        "Default to session config if no HadoopConfigurable",
+        "Debate on opt\u2011in vs default and coverage of non\u2011Hadoop FileIOs"
+      ],
       "proposal_ids": [
         "iceberg-ml-0m2gc9yqt77cpy2nvcthm9vkvgsgwrqq"
       ],
       "proposal_count": 1,
       "shared_docs": [],
-      "last_activity": "2026-11-07T11:48:04+00:00",
+      "last_activity": "2026-11-08T04:34:47+00:00",
       "signals": [],
       "archived": false
     },
@@ -153,18 +161,45 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-vj3x5knqb1h71j2sgpsbgbbsdb1kz7b6",
-      "title": "Migrating Iceberg to Jackson 3",
-      "summary": "The discussion proposes a phased migration of Apache Iceberg from Jackson 2 to Jackson 3 by shipping both libraries during a transition period, adding compatibility tests, and removing Jackson 2 types from the serde and REST layers using shims. The plan aims to clean up the public API while ensuring no regressions. The community is asked to agree on this approach and discuss implementation steps.",
+      "id": "iceberg-init-iceberg-ml-98ojhwbw1wswst5pfxg0r7wgyrb966pf",
+      "title": "NaN and Infinity in JSON serialization",
+      "summary": "",
       "status": "discussion",
       "key_points": [],
       "proposal_ids": [
-        "iceberg-ml-vj3x5knqb1h71j2sgpsbgbbsdb1kz7b6"
+        "iceberg-gh-rel-apache-iceberg-1-4-0",
+        "iceberg-ml-vj3x5knqb1h71j2sgpsbgbbsdb1kz7b6",
+        "iceberg-ml-98ojhwbw1wswst5pfxg0r7wgyrb966pf",
+        "iceberg-ml-orwny91fqyfmzx7w7p6wj7cgmndvd8r3",
+        "iceberg-ml-5lw2s0zs14p8tlmj2mlwdbg46fq7tkxt",
+        "iceberg-ml-bw8pvv1mghgfl96ny0sbqkx3ct33lco6",
+        "iceberg-ml-br8bfgbd68z3tmmzrpkm5fqm4zqsvd4b",
+        "iceberg-ml-rfyj9vlpkc42vwndxwc0rk5dj8nsbd80",
+        "iceberg-ml-whbgoc325o99vm4b599f0g1owhgww2kx",
+        "iceberg-ml-v96xj6kxwclyl52d97dkcvzxytfypyp3",
+        "iceberg-ml-g7rz2kt12ytd5j2xnbdlk696cxm0d3s2",
+        "iceberg-ml-4dho692vtclvnqrq1qk2c4lkn14kro7g",
+        "iceberg-ml-59b3c88p59kclvzqgv0jwr86486gr7oz",
+        "iceberg-ml-497qxkq3nfplwo27fh959zhsc2o7hkmy",
+        "iceberg-ml-bbl4wb2vfpxrr5mrnmjmcwnx4h0fvw14",
+        "iceberg-ml-44s6vkd9ky6x4ty2fyn9j7r7ylry6lgh",
+        "iceberg-ml-d4oo95wmmoqnh5dqn60n2p1s2gdbs0fx",
+        "iceberg-ml-q9pk815n12v9dh712pb8wdqv3xw2pqwg",
+        "iceberg-ml-1jm9zd6rtgjsvly3x099wvgdbohjn29v",
+        "iceberg-ml-dplytsw3j6v6lg5rs8pws9g105xqmpt9",
+        "iceberg-ml-2ty27yx4q0zlqd5h71cyyhb5k47yf9bv",
+        "iceberg-ml-9cdp2vmw1v2xgb3s2cnplqmvsoz036js",
+        "iceberg-ml-n21ojvn0go5yvky06cyw2yrlhx77x7mm"
       ],
-      "proposal_count": 1,
+      "proposal_count": 23,
       "shared_docs": [],
       "last_activity": "2026-11-06T18:40:22+00:00",
-      "signals": [],
+      "signals": [
+        "cross_source",
+        "vote_thread",
+        "topic:json-serialization",
+        "topic:serialization"
+      ],
       "archived": false
     },
     {
@@ -195,41 +230,25 @@
         "iceberg-ml-h5jnk7l2op325x545hfnrpbo3qmh2ovo",
         "iceberg-ml-th30oq0rcvn5gmn2qdx790k8vf4fz1ob",
         "iceberg-ml-t53xb61k1gg3qmf5rc4zbmfc3g2zfqvs",
-        "iceberg-ml-vk1yzvdnr4t8c6kywf4s2npwfkz6nvpz",
         "iceberg-ml-7qo3nydsv4fcx9z94p1gb53oqydsl5oc",
         "iceberg-ml-zfc96ktz5vhxn1gymv9lohlzj3prq9jm",
-        "iceberg-ml-lvmhz1w0ly6kpdpl8s7wk3rbt5q4dqh1",
         "iceberg-ml-m3t2lmo39yx4zkqtoflxmnn6tysstf2n",
         "iceberg-ml-kst8b58yjnvfy353g2ysvb4fkx3xdcr9",
         "iceberg-ml-bff9f50q06g91qngt2phjkctfp6490l5",
         "iceberg-ml-lndrr0yn3l2pt7o72wfn2d9ssvhn5ho1",
-        "iceberg-ml-n1jqr58jvk6f4y6wfvlwc86cb6gfh93r",
         "iceberg-ml-w035r64jpgyjft4dx2wsph3tztmxstq4",
         "iceberg-ml-b9n451cv6zfbp63nogljzsopdwdxw79w",
-        "iceberg-ml-71nlx8ktrpp98ql930nz34d2qvcx19lo",
         "iceberg-ml-xwqz0j6g2fcvq4hf5xs63ll4137ch0n6",
-        "iceberg-ml-rx0tcnqkq0nzj1phwo64ng79pp51hzf9",
         "iceberg-ml-krophr3htb39xhxr3ldbcn7ghqm82ohj",
-        "iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
         "iceberg-ml-q9qzhs9t6wx86kl35wjv0nxz48hwcvs8",
-        "iceberg-ml-9knf9bs7bx6f4x0tzmjhs5oopo2ghlbo",
         "iceberg-ml-lfr1kb253m99dg0mbdzpm6g1k3nbd6fc",
-        "iceberg-ml-2jrm755rzj3930wmgvcrtw73qzhnl44n",
         "iceberg-ml-mhyx8g420qtq3rc57m84xgcnqfl0dp15",
-        "iceberg-ml-k5pfk4rork0mp2p303pd70q9nx0tsl9w",
         "iceberg-ml-w0xqrm0dpnsgvw0dyvy4r34y0dtzmn7f",
         "iceberg-ml-8xckb3h2rr421yswd2x53yb2zds8vmks",
-        "iceberg-ml-rvp2wh1m91h5lvz5zvxqp96f7pdxrzqr",
         "iceberg-ml-kr9x53nknh0wc9r0wvbcgs6fk915noxy",
         "iceberg-ml-ldczvlskldz8qr7tfflxjdh95rkf892n",
-        "iceberg-ml-qhtxrbrttp4zc7sn1qj05yq70z9vzzqb",
-        "iceberg-ml-z6krfw87qft21rt7nfrdh09qg2h03ryf",
-        "iceberg-ml-yftsdrtdlv7n7jb1qt7yxn4wtycoftgw",
-        "iceberg-ml-9tkfxcx9lsx64skmocs3fv8dhgx0syqx",
         "iceberg-ml-z0xs3lgs18s8ybxpzlf4yslom4khsdfv",
         "iceberg-ml-93dfx9rg75l4gdhw7l0lm5p19z9d6okr",
-        "iceberg-ml-o3nno26wlm8n90j8zykvzod2s53wb7gf",
-        "iceberg-ml-129f3n8zgdck3nc5hmdf63sntzcy9tjg",
         "iceberg-ml-nc90rhczmt0xs5jjbq02r3mjlttg2ty9",
         "iceberg-ml-coprdjoc7l4wzn3kohb5tm7xrs7d4xdb",
         "iceberg-ml-17o809rhxj61rllgskm500m56bkyno8l",
@@ -245,50 +264,38 @@
         "iceberg-ml-vpos1yyfplbrtnlptjs4z5nxqv21kf5l",
         "iceberg-ml-9dnnfr19plyzbd0bq22b9y46vgn0pkbd",
         "iceberg-ml-77wxvr6qk24hy9s78lfxkcjnl37v2hy1",
-        "iceberg-ml-g3kbckxsjgb83ofh0n2p4rhjroff9yj0",
         "iceberg-ml-5q8lm7svnc2ksw57vc83xd83wjcqw6rl",
         "iceberg-ml-wh0l9z5s9dn5gozg23q38knbx4myl3z8",
         "iceberg-ml-blk78z75pmywzpz8qb54mvo91zcnzfbl",
-        "iceberg-ml-9twoxvrsmj7dcj091r4xc930gx6mp71l",
         "iceberg-ml-65y93cbdqf211nhpf03qrw1wtq77s2b3",
+        "iceberg-ml-xfv7n1nnmv92f5nkdt1g72hl7cd87nh7",
         "iceberg-ml-x0tgxw2qcqrh8ljln315777nqlkbr72z",
         "iceberg-ml-fcd10zcmsk9zv7nq7ls2qc9ry25osntn",
         "iceberg-ml-2bbv4vyrq6gvw376fr4o7ylh3rnnfoky",
         "iceberg-ml-9bbkr8w3sd3y4bgcv0vt2pl1jxrwsxff",
         "iceberg-ml-3wr1m4g6qy8s233rql4wwnm43xqdndg5",
-        "iceberg-ml-7o5p8p2b0jbqdyp97f7nnogdsz7xgdv7",
-        "iceberg-ml-4dho692vtclvnqrq1qk2c4lkn14kro7g",
-        "iceberg-ml-59b3c88p59kclvzqgv0jwr86486gr7oz",
+        "iceberg-ml-5d4qf18z41vjff424ktdz04sfcot8r4t",
         "iceberg-ml-f2brhzr2m2x6wttt4m90ygv87bvzgybs",
-        "iceberg-ml-wocqnmz1w9xsy7w5t7wxommlkty0y5m1",
         "iceberg-ml-o9qr4ttwsc94sck2z1km5z1dhlmskkqz",
         "iceberg-ml-c0dpns6txjglxlsojs1y84cfx9sg90zl",
-        "iceberg-ml-8j30pys8626zr9qsgx5kbnt48tp2ln3k",
         "iceberg-ml-5q2x1n0hcx3d0v2vnc6zxjhl3jml1r9r",
         "iceberg-ml-jgrcd4st4xko793jnjnr2jmmngmlqpxg",
-        "iceberg-ml-f2k158xsqgp1my7fkdzryvttok42r31d",
         "iceberg-ml-bk9o3css4bknvdjddsxb5bw9kzqqmyxp",
-        "iceberg-ml-443skhqr59j3fj0ovg4tyxh9d4f4gysc",
         "iceberg-ml-w403yzmpy9n9swcpwl2dcj2skdc0dskg",
         "iceberg-ml-4njo7dmxmc50pmj9fw972bvo91r0bl8s",
-        "iceberg-ml-9rjwz422mzf1mqdn5ss5slvldxl8lsx3",
         "iceberg-ml-q0z95yoxso8s4nogcxt7pypv5yt54s9b",
         "iceberg-ml-tws9z188ws1hv6ntdbk8os3b5173dbyq",
         "iceberg-ml-yd92h88jznyyvjztzwzx2zlo83g3x4nd",
         "iceberg-ml-zr8pb296dwfxr93ls1k89o3nw40qwfo6",
         "iceberg-ml-bsvfp28ph4xyp84ldzylyq0f1hy3tqnq",
-        "iceberg-ml-7kpbqtqf7o14s4t2106hjr3pr2l4gb61",
+        "iceberg-ml-mowmbr36y8wr1k9don2xx36l97n5f1xz",
         "iceberg-ml-ff4rn0lsgx3dzwns895wo8l2ppfptlrx",
         "iceberg-ml-d9r91hgq4wr30c2qm5y2zbkqb1nhjngh",
-        "iceberg-ml-m3d2096f10qof7jfb8k8ybmk00z2jg2t",
-        "iceberg-ml-24c0xhfbb2680nrqyd2jrngxtg6qoz8c",
         "iceberg-ml-2wo7j44979mvs9583xk4rgjnjdn5rvqt",
-        "iceberg-ml-44s6vkd9ky6x4ty2fyn9j7r7ylry6lgh",
-        "iceberg-ml-d4oo95wmmoqnh5dqn60n2p1s2gdbs0fx",
+        "iceberg-ml-qcs45z3moq4pjbnjq7zzvlnmlbvxml9c",
         "iceberg-ml-93p74trcg8wh0qwhdcc120v10wfnwpb1",
         "iceberg-ml-8tltdzpvyrpbhxjqdwr7m28jcncsxrgp",
-        "iceberg-ml-tp4dpw6qj5fyhrh17197bf6fg4gj3rk6",
-        "iceberg-ml-vo9djzjw5j0h5728x8mv2v8fx65t1tfr",
+        "iceberg-ml-1ml2s5bn8yj4no9xm1jrw4gkb22bh37l",
         "iceberg-ml-q3d3ldh9z3wdwzxz1l21jskq7rk9zjoz",
         "iceberg-ml-4050dvj99w403j1ob1757v8qo1ckrgmn",
         "iceberg-ml-9tsro1nf886jhg0zk9d0q3l3hvj4d0ff",
@@ -296,20 +303,20 @@
         "iceberg-ml-og0bp55ht2cqchx4rrhkz40kr8kfxmgs",
         "iceberg-ml-bvs6jqsjvscv097typ23qhomnbr0q8ck",
         "iceberg-ml-xmyktfsj9tb5nhqphwnmw9r5181rqrmy",
-        "iceberg-ml-10dy1l1mf1sh6n5p215fx6yyphnh8zpd",
         "iceberg-ml-wgpjb990xynxkc1cpfdpnr969tgwl412",
         "iceberg-ml-12l4gftbqy6bs26fhp6g01nv27bww6nj",
         "iceberg-ml-gg10y3tcg5hq9scm6wr0cm3g2tkos264",
         "iceberg-ml-kmory4kvmn0v3bw7hl59qrxvojpo1l4t",
+        "iceberg-ml-jglnp92fhfp6wor4dp4pvh1004nm9q57",
         "iceberg-ml-o1ghwhnwvdyq1lh7xnxjjb213tp3oqzc",
+        "iceberg-ml-lhvt09r4motjl4hr862lsdj938zj83j4",
         "iceberg-ml-1jnx171kbnf0xwhb835jsnf2ozfcdbxr",
         "iceberg-ml-27870jm7wvgs0xg2pxp5z32wg9dm6fd3",
-        "iceberg-ml-ccj4kb7hvgcgoym7wo276jrhywovl44p",
-        "iceberg-ml-jozhcltofc7t6bdnnmk9h3924df9wdjr",
         "iceberg-ml-bbs622mc1g16gfmns8m9zhv0gf0qk75t",
         "iceberg-ml-vtz0dh6gt4on0q2p9bw0r4vt9bz091ob",
         "iceberg-ml-vxwoxn3djjndtjd2slo4cmmtf4p287hg",
         "iceberg-ml-j73sfkss6pgvj6lfzxt86gnk6w0otclx",
+        "iceberg-ml-pbz8szdx845665xtt57jqs93lmk3z67f",
         "iceberg-ml-qnl71dc5ob3hknf9jq76rgmk17d8mg0d",
         "iceberg-ml-h9j0fd507g6tp6osbgbvx0q3vgrxgt1s",
         "iceberg-ml-2c27f5pombsdq2vtdczbsbypwfxhbnd0",
@@ -321,26 +328,18 @@
         "iceberg-ml-n6xp0snqjfsqd41cld472dvlgfyoy3cs",
         "iceberg-ml-no8hqztvjrtxzfsqgdyz6z6l1wv0q0k8",
         "iceberg-ml-qhg9q2mzyy4816dd7mbb4z36n7n7fd7t",
-        "iceberg-ml-v0nttnsvr17yn2vjwzmlsy9nxcq4dm74",
         "iceberg-ml-40mcfb77y8k9fz2lmtvvrjmt79vfp7dg",
         "iceberg-ml-tpzvnt07btncfpmsw70d5p469o0nwrj0",
-        "iceberg-ml-jlmmw6yj13wt5ykkmso1g4n58jmo5t8m",
         "iceberg-ml-h38t4gfk2m76ftf3dy2ko5m3xygmsbx9",
         "iceberg-ml-sl5kcqpl6bm57x6z6vnvkhvobmx1mvkz"
       ],
-      "proposal_count": 153,
+      "proposal_count": 123,
       "shared_docs": [
         {
           "url": "https://docs.google.com/document/d/1NDMozxdvB3u66L-dTchnyZtQO5JCz3H9lUg14crpy8M/edit?tab=t.0",
           "kind": "google_doc",
           "fetched": true,
           "title": "\ufeffDefault Value Expressions in Iceberg v4"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1Hxw-t8Maa7wZFmrlSujm7LRawKsFP3Q31tET_3aRnQU/edit?tab=t.0#heading=h.49o3didcns1c",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffREST OAuth2 Auth Manager v2"
         }
       ],
       "last_activity": "2026-11-06T18:31:53+00:00",
@@ -354,56 +353,66 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-6-0",
-      "title": "Clarify rounding before bucket hashing",
-      "summary": "",
-      "status": "discussion",
-      "key_points": [],
+      "id": "iceberg-init-iceberg-yt-NYme94R_MXY",
+      "title": "Iceberg Catalog Sync",
+      "summary": "The initiative consolidates recent community syncs, spec updates, and file\u2011format discussions around Apache Iceberg. It includes released catalog improvements, proposals for relative paths and REST catalog restructuring, and ongoing debates on format support and spec clarifications. The effort aims to streamline integration and roadmap alignment across languages and platforms.",
+      "status": "released",
+      "key_points": [
+        "Community syncs and roadmap updates",
+        "Spec clarifications for relative paths, rounding, and file\u2011format support",
+        "REST catalog spec restructuring and compatibility testing"
+      ],
       "proposal_ids": [
+        "iceberg-yt-NYme94R_MXY",
         "iceberg-gh-p15630",
-        "iceberg-gh-rel-apache-iceberg-1-6-0",
+        "iceberg-yt-D0xpEnh4nxU",
         "iceberg-ml-hcc1yo2pcyrc089rgywo8nh0tt9gs5yl",
-        "iceberg-ml-09rg2v2f308nbjhfhjq51gs3hypg0bsh",
-        "iceberg-ml-bj0sgk79yx0yt0wnr8jww2dsjsjc5tqj",
+        "iceberg-ml-5jfzckl0cc9z683kz9vfv41pmhrm1tdb",
+        "iceberg-ml-7zk8grxjddk7cwwvpz8bfhdbt2wkcbry",
+        "iceberg-ml-5bhmtqwwg1wkh0c40tho394jz38tcgd6",
+        "iceberg-ml-pb66o8gk8nqc6yormfld7pkt6rdfkvh7",
+        "iceberg-ml-q75tv7z3mjg6lvs2tc4nbmords1fr0bh",
+        "iceberg-ml-gc0wbgh7q8yh4hf1ctz7rfmqnyssg2th",
         "iceberg-ml-dsc55x2twc3swywczhhgl2qq93ybykj6",
         "iceberg-ml-5tcmqx4fcz3zgd799bqj7krtjf6lrbkp",
-        "iceberg-ml-n1fowdv252t327hqbok8rxt2dcy7tchw",
+        "iceberg-ml-qvx6bj330vqr7t5q1x12tc0jsb2v0c3n",
         "iceberg-ml-dqlgo3rmz1tnshx0bgk2cv4qm1h06k2n",
         "iceberg-ml-9bkbfbxnz52lywzjhy0fjn0tz2d1ss69",
-        "iceberg-ml-5g55jlwf3krh7op5ophs22cpno2v0l8n",
         "iceberg-ml-p7jvxfjty0bb932jy9rvrywcxsslktmn",
-        "iceberg-ml-qtb5tk81l3vtjn8lg8h0o7mbj825rd5t",
-        "iceberg-ml-kqgqtpjpxrmz137myyf492vvcxsohxvc",
-        "iceberg-ml-6v25f55oj5p1kycg978tqq3ycvs2jd42",
-        "iceberg-ml-47rcp7gtpbxzoj9o26fd9rwm50663hmx",
-        "iceberg-ml-4qg7j9sjtk28bcwn34v2w9yb7dlm7fzj",
-        "iceberg-ml-5nnddr30mm077rxj4xw3odvhhpcvh2rf",
-        "iceberg-ml-f7zd1dvlf6l1gw6wmnh9g404trcrkg06",
-        "iceberg-ml-5ymlw1z0lfkhtb2sh4r44yk6h336ck4v",
-        "iceberg-ml-b5k7vdng904zr3n3q8wv83y8l30rnd4c",
+        "iceberg-ml-g0hn70s4sxh9f2m03kmw0155c8pgjyw0",
+        "iceberg-ml-pd7ofds7cf79pf5wqkdqczbbjq9g1kb1",
+        "iceberg-ml-m208yrqo3h2hg4p2n399gfo1tq1v7ho3",
+        "iceberg-ml-kq2m5db5cy0vr24wlor4blmpwz8621p2",
+        "iceberg-ml-vyv587k3tyg3vvz67jgmpt8h3mk01knq",
         "iceberg-ml-mj2kcwpydm5lls42kzfmworkyc6lh562",
-        "iceberg-ml-jbg14hb7mvrg2m34845xbzfvnjg5bh00",
         "iceberg-ml-0q1csnkfg8jc11zo1dlssjkr4v8s8zz0",
+        "iceberg-ml-yxfmg94g1kg6r77rp5xz8j1xndvw86s5",
         "iceberg-ml-hdzqzpg68wjphr9t4vcrnfjkcfczztyz",
-        "iceberg-ml-2lo59wkhn8cm29wmokfmg2f18934qnln",
-        "iceberg-ml-r94shdmf8j96k2cznxj7pf2vq0wkfsxw",
+        "iceberg-ml-ccmk9om4t9x4orn265nrly2jtjdm1hmg",
         "iceberg-ml-hss83r1605r8932b94xv9y2wfb9o0yns",
         "iceberg-ml-6d7ozyjd42oc1wyc7ynft1jcfq6p6vlv",
-        "iceberg-ml-pnl6zh67zf6q9vkq2sgwmlq4y2r667cq"
+        "iceberg-ml-pnl6zh67zf6q9vkq2sgwmlq4y2r667cq",
+        "iceberg-ml-30fln71zsmvcbfxd5xrrjh5vdc7otz8h"
       ],
       "proposal_count": 30,
       "shared_docs": [
         {
-          "url": "https://docs.google.com/document/d/1iPGVCIcr-M0XtAiudOguWAvmqIdVgpYN5vz5ohO8PKw/edit?tab=t.0#bookmark=id.ishstxjeoz1z",
+          "url": "https://docs.google.com/document/d/1g0EJDr3DkSmfAce8C94zA2JyWRj2SeNeAeiYOotnSww/edit?usp=sharing",
           "kind": "google_doc",
           "fetched": true,
-          "title": "\ufeffIceberg Catalog Community Sync Notes"
+          "title": "\ufeffAdding Vortex as an Apache Iceberg File Format"
         },
         {
-          "url": "https://docs.google.com/document/d/1WtIsNGVX75-_MsQIOJhXLAWg6IbplV4-DkLllQEiFT8/edit?usp=sharing",
+          "url": "https://docs.google.com/document/d/1-0-2Wx8saf3EQQW6AyMtPxlBLs7P5SJGsgimLQ4E_1Y/edit?tab=t.0#heading=h.3g7h7zcbx8f9",
           "kind": "google_doc",
           "fetched": true,
-          "title": "\ufeffEvents Endpoint for Iceberg REST Catalog"
+          "title": "\ufeffRFC: Public API Stabilization and Cleanup for 1.0.0"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1oMKodaZJrOJjPfc8PDVAoTdl02eGQKHlhwuggiw7s9U/edit?tab=t.0#heading=h.nkagyx383k9h",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffIceberg Python Library Sync Agenda and Meeting Notes"
         }
       ],
       "last_activity": "2026-11-06T17:16:34+00:00",
@@ -411,8 +420,8 @@
         "shared_doc",
         "cross_source",
         "vote_thread",
-        "topic:metadata-management",
-        "topic:specification"
+        "topic:specification",
+        "topic:community"
       ],
       "archived": false
     },
@@ -433,17 +442,12 @@
     },
     {
       "id": "iceberg-init-iceberg-ml-lm4sskbfojckzmo6l3fkko1wcoz5v8h6",
-      "title": "Iceberg Rust Release Cycle",
-      "summary": "The initiative tracks the development and release of Apache Iceberg Rust, covering new features, bug fixes, and REST API enhancements. It includes community health monitoring, governance discussions, and the transition to regular monthly releases. The effort culminates in released versions that incorporate incremental improvements and improved access control.",
-      "status": "released",
-      "key_points": [
-        "Regular monthly releases with new features and bug fixes",
-        "Ongoing REST API specification enhancements, including delegation headers and loaded-via support",
-        "Community engagement through dashboards, discussions, and GitHub Discussions to improve governance and reduce forks"
-      ],
+      "title": "Release Apache Iceberg Rust 0.11.0",
+      "summary": "The initiative tracks the release cycle of Apache Iceberg",
+      "status": "discussion",
+      "key_points": [],
       "proposal_ids": [
         "iceberg-ml-lm4sskbfojckzmo6l3fkko1wcoz5v8h6",
-        "iceberg-ml-hc2764vozz7ygx5fjj64104hotrof0lk",
         "iceberg-ml-s5jqhbczoknftmojhrvzpsb53w1s7gd6",
         "iceberg-ml-l02zjbx3j1pddqhj3wg8gkj10o90l2cp",
         "iceberg-ml-ohgwhy8x2cw4coons0kb000s0f8lv7jk",
@@ -460,24 +464,18 @@
         "iceberg-ml-yhgl0184drx23578rd8wzbm41fps52hg",
         "iceberg-ml-5b7j53swgdccjv6x0k1jznhvzmhoqlnn",
         "iceberg-ml-ghpz96lp7t557pvdjh1j3gjh4yhwdmqq",
-        "iceberg-ml-yz9k52qzmf6v85tr07ytdq6nxp2ljymv",
         "iceberg-ml-yrfrfw58zgjgzql6wjvn589n99vb7fgj",
-        "iceberg-ml-bq1x788pk6r0vswtzhjrlr1w03rnt23x",
+        "iceberg-ml-d5bvr5r4sx0mrmmlbn2pzgk43opr475l",
         "iceberg-ml-c9kn301t13ncjbrygosk6wqhgso9tfzv",
         "iceberg-ml-rcgpqchvkwb606b40fckcbmfccj05fhd",
-        "iceberg-ml-hwxjpnyd6161fvp9kh8f7o4xo6cyl1g7",
-        "iceberg-ml-v27bn3wvnhxb7mh9bwmy5qmghnhf4s7f",
-        "iceberg-ml-bp7kccn055oq9ndczd0h7cfpg85w1v05",
-        "iceberg-ml-g6hkynq987zxrtzq9gs4mrl17kqjb82z",
         "iceberg-ml-fs7czm9tpllkjy7f1kljlg05bvxwwfon",
         "iceberg-ml-dw8vxc1p1pcwz5095ftpr1sghwqzvyp6",
         "iceberg-ml-c26cc5ftql0s6sdjko5fs8g16bjz2bvt"
       ],
-      "proposal_count": 30,
+      "proposal_count": 24,
       "shared_docs": [],
       "last_activity": "2026-11-04T18:46:02+00:00",
       "signals": [
-        "vote_thread",
         "topic:apache-iceberg",
         "topic:iceberg-rust"
       ],
@@ -485,15 +483,10 @@
     },
     {
       "id": "iceberg-init-iceberg-ml-rfc6bc7lq1xllv2hd4sy80qy39d1vlcc",
-      "title": "Iceberg Rust Release Cycle",
-      "summary": "The initiative tracks the release process for Apache Iceberg Rust, covering multiple version candidates from RC1 to RC4 across major releases. Several releases have been approved and published, while earlier RCs were vetoed and abandoned. Current proposals for newer RCs remain in discussion.",
+      "title": "[VOTE] Release Apache Iceberg Rust 0.11.0 RC3",
+      "summary": "Hi all,\n\nThe Apache Iceberg Rust community is pleased to announce that Apache\nIceberg Rust v0.4.0 has been released! The notable changes since v0.3.0 include:\n- Caching parsed Manifests and ManifestLi",
       "status": "released",
-      "key_points": [
-        "Multiple release candidates across versions",
-        "Several releases have been approved and published",
-        "Some RCs were vetoed and abandoned",
-        "Current RCs are under discussion"
-      ],
+      "key_points": [],
       "proposal_ids": [
         "iceberg-ml-rfc6bc7lq1xllv2hd4sy80qy39d1vlcc",
         "iceberg-ml-bfh1x4wjlfbvy0qbgokk5vb12orljvn6",
@@ -538,78 +531,59 @@
     {
       "id": "iceberg-init-iceberg-yt-zi4-JC16yqQ",
       "title": "REST catalog metrics endpoint semantics",
-      "summary": "The discussion addresses a gap in Iceberg's V3 spec regarding geospatial type support: wraparound bounds (for objects crossing the anti-meridian) are only allowed for Geography types, not Geometry typ",
+      "summary": "The discussion centers on whether the metrics reporting endpoint should be treated as best\u2011effort and how a server should respond when it cannot persist a report. Participants agree that failures can ",
       "status": "released",
       "key_points": [],
       "proposal_ids": [
         "iceberg-yt-zi4-JC16yqQ",
-        "iceberg-gh-i13855",
         "iceberg-ml-1nfwnk1j8sppmsry675ygr1jbxyhvrdx",
         "iceberg-ml-dmf60fs64swkcy8cpdgkxn2nldx836xo",
-        "iceberg-ml-6qfom12527mwkgohrlf8wmhn1x31rqcy",
-        "iceberg-ml-k09hbrtmzvd9tdjcrv5yb9d0wmx7l6nt",
         "iceberg-ml-vn4gglocg2g40p69mfrrh86qzkn1rr4b",
-        "iceberg-ml-18t1xnwly440ndvfbtd9whkvpm54d4lg",
-        "iceberg-ml-v96xj6kxwclyl52d97dkcvzxytfypyp3",
-        "iceberg-ml-x9ll3rhg26mngm10cjn74w66ov23grmm",
-        "iceberg-ml-6ob6xkov6p1f1c8smhbxyzf33s4m0jlo",
-        "iceberg-ml-g7rz2kt12ytd5j2xnbdlk696cxm0d3s2",
-        "iceberg-ml-1pqnbvhj16gd2wqohgp6ht0sxcslk0wx",
-        "iceberg-ml-ofrk0fqdj76hk1520649odxnd9xl71f4",
-        "iceberg-ml-r1ycxqlc95x7bxbmydxlhcpq02gmgbq9"
+        "iceberg-ml-18t1xnwly440ndvfbtd9whkvpm54d4lg"
       ],
-      "proposal_count": 15,
-      "shared_docs": [
-        {
-          "url": "https://docs.google.com/document/d/1HZa3AyPPfgz9VOVA9rPhJJ8f3F-3tEel_53nIlvYlo0/edit?usp=sharing",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffThe suggested changes are to improve performance of queries that include column to column predicates.  The implementati"
-        }
-      ],
+      "proposal_count": 5,
+      "shared_docs": [],
       "last_activity": "2026-11-04T01:52:50+00:00",
       "signals": [
-        "shared_doc",
         "cross_source",
-        "vote_thread",
-        "topic:query-optimization",
-        "topic:observability"
+        "topic:observability",
+        "topic:metrics-reporting"
       ],
       "archived": false
     },
     {
       "id": "iceberg-init-iceberg-ml-d90t8lbgomb23d8dtllnncsbx27g69k3",
       "title": "[VOTE] Add stats-only fields for v4",
-      "summary": "Hi all,\n\nOn behalf of the Iceberg Summit 2026 Selection Committee, I'm excited to\nannounce that we have settled on the keynote speakers for this year's event:\n\n   - Russell Spitzer, \"From Batch to Str",
+      "summary": ">> >> Yes, I did similar things and it didn't happen again >> >> On Fri, Jul 31, 2026 at 1:26\u202fPM Maximilian Michels <mx...@apache.org> >> wrote: >> >>> I also had the same issue. >>> > >>> > >>> > Sco",
       "status": "released",
       "key_points": [],
       "proposal_ids": [
         "iceberg-ml-rtxfssrwwjdo04h6q78n1n74wxp5toss",
         "iceberg-ml-d90t8lbgomb23d8dtllnncsbx27g69k3",
-        "iceberg-ml-c5ldjw25fplxjfplfx8fnvbkv598yy3p",
-        "iceberg-ml-g7qvlhkt3kchgf7sgjdcr0z9sksbqgq6",
         "iceberg-ml-k8lo7j1xfq2kq1f0tblvz8kklc49g6tj",
         "iceberg-ml-99vvhs027n70r95qqfbnqobjs8fktb1s",
-        "iceberg-ml-od2qyt4b5yz3tobgfv10hgz3h79m6t4g",
-        "iceberg-ml-98ntkfmtrqhfj5w54x27tnxfq14fftqb",
+        "iceberg-ml-7tkqczcz25m91nptmvdpv6govrty7owh",
+        "iceberg-ml-n1jqr58jvk6f4y6wfvlwc86cb6gfh93r",
         "iceberg-ml-2plrmco4k7vvb1jd8ythvjvko6nk6q9w",
         "iceberg-ml-589byrnmfwfovbpl7ohko9b75jf3y3v3",
         "iceberg-ml-sjkhkblfl1s792bdkgzmtj63bwvdbk99",
         "iceberg-ml-9ncgm04vd20lds0c3q99smvotjpxzjt8",
+        "iceberg-ml-njo5bzgf4m126ly74ydz1pfznhz70h38",
+        "iceberg-ml-hoyt1k23sjtw37z7gd2kzqm4r99gl1hm",
         "iceberg-ml-vmm8ybdnwsr2f8w2jf3frnq4gv7fl8h4",
         "iceberg-ml-2ck1m1lzyq0mzbs7g4g2zw0qdjnkjm3t",
-        "iceberg-ml-jx0k51kt04bkf6c0wdjt873qbdbb8mtp",
+        "iceberg-ml-6vmyk16qnqw5mkfhx177sm6f0qttoxtg",
+        "iceberg-ml-5pqco3dkbsbj1zd48qzopnj30stygz5n",
         "iceberg-ml-4ywo04wl7r8nyqpf76thhg8x3kh57zlb",
         "iceberg-ml-6x0f2bd3mgw3xn6jnworsmrnvl5gncdl",
         "iceberg-ml-4wt11lm05txtcm7h96xqytokxxxgrp67",
         "iceberg-ml-swj07pxtsgxqgfvrrj0vwg5xnj6565b3",
         "iceberg-ml-so2yo9p7xkxrgljhjgsocmcndhfg6hxo",
+        "iceberg-ml-7k5dwk80k3xy3j8nqcp5osb83sf30kyn",
         "iceberg-ml-ch50oob1w10prgd276rmjxwsjzv3hbkn",
         "iceberg-ml-lp6mr1hvm41l1o85c22zko59p39grkwo",
-        "iceberg-ml-gfyh8olhc3kk62h7jyxf7shblnq2vjgc",
         "iceberg-ml-9o42rkytm2l86kojmdl9xn3g9n9nhfvh",
         "iceberg-ml-1xmrfcq3g1my8sthcn0j57bvqhtqb8x7",
-        "iceberg-ml-k5zxxdjqfrtn2g6ylqfkrhpsf52tn2hy",
         "iceberg-ml-n86tzwfy8d7j579c60olxnmdspwcsn10",
         "iceberg-ml-xkbw2w26zw1r6sk6w3jfpf8zsgcdx8jo",
         "iceberg-ml-2hs887hw2c09v3sq4oxxbyr8pbqxvj32",
@@ -619,6 +593,7 @@
       "shared_docs": [],
       "last_activity": "2026-11-03T23:54:24+00:00",
       "signals": [
+        "vote_thread",
         "topic:result",
         "topic:apache-iceberg"
       ],
@@ -640,6 +615,62 @@
       "shared_docs": [],
       "last_activity": "2026-11-03T14:27:51+00:00",
       "signals": [],
+      "archived": false
+    },
+    {
+      "id": "iceberg-init-iceberg-ml-vk1yzvdnr4t8c6kywf4s2npwfkz6nvpz",
+      "title": "Downscoping OAuth2 AuthManager v2",
+      "summary": "The discussion addresses a gap in Iceberg's V3 spec regarding geospatial type support: wraparound bounds (for objects crossing the anti-meridian) are only allowed for Geography types, not Geometry typ",
+      "status": "implementation",
+      "key_points": [],
+      "proposal_ids": [
+        "iceberg-ml-vk1yzvdnr4t8c6kywf4s2npwfkz6nvpz",
+        "iceberg-ml-bvnhbx81620ho11vo1nyps3pnp9x0bth",
+        "iceberg-ml-lvmhz1w0ly6kpdpl8s7wk3rbt5q4dqh1",
+        "iceberg-ml-rx0tcnqkq0nzj1phwo64ng79pp51hzf9",
+        "iceberg-ml-n2s6z7rt745cgftsb8j9yob0kc70cgny",
+        "iceberg-ml-2jrm755rzj3930wmgvcrtw73qzhnl44n",
+        "iceberg-ml-6qfom12527mwkgohrlf8wmhn1x31rqcy",
+        "iceberg-ml-rvp2wh1m91h5lvz5zvxqp96f7pdxrzqr",
+        "iceberg-ml-qhtxrbrttp4zc7sn1qj05yq70z9vzzqb",
+        "iceberg-ml-z6krfw87qft21rt7nfrdh09qg2h03ryf",
+        "iceberg-ml-yftsdrtdlv7n7jb1qt7yxn4wtycoftgw",
+        "iceberg-ml-9tkfxcx9lsx64skmocs3fv8dhgx0syqx",
+        "iceberg-ml-o3nno26wlm8n90j8zykvzod2s53wb7gf",
+        "iceberg-ml-129f3n8zgdck3nc5hmdf63sntzcy9tjg",
+        "iceberg-ml-x9ll3rhg26mngm10cjn74w66ov23grmm",
+        "iceberg-ml-g3kbckxsjgb83ofh0n2p4rhjroff9yj0",
+        "iceberg-ml-jkv8w224x6b0bdgnp2kfv3lcb0s73h59",
+        "iceberg-ml-9twoxvrsmj7dcj091r4xc930gx6mp71l",
+        "iceberg-ml-7o5p8p2b0jbqdyp97f7nnogdsz7xgdv7",
+        "iceberg-ml-wocqnmz1w9xsy7w5t7wxommlkty0y5m1",
+        "iceberg-ml-8j30pys8626zr9qsgx5kbnt48tp2ln3k",
+        "iceberg-ml-f2k158xsqgp1my7fkdzryvttok42r31d",
+        "iceberg-ml-443skhqr59j3fj0ovg4tyxh9d4f4gysc",
+        "iceberg-ml-9jkrr5orrlxlzz8oklxszj3n2t77sjfr",
+        "iceberg-ml-9rjwz422mzf1mqdn5ss5slvldxl8lsx3",
+        "iceberg-ml-m3d2096f10qof7jfb8k8ybmk00z2jg2t",
+        "iceberg-ml-j22o7yktrlddrgkcy7gl88o23nyrgooc",
+        "iceberg-ml-24c0xhfbb2680nrqyd2jrngxtg6qoz8c",
+        "iceberg-ml-ccj4kb7hvgcgoym7wo276jrhywovl44p",
+        "iceberg-ml-jozhcltofc7t6bdnnmk9h3924df9wdjr"
+      ],
+      "proposal_count": 30,
+      "shared_docs": [
+        {
+          "url": "https://docs.google.com/document/d/1Hxw-t8Maa7wZFmrlSujm7LRawKsFP3Q31tET_3aRnQU/edit?tab=t.0#heading=h.49o3didcns1c",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffREST OAuth2 Auth Manager v2"
+        }
+      ],
+      "last_activity": "2026-11-03T10:25:35+00:00",
+      "signals": [
+        "shared_doc",
+        "vote_thread",
+        "topic:authentication",
+        "topic:release-process"
+      ],
       "archived": false
     },
     {
@@ -666,21 +697,16 @@
         "iceberg-ml-xd96q0f039q8fks8bb83r817rdy3ff1m",
         "iceberg-ml-5984cxzzojmo0vvpq4wo6bl9tjlhyt2s",
         "iceberg-ml-ppjdo97l4qpcxn0h0j6zhykgs7d0fpf7",
-        "iceberg-ml-jkv8w224x6b0bdgnp2kfv3lcb0s73h59",
         "iceberg-ml-5gff76hvqy7r1lksrt9ld9h3pdp03nb5",
         "iceberg-ml-29n4t7xfzx4g2pcgt3yzzwn1oqcot0nn",
         "iceberg-ml-81lxqvo58oygrlmd5o5cygsxnjqd77ft",
-        "iceberg-ml-lxfbrv32wwn1tkvc37dmor2f8rbkrv2c",
-        "iceberg-ml-n97qo5nb09ggz5591g7cp99767fv5cf7",
+        "iceberg-ml-hnyhxp3rdrjor1t32xk6kxsfocqkgqzd",
         "iceberg-ml-sf2zmf3sgxqdcflx7kpl5q2692stv3gv",
-        "iceberg-ml-snzvh6yvvyt37j2wcsgblxpplo582vrf",
-        "iceberg-ml-k606d81cv8h9f0oxtv5wzwg7qtb8mgxc",
         "iceberg-ml-llpljpy62o00gmvpbcrn889wwnw5mvjd",
         "iceberg-ml-kh4n98w4z22sc8h2vot4q8n44vdtnltg",
-        "iceberg-ml-5pt5g4q9zt856cpscob37y30mczlf9rx",
         "iceberg-ml-bh41248t77cqr43fdsqkvsbonmog7s69"
       ],
-      "proposal_count": 30,
+      "proposal_count": 25,
       "shared_docs": [
         {
           "url": "https://docs.google.com/document/d/1WyiIk08JRe8AjWh63txIP4i2xcIUHYQWFrF_1CCS3uw/edit?tab=t.0#heading=h.jfecktgonj1i",
@@ -694,7 +720,7 @@
         "shared_doc",
         "vote_thread",
         "topic:parquet",
-        "topic:rest-catalog"
+        "topic:hey-folks"
       ],
       "archived": false
     },
@@ -718,7 +744,7 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-prmpbfy6v20spsmts19hs8gbkkxo16vv",
+      "id": "iceberg-init-iceberg-yt-KckCjeP-4DM",
       "title": "Virtual Apache Iceberg Meetup Nov 13",
       "summary": "In this demo-driven talk, we\u2019ll explore what it takes to build a modern lakehouse pipeline on open table formats and object storage. Using Apache Spark, Apache Iceberg, the Polaris REST catalog, and S",
       "status": "released",
@@ -730,18 +756,9 @@
         "iceberg-yt-o_lHTe9yACc",
         "iceberg-ml-0bgzpkz65c8pltv9owzwlmmv1kw2hz0t",
         "iceberg-ml-ov4bk4qg8pfod2s4z035mg3tj3tcv8mn",
-        "iceberg-ml-87cvl9gk0cjk1of7jh3nvm4lzvzxnc8m",
-        "iceberg-ml-prmpbfy6v20spsmts19hs8gbkkxo16vv",
-        "iceberg-ml-rx4x22r97t24hrbn3s73tl8gt7k7c7pc",
-        "iceberg-ml-vk3m2vvnt2n8p5q2zgn7c5lszdd94gwz",
-        "iceberg-ml-wsy33whf9bn3n5fop8m82lj2lq7dqtvz",
-        "iceberg-ml-7jmw3mbrwtwqx1ldxb240hwtxr49vdr1",
-        "iceberg-ml-g889dzv4ofp0o66b22q1qtjtvo0q58c8",
-        "iceberg-ml-v4odz4p7h8wzbjnvt9boylx031jorn93",
-        "iceberg-ml-xl1cwq7vmnh6zgfd2vck2nq7dfd33ncq",
-        "iceberg-ml-hzcd51js0ofpwc4rq3yxnv9rv06ol9dy"
+        "iceberg-ml-87cvl9gk0cjk1of7jh3nvm4lzvzxnc8m"
       ],
-      "proposal_count": 16,
+      "proposal_count": 7,
       "shared_docs": [
         {
           "url": "https://docs.google.com/forms/d/e/1FAIpQLSeiC3w1kNrNorFBie0Uhbm1lQ-vsVXzTkGXqtARjziqNs_6Qw/viewform?utm_source=luma",
@@ -759,42 +776,42 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-yt-NYme94R_MXY",
-      "title": "Should V4 stop writing ORC and Avro data files?",
-      "summary": "Hi everyone,\n\nThere\u2019s been a lot of interest lately in the state of pyiceberg and where\nthe project is headed. In our last two community syncs, we discussed\nsetting aside time to brainstorm about the ",
-      "status": "released",
+      "id": "iceberg-init-iceberg-ml-zyttpswnltjzgskvchofhx4lmgmhxcv4",
+      "title": "Iceberg 1.13 release discussion",
+      "summary": "Apache Iceberg's December board report highlights ongoing project status with no issues, recent additions of 2 PMC members and 1 committer, and significant progress across multiple components includin",
+      "status": "implementation",
       "key_points": [],
       "proposal_ids": [
-        "iceberg-yt-NYme94R_MXY",
-        "iceberg-yt-D0xpEnh4nxU",
         "iceberg-ml-zyttpswnltjzgskvchofhx4lmgmhxcv4",
-        "iceberg-ml-5jfzckl0cc9z683kz9vfv41pmhrm1tdb",
         "iceberg-ml-0kvq4nc2085zp7r74cs3kykw9v2hczdg",
-        "iceberg-ml-7zk8grxjddk7cwwvpz8bfhdbt2wkcbry",
-        "iceberg-ml-5bhmtqwwg1wkh0c40tho394jz38tcgd6",
-        "iceberg-ml-pb66o8gk8nqc6yormfld7pkt6rdfkvh7",
-        "iceberg-ml-q75tv7z3mjg6lvs2tc4nbmords1fr0bh",
-        "iceberg-ml-tnx2p2hbot2vpn5rbz5xd24chn871d27",
-        "iceberg-ml-gc0wbgh7q8yh4hf1ctz7rfmqnyssg2th",
-        "iceberg-ml-qvx6bj330vqr7t5q1x12tc0jsb2v0c3n",
-        "iceberg-ml-81hjtpqgz8512grogr2cdrrwlo74szos",
-        "iceberg-ml-g0hn70s4sxh9f2m03kmw0155c8pgjyw0",
-        "iceberg-ml-pd7ofds7cf79pf5wqkdqczbbjq9g1kb1",
-        "iceberg-ml-m208yrqo3h2hg4p2n399gfo1tq1v7ho3",
-        "iceberg-ml-kq2m5db5cy0vr24wlor4blmpwz8621p2",
-        "iceberg-ml-vyv587k3tyg3vvz67jgmpt8h3mk01knq",
-        "iceberg-ml-o64dgmsldq3o7zfvod1m7zn2s1ghljmw",
-        "iceberg-ml-5d4qf18z41vjff424ktdz04sfcot8r4t",
-        "iceberg-ml-4cknksv5kbr3ry9x0zlt7g1fkm2sgtx7",
+        "iceberg-ml-mj8czb2ljf8kj1d7ldbfw39sffr9knjc",
+        "iceberg-ml-nxqw16p5wt8oorrtsbc28phkosp0g55l",
+        "iceberg-ml-22t5j4wgfghqzgm6ds5xk5fwmt2rogph",
+        "iceberg-ml-0n5c9bnjqttzf6ylfxtdy5swfljr24b9",
+        "iceberg-ml-9gdtbvhkvl3vyxqdp9wlkbpwm6ksm56q",
+        "iceberg-ml-cdjjn4xo1fq2h4m1s1lsr059578sm6rs",
+        "iceberg-ml-krghfpo6o6nc6k5q6922hdx0cg5dgnrz",
+        "iceberg-ml-7lnzb9jh0v7cpzc73kojc3xtfdph8c7n",
+        "iceberg-ml-zqzn7dd64v8284b4j92h9wd801lknpy1",
+        "iceberg-ml-fvn2q43rfr1xz7f47ohjmkdvok9rs1r6",
+        "iceberg-ml-mkzmkvcs6s1pt9o58df0wopn3w96wwv0",
+        "iceberg-ml-tjgtpqy7wx8lnxvr2kzh4wffdwlxbt14",
+        "iceberg-ml-5kv0wmzbrky2fdl937bs70901qkng5s3",
+        "iceberg-ml-gbl7bh43fcd0lzjxct6g8zmtpnrjx459",
+        "iceberg-ml-cvlojx7vj8n3gysld3zsqg48r6pnrvm6",
+        "iceberg-ml-0tnnc81p6nw2kz32oz1fscvm2ztf8wtb",
+        "iceberg-ml-rr8lcf96jl6079dz6vfkwr5spbvlxzpm",
+        "iceberg-ml-x3cofkhlzy1hh36pw8x7gx2lwgo8pq9y",
+        "iceberg-ml-ylj9z8ryckgcxj8k9jghqo5gzby73qmt",
+        "iceberg-ml-h99gnh4kc4g7qcprq36mlxnm8xl3w37h",
+        "iceberg-ml-k71ls3pdf4x78r7q4x2np75tl74tsvdf",
+        "iceberg-ml-j4l5xk92j6z3pb31wyqtxk7fbf1621kv",
+        "iceberg-ml-06o2hpzpzw7t9c7yol1099166qoh8g0x",
         "iceberg-ml-1h0yddln87pn902zj820m8qg2xfvs4f5",
-        "iceberg-ml-yxfmg94g1kg6r77rp5xz8j1xndvw86s5",
-        "iceberg-ml-x58g33dqbvxcpdhw9h5o0ns15vzdvszs",
-        "iceberg-ml-ccmk9om4t9x4orn265nrly2jtjdm1hmg",
-        "iceberg-ml-oqgr63hdn5ndh8p14sfdzj1swb6dr3gp",
-        "iceberg-ml-ckj8rmjrwh9qmy5o5gk6qkk6hxd54ggq",
-        "iceberg-ml-oy9xj4tw0sdb8hbmw2bhhfq0t20gztnh",
-        "iceberg-ml-rkv5omc5hfpyx9w87frhdyggbgvpv6sw",
-        "iceberg-ml-30fln71zsmvcbfxd5xrrjh5vdc7otz8h"
+        "iceberg-ml-mpd5zk2fd89ssf0pfk87qyyc5h1t3tyj",
+        "iceberg-ml-sjs3bf0svt1yz5v98kkbghwl5boggy2n",
+        "iceberg-ml-fy7w4n9y6jpnf2rs4f4thg2xjb0wrqy3",
+        "iceberg-ml-yz9k52qzmf6v85tr07ytdq6nxp2ljymv"
       ],
       "proposal_count": 30,
       "shared_docs": [
@@ -803,33 +820,13 @@
           "kind": "google_doc",
           "fetched": true,
           "title": "\ufeffIceberg Go Sync: v4 adoption and the road to 1.0"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1g0EJDr3DkSmfAce8C94zA2JyWRj2SeNeAeiYOotnSww/edit?usp=sharing",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffAdding Vortex as an Apache Iceberg File Format"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1-0-2Wx8saf3EQQW6AyMtPxlBLs7P5SJGsgimLQ4E_1Y/edit?tab=t.0#heading=h.3g7h7zcbx8f9",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffRFC: Public API Stabilization and Cleanup for 1.0.0"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1oMKodaZJrOJjPfc8PDVAoTdl02eGQKHlhwuggiw7s9U/edit?tab=t.0#heading=h.nkagyx383k9h",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffIceberg Python Library Sync Agenda and Meeting Notes"
         }
       ],
       "last_activity": "2026-11-02T19:48:20+00:00",
       "signals": [
         "shared_doc",
-        "cross_source",
-        "vote_thread",
-        "topic:release-planning",
-        "topic:community"
+        "topic:release-management",
+        "topic:security"
       ],
       "archived": false
     },
@@ -842,7 +839,6 @@
       "proposal_ids": [
         "iceberg-gh-p13879",
         "iceberg-gh-i14187",
-        "iceberg-yt-cbNaqGQgTzU",
         "iceberg-ml-sbwmpx1tddw2bofh19f6dxx3pjgz0txo",
         "iceberg-ml-cv1ks4gcvqpy3jmm8x00hxxyjz776d8r",
         "iceberg-ml-qron2f2k7rochgqm37crfhybcw4ddxcn",
@@ -869,7 +865,8 @@
         "iceberg-ml-rc4kw2kbtyco45otz94l4pys0sx3qndk",
         "iceberg-ml-mvpv9hs7qtz3r2o4o2bmc3hl4h2vz13o",
         "iceberg-ml-2j9792vmdh8q768bo44cgczt0zvt3pcn",
-        "iceberg-ml-nfw1t0glfdfj1hwmzzzzwwyrfnq44yr5"
+        "iceberg-ml-nfw1t0glfdfj1hwmzzzzwwyrfnq44yr5",
+        "iceberg-ml-rlnm8jcv4gk6bzgpgx5gvwrvtjg2l611"
       ],
       "proposal_count": 30,
       "shared_docs": [
@@ -1031,53 +1028,6 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-mj8czb2ljf8kj1d7ldbfw39sffr9knjc",
-      "title": "Iceberg 1.13 release discussion",
-      "summary": "Apache Iceberg's December board report highlights ongoing project status with no issues, recent additions of 2 PMC members and 1 committer, and significant progress across multiple components includin",
-      "status": "implementation",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-ml-bvnhbx81620ho11vo1nyps3pnp9x0bth",
-        "iceberg-ml-ff4v7jvtl1r44wvl0nntlv0d63n8p8p7",
-        "iceberg-ml-mj8czb2ljf8kj1d7ldbfw39sffr9knjc",
-        "iceberg-ml-nxqw16p5wt8oorrtsbc28phkosp0g55l",
-        "iceberg-ml-22t5j4wgfghqzgm6ds5xk5fwmt2rogph",
-        "iceberg-ml-0n5c9bnjqttzf6ylfxtdy5swfljr24b9",
-        "iceberg-ml-9gdtbvhkvl3vyxqdp9wlkbpwm6ksm56q",
-        "iceberg-ml-cdjjn4xo1fq2h4m1s1lsr059578sm6rs",
-        "iceberg-ml-krghfpo6o6nc6k5q6922hdx0cg5dgnrz",
-        "iceberg-ml-7lnzb9jh0v7cpzc73kojc3xtfdph8c7n",
-        "iceberg-ml-zqzn7dd64v8284b4j92h9wd801lknpy1",
-        "iceberg-ml-fvn2q43rfr1xz7f47ohjmkdvok9rs1r6",
-        "iceberg-ml-mkzmkvcs6s1pt9o58df0wopn3w96wwv0",
-        "iceberg-ml-tjgtpqy7wx8lnxvr2kzh4wffdwlxbt14",
-        "iceberg-ml-5kv0wmzbrky2fdl937bs70901qkng5s3",
-        "iceberg-ml-gbl7bh43fcd0lzjxct6g8zmtpnrjx459",
-        "iceberg-ml-cvlojx7vj8n3gysld3zsqg48r6pnrvm6",
-        "iceberg-ml-0tnnc81p6nw2kz32oz1fscvm2ztf8wtb",
-        "iceberg-ml-rr8lcf96jl6079dz6vfkwr5spbvlxzpm",
-        "iceberg-ml-9jkrr5orrlxlzz8oklxszj3n2t77sjfr",
-        "iceberg-ml-x3cofkhlzy1hh36pw8x7gx2lwgo8pq9y",
-        "iceberg-ml-ylj9z8ryckgcxj8k9jghqo5gzby73qmt",
-        "iceberg-ml-h99gnh4kc4g7qcprq36mlxnm8xl3w37h",
-        "iceberg-ml-k71ls3pdf4x78r7q4x2np75tl74tsvdf",
-        "iceberg-ml-j4l5xk92j6z3pb31wyqtxk7fbf1621kv",
-        "iceberg-ml-06o2hpzpzw7t9c7yol1099166qoh8g0x",
-        "iceberg-ml-mpd5zk2fd89ssf0pfk87qyyc5h1t3tyj",
-        "iceberg-ml-j22o7yktrlddrgkcy7gl88o23nyrgooc",
-        "iceberg-ml-sjs3bf0svt1yz5v98kkbghwl5boggy2n",
-        "iceberg-ml-fy7w4n9y6jpnf2rs4f4thg2xjb0wrqy3"
-      ],
-      "proposal_count": 30,
-      "shared_docs": [],
-      "last_activity": "2026-10-29T13:52:27+00:00",
-      "signals": [
-        "topic:release-management",
-        "topic:security"
-      ],
-      "archived": false
-    },
-    {
       "id": "iceberg-init-iceberg-ml-2pgfvf8v5ob221q5t2xwzjo4xvw5ltz1",
       "title": "Replace example with examples in rest catalog openapi spec",
       "summary": "All four are addressed, the branch is rebased on current main with no conflicts and squashed to a single commit, and all 44 CI checks are green. > >   https://github.com/apache/iceberg/pull/17164 > > ",
@@ -1162,6 +1112,7 @@
         "iceberg-yt-tj5emVNX6s4",
         "iceberg-yt-GGGAnp5CcRs",
         "iceberg-yt-UA0yHSAPpHQ",
+        "iceberg-yt-CDiwC0uEfoE",
         "iceberg-yt-OGcQ2ET_R4k",
         "iceberg-yt-4_nA8PlK1as",
         "iceberg-yt-Rw4HF9pr7mw",
@@ -1181,7 +1132,7 @@
         "iceberg-ml-8n5jygtol1bgyw6ow7wjt7c8m3v3t0l7",
         "iceberg-ml-mzy8n0yv2fo55gmwqxn5jj8k84cwk333"
       ],
-      "proposal_count": 27,
+      "proposal_count": 28,
       "shared_docs": [
         {
           "url": "https://docs.google.com/document/d/1YuGhUdukLP5gGiqCbk0A5_Wifqe2CZWgOd3TbhY3UQg/edit?tab=t.0",
@@ -1195,8 +1146,8 @@
         "shared_doc",
         "cross_source",
         "vote_thread",
-        "topic:community-collaboration",
-        "topic:repository-management"
+        "topic:iceberg",
+        "topic:community-collaboration"
       ],
       "archived": false
     },
@@ -1250,6 +1201,54 @@
       "archived": false
     },
     {
+      "id": "iceberg-init-iceberg-ml-hc2764vozz7ygx5fjj64104hotrof0lk",
+      "title": "REST spec: Add none to X-Iceberg-Access-Delegation header va",
+      "summary": "Another way of solving this would be to make a required response field optional (manifest-list and metadata-location) without bumping the model/api versions. However, one of the incompatiblity is that",
+      "status": "released",
+      "key_points": [],
+      "proposal_ids": [
+        "iceberg-ml-hc2764vozz7ygx5fjj64104hotrof0lk",
+        "iceberg-ml-c5ldjw25fplxjfplfx8fnvbkv598yy3p",
+        "iceberg-ml-g7qvlhkt3kchgf7sgjdcr0z9sksbqgq6",
+        "iceberg-ml-od2qyt4b5yz3tobgfv10hgz3h79m6t4g",
+        "iceberg-ml-6y446mbtrho2r54cbd2x9gzyb13jjlbl",
+        "iceberg-ml-98ntkfmtrqhfj5w54x27tnxfq14fftqb",
+        "iceberg-ml-n4hyqr3k2gnzbxvs3l1o4cz3ggdfwkx2",
+        "iceberg-ml-3mdjz2ogqdmgzzpsqbxl2gpnh6rk3ng9",
+        "iceberg-ml-vy9fqyopp9c149oy40brdhb10grpq32g",
+        "iceberg-ml-30voqgmho92o0bnv79qcz1rzlkwh5z39",
+        "iceberg-ml-r3jmt29k1c9z5lsx0g390p16ttljwdgw",
+        "iceberg-ml-n715h56k15pk6j62v4jdn70k8stbr6ld",
+        "iceberg-ml-0563t6dzgk8lgr5mr6pmdkfv5bph6zqy",
+        "iceberg-ml-lvxz92zd93hncpot57p89w6qctmv1vqp",
+        "iceberg-ml-6f2cl73m7h16mcqc567v33h9q84zw67w",
+        "iceberg-ml-jx0k51kt04bkf6c0wdjt873qbdbb8mtp",
+        "iceberg-ml-1q3xkvn2373n3g43qjjhnzj7p0v3d9p9",
+        "iceberg-ml-p51pc0g4l7mvr1x0xrn4gsf7gfnq0cnq",
+        "iceberg-ml-l055gx3spwy2n24kthy38fhoj2qy1tq7",
+        "iceberg-ml-bm9x6f9lxh2901j2scwoqs2gf6mlm6yt",
+        "iceberg-ml-n97qo5nb09ggz5591g7cp99767fv5cf7",
+        "iceberg-ml-k606d81cv8h9f0oxtv5wzwg7qtb8mgxc",
+        "iceberg-ml-jz5s7pm2bhbm87ft495d6yrsh3bqvtb9",
+        "iceberg-ml-7xtpt6m95qwrk8tc8h40p7c743218ylc",
+        "iceberg-ml-5pt5g4q9zt856cpscob37y30mczlf9rx",
+        "iceberg-ml-99lo7stnprchjzosjcq9k3mns1mq8fwc",
+        "iceberg-ml-gfyh8olhc3kk62h7jyxf7shblnq2vjgc",
+        "iceberg-ml-tp4dpw6qj5fyhrh17197bf6fg4gj3rk6",
+        "iceberg-ml-vo9djzjw5j0h5728x8mv2v8fx65t1tfr",
+        "iceberg-ml-k5zxxdjqfrtn2g6ylqfkrhpsf52tn2hy"
+      ],
+      "proposal_count": 30,
+      "shared_docs": [],
+      "last_activity": "2026-10-28T06:16:46+00:00",
+      "signals": [
+        "vote_thread",
+        "topic:rest-spec",
+        "topic:daniel-weeks"
+      ],
+      "archived": false
+    },
+    {
       "id": "iceberg-init-iceberg-ml-58hj4fjyxnh7or9zbl96c1hbzrjdv9t4",
       "title": "PR Review Helps Needed",
       "summary": "The only one that prevails: [#17984 <https://github.com/apache/iceberg/pull/17984>] - Core, Hive: Commit manifest list encryption keys with the snapshot that uses them Once this merges, the release wi",
@@ -1279,10 +1278,10 @@
         "iceberg-ml-fn2ow3mp8qdwmh1h6fozjd97p9j38dhl",
         "iceberg-ml-619z3kdm57tcjvk6c7j9bsor644pr0or",
         "iceberg-ml-llwkomq28v8rjcyp7lzgsyk6ttrdqhx6",
+        "iceberg-ml-6ort0gc9v2snwwqrk0h0wrwtonjocqpx",
         "iceberg-ml-yj9xl451qdm9t37grb3hp04jxd9pknk1",
         "iceberg-ml-m49y4w9xz9l92nydnyoxrpwhz9k7d3zj",
         "iceberg-ml-vhnx0khkf48forjk01lj9cxpdvymng6c",
-        "iceberg-ml-9g9nywj7xpxkf3l4wz9p5qgszm9x1r13",
         "iceberg-ml-b1h9gppx5gdptghqj2xo9bg0j9wywf2f",
         "iceberg-ml-l8hpy699yh24vb4x76nvhcq0w6l5bbz5",
         "iceberg-ml-0bh9t48hrwzt5tzx5rs84y59xfpfkoo9"
@@ -1370,7 +1369,6 @@
         "iceberg-ml-t9k05fltw3fcxkzq4o45tb52y7lyqyxm",
         "iceberg-ml-qdsplzk42bf4qvvvtjl2gpzn521qqtpy",
         "iceberg-ml-q5n355d89nxbhywtlv3qhq7dchbyb67d",
-        "iceberg-ml-497qxkq3nfplwo27fh959zhsc2o7hkmy",
         "iceberg-ml-cfxbdzs0rfopjg8qy101qc9vsokn75p5",
         "iceberg-ml-z32drkgxdlbshysmk3z4987m4ywcjv3x",
         "iceberg-ml-7q4rplst9tf9fpm7b9cco82j5n9q1hl7",
@@ -1379,7 +1377,8 @@
         "iceberg-ml-jmklpnywnghg7qwmwr14zj2k6tnxmdo4",
         "iceberg-ml-fo9gjsb02kpj0n2h87msxtok3b6gg4sx",
         "iceberg-ml-qocy0w2y1wk1775x2n68mt9vompcbhmc",
-        "iceberg-ml-9cdp2vmw1v2xgb3s2cnplqmvsoz036js"
+        "iceberg-ml-nrn25zpocsgo952kfog9sgt5xkx5j2h7",
+        "iceberg-ml-o44sn9n1myzbxgjqy67mf2jpj0szh3t4"
       ],
       "proposal_count": 30,
       "shared_docs": [
@@ -1543,62 +1542,6 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-7tkqczcz25m91nptmvdpv6govrty7owh",
-      "title": "NaN and Infinity in JSON serialization",
-      "summary": "* API\r\n  - Implement bound expression sanitization ([\\#8149](https://github.com/apache/iceberg/pull/8149))\r\n  - Remove overflow checks in `DefaultCounter` causing performance issues ([\\#8297](https://",
-      "status": "released",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-yt-_yzBl1N392M",
-        "iceberg-gh-i13462",
-        "iceberg-gh-rel-apache-iceberg-1-4-0",
-        "iceberg-ml-98ojhwbw1wswst5pfxg0r7wgyrb966pf",
-        "iceberg-ml-7otnzpb2lwcw1ck520y7qcgz570occo3",
-        "iceberg-ml-sq52zcsmc7ls7gzv6o10r9r5m4kobvx4",
-        "iceberg-ml-ntb9r6n4d4ohhjvvswzkbgt1yd1p56kl",
-        "iceberg-ml-s283f6obyqf6c14bn37sw7vtf9y1c9mj",
-        "iceberg-ml-7tkqczcz25m91nptmvdpv6govrty7owh",
-        "iceberg-ml-orwny91fqyfmzx7w7p6wj7cgmndvd8r3",
-        "iceberg-ml-5lw2s0zs14p8tlmj2mlwdbg46fq7tkxt",
-        "iceberg-ml-n4hyqr3k2gnzbxvs3l1o4cz3ggdfwkx2",
-        "iceberg-ml-njo5bzgf4m126ly74ydz1pfznhz70h38",
-        "iceberg-ml-hoyt1k23sjtw37z7gd2kzqm4r99gl1hm",
-        "iceberg-ml-bw8pvv1mghgfl96ny0sbqkx3ct33lco6",
-        "iceberg-ml-br8bfgbd68z3tmmzrpkm5fqm4zqsvd4b",
-        "iceberg-ml-dpcg8qbt57t0b09bdm7xdwstvstk6zyb",
-        "iceberg-ml-rfyj9vlpkc42vwndxwc0rk5dj8nsbd80",
-        "iceberg-ml-0563t6dzgk8lgr5mr6pmdkfv5bph6zqy",
-        "iceberg-ml-lvxz92zd93hncpot57p89w6qctmv1vqp",
-        "iceberg-ml-whbgoc325o99vm4b599f0g1owhgww2kx",
-        "iceberg-ml-l055gx3spwy2n24kthy38fhoj2qy1tq7",
-        "iceberg-ml-2bpwmbxlwyvhkb924yv67038rpzl1yw8",
-        "iceberg-ml-vnqw4rnlzs1zrjnp8tr2lmmjm3yrc3k1",
-        "iceberg-ml-q9pk815n12v9dh712pb8wdqv3xw2pqwg",
-        "iceberg-ml-1jm9zd6rtgjsvly3x099wvgdbohjn29v",
-        "iceberg-ml-dplytsw3j6v6lg5rs8pws9g105xqmpt9",
-        "iceberg-ml-2ty27yx4q0zlqd5h71cyyhb5k47yf9bv",
-        "iceberg-ml-n21ojvn0go5yvky06cyw2yrlhx77x7mm"
-      ],
-      "proposal_count": 29,
-      "shared_docs": [
-        {
-          "url": "https://docs.google.com/document/d/1u93kyIrTc8bt9VSTB4O0GM9S7zuXekqixJR6Id2FZC4/edit?usp=sharing",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffProposal: Derived Column Support"
-        }
-      ],
-      "last_activity": "2026-10-22T17:03:20+00:00",
-      "signals": [
-        "shared_doc",
-        "cross_source",
-        "vote_thread",
-        "topic:remote-signing",
-        "topic:rest-spec"
-      ],
-      "archived": false
-    },
-    {
       "id": "iceberg-init-iceberg-ml-4ht89t1zxnl4c33hfrx5nx1lfl00lqr0",
       "title": "uffhg",
       "summary": "uffhg",
@@ -1670,6 +1613,35 @@
       "archived": false
     },
     {
+      "id": "iceberg-init-iceberg-ml-7otnzpb2lwcw1ck520y7qcgz570occo3",
+      "title": "make appendUpdate public",
+      "summary": "The discussion proposes using derived/virtual columns to track field IDs for non-materialized columns in Iceberg v4, leveraging existing sort order and group statistics for indexing. Participants sugg",
+      "status": "discussion",
+      "key_points": [],
+      "proposal_ids": [
+        "iceberg-ml-7otnzpb2lwcw1ck520y7qcgz570occo3",
+        "iceberg-ml-sq52zcsmc7ls7gzv6o10r9r5m4kobvx4",
+        "iceberg-ml-28kw8cnzm835y2l8c6w8pp3m24551qlb",
+        "iceberg-ml-rmr96wwdcf1p04tbg1cpc4632ogv6zy8"
+      ],
+      "proposal_count": 4,
+      "shared_docs": [
+        {
+          "url": "https://docs.google.com/document/d/1u93kyIrTc8bt9VSTB4O0GM9S7zuXekqixJR6Id2FZC4/edit?usp=sharing",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffProposal: Derived Column Support"
+        }
+      ],
+      "last_activity": "2026-10-20T10:22:01+00:00",
+      "signals": [
+        "shared_doc",
+        "topic:indexing",
+        "topic:derived-columns"
+      ],
+      "archived": false
+    },
+    {
       "id": "iceberg-init-iceberg-yt-SySKoTWWLfo",
       "title": "Encryption community sync",
       "summary": "> > Document: [Proposal > <https://docs.google.com/document/d/1Qr82hccxJhWxKRT7B-3ylhOLSaJTYfc7hU51-mhzK6Y/edit?usp=sharing> > ] > > The plan: start with the smallest primitives (type strings, transfo",
@@ -1685,6 +1657,7 @@
         "iceberg-yt-gZ82VlKNfdo",
         "iceberg-yt-zdisDioOvVE",
         "iceberg-yt-KKm5oHdbsn0",
+        "iceberg-yt-_yzBl1N392M",
         "iceberg-yt-sGCyTv5kk9o",
         "iceberg-yt-HW80v23j7Jw",
         "iceberg-yt-Z-Y2zoZD3hM",
@@ -1694,6 +1667,7 @@
         "iceberg-yt-dLOZxgXrcyg",
         "iceberg-yt-usgUe8r_e9E",
         "iceberg-yt-vNvOHMHXHGw",
+        "iceberg-gh-i13462",
         "iceberg-ml-n9k9sbbl4wj7qy5pl03r0990rwpcs6zg",
         "iceberg-ml-bjztsshokns59lzrmny6szlvk7vk2o6c",
         "iceberg-ml-mxjkhmwp29cgc12hr86zcsmgzhb8ok0l",
@@ -1705,9 +1679,10 @@
         "iceberg-ml-jmj5gdrpsmn0g88jkn3go393hm6vl1yc",
         "iceberg-ml-k3crsxx2jwl2gsckt2by8fnwn7skjw28",
         "iceberg-ml-cqwg7fmnhyhnh4rnnpfjqsvllp2lxvvk",
-        "iceberg-ml-fnj2wjk7wwbonc82znkx7r9xs9mfkddf"
+        "iceberg-ml-fnj2wjk7wwbonc82znkx7r9xs9mfkddf",
+        "iceberg-ml-2bpwmbxlwyvhkb924yv67038rpzl1yw8"
       ],
-      "proposal_count": 30,
+      "proposal_count": 33,
       "shared_docs": [
         {
           "url": "https://docs.google.com/document/d/1Qr82hccxJhWxKRT7B-3ylhOLSaJTYfc7hU51-mhzK6Y/edit?tab=t.nw4xvjil9lqu#heading=h.4mrs46t8e97h",
@@ -1792,93 +1767,56 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-28kw8cnzm835y2l8c6w8pp3m24551qlb",
-      "title": "make appendUpdate public",
-      "summary": "Dzeri proposes making the appendUpdate method in BaseTransaction public to simplify custom index integration, avoiding reflection or wrapping. The discussion highlights an alternative using the SnapshotAncestryValidator hook introduced in 1.11 for conflict detection, and explains the use case of embedding a proprietary index into a statistics file. The community considers the trade-offs between API exposure and existing validation mechanisms.",
-      "status": "discussion",
-      "key_points": [
-        "Proposal to expose appendUpdate method",
-        "Alternative via SnapshotAncestryValidator hook",
-        "Custom index requires special transaction semantics"
-      ],
-      "proposal_ids": [
-        "iceberg-ml-28kw8cnzm835y2l8c6w8pp3m24551qlb"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2026-10-13T10:55:24+00:00",
-      "signals": [],
-      "archived": false
-    },
-    {
       "id": "iceberg-init-iceberg-ml-vd2op7dxbqk6llsjv9m3r4ngv260gzd7",
       "title": "Readers must accept promotable types",
-      "summary": "The first is in Iceberg-core: it owns the materialized-view metadata and the parsing/recording of the source states (what the result was computed from) and performs the basic freshness checks. That > ",
+      "summary": "I opened a draft PR to move the current proposal into the REST OpenAPI spec: https://github.com/apache/iceberg/pull/17155 > Hi folks, > > I wrote up a spec proposal for the KMS credential vending part",
       "status": "released",
       "key_points": [],
       "proposal_ids": [
         "iceberg-ml-c91ph82tnrlhj8qq9lj8n72b0s7qq5r0",
         "iceberg-ml-vd2op7dxbqk6llsjv9m3r4ngv260gzd7",
-        "iceberg-ml-crc2v9hwgxjfgbdktm3nvbo6cxysp7d0",
-        "iceberg-ml-xhrl87d1lnqhm0d8n6w3dzjb1k9hkqcj",
+        "iceberg-ml-ntb9r6n4d4ohhjvvswzkbgt1yd1p56kl",
+        "iceberg-ml-s283f6obyqf6c14bn37sw7vtf9y1c9mj",
         "iceberg-ml-27h7wvzcxc5tszthdmryj5y5m576cw6x",
-        "iceberg-ml-yrsp7fmm6o8zh3624r335fdxczo2mg5s",
         "iceberg-ml-1269w5pzoy723sr1c6xxq8jg02zcf3on",
         "iceberg-ml-25k9cy51bl57wwqwx656yk7ly41bz4jt",
         "iceberg-ml-tlwrd245wsrsrn4mytqjg6dopj98g2hc",
         "iceberg-ml-b8wfjvdfc98fv2f7qd3dbb0j1jbr0ysv",
         "iceberg-ml-0nn11o4xf1nmw68d4px33sxw5tzzmgbo",
-        "iceberg-ml-1j1m9b2l70ogngh0mn5fd7or7kfzo5q7",
-        "iceberg-ml-bj473mx8msvdncwxb6otxvx32nkjcqvf",
-        "iceberg-ml-m8o0dc0q1pbn6nlt7o1bp7zjy5k31kds",
         "iceberg-ml-tfy96bqmz1bmdxr73x17w3xxj3yzs606",
+        "iceberg-ml-xno8c88sm4mlt0y5yw7p3tsob8wmhgkg",
+        "iceberg-ml-wg8m058z1jy9dss7jotx6g8h9ko1fxho",
         "iceberg-ml-9oncq0j0222nrm6scvm89xdq3gozg24p",
-        "iceberg-ml-1q3xkvn2373n3g43qjjhnzj7p0v3d9p9",
-        "iceberg-ml-p51pc0g4l7mvr1x0xrn4gsf7gfnq0cnq",
         "iceberg-ml-o0xczsrjm8xqbmy7rs0tpg0lwx9z4vqh",
         "iceberg-ml-8grrr8r11ovtokj6blnvmqxb1jpzjzn5",
+        "iceberg-ml-lcjvzp8o1n6bvvhbr1lo0zx7w9ncs1pm",
         "iceberg-ml-mz01jwt69osqxhx9d3dd9xzncv9yncd0",
         "iceberg-ml-ds4kg1zqrsx0n9266kxxcmzgtbb11k3c",
+        "iceberg-ml-6fnrp73wokfqlt5vormpjyjmtvl29ll1",
         "iceberg-ml-0jqfryvx0m19698h9xph9co0wh72hpv3",
+        "iceberg-ml-9wt52vq1895czzbkxjlz30923vp6r6sb",
+        "iceberg-ml-of8x50751vy3hv3xk3gcgncp4jry8z6x",
+        "iceberg-ml-7kpbqtqf7o14s4t2106hjr3pr2l4gb61",
         "iceberg-ml-qrc4tb2bcdy4twfyjtlc4gzq0zl6pcx8",
-        "iceberg-ml-zcv6qm9ysknrhfpg093qgnrkrolptcht",
         "iceberg-ml-cfv4xnf74sfgt00lt233lsbwr6b4o3bo",
-        "iceberg-ml-y1l45bwdh59hnvc942lfh7g89n45v4xq",
         "iceberg-ml-hk9x9qk5xxcdlg9tt609tmzm81y1k8tm",
-        "iceberg-ml-rotmqzmwk5jrcsyxhzjhrvcjs5v3yjcc",
         "iceberg-ml-cwl89mgm7fj8w6zq92x7622f96q9c8h0"
       ],
-      "proposal_count": 30,
+      "proposal_count": 28,
       "shared_docs": [
         {
           "url": "https://docs.google.com/document/d/1VSewbVmjukU5eTiZruCJVmUZcRZvcAsd4JOeC6Lt3fo&source=gmail&ust=1791870345063000&sa=E",
           "kind": "google_doc",
           "fetched": true,
           "title": "\ufeffKMS credential vending for Iceberg table encryption"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1UnhldHhe3Grz8JBngwXPA6ZZord1xMedY5ukEhZYF-A/edit?tab=t.4lz4t8og6hk2",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffAgenda"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1_StBW5hCQhumhIvgbdsHjyW0ED3dWMkjtNzyPp9Sfr8/edit?tab=t.0",
-          "kind": "google_doc"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1zg0wQ5bVKTckf7-K_cdwF4mlRi6sixLcyEh6jErpGYY/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffModeling of Materialized Views in Apache Iceberg"
         }
       ],
       "last_activity": "2026-10-13T07:18:36+00:00",
       "signals": [
         "shared_doc",
         "vote_thread",
-        "topic:row-lineage",
-        "topic:rest-catalog"
+        "topic:rest-catalog",
+        "topic:row-lineage"
       ],
       "archived": false
     },
@@ -1985,6 +1923,109 @@
       "shared_docs": [],
       "last_activity": "2026-10-07T21:39:44+00:00",
       "signals": [],
+      "archived": false
+    },
+    {
+      "id": "iceberg-init-iceberg-ml-ff4v7jvtl1r44wvl0nntlv0d63n8p8p7",
+      "title": "Upgrade arrow-java dependency to 19.0.0",
+      "summary": "Robert Kruszewski opened a pull request to upgrade the Arrow Java dependency from 15.0.2 to 19.0.0, aiming to position the project for Arrow 20 and enable new features such as Decimal32/64, ListView, VarBinView, and UUID support. The discussion highlights the long\u2011standing lag in dependency updates and the benefits of the proposed upgrade.",
+      "status": "discussion",
+      "key_points": [
+        "Proposed upgrade to arrow-java 19.0.0",
+        "Goal to enable new Arrow features (Decimal32/64, ListView, VarBinView, UUID)",
+        "Concern about outdated dependency"
+      ],
+      "proposal_ids": [
+        "iceberg-ml-ff4v7jvtl1r44wvl0nntlv0d63n8p8p7"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-10-07T16:05:25+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
+      "id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-6-0",
+      "title": "Fixing Replace Table Commit Bug",
+      "summary": "## What's Changed\r\n\r\n* API, Spark 3.3: Remove all usages of deprecated AssertHelpers by @findepi in https://github.com/apache/iceberg/pull/10500\r\n* API: Fix default FileIO#newInputFile ManifestFile, D",
+      "status": "proposal",
+      "key_points": [],
+      "proposal_ids": [
+        "iceberg-gh-i13855",
+        "iceberg-gh-rel-apache-iceberg-1-6-0",
+        "iceberg-ml-09rg2v2f308nbjhfhjq51gs3hypg0bsh",
+        "iceberg-ml-xhrl87d1lnqhm0d8n6w3dzjb1k9hkqcj",
+        "iceberg-ml-bj0sgk79yx0yt0wnr8jww2dsjsjc5tqj",
+        "iceberg-ml-q49363jt0q06ld9wz6v4cz9gtfrln4kr",
+        "iceberg-ml-yrsp7fmm6o8zh3624r335fdxczo2mg5s",
+        "iceberg-ml-n1fowdv252t327hqbok8rxt2dcy7tchw",
+        "iceberg-ml-5g55jlwf3krh7op5ophs22cpno2v0l8n",
+        "iceberg-ml-qtb5tk81l3vtjn8lg8h0o7mbj825rd5t",
+        "iceberg-ml-kqgqtpjpxrmz137myyf492vvcxsohxvc",
+        "iceberg-ml-6v25f55oj5p1kycg978tqq3ycvs2jd42",
+        "iceberg-ml-1j1m9b2l70ogngh0mn5fd7or7kfzo5q7",
+        "iceberg-ml-47rcp7gtpbxzoj9o26fd9rwm50663hmx",
+        "iceberg-ml-bj473mx8msvdncwxb6otxvx32nkjcqvf",
+        "iceberg-ml-4qg7j9sjtk28bcwn34v2w9yb7dlm7fzj",
+        "iceberg-ml-m8o0dc0q1pbn6nlt7o1bp7zjy5k31kds",
+        "iceberg-ml-6ob6xkov6p1f1c8smhbxyzf33s4m0jlo",
+        "iceberg-ml-5nnddr30mm077rxj4xw3odvhhpcvh2rf",
+        "iceberg-ml-f7zd1dvlf6l1gw6wmnh9g404trcrkg06",
+        "iceberg-ml-5ymlw1z0lfkhtb2sh4r44yk6h336ck4v",
+        "iceberg-ml-b5k7vdng904zr3n3q8wv83y8l30rnd4c",
+        "iceberg-ml-jbg14hb7mvrg2m34845xbzfvnjg5bh00",
+        "iceberg-ml-1pqnbvhj16gd2wqohgp6ht0sxcslk0wx",
+        "iceberg-ml-ofrk0fqdj76hk1520649odxnd9xl71f4",
+        "iceberg-ml-zcv6qm9ysknrhfpg093qgnrkrolptcht",
+        "iceberg-ml-2lo59wkhn8cm29wmokfmg2f18934qnln",
+        "iceberg-ml-y1l45bwdh59hnvc942lfh7g89n45v4xq",
+        "iceberg-ml-r94shdmf8j96k2cznxj7pf2vq0wkfsxw",
+        "iceberg-ml-rotmqzmwk5jrcsyxhzjhrvcjs5v3yjcc"
+      ],
+      "proposal_count": 30,
+      "shared_docs": [
+        {
+          "url": "https://docs.google.com/document/d/1UnhldHhe3Grz8JBngwXPA6ZZord1xMedY5ukEhZYF-A/edit?tab=t.4lz4t8og6hk2",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffAgenda"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1_StBW5hCQhumhIvgbdsHjyW0ED3dWMkjtNzyPp9Sfr8/edit?tab=t.0",
+          "kind": "google_doc"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1iPGVCIcr-M0XtAiudOguWAvmqIdVgpYN5vz5ohO8PKw/edit?tab=t.0#bookmark=id.ishstxjeoz1z",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffIceberg Catalog Community Sync Notes"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1WtIsNGVX75-_MsQIOJhXLAWg6IbplV4-DkLllQEiFT8/edit?usp=sharing",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffEvents Endpoint for Iceberg REST Catalog"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1zg0wQ5bVKTckf7-K_cdwF4mlRi6sixLcyEh6jErpGYY/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffModeling of Materialized Views in Apache Iceberg"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1HZa3AyPPfgz9VOVA9rPhJJ8f3F-3tEel_53nIlvYlo0/edit?usp=sharing",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffThe suggested changes are to improve performance of queries that include column to column predicates.  The implementati"
+        }
+      ],
+      "last_activity": "2026-10-06T10:05:29+00:00",
+      "signals": [
+        "shared_doc",
+        "cross_source",
+        "topic:metadata-management",
+        "topic:rest-catalog"
+      ],
       "archived": false
     },
     {
@@ -2179,42 +2220,42 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-12-0",
+      "id": "iceberg-init-iceberg-ml-k5pfk4rork0mp2p303pd70q9nx0tsl9w",
       "title": "Breaking Change in AvroSchemaUtil Behavior",
       "summary": "## What's Changed\r\n* Build: Bump software.amazon.awssdk:bom from 2.30.11 to 2.30.16 by @dependabot in https://github.com/apache/iceberg/pull/12208\r\n* Build: Bump com.google.cloud:libraries-bom from 26",
       "status": "released",
       "key_points": [],
       "proposal_ids": [
         "iceberg-gh-rel-apache-iceberg-1-12-0",
-        "iceberg-yt-jddX8atQJ84",
         "iceberg-gh-rel-apache-iceberg-1-11-0",
         "iceberg-gh-rel-apache-iceberg-1-9-0",
         "iceberg-gh-rel-apache-iceberg-1-8-0",
-        "iceberg-gh-rel-apache-iceberg-1-7-1",
         "iceberg-gh-rel-apache-iceberg-1-7-0",
-        "iceberg-gh-rel-apache-iceberg-1-5-2",
-        "iceberg-gh-rel-apache-iceberg-1-3-0",
-        "iceberg-gh-rel-apache-iceberg-0-14-1",
-        "iceberg-gh-rel-apache-iceberg-0-13-2",
-        "iceberg-gh-rel-apache-iceberg-0-12-1",
-        "iceberg-gh-rel-apache-iceberg-0-12-0",
         "iceberg-ml-qrr6hwzy70slxz24s3gr5dz68mxys9ls",
-        "iceberg-ml-nx46bfyd7qw0ppmod2yppgvz0gnr90gq",
-        "iceberg-ml-gz432tvboxvno2v7g3l17c8tbtxckxrb",
+        "iceberg-ml-k5pfk4rork0mp2p303pd70q9nx0tsl9w",
         "iceberg-ml-wx40fxmplrlsmwhyn8dqohm0ppnshgp1",
+        "iceberg-ml-81hjtpqgz8512grogr2cdrrwlo74szos",
         "iceberg-ml-qvsvdn0nsj4wv3ox004h0948xp0c83bk",
         "iceberg-ml-8z0kc8vz1379lghwlcwl0jmsoym6shd7",
+        "iceberg-ml-prmpbfy6v20spsmts19hs8gbkkxo16vv",
+        "iceberg-ml-rx4x22r97t24hrbn3s73tl8gt7k7c7pc",
+        "iceberg-ml-7jmw3mbrwtwqx1ldxb240hwtxr49vdr1",
         "iceberg-ml-7t9k18rktotp95rxvc8lmt5jc1s0klry",
-        "iceberg-ml-hotlcdw86nrmt7cf5o5o7kq6gwo98758",
+        "iceberg-ml-o64dgmsldq3o7zfvod1m7zn2s1ghljmw",
+        "iceberg-ml-4cknksv5kbr3ry9x0zlt7g1fkm2sgtx7",
         "iceberg-ml-cl177z548ts8vj7s7fmwo5k8tbl7fd9k",
         "iceberg-ml-lyg9r60nt5yd9chw83rxtly7txjlprmm",
         "iceberg-ml-zrydq6svnh9jr3z5vdnrrj3wdjwrkj7k",
         "iceberg-ml-dtozc1d2f0v0w1t9v985rdjhqlh78okn",
-        "iceberg-ml-1zznfh218pqjvpgc8p8hspl6ky2wjlk4",
+        "iceberg-ml-x58g33dqbvxcpdhw9h5o0ns15vzdvszs",
+        "iceberg-ml-xl1cwq7vmnh6zgfd2vck2nq7dfd33ncq",
         "iceberg-ml-33c0nkc3k6646lvro1lv22pvhwlp50ss",
-        "iceberg-ml-gs0tswlp5hx3jsjgbppdfr7ll48gy9o9",
-        "iceberg-ml-7tw9qzz7yd8c4d7tcrwpmn7k0ojws7zh",
-        "iceberg-ml-5570vbdkrk7mdswt4jqy45lv7y58pz4b"
+        "iceberg-ml-hzcd51js0ofpwc4rq3yxnv9rv06ol9dy",
+        "iceberg-ml-10dy1l1mf1sh6n5p215fx6yyphnh8zpd",
+        "iceberg-ml-ckj8rmjrwh9qmy5o5gk6qkk6hxd54ggq",
+        "iceberg-ml-oy9xj4tw0sdb8hbmw2bhhfq0t20gztnh",
+        "iceberg-ml-rkv5omc5hfpyx9w87frhdyggbgvpv6sw",
+        "iceberg-ml-jlmmw6yj13wt5ykkmso1g4n58jmo5t8m"
       ],
       "proposal_count": 30,
       "shared_docs": [],
@@ -2222,8 +2263,8 @@
       "signals": [
         "cross_source",
         "vote_thread",
-        "topic:apache-iceberg",
-        "topic:iceberg"
+        "topic:release-planning",
+        "topic:bug-fixes"
       ],
       "archived": false
     },
@@ -2416,6 +2457,21 @@
       "archived": false
     },
     {
+      "id": "iceberg-init-iceberg-ml-crc2v9hwgxjfgbdktm3nvbo6cxysp7d0",
+      "title": "Spark routing architecture for Iceberg Materialized Views",
+      "summary": "The first is in Iceberg-core: it owns the materialized-view metadata and the parsing/recording of the source states (what the result was computed from) and performs the basic freshness checks. That > doesn't exist yet so I think starting with the simple case (replace a view > with a table read) and allowing engines to add complexity over time is > probably the right way to go. > > Ryan > > On Mon, Jun 29, 2026 at 12:50\u202fPM Walaa Eldin Moustafa < > wa.moustafa@gmail.com> wrote: > >> Hi all (cross-posting to Iceberg and Spark dev lists), >> >> I'd like to gather input from both communities on an architectural >> decis",
+      "status": "discussion",
+      "key_points": [],
+      "proposal_ids": [
+        "iceberg-ml-crc2v9hwgxjfgbdktm3nvbo6cxysp7d0"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-09-21T06:11:45+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
       "id": "iceberg-init-iceberg-ml-z2kc7n4pkjobcyrhbptgrbxbvkhd5pqv",
       "title": "Swag request from a high school student who loves Apache Ice",
       "summary": "I've been using Apache Iceberg for several months, and its modern open table format taught me how transactional data lakehouses work. I'm writing to ask whether Apache Iceberg sends swag \u2014 stickers, a t-shirt, anything \u2014 to students or community members. I'd genuinely love to wear and use it around school, because I already tell my classmates about Apache Iceberg whenever the subject comes up.",
@@ -2444,14 +2500,13 @@
         "iceberg-ml-r5rlsdvx0z3r041ymmlg19zmkw0y2z93",
         "iceberg-ml-wxy1tnnx09sgjtbtsv6nk5jzvc118c0t",
         "iceberg-ml-2oxw5c53hrdg54b1jo7v4wf9bk1xm3t0",
-        "iceberg-ml-6vmyk16qnqw5mkfhx177sm6f0qttoxtg",
         "iceberg-ml-qwbhztgf3dn4pbxmd0g90oqrm5tkvj70",
         "iceberg-ml-3cy0818rl2b3zn68b1c4tddqbm1xlv7b",
         "iceberg-ml-6858r6njgqxl95bxrh81o1p5h8r3cxmt",
         "iceberg-ml-dg4lr81p17tt6g4mdo47x3x2pxyk020j",
         "iceberg-ml-n03tfgvn6wsxlg1hyqslss40xsmnylsm"
       ],
-      "proposal_count": 13,
+      "proposal_count": 12,
       "shared_docs": [],
       "last_activity": "2026-09-20T08:27:26+00:00",
       "signals": [
@@ -2690,20 +2745,38 @@
       "archived": false
     },
     {
+      "id": "iceberg-init-iceberg-ml-71nlx8ktrpp98ql930nz34d2qvcx19lo",
+      "title": "Moving forward with iceberg-rust 0.11 release",
+      "summary": "> > On Mon, Aug 31, 2026 at 3:20\u202fAM Renjie Liu <li...@gmail.com> > wrote: > >> +1 for moving forward with 0.11 release. >> >> On Wed, Aug 26, 2026 at 5:34\u202fPM Jones, Danny <dj...@amazon.co.uk> >> wrote: >> >>> Hey Rust-interested folks, >>> >>> >>> >>> I\u2019d like to propose that we move forward with a release of iceberg-rust >>> 0.11. I\u2019m happy to volunteer as release manager, and Shawn offered to >>> support me with steps that required committer privileges.",
+      "status": "discussion",
+      "key_points": [],
+      "proposal_ids": [
+        "iceberg-ml-71nlx8ktrpp98ql930nz34d2qvcx19lo"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-09-01T11:00:33+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
       "id": "iceberg-init-iceberg-ml-3zq0vpkw5xkp48okq5ocpqft5mnyg03s",
       "title": "PyIceberg 0.12.0rc2",
-      "summary": "I'm pleased to announce the release of Apache PyIceberg 0.5.0! PyIceberg 0.5.0 comes with many new features:\n\n   - Add gzip metadata support <https://github.com/apache/iceberg/pull/7984>\n   - PyArrow ",
+      "summary": "Proposal to remove Hive locks from HiveCatalog by leveraging a new Hive feature (HIVE-26882) that provides transactional metadata location checks before table alterations. This approach eliminates aba",
       "status": "released",
       "key_points": [],
       "proposal_ids": [
         "iceberg-gh-rel-apache-iceberg-1-5-0",
         "iceberg-ml-3zq0vpkw5xkp48okq5ocpqft5mnyg03s",
         "iceberg-ml-5qhn33k5kr0t9g3vvqqxc893bs11jxlc",
+        "iceberg-ml-wsy33whf9bn3n5fop8m82lj2lq7dqtvz",
         "iceberg-ml-0j6sfpxtcx371ht4yfoh46wx2shjwml0",
         "iceberg-ml-9dstoqkmtto7np0v0mw6vx8h74wgz8jc",
         "iceberg-ml-wvvj9v0y00yvz5nnvpg7fl4dtql4437q",
+        "iceberg-ml-g889dzv4ofp0o66b22q1qtjtvo0q58c8",
         "iceberg-ml-tbr90g0kx201dj5323hwqyd6rbkjtjyc",
         "iceberg-ml-9v38dntmbt91gfyq372j6fy12yn0ojfj",
+        "iceberg-ml-v4odz4p7h8wzbjnvt9boylx031jorn93",
         "iceberg-ml-8ttopt88jdjhyl1kv9py6h5q59fcxz70",
         "iceberg-ml-rxszwx895kmfdos6l66j5w54dcftkjjq",
         "iceberg-ml-0xcw56z1bpldypm7pv92h70fhhq0qgfq",
@@ -2714,19 +2787,17 @@
         "iceberg-ml-7jccszv7m01yj21yx5htmqv021htfw1o",
         "iceberg-ml-pry0n9zm2h27wbbbyslm86hh1o23q2tf",
         "iceberg-ml-zxo1obql2124xwb1qbq7qnn3trdl02x3",
-        "iceberg-ml-f8vofwmmhkccyx0kh4d71xt0gtq5ry4k",
         "iceberg-ml-6zvvqmzymp1kyg4jxnyqb5g2tz1d4x6k",
         "iceberg-ml-wtsnm3lshd5lhp8d6phxp1ovwb9g3hgr",
         "iceberg-ml-hx0bpbvlkl3gcwo24yfogyss4dvxzcx2",
         "iceberg-ml-fcln3mkqnhvjd2prxb41zvfg7x4d2qod",
-        "iceberg-ml-kk80mlpcp3mrmkmn83xq1x02s13vfl1h",
         "iceberg-ml-k849zky5v0hfmq85h6yooqj1hvw34wgd",
         "iceberg-ml-yb43dx2lp1gz9od9oo9g60yzj14gjyg2",
         "iceberg-ml-f6188s5z3twxdo8jpfdohyfomlxlnrmt",
         "iceberg-ml-w4robh01dn3hqfrk3skchq4364cb31f8",
         "iceberg-ml-sqy91d9yylk6yv57kjmnngzb8590vgrw"
       ],
-      "proposal_count": 29,
+      "proposal_count": 30,
       "shared_docs": [],
       "last_activity": "2026-08-31T17:50:43+00:00",
       "signals": [
@@ -2826,21 +2897,17 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-6y446mbtrho2r54cbd2x9gzyb13jjlbl",
-      "title": "Initial IRC changes needed for Iceberg V4",
-      "summary": "Another way of solving this would be to make a required response field optional (manifest-list and metadata-location) without bumping the model/api versions. However, one of the incompatiblity is that the server should NOT return `200` with a response that violates its documented schema(e.g., missing the required manifest-list path in a snapshot) via v1 endpoint. Though it's a bit awkward since there have been changes for v3 like new data types or new optional snapshot fields going over the wire which arguably also are not",
+      "id": "iceberg-init-iceberg-ml-tnx2p2hbot2vpn5rbz5xd24chn871d27",
+      "title": "Register for Lakehouse Day EU 2026",
+      "summary": "Lakehouse Day will take place on October 10 in Glasgow, Scotland, co-located with Community Over Code. It's a full-day, multi-track event dedicated to open lakehouse technologies under the ASF umbrella, with content covering Apache Iceberg, Parquet, Polaris, Gravitino, Paimon, Hudi, XTable, Fluss, and more. We've deliberately created Lakehouse Day to bring folks from across these projects together under one roof to meet, discuss, and share ideas.",
       "status": "discussion",
-      "key_points": [
-        "Hey Dhruv,\n\nI think the second approach is a much cleaner solution, though it relies on\nsome nuance for backward compati",
-        "I largely agree with Dan and Amogh.",
-        "Yufei,\n\nThe compatibility issue is related to the conflict of relaxing the required\ntable location field for relative pa"
-      ],
+      "key_points": [],
       "proposal_ids": [
-        "iceberg-ml-6y446mbtrho2r54cbd2x9gzyb13jjlbl"
+        "iceberg-ml-tnx2p2hbot2vpn5rbz5xd24chn871d27"
       ],
       "proposal_count": 1,
       "shared_docs": [],
-      "last_activity": "2026-08-24T19:53:17+00:00",
+      "last_activity": "2026-08-25T18:49:54+00:00",
       "signals": [],
       "archived": false
     },
@@ -3184,6 +3251,24 @@
       "archived": false
     },
     {
+      "id": "iceberg-init-iceberg-ml-9knf9bs7bx6f4x0tzmjhs5oopo2ghlbo",
+      "title": "Release timing for encrypted deletion fix",
+      "summary": "The discussion revolves around the release timing for the fix to the encrypted deletion vectors bug. The fix has been merged and backported to versions 1.10.x and 1.11.x, and the community is inquiring about the potential release of patches 1.11.1 and 1.10.3, as well as the expected timeframe for version 1.12.0.",
+      "status": "discussion",
+      "key_points": [
+        "Fix for encrypted deletion vectors is merged",
+        "Backports to 1.10.x and 1.11.x are in progress"
+      ],
+      "proposal_ids": [
+        "iceberg-ml-9knf9bs7bx6f4x0tzmjhs5oopo2ghlbo"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-07-16T13:20:36+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
       "id": "iceberg-init-iceberg-ml-0zjm6wmptbz4rpgsp4h3c1v6fsm0492n",
       "title": "ValidateTableIntegrity for Iceberg Tables",
       "summary": "A proposal for a new action called ValidateTableIntegrity aims to ensure that Iceberg table metadata accurately references existing files in storage. This action will help prevent issues like failed queries and data loss by verifying the integrity of metadata across various scenarios, including self-audits and source-destination checks.",
@@ -3261,54 +3346,6 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-vy9fqyopp9c149oy40brdhb10grpq32g",
-      "title": "Clarify field id handling in REST Spec",
-      "summary": "Discussion on handling catalog namespace references when registering views across catalogs. The issue is that registered views retain the original catalog name in their spec, preventing Spark from rea",
-      "status": "released",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-ml-3mdjz2ogqdmgzzpsqbxl2gpnh6rk3ng9",
-        "iceberg-ml-63xpzdp10nd3wgv43z2phz5o9zwwx818",
-        "iceberg-ml-vy9fqyopp9c149oy40brdhb10grpq32g",
-        "iceberg-ml-30voqgmho92o0bnv79qcz1rzlkwh5z39",
-        "iceberg-ml-q60ymn6rq1qzs102zj0vm0fnqjjv0knw",
-        "iceberg-ml-r3jmt29k1c9z5lsx0g390p16ttljwdgw",
-        "iceberg-ml-bcc62zxhc1rqjmwxxll81rpn8yfnr9fy",
-        "iceberg-ml-43f4r20q4n1vow3nssvxnlsbdqw6g6w8",
-        "iceberg-ml-h7cb1h16vxc81o7mf0bvpj9dqn2zmgow",
-        "iceberg-ml-mt4y8vw80glnqqwsr8czfmwvhqf09h46",
-        "iceberg-ml-fgpwnsbslwkm4qxh10y6xn52pprbk274",
-        "iceberg-ml-80dm5b8rxcnqwfqwqoc43grjg8hktqgf",
-        "iceberg-ml-360z73c29zw2gm708g8l11cx4b4z4vrn",
-        "iceberg-ml-yt430r50xp9v5jmhf79m3o56q05x9k3v",
-        "iceberg-ml-520or6svg2yxcthbjc2wt5c9lbx0ntpz",
-        "iceberg-ml-w45r0rrlzyn8v1gzkkqzry8tkbfd0w86",
-        "iceberg-ml-t210ccrcz7fglv3vlwvnz827hb65217d",
-        "iceberg-ml-002y8ndg0s5l7vswkpr4nlr31ld3myg3",
-        "iceberg-ml-m51fxlsbt5yk219ypk2dhj07tlk3407b",
-        "iceberg-ml-bxp7cx6jv0109qghwnscn9x20l6hpqrg",
-        "iceberg-ml-kldn17cpjydrgpv2w01tnxzx8hqthdq7",
-        "iceberg-ml-bm9x6f9lxh2901j2scwoqs2gf6mlm6yt",
-        "iceberg-ml-7xtpt6m95qwrk8tc8h40p7c743218ylc",
-        "iceberg-ml-ptg7yoz0tv5c5mb0p1dbc75p9blfos7h",
-        "iceberg-ml-99lo7stnprchjzosjcq9k3mns1mq8fwc",
-        "iceberg-ml-8h86382omdx9cmvc15m2bf361p5rz4rk",
-        "iceberg-ml-jr058wlwq2s2wcbw234cg6wqxhozox8l",
-        "iceberg-ml-fmlnyn25zvy6r0co0fd2bn2zp3v19srk",
-        "iceberg-ml-wjrrg2qfr0g0p2zrw7fyxt0kov8fzlrx",
-        "iceberg-ml-b40t917l719fx205ohyv1xks4qx065j5"
-      ],
-      "proposal_count": 30,
-      "shared_docs": [],
-      "last_activity": "2026-07-08T17:48:26+00:00",
-      "signals": [
-        "vote_thread",
-        "topic:rest-spec",
-        "topic:rest-catalog"
-      ],
-      "archived": false
-    },
-    {
       "id": "iceberg-init-iceberg-yt-I_aOSlBT4RM",
       "title": "Iceberg Read Restrictions Sync 2026 07 07",
       "summary": "Iceberg Read Restrictions Sync   2026 07 07",
@@ -3357,6 +3394,42 @@
       "archived": false
     },
     {
+      "id": "iceberg-init-iceberg-ml-k09hbrtmzvd9tdjcrv5yb9d0wmx7l6nt",
+      "title": "QuadTree-inspired spatial partitioning for Iceberg",
+      "summary": "A new approach to spatial data management in Iceberg is proposed, utilizing a QuadTree-inspired hierarchy for physical data partitioning instead of relying on metadata-based spatial pruning. This method aims to enhance query performance and support incremental data ingestion without the need for global ordering.",
+      "status": "discussion",
+      "key_points": [
+        "Physical partitioning improves spatial locality",
+        "Supports incremental data ingestion"
+      ],
+      "proposal_ids": [
+        "iceberg-ml-k09hbrtmzvd9tdjcrv5yb9d0wmx7l6nt"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-07-05T07:03:00+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
+      "id": "iceberg-init-iceberg-ml-dpcg8qbt57t0b09bdm7xdwstvstk6zyb",
+      "title": "Clarifying Valid Source Types for Identity Transform",
+      "summary": "There is a discussion regarding the specification of valid source types for the identity transform, highlighting discrepancies between the spec and current implementations. The conversation emphasizes the need for clarification in the spec to align with the behavior of Java and Go implementations, which only accept primitive types and exclude geometry, geography, and variant types.",
+      "status": "discussion",
+      "key_points": [
+        "Specification needs clarification",
+        "Current implementations reject non-primitive types"
+      ],
+      "proposal_ids": [
+        "iceberg-ml-dpcg8qbt57t0b09bdm7xdwstvstk6zyb"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-07-01T19:19:48+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
       "id": "iceberg-init-iceberg-yt-OaeTob3lM1Q",
       "title": "Iceberg Catalog Community Sync Jun 10 2026",
       "summary": "Iceberg Catalog Community Sync Jun 10 2026",
@@ -3398,24 +3471,6 @@
       "proposal_count": 1,
       "shared_docs": [],
       "last_activity": "2026-06-29T20:44:57+00:00",
-      "signals": [],
-      "archived": false
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-q49363jt0q06ld9wz6v4cz9gtfrln4kr",
-      "title": "Fixing Replace Table Commit Bug",
-      "summary": "A bug in the Replace Table flow allows a second commit to occur before the replace finishes, leading to commit conflicts and outdated metadata. A new PR has been opened to address this issue, building on previous work while introducing a unit test to recreate the scenario.",
-      "status": "discussion",
-      "key_points": [
-        "Concurrent commits can cause metadata issues",
-        "New PR aims to fix history loss and field-ID shifts"
-      ],
-      "proposal_ids": [
-        "iceberg-ml-q49363jt0q06ld9wz6v4cz9gtfrln4kr"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2026-06-26T20:13:47+00:00",
       "signals": [],
       "archived": false
     },
@@ -3576,6 +3631,56 @@
       "archived": false
     },
     {
+      "id": "iceberg-init-iceberg-ml-hotlcdw86nrmt7cf5o5o7kq6gwo98758",
+      "title": "Apache Iceberg C++ Release v0.3.0",
+      "summary": "I'm pleased to announce the release of Apache PyIceberg 0.5.0! PyIceberg 0.5.0 comes with many new features:\n\n   - Add gzip metadata support <https://github.com/apache/iceberg/pull/7984>\n   - PyArrow ",
+      "status": "released",
+      "key_points": [],
+      "proposal_ids": [
+        "iceberg-yt-jddX8atQJ84",
+        "iceberg-ml-nx46bfyd7qw0ppmod2yppgvz0gnr90gq",
+        "iceberg-ml-m4rgsw0m2ndd3lyxglq3mwbkjn71728j",
+        "iceberg-ml-zomcjmm233ov9n56mztbofxbwlr26kk5",
+        "iceberg-ml-hotlcdw86nrmt7cf5o5o7kq6gwo98758",
+        "iceberg-ml-ko4bstd6rk4w4xhboh1ynbfmhlhj01rc",
+        "iceberg-ml-7tw9qzz7yd8c4d7tcrwpmn7k0ojws7zh",
+        "iceberg-ml-5570vbdkrk7mdswt4jqy45lv7y58pz4b",
+        "iceberg-ml-f8vofwmmhkccyx0kh4d71xt0gtq5ry4k",
+        "iceberg-ml-t7wtt71m7f7wg2s1ho0s4c97dhrhm6qq",
+        "iceberg-ml-d7x5oncmngtmw9l53w5hqmlrff9ykl9v",
+        "iceberg-ml-6hsqmdlv6q3f56syopfjfoprf9por6rx",
+        "iceberg-ml-kk80mlpcp3mrmkmn83xq1x02s13vfl1h"
+      ],
+      "proposal_count": 13,
+      "shared_docs": [],
+      "last_activity": "2026-06-17T17:17:05+00:00",
+      "signals": [
+        "cross_source",
+        "vote_thread",
+        "topic:file-io",
+        "topic:rust-integration"
+      ],
+      "archived": false
+    },
+    {
+      "id": "iceberg-init-iceberg-ml-gz432tvboxvno2v7g3l17c8tbtxckxrb",
+      "title": "Clarify day partition transform result type as date in the s",
+      "summary": "Vote in progress: 0 binding +1, 12 non-binding +1",
+      "status": "proposal",
+      "key_points": [
+        "Hi all,\n\nFollowing the discussion thread [1], I'd like to call a vote on the\nspec clarification in PR #16446 [2].",
+        "Voters include: Amogh Jahagirdar, Fokko Driesprong, Gang Wu..."
+      ],
+      "proposal_ids": [
+        "iceberg-ml-gz432tvboxvno2v7g3l17c8tbtxckxrb"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-06-13T10:59:30+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
       "id": "iceberg-init-iceberg-ml-25zccjjpmrkx6pp350s64gvvvlx1lg18",
       "title": "Improve Commit Failure Messages",
       "summary": "A proposal has been made to enhance commit failure messages in Iceberg when commit retries are exhausted. The aim is to provide clearer guidance on why retries stopped, helping users adjust their retry configurations effectively.",
@@ -3639,6 +3744,43 @@
       "shared_docs": [],
       "last_activity": "2026-06-08T22:40:53+00:00",
       "signals": [],
+      "archived": false
+    },
+    {
+      "id": "iceberg-init-iceberg-ml-63xpzdp10nd3wgv43z2phz5o9zwwx818",
+      "title": "Adding unregister table endpoint to REST spec",
+      "summary": "Discussion on handling catalog namespace references when registering views across catalogs. The issue is that registered views retain the original catalog name in their spec, preventing Spark from rea",
+      "status": "released",
+      "key_points": [],
+      "proposal_ids": [
+        "iceberg-ml-63xpzdp10nd3wgv43z2phz5o9zwwx818",
+        "iceberg-ml-q60ymn6rq1qzs102zj0vm0fnqjjv0knw",
+        "iceberg-ml-bcc62zxhc1rqjmwxxll81rpn8yfnr9fy",
+        "iceberg-ml-43f4r20q4n1vow3nssvxnlsbdqw6g6w8",
+        "iceberg-ml-h7cb1h16vxc81o7mf0bvpj9dqn2zmgow",
+        "iceberg-ml-mt4y8vw80glnqqwsr8czfmwvhqf09h46",
+        "iceberg-ml-fgpwnsbslwkm4qxh10y6xn52pprbk274",
+        "iceberg-ml-80dm5b8rxcnqwfqwqoc43grjg8hktqgf",
+        "iceberg-ml-360z73c29zw2gm708g8l11cx4b4z4vrn",
+        "iceberg-ml-yt430r50xp9v5jmhf79m3o56q05x9k3v",
+        "iceberg-ml-520or6svg2yxcthbjc2wt5c9lbx0ntpz",
+        "iceberg-ml-w45r0rrlzyn8v1gzkkqzry8tkbfd0w86",
+        "iceberg-ml-t210ccrcz7fglv3vlwvnz827hb65217d",
+        "iceberg-ml-002y8ndg0s5l7vswkpr4nlr31ld3myg3",
+        "iceberg-ml-m51fxlsbt5yk219ypk2dhj07tlk3407b",
+        "iceberg-ml-bxp7cx6jv0109qghwnscn9x20l6hpqrg",
+        "iceberg-ml-kldn17cpjydrgpv2w01tnxzx8hqthdq7",
+        "iceberg-ml-ptg7yoz0tv5c5mb0p1dbc75p9blfos7h",
+        "iceberg-ml-8h86382omdx9cmvc15m2bf361p5rz4rk"
+      ],
+      "proposal_count": 19,
+      "shared_docs": [],
+      "last_activity": "2026-06-06T02:18:48+00:00",
+      "signals": [
+        "vote_thread",
+        "topic:rest-catalog",
+        "topic:api-design"
+      ],
       "archived": false
     },
     {
@@ -4109,22 +4251,21 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-6f2cl73m7h16mcqc567v33h9q84zw67w",
+      "id": "iceberg-init-iceberg-ml-o6ojgqyzrpwxp1wb0onl7wxmrxrfgx46",
       "title": "Support Recursive Namespace Listing in REST Catalog",
-      "summary": "Eduard proposes making the namespace separator configurable in the Iceberg REST API to address issues with V1 API users upgrading their server stack and to unblock work on secure views. The configurat",
+      "summary": "A proposal has been made to add support for recursively listing namespaces in the REST catalog to improve efficiency. Currently, the Iceberg connector flattens results from multiple namespace requests, which can be time-consuming. Feedback has been positive, with suggestions for an optional 'recursive' parameter to streamline the process.",
       "status": "discussion",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-ml-o6ojgqyzrpwxp1wb0onl7wxmrxrfgx46",
-        "iceberg-ml-6f2cl73m7h16mcqc567v33h9q84zw67w",
-        "iceberg-ml-6ort0gc9v2snwwqrk0h0wrwtonjocqpx"
+      "key_points": [
+        "Support for multi-level namespaces",
+        "Optional 'recursive' parameter proposed"
       ],
-      "proposal_count": 3,
+      "proposal_ids": [
+        "iceberg-ml-o6ojgqyzrpwxp1wb0onl7wxmrxrfgx46"
+      ],
+      "proposal_count": 1,
       "shared_docs": [],
       "last_activity": "2026-05-11T17:40:33+00:00",
-      "signals": [
-        "topic:rest-catalog"
-      ],
+      "signals": [],
       "archived": false
     },
     {
@@ -4302,24 +4443,6 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-yt-CDiwC0uEfoE",
-      "title": "Iceberg Spark Community Sync April 2026",
-      "summary": "The Iceberg Spark Community Sync held on April 21, 2026, focused on recent developments and community contributions. Participants discussed ongoing projects, upcoming features, and collaborative efforts within the community.",
-      "status": "released",
-      "key_points": [
-        "Discussion on recent developments",
-        "Overview of upcoming features"
-      ],
-      "proposal_ids": [
-        "iceberg-yt-CDiwC0uEfoE"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2026-04-22T15:48:47+00:00",
-      "signals": [],
-      "archived": false
-    },
-    {
       "id": "iceberg-init-iceberg-yt-Tj6DdpdPAZg",
       "title": "Iceberg MV sync 2026-04-16",
       "summary": "Iceberg MV sync   2026-04-16",
@@ -4440,20 +4563,20 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-n715h56k15pk6j62v4jdn70k8stbr6ld",
-      "title": "Signer endpoint: extra information in request body",
-      "summary": "The discussion focuses on proposing a change to the REST specification to allow catalog servers to send arbitrary properties to signer clients. This change aims to optimize the signing process for large tables by including additional information in the request body.",
-      "status": "discussion",
+      "id": "iceberg-init-iceberg-yt-cbNaqGQgTzU",
+      "title": "Iceberg V4 Tags and Attributes Sync",
+      "summary": "This video discusses the synchronization of tags and attributes in Iceberg V4. Key updates and enhancements are highlighted, focusing on improving data management and usability.",
+      "status": "released",
       "key_points": [
-        "Proposal to enhance REST spec for signer clients",
-        "Optimizing signing for large tables"
+        "Overview of tags and attributes synchronization",
+        "Enhancements in data management"
       ],
       "proposal_ids": [
-        "iceberg-ml-n715h56k15pk6j62v4jdn70k8stbr6ld"
+        "iceberg-yt-cbNaqGQgTzU"
       ],
       "proposal_count": 1,
       "shared_docs": [],
-      "last_activity": "2026-04-01T14:55:09+00:00",
+      "last_activity": "2026-04-01T17:53:11+00:00",
       "signals": [],
       "archived": false
     },
@@ -4596,29 +4719,24 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-xfv7n1nnmv92f5nkdt1g72hl7cd87nh7",
+      "id": "iceberg-init-iceberg-ml-y3lzymyl1kjj1h7f1th3kcsjn97fsww4",
       "title": "PyIceberg 0.11.1 patch release for REST Catalog regression",
-      "summary": "A proposal to cut a 0.11.1 patch release to fix a critical regression in PyIceberg 0.11.0 where stricter ConfigResponse validation crashes when connecting to Apache Polaris 1.2.0+ due to missing HTTP ",
-      "status": "proposal",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-ml-y3lzymyl1kjj1h7f1th3kcsjn97fsww4",
-        "iceberg-ml-xfv7n1nnmv92f5nkdt1g72hl7cd87nh7",
-        "iceberg-ml-mowmbr36y8wr1k9don2xx36l97n5f1xz",
-        "iceberg-ml-qcs45z3moq4pjbnjq7zzvlnmlbvxml9c",
-        "iceberg-ml-1ml2s5bn8yj4no9xm1jrw4gkb22bh37l",
-        "iceberg-ml-t7wtt71m7f7wg2s1ho0s4c97dhrhm6qq",
-        "iceberg-ml-d7x5oncmngtmw9l53w5hqmlrff9ykl9v",
-        "iceberg-ml-6hsqmdlv6q3f56syopfjfoprf9por6rx"
+      "summary": "A proposal to cut a 0.11.1 patch release to fix a critical regression in PyIceberg 0.11.0 where stricter ConfigResponse validation crashes when connecting to Apache Polaris 1.2.0+ due to missing HTTP methods like PUT in the HttpMethod enum. The fix has already been merged to main and is needed urgently since users upgrading to 0.11.0 with Polaris hit a hard crash on startup with no workaround.",
+      "status": "discussion",
+      "key_points": [
+        "0.11.0 introduced stricter validation that breaks RestCatalog initialization with Apache Polaris",
+        "HttpMethod enum was missing PUT and other standard HTTP methods",
+        "Polaris extends the REST Catalog spec with additional PUT endpoints",
+        "Fix already merged in PR #3010 to main branch",
+        "Critical regression affecting widely-used Polaris catalog implementation"
       ],
-      "proposal_count": 8,
+      "proposal_ids": [
+        "iceberg-ml-y3lzymyl1kjj1h7f1th3kcsjn97fsww4"
+      ],
+      "proposal_count": 1,
       "shared_docs": [],
       "last_activity": "2026-02-26T18:23:29+00:00",
-      "signals": [
-        "vote_thread",
-        "topic:memory-optimization",
-        "topic:performance"
-      ],
+      "signals": [],
       "archived": false
     },
     {
@@ -4658,6 +4776,26 @@
       "proposal_count": 1,
       "shared_docs": [],
       "last_activity": "2026-02-25T02:34:32+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
+      "id": "iceberg-init-iceberg-ml-vk3m2vvnt2n8p5q2zgn7c5lszdd94gwz",
+      "title": "Flink quickstart image and PR merge strategy",
+      "summary": "Robin Moffatt is seeking guidance on resolving a deadlock between two related PRs for adding a Flink quickstart Docker image. The main issues are determining the merge order of PRs #15124 (Docker image) and #15062 (quickstart docs), deciding whether to include the publish script, and resolving the Dockerfile location conflict between two proposed paths.",
+      "status": "discussion",
+      "key_points": [
+        "Two interdependent PRs need coordination: #15124 (Flink quickstart docker image) and #15062 (Flink quickstart with docs)",
+        "Dockerfile location conflict: flink/quickstart vs docker/iceberg-flink-quickstart",
+        "Decision needed on whether to include Docker image publish script in initial merge",
+        "Kevin Liu suggested isolating the publish script to unblock merging the getting started docs"
+      ],
+      "proposal_ids": [
+        "iceberg-ml-vk3m2vvnt2n8p5q2zgn7c5lszdd94gwz"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-02-19T16:20:38+00:00",
       "signals": [],
       "archived": false
     },
@@ -4897,61 +5035,6 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-m4rgsw0m2ndd3lyxglq3mwbkjn71728j",
-      "title": "Make Storage a Trait in Iceberg-rust",
-      "summary": "Proposal to refactor Iceberg-rust's FileIO implementation by making the underlying Storage a trait while keeping FileIO as a struct. This design aims to provide users with flexibility to customize FileIO behavior, similar to the Java implementation, building on consensus reached in GitHub issue #1314.",
-      "status": "discussion",
-      "key_points": [
-        "Storage should be a trait instead of FileIO to enable customization",
-        "FileIO remains a struct wrapping the Storage trait",
-        "Design aligns with Iceberg Java's FileIO architecture",
-        "Currently backed by OpenDAL with static implementation"
-      ],
-      "proposal_ids": [
-        "iceberg-ml-m4rgsw0m2ndd3lyxglq3mwbkjn71728j"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [
-        {
-          "url": "https://docs.google.com/document/d/1-CEvRvb52vPTDLnzwJRBx5KLpej7oSlTu_rg0qKEGZ8/edit?usp=sharing",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffinitial draft"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1-CEvRvb52vPTDLnzwJRBx5KLpej7oSlTu_rg0qKEGZ8/edit?tab=t.dgr4vjtmzh92",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffinitial draft"
-        }
-      ],
-      "last_activity": "2025-11-25T00:26:41+00:00",
-      "signals": [
-        "shared_doc"
-      ],
-      "archived": false
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-zomcjmm233ov9n56mztbofxbwlr26kk5",
-      "title": "Modularize Iceberg Rust Implementations",
-      "summary": "A new RFC proposes modularizing the Iceberg Rust implementation to address coupling issues and improve customization. The proposal aims to prevent community divergence and meet user needs for more flexible architecture.",
-      "status": "discussion",
-      "key_points": [
-        "Addresses tight coupling in iceberg-rust codebase",
-        "Improves customization capabilities for users",
-        "Prevents community fragmentation",
-        "RFC available for community feedback"
-      ],
-      "proposal_ids": [
-        "iceberg-ml-zomcjmm233ov9n56mztbofxbwlr26kk5"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2025-11-19T10:20:41+00:00",
-      "signals": [],
-      "archived": false
-    },
-    {
       "id": "iceberg-init-iceberg-ml-nwkgfrxw7w6ql2s4rjglgqwmmsr4mzqd",
       "title": "Palo Alto Data Analytics Platform Meetup",
       "summary": "All,\n\n\u200bNetwork with fellow users and engineers of Data Analytics Platforms to \nlearn about current issues, methods, and best practices. Collectively, \nwe integrate many open source projects like Iceberg, Flink, Spark, and \nPolaris. Gather with the community to share where we are and where we\u2019ll \ngo in the future.",
@@ -5039,24 +5122,6 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-xno8c88sm4mlt0y5yw7p3tsob8wmhgkg",
-      "title": "mark 503 as non-retryable error code for the Update Table",
-      "summary": "Proposal to treat HTTP 503 status codes as non-retryable for updateTable operations and classify them as CommitStateUnknown, similar to 500/502/504 errors. The change addresses the fact that services ",
-      "status": "proposal",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-ml-xno8c88sm4mlt0y5yw7p3tsob8wmhgkg",
-        "iceberg-ml-wg8m058z1jy9dss7jotx6g8h9ko1fxho"
-      ],
-      "proposal_count": 2,
-      "shared_docs": [],
-      "last_activity": "2025-08-22T04:20:49+00:00",
-      "signals": [
-        "vote_thread"
-      ],
-      "archived": false
-    },
-    {
       "id": "iceberg-init-iceberg-ml-rvxwxv1jzkxmhfb7ojzym08l44s7fqzp",
       "title": "Standardize Error Messages Across Iceberg Clients",
       "summary": "Discussion about inconsistent error messages across Iceberg implementations (Java, Rust, Python, Go) when RCK validates REST catalog responses. The author proposes three potential solutions: standardizing error messages across all implementations, making RCK more permissive by checking only exception types, or handling adaptation at the REST server level.",
@@ -5086,38 +5151,54 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-nrn25zpocsgo952kfog9sgt5xkx5j2h7",
-      "title": "Ambiguity in total-position-deletes metric for V2 vs V3 dele",
-      "summary": "Query engines struggle to distinguish whether 'total-position-deletes' metric indicates legacy V2 position delete files or V3 deletion vectors, leading to conservative and potentially suboptimal scan ",
+      "id": "iceberg-init-iceberg-ml-xr26sc06q7m2cdor2dtctjfd0157x1z9",
+      "title": "Ambiguity in total-position-deletes metric for V2 vs V3 deletion handling",
+      "summary": "Query engines struggle to distinguish whether 'total-position-deletes' metric indicates legacy V2 position delete files or V3 deletion vectors, leading to conservative and potentially suboptimal scan planning. The lack of a 'total-dvs' metric in the Iceberg specification creates ambiguity that persists even after full V3 migration if legacy delete files remain.",
       "status": "discussion",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-ml-xr26sc06q7m2cdor2dtctjfd0157x1z9",
-        "iceberg-ml-nrn25zpocsgo952kfog9sgt5xkx5j2h7",
-        "iceberg-ml-o44sn9n1myzbxgjqy67mf2jpj0szh3t4"
+      "key_points": [
+        "total-position-deletes metric is ambiguous in V3 tables, potentially indicating V2 legacy deletes, V3 deletion vectors, or both",
+        "Engines must conservatively assume both mechanisms exist when total-position-deletes > 0, leading to unnecessarily complex scan plans",
+        "No 'total-dvs' metric exists in the specification to distinguish deletion vector usage from legacy position deletes",
+        "The ambiguity persists even after full V3 migration if legacy delete files are retained in the table"
       ],
-      "proposal_count": 3,
+      "proposal_ids": [
+        "iceberg-ml-xr26sc06q7m2cdor2dtctjfd0157x1z9"
+      ],
+      "proposal_count": 1,
       "shared_docs": [],
       "last_activity": "2025-07-28T20:10:06+00:00",
-      "signals": [
-        "topic:row-level-deletes"
-      ],
+      "signals": [],
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-7x7xcm3y87y81c4grq4nn9gdjd4jm05f",
+      "id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-5-2",
       "title": "Ensure feature consistency across three Spark versions",
       "summary": "Discussion on standardizing Iceberg's Spark runtime artifact naming conventions across Spark 2.4, 3.0, 3.1, and 3.2. Currently, Spark 3.1+ use a consistent format (iceberg-spark-runtime-<version>_<sca",
-      "status": "discussion",
+      "status": "proposal",
       "key_points": [],
       "proposal_ids": [
+        "iceberg-gh-rel-apache-iceberg-1-5-2",
         "iceberg-ml-7x7xcm3y87y81c4grq4nn9gdjd4jm05f",
+        "iceberg-ml-plhxdxjty2w3gdg2fzg5dvvv28y20n3g",
+        "iceberg-ml-bq1x788pk6r0vswtzhjrlr1w03rnt23x",
+        "iceberg-ml-hwxjpnyd6161fvp9kh8f7o4xo6cyl1g7",
+        "iceberg-ml-ttonfgrfb3ssrhl38kc7hljqmf5phlfw",
+        "iceberg-ml-v27bn3wvnhxb7mh9bwmy5qmghnhf4s7f",
+        "iceberg-ml-znvy3fqw5pqrx4nhz0bvntdpqzbgy8mk",
+        "iceberg-ml-zw1blng2d1bbrlcftxwmmhb2l7jxbxqx",
+        "iceberg-ml-bp7kccn055oq9ndczd0h7cfpg85w1v05",
+        "iceberg-ml-s597m6f1knvlfz7tygrm4jpcgynst98m",
+        "iceberg-ml-g6hkynq987zxrtzq9gs4mrl17kqjb82z",
         "iceberg-ml-cwhqktpw0f89gg7hx6fol4dgfkb1t6ny"
       ],
-      "proposal_count": 2,
+      "proposal_count": 13,
       "shared_docs": [],
       "last_activity": "2025-07-23T19:23:29+00:00",
-      "signals": [],
+      "signals": [
+        "cross_source",
+        "topic:spark-compatibility",
+        "topic:release-management"
+      ],
       "archived": false
     },
     {
@@ -5157,43 +5238,6 @@
       "proposal_count": 1,
       "shared_docs": [],
       "last_activity": "2025-07-07T22:01:10+00:00",
-      "signals": [],
-      "archived": false
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-rmr96wwdcf1p04tbg1cpc4632ogv6zy8",
-      "title": "Improving Merge-On-Read Query Performance With Indexing",
-      "summary": "Discussion on indexing strategies to improve merge-on-read query performance and enable fast upserts through deletion vectors. Two primary approaches are compared: partitioned global indexing (decoupled from table partitions) and partition-aligned indexing, with analysis of tradeoffs around lookup performance, index freshness maintenance, and compaction complexity.",
-      "status": "discussion",
-      "key_points": [
-        "Index should map primary keys to data file locations for fast key lookups and upsert support",
-        "Partitioned global indexing uses hash-based bucketing independent of table partitions for deterministic key-to-file mapping",
-        "Global indexing offers flexible partitioning and avoids index rewrites during compaction, but requires synchronous maintenance overhead",
-        "Index freshness and synchronization with underlying data is a key challenge for global indexing approach"
-      ],
-      "proposal_ids": [
-        "iceberg-ml-rmr96wwdcf1p04tbg1cpc4632ogv6zy8"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2025-06-10T23:50:25+00:00",
-      "signals": [],
-      "archived": false
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-5pqco3dkbsbj1zd48qzopnj30stygz5n",
-      "title": "Release Apache Iceberg Rust 0.5.1 RC1",
-      "summary": "Vote in progress: 0 binding +1",
-      "status": "proposal",
-      "key_points": [
-        "A quick update on the release."
-      ],
-      "proposal_ids": [
-        "iceberg-ml-5pqco3dkbsbj1zd48qzopnj30stygz5n"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2025-06-03T19:40:53+00:00",
       "signals": [],
       "archived": false
     },
@@ -5269,20 +5313,24 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-fkqb3y9odvpcc9d4nbtgflw3zwgflk76",
-      "title": "Update partition stats spec for V3",
-      "summary": "Vote in progress: 0 binding +1",
-      "status": "proposal",
-      "key_points": [
-        "My apologies for not following up earlier."
-      ],
+      "id": "iceberg-init-iceberg-ml-1zznfh218pqjvpgc8p8hspl6ky2wjlk4",
+      "title": "Spec changes in preparation for v3",
+      "summary": "Discussion on whether to finalize format version 3 specification now or adopt a regular release cadence (quarterly/semi-annually). Proposes that specifications should be released regularly with featur",
+      "status": "released",
+      "key_points": [],
       "proposal_ids": [
-        "iceberg-ml-fkqb3y9odvpcc9d4nbtgflw3zwgflk76"
+        "iceberg-ml-fkqb3y9odvpcc9d4nbtgflw3zwgflk76",
+        "iceberg-ml-1zznfh218pqjvpgc8p8hspl6ky2wjlk4",
+        "iceberg-ml-gs0tswlp5hx3jsjgbppdfr7ll48gy9o9",
+        "iceberg-ml-36ozxq7zgt6h1h1grq5o3hzz88gto8hp",
+        "iceberg-ml-9tr81rqrkybvrljw6zy5ojnstzs6mts9"
       ],
-      "proposal_count": 1,
+      "proposal_count": 5,
       "shared_docs": [],
       "last_activity": "2025-05-05T21:21:29+00:00",
-      "signals": [],
+      "signals": [
+        "topic:apache-iceberg"
+      ],
       "archived": false
     },
     {
@@ -5302,6 +5350,24 @@
         "topic:apache-airflow",
         "topic:airflow-providers"
       ],
+      "archived": false
+    },
+    {
+      "id": "iceberg-init-iceberg-ml-vnqw4rnlzs1zrjnp8tr2lmmjm3yrc3k1",
+      "title": "Simplify multi-argument field-id(s) encoding",
+      "summary": "Vote PASSED with 5 binding +1 votes and 3 non-binding +1",
+      "status": "released",
+      "key_points": [
+        "Hi everyone,\n\nA while ago, I sent out a DISCUSS around simplifying the encoding of the\nsource-id(s)\n<https://lists.apache.org/thread/ptwmd2r0jwn70bw02",
+        "Voters include: Jean-Baptiste Onofr\u00e9, Russell Spitzer, Daniel Weeks..."
+      ],
+      "proposal_ids": [
+        "iceberg-ml-vnqw4rnlzs1zrjnp8tr2lmmjm3yrc3k1"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2025-04-18T16:18:36+00:00",
+      "signals": [],
       "archived": false
     },
     {
@@ -5350,27 +5416,6 @@
       "proposal_count": 1,
       "shared_docs": [],
       "last_activity": "2025-04-16T11:08:56+00:00",
-      "signals": [],
-      "archived": false
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-hnyhxp3rdrjor1t32xk6kxsfocqkgqzd",
-      "title": "Introducing Iceberg Features metadata field",
-      "summary": "Proposal to add an explicit \"features\" field to Iceberg metadata to declare supported functionalities (row_lineage, variant, default_value, etc.) independently of table spec version. This would simplify reader/writer logic by allowing feature detection through metadata parsing rather than relying on spec version checks and field presence heuristics.",
-      "status": "discussion",
-      "key_points": [
-        "Current approach requires checking table spec version and parsing metadata fields to determine feature availability",
-        "Proposed \"features\" array would decouple feature support from table spec versioning",
-        "Similar pattern already used by Delta Lake",
-        "Could extend to data file format API layer in the future",
-        "Addresses complexity in multi-arg transforms and backward compatibility concerns"
-      ],
-      "proposal_ids": [
-        "iceberg-ml-hnyhxp3rdrjor1t32xk6kxsfocqkgqzd"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2025-04-16T08:44:34+00:00",
       "signals": [],
       "archived": false
     },
@@ -5476,42 +5521,21 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-7k5dwk80k3xy3j8nqcp5osb83sf30kyn",
-      "title": "Release Apache PyIceberg 0.9.0rc3",
-      "summary": "Vote PASSED with 4 binding +1 votes",
-      "status": "released",
+      "id": "iceberg-init-iceberg-ml-lxfbrv32wwn1tkvc37dmor2f8rbkrv2c",
+      "title": "Improve OpenAPI documentation around how NamespaceNotEmptyEx",
+      "summary": "Vote in progress: 0 binding +1, 6 non-binding +1",
+      "status": "proposal",
       "key_points": [
-        "Thanks Drew for running this release!",
-        "Voters include: Fokko Driesprong, \"Honah J.\", Sung Yun..."
+        "Hey everyone,\n\nI'd like to hold a quick VOTE on #12518\n<https://github.com/apache/iceberg/pull/12518> that improves the\ndocumentation around how *Name",
+        "Voters include: Jean-Baptiste Onofr\u00e9, Russell Spitzer, Christian Thiel..."
       ],
       "proposal_ids": [
-        "iceberg-ml-7k5dwk80k3xy3j8nqcp5osb83sf30kyn"
+        "iceberg-ml-lxfbrv32wwn1tkvc37dmor2f8rbkrv2c"
       ],
       "proposal_count": 1,
       "shared_docs": [],
-      "last_activity": "2025-03-06T17:36:09+00:00",
+      "last_activity": "2025-03-18T23:10:06+00:00",
       "signals": [],
-      "archived": false
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-plhxdxjty2w3gdg2fzg5dvvv28y20n3g",
-      "title": "Spark 3.3 support deprecation timeline",
-      "summary": "Discussion about deprecating Spark 3.1 support in Iceberg, with the proposal to make version 1.4 the last release supporting Spark 3.1. The team considers marking Spark 3.1 as deprecated rather than r",
-      "status": "proposal",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-ml-plhxdxjty2w3gdg2fzg5dvvv28y20n3g",
-        "iceberg-ml-ttonfgrfb3ssrhl38kc7hljqmf5phlfw",
-        "iceberg-ml-znvy3fqw5pqrx4nhz0bvntdpqzbgy8mk",
-        "iceberg-ml-zw1blng2d1bbrlcftxwmmhb2l7jxbxqx",
-        "iceberg-ml-s597m6f1knvlfz7tygrm4jpcgynst98m"
-      ],
-      "proposal_count": 5,
-      "shared_docs": [],
-      "last_activity": "2025-02-19T02:34:39+00:00",
-      "signals": [
-        "topic:spark-compatibility"
-      ],
       "archived": false
     },
     {
@@ -5572,26 +5596,22 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-6fnrp73wokfqlt5vormpjyjmtvl29ll1",
-      "title": "Deprecate IRC snapshot-id Field of SetStatisticsUpdate",
-      "summary": "Proposal to deprecate and remove the last-column-id field from the public API and REST spec, as it serves only internal purposes for determining the next field-id when adding schema fields. The field ",
-      "status": "proposal",
-      "key_points": [],
+      "id": "iceberg-init-iceberg-ml-snzvh6yvvyt37j2wcsgblxpplo582vrf",
+      "title": "Adding RemoveSchemasUpdate to REST spec",
+      "summary": "Proposal to add RemoveSchemasUpdate as a new update type to the Iceberg REST specification, following a similar pattern to the recently merged RemovePartitionSpecsUpdate. This enhancement would allow dropping unused schemas from tables.",
+      "status": "discussion",
+      "key_points": [
+        "Adding RemoveSchemasUpdate update type to REST spec",
+        "Follows pattern of RemovePartitionSpecsUpdate for consistency",
+        "PR #12022 submitted for community feedback"
+      ],
       "proposal_ids": [
-        "iceberg-ml-lcjvzp8o1n6bvvhbr1lo0zx7w9ncs1pm",
-        "iceberg-ml-6fnrp73wokfqlt5vormpjyjmtvl29ll1",
-        "iceberg-ml-9wt52vq1895czzbkxjlz30923vp6r6sb",
-        "iceberg-ml-of8x50751vy3hv3xk3gcgncp4jry8z6x",
-        "iceberg-ml-jz5s7pm2bhbm87ft495d6yrsh3bqvtb9"
+        "iceberg-ml-snzvh6yvvyt37j2wcsgblxpplo582vrf"
       ],
-      "proposal_count": 5,
+      "proposal_count": 1,
       "shared_docs": [],
-      "last_activity": "2025-01-27T09:45:09+00:00",
-      "signals": [
-        "vote_thread",
-        "topic:rest-catalog",
-        "topic:api-design"
-      ],
+      "last_activity": "2025-01-28T13:45:33+00:00",
+      "signals": [],
       "archived": false
     },
     {
@@ -5687,6 +5707,22 @@
       "archived": false
     },
     {
+      "id": "iceberg-init-iceberg-gh-rel-apache-iceberg-1-7-1",
+      "title": "Apache Iceberg 1.7.1",
+      "summary": "## What's Changed\r\n* Nessie: Remove compile-time Hadoop dependency by @nastra in https://github.com/apache/iceberg/pull/7054\r\n* Core: Fix deprecation message by @nastra in https://github.com/apache/ic",
+      "status": "discussion",
+      "key_points": [],
+      "proposal_ids": [
+        "iceberg-gh-rel-apache-iceberg-1-7-1",
+        "iceberg-gh-rel-apache-iceberg-1-3-0"
+      ],
+      "proposal_count": 2,
+      "shared_docs": [],
+      "last_activity": "2024-12-06T20:01:03Z",
+      "signals": [],
+      "archived": true
+    },
+    {
       "id": "iceberg-init-iceberg-ml-yy44w0l6g3smwswy7w49r9gv9h18wn22",
       "title": "Release Apache PyIceberg 0.8.1rc1",
       "summary": "Vote PASSED with 4 binding +1 votes",
@@ -5773,26 +5809,6 @@
       "signals": [
         "topic:manifest-management"
       ],
-      "archived": false
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-rlnm8jcv4gk6bzgpgx5gvwrvtjg2l611",
-      "title": "Adjust Catalog Sync Meeting Schedule and Timezone Coverage",
-      "summary": "Proposal to cancel the November 27 8 PM meeting due to Thanksgiving and restructure the recurring catalog sync meetings from twice every 3 weeks to a 6-week alternating schedule with one meeting at 9 AM PT and a new time slot for other timezones. The goal is to improve attendance and accommodate participants across different regions.",
-      "status": "discussion",
-      "key_points": [
-        "Cancel November 27 8 PM Pacific meeting due to U.S. Thanksgiving",
-        "Reduce meeting frequency from twice every 3 weeks to once every 6 weeks per timezone",
-        "Keep 9 AM Pacific Wednesday slot recurring every 6 weeks",
-        "Find alternative time for non-Pacific timezone participants with 3-week offset"
-      ],
-      "proposal_ids": [
-        "iceberg-ml-rlnm8jcv4gk6bzgpgx5gvwrvtjg2l611"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2024-11-21T19:23:32+00:00",
-      "signals": [],
       "archived": false
     },
     {
@@ -5914,24 +5930,6 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-bbl4wb2vfpxrr5mrnmjmcwnx4h0fvw14",
-      "title": "Merge guidelines for committing PRs",
-      "summary": "Vote PASSED with 5 binding +1 votes and 1 non-binding +1",
-      "status": "released",
-      "key_points": [
-        "I propose to merge https://github.com/apache/iceberg/pull/10780 as a\nstarting place for describing community norms around merging/discussing PRs.",
-        "Voters include: Steven Wu, Walaa Eldin Moustafa, Dmitri Bourlatchkov..."
-      ],
-      "proposal_ids": [
-        "iceberg-ml-bbl4wb2vfpxrr5mrnmjmcwnx4h0fvw14"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2024-09-03T18:35:16+00:00",
-      "signals": [],
-      "archived": false
-    },
-    {
       "id": "iceberg-init-iceberg-ml-qlx91sjj84t5p2jsc17mk0bh917lrzzf",
       "title": "Release Apache Iceberg Rust 0.3.0 RC1",
       "summary": "Vote PASSED with 4 binding +1 votes and 2 non-binding +1",
@@ -5965,22 +5963,22 @@
       "archived": true
     },
     {
-      "id": "iceberg-init-iceberg-ml-ko4bstd6rk4w4xhboh1ynbfmhlhj01rc",
-      "title": "Standardizing filesystem interface for PyIceberg",
-      "summary": "Discussion on establishing a standard filesystem interface for PyIceberg to handle file listing operations across different FileIO implementations (Fsspec, PyArrow, and future OpenDAL-based rust-iceberg). The author seeks community input on whether to create a custom interface, adopt an existing standard (Fsspec/Arrow/OpenDAL), or pursue alternative approaches.",
+      "id": "iceberg-init-iceberg-ml-9g9nywj7xpxkf3l4wz9p5qgszm9x1r13",
+      "title": "REST spec behavior for unknown updates and requirements",
+      "summary": "Proposal to clarify REST specification requiring servers to return 400 error when receiving unknown updates or requirements during commit operations. This ensures correctness by preventing servers from silently ignoring unrecognized operations and enables safe addition of new operations without complex versioning schemes.",
       "status": "discussion",
       "key_points": [
-        "Current PyIceberg uses PyArrow as default filesystem interface with Fsspec wrapped around it",
-        "Future integration with rust-iceberg using OpenDAL requires a filesystem abstraction that works across multiple backends",
-        "Need to standardize file listing interface and potentially relocate filesystem wrapping logic for reusability",
-        "Multiple filesystem interface options under consideration: custom definition, Fsspec, Arrow, OpenDAL, or other solutions"
+        "Servers must fail with 400 error code for unknown updates/requirements",
+        "Prevents correctness issues from ignoring unknown operations",
+        "Enables community to add new operations without versioning complexity",
+        "Example: RemovePartitionSpecUpdate should fail on unaware servers"
       ],
       "proposal_ids": [
-        "iceberg-ml-ko4bstd6rk4w4xhboh1ynbfmhlhj01rc"
+        "iceberg-ml-9g9nywj7xpxkf3l4wz9p5qgszm9x1r13"
       ],
       "proposal_count": 1,
       "shared_docs": [],
-      "last_activity": "2024-08-13T13:54:04+00:00",
+      "last_activity": "2024-08-13T14:57:55+00:00",
       "signals": [],
       "archived": false
     },
@@ -6127,6 +6125,27 @@
       "archived": false
     },
     {
+      "id": "iceberg-init-iceberg-ml-oqgr63hdn5ndh8p14sfdzj1swb6dr3gp",
+      "title": "Apache Camel component for Iceberg integration",
+      "summary": "A developer is proposing a new Apache Camel component for Iceberg that enables reading from and writing to Iceberg tables/views through Camel's consumer and producer endpoints. The component allows integration with various data sources and destinations using Camel's Enterprise Integration Patterns, and the author is seeking feedback on whether it should be developed in the Iceberg or Camel repository.",
+      "status": "discussion",
+      "key_points": [
+        "Camel consumer endpoint scans Iceberg tables/views and creates exchanges",
+        "Camel producer endpoint writes exchange data to Iceberg tables/views",
+        "Enables event-driven integration with JMS, MongoDB, and other Camel components",
+        "Supports Enterprise Integration Patterns like routing, multicast, and wiretap",
+        "Question about appropriate repository location (Iceberg vs Camel)"
+      ],
+      "proposal_ids": [
+        "iceberg-ml-oqgr63hdn5ndh8p14sfdzj1swb6dr3gp"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2024-05-22T15:57:53+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
       "id": "iceberg-init-iceberg-ml-j6kszdofsbxyv7cckmkd898hn2zfngpr",
       "title": "[VOTE] Release Apache Iceberg 1.5.2 RC0",
       "summary": "Vote PASSED with 4 binding +1 votes and 5 non-binding +1",
@@ -6176,27 +6195,6 @@
       "last_activity": "2024-04-14T00:15:33Z",
       "signals": [],
       "archived": true
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-d5bvr5r4sx0mrmmlbn2pzgk43opr475l",
-      "title": "Iceberg 2.0.0 roadmap and community planning",
-      "summary": "Discussion initiating community-driven planning for Iceberg 2.0.0 release, proposing major topics for consideration including Spec v3, catalog consolidation and deprecation, REST Catalog enhancements, engine support decisions, data/table format updates, and data injection capabilities.",
-      "status": "discussion",
-      "key_points": [
-        "Spec v3 adoption and feature planning for 2.0",
-        "Catalog consolidation strategy including deprecation of DynamoDBCatalog and potentially HadoopCatalog",
-        "REST Catalog as unified facade with improved pluggability and authentication/authorization",
-        "Engine support decisions and new engine additions (Beam, Karaf)",
-        "Data file format and table format updates with potential migration tooling"
-      ],
-      "proposal_ids": [
-        "iceberg-ml-d5bvr5r4sx0mrmmlbn2pzgk43opr475l"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2024-03-13T10:02:57+00:00",
-      "signals": [],
-      "archived": false
     },
     {
       "id": "iceberg-init-iceberg-ml-r1cb3lmxkwpxl150zh6oytwwv4pn3t0t",
@@ -6452,11 +6450,14 @@
       "key_points": [],
       "proposal_ids": [
         "iceberg-gh-m39",
+        "iceberg-gh-rel-apache-iceberg-0-14-1",
         "iceberg-gh-rel-apache-iceberg-0-14-0",
         "iceberg-gh-rel-apache-iceberg-0-13-1",
-        "iceberg-gh-rel-apache-iceberg-0-13-0"
+        "iceberg-gh-rel-apache-iceberg-0-13-0",
+        "iceberg-gh-rel-apache-iceberg-0-12-1",
+        "iceberg-gh-rel-apache-iceberg-0-12-0"
       ],
-      "proposal_count": 4,
+      "proposal_count": 7,
       "shared_docs": [],
       "last_activity": "2023-11-14T16:23:06Z",
       "signals": [
@@ -6558,24 +6559,6 @@
       "shared_docs": [],
       "last_activity": "2023-10-07T18:50:49+00:00",
       "signals": [],
-      "archived": false
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-jglnp92fhfp6wor4dp4pvh1004nm9q57",
-      "title": "Release Apache Iceberg 1.4.0 RC1",
-      "summary": "Vote PASSED with 3 binding +1 votes and 1 non-binding +1",
-      "status": "released",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-ml-jglnp92fhfp6wor4dp4pvh1004nm9q57",
-        "iceberg-ml-lhvt09r4motjl4hr862lsdj938zj83j4"
-      ],
-      "proposal_count": 2,
-      "shared_docs": [],
-      "last_activity": "2023-10-04T23:45:12+00:00",
-      "signals": [
-        "topic:apache-iceberg"
-      ],
       "archived": false
     },
     {
@@ -6827,24 +6810,6 @@
       "proposal_count": 1,
       "shared_docs": [],
       "last_activity": "2023-04-05T22:10:30+00:00",
-      "signals": [],
-      "archived": false
-    },
-    {
-      "id": "iceberg-init-iceberg-ml-pbz8szdx845665xtt57jqs93lmk3z67f",
-      "title": "Release Apache Iceberg 1.2.0 RC1",
-      "summary": "Vote PASSED with 3 binding +1 votes and 4 non-binding +1",
-      "status": "released",
-      "key_points": [
-        "Hi Everyone,\n\nI propose that we release the following RC as the official Apache Iceberg\n1.2.0 release.",
-        "Voters include: Eduard Tudenhoefner, Eduard Tudenhoefner, Ajantha Bhat..."
-      ],
-      "proposal_ids": [
-        "iceberg-ml-pbz8szdx845665xtt57jqs93lmk3z67f"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2023-03-18T20:09:08+00:00",
       "signals": [],
       "archived": false
     },
@@ -7105,6 +7070,40 @@
       "archived": false
     },
     {
+      "id": "iceberg-init-iceberg-ml-jr058wlwq2s2wcbw234cg6wqxhozox8l",
+      "title": "[VOTE] Release Apache Iceberg 0.14.0 RC1",
+      "summary": "With 7 +1 votes (4 binding) and no -1 or +0 votes, this release passes.",
+      "status": "proposal",
+      "key_points": [],
+      "proposal_ids": [
+        "iceberg-ml-jr058wlwq2s2wcbw234cg6wqxhozox8l",
+        "iceberg-ml-fmlnyn25zvy6r0co0fd2bn2zp3v19srk"
+      ],
+      "proposal_count": 2,
+      "shared_docs": [],
+      "last_activity": "2022-07-16T20:41:36+00:00",
+      "signals": [
+        "topic:apache-iceberg",
+        "topic:release-apache"
+      ],
+      "archived": false
+    },
+    {
+      "id": "iceberg-init-iceberg-gh-rel-apache-iceberg-0-13-2",
+      "title": "apache-iceberg-0.13.2",
+      "summary": "Apache Iceberg 0.13.2",
+      "status": "discussion",
+      "key_points": [],
+      "proposal_ids": [
+        "iceberg-gh-rel-apache-iceberg-0-13-2"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2022-06-15T18:47:35Z",
+      "signals": [],
+      "archived": true
+    },
+    {
       "id": "iceberg-init-iceberg-ml-m3nothws3qhf9jyr4wb4boq98l889vq0",
       "title": "[VOTE] Release Apache Iceberg 0.13.2 RC1",
       "summary": "Hi Everyone,\n\nI propose that we release the following RC as the official Apache Iceberg\n0.13.2 release.",
@@ -7323,24 +7322,6 @@
       "archived": false
     },
     {
-      "id": "iceberg-init-iceberg-ml-36ozxq7zgt6h1h1grq5o3hzz88gto8hp",
-      "title": "Re: Subject: [VOTE] Release Apache Iceberg 0.12.0 RC3",
-      "summary": "Vote PASSED with 3 binding +1 votes and 3 non-binding +1",
-      "status": "released",
-      "key_points": [],
-      "proposal_ids": [
-        "iceberg-ml-36ozxq7zgt6h1h1grq5o3hzz88gto8hp",
-        "iceberg-ml-9tr81rqrkybvrljw6zy5ojnstzs6mts9"
-      ],
-      "proposal_count": 2,
-      "shared_docs": [],
-      "last_activity": "2021-08-16T17:24:12+00:00",
-      "signals": [
-        "topic:apache-iceberg"
-      ],
-      "archived": false
-    },
-    {
       "id": "iceberg-init-iceberg-ml-gdqnkqshr1749kp7pkms6jxpov4c9351",
       "title": "[VOTE] Release Apache Iceberg 0.12.0 RC3",
       "summary": "Vote VETOED \u2014 1 veto(es) recorded",
@@ -7377,6 +7358,27 @@
       "archived": false
     },
     {
+      "id": "iceberg-init-iceberg-ml-r1ycxqlc95x7bxbmydxlhcpq02gmgbq9",
+      "title": "Adding distinct count map to file metadata",
+      "summary": "Discussion about whether to reintroduce a file-level distinct counts map to the v2 spec for cost-based SQL optimization. The field was previously removed because distinct counts aren't easily mergeable across files, but SQL planner teams have requested it back, suggesting heuristics like checking column bound overlaps could help estimate counts across files.",
+      "status": "discussion",
+      "key_points": [
+        "Distinct counts map was removed from spec due to non-mergeable nature across files",
+        "SQL planners have requested the field be added back despite challenges",
+        "Heuristics like checking column bound overlaps could indicate if counts should be summed or maxed",
+        "Metrics framework now available to help populate distinct counts",
+        "Decision needed on whether to include in v2 spec"
+      ],
+      "proposal_ids": [
+        "iceberg-ml-r1ycxqlc95x7bxbmydxlhcpq02gmgbq9"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2021-07-23T09:10:31+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
       "id": "iceberg-init-iceberg-ml-jjgd587md5swfr8tdhq7qpq0tnw606m0",
       "title": "[VOTE] Release Apache Iceberg 0.11.1 RC0",
       "summary": "Vote VETOED \u2014 1 veto(es) recorded",
@@ -7391,6 +7393,23 @@
       "proposal_count": 1,
       "shared_docs": [],
       "last_activity": "2021-04-02T21:34:19+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
+      "id": "iceberg-init-iceberg-ml-v0nttnsvr17yn2vjwzmlsy9nxcq4dm74",
+      "title": "Release Apache Iceberg 0.11.1 RC0",
+      "summary": "Vote in progress: 2 binding +1",
+      "status": "proposal",
+      "key_points": [
+        "Voters include: Yufei Gu, Ryan Blue..."
+      ],
+      "proposal_ids": [
+        "iceberg-ml-v0nttnsvr17yn2vjwzmlsy9nxcq4dm74"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2021-04-02T00:37:57+00:00",
       "signals": [],
       "archived": false
     },
@@ -7442,10 +7461,12 @@
         "iceberg-ml-ffq0znt1565h426smv97951nz2d4d3xo",
         "iceberg-ml-y3s6hx912d0v6xotzk5r07d1m0f51g68",
         "iceberg-ml-88ytk01snthprb6djhflqh72bvzojo86",
+        "iceberg-ml-wjrrg2qfr0g0p2zrw7fyxt0kov8fzlrx",
+        "iceberg-ml-b40t917l719fx205ohyv1xks4qx065j5",
         "iceberg-ml-v6wnz5dh6mzf76pkzq1d3n05cxt9w0vv",
         "iceberg-ml-5lc6rhg4fkw0cmt51vzc16kbjpklhw6z"
       ],
-      "proposal_count": 6,
+      "proposal_count": 8,
       "shared_docs": [],
       "last_activity": "2020-11-05T16:28:51+00:00",
       "signals": [

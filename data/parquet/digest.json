@@ -1,19 +1,29 @@
 {
-  "summary": "Apache Parquet Java has advanced through the 1.18.2 release cycle, with RC0, RC1, and RC2 now available, each noting minor fixes and dependency updates. Community discussions are actively exploring compression performance, new numeric vector types, and clarifying the FILE logical type behavior.",
+  "summary": "1.19.0 The discussion centers on how Parquet readers should resolve a FILE logical type value when both inline data and a URI locator are present, as different engines currently return different bytes. The authors recommend including Delta mode in the initial specification and starting with conventional bit packing, deferring interleaving and UTL optimizations to later stages. ## What's Changed * MINOR: [1.18.x] Revert \"Set version to 1.18.2 for release\" by @manuzhang in https://github.com/apache/parquet-java/pull/3931 **Full Changelog**: https://github.com/apache/parquet-java/compare/apache-parquet-1.18.2-rc0...apache-parquet-1.18.2-rc1 The discussion centers on adding a new FINITE_VECTOR type to Parquet and how Iceberg should handle unannotated list data. Participants raise backward\u2011compatibility concerns, arguing that Iceberg should accept existing LIST<FLOAT>/LIST<DOUBLE> files and t",
   "highlights": [
     {
-      "text": "The 1.18.2 release cycle is progressing with RC0, RC1, and RC2 now published, each documenting minor changes and dependency updates.",
+      "text": "1.19.0",
       "sources": [
         {
-          "id": "parquet-gh-rel-apache-parquet-1-18-2-rc0",
-          "title": "Apache Parquet 1.18.2 RC0",
-          "url": "https://github.com/apache/parquet-java/releases/tag/apache-parquet-1.18.2-rc0"
-        },
+          "id": "parquet-gh-m35",
+          "title": "1.19.0",
+          "url": "https://github.com/apache/parquet-java/milestone/35"
+        }
+      ]
+    },
+    {
+      "text": "The discussion centers on how Parquet readers should resolve a FILE logical type value when both inline data and a URI locator are present, as different engines\u2026",
+      "sources": [
         {
-          "id": "parquet-gh-rel-apache-parquet-1-18-2-rc1",
-          "title": "Apache Parquet 1.18.2 RC1",
-          "url": "https://github.com/apache/parquet-java/releases/tag/apache-parquet-1.18.2-rc1"
-        },
+          "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
+          "title": "[DISCUSS] Ambiguity in the FILE logical type when inline and uri are both set",
+          "url": "https://lists.apache.org/thread/yrghnfgghh6l86vg8hfhovo655c9qwtq"
+        }
+      ]
+    },
+    {
+      "text": "**Full Changelog**: https://github.com/apache/parquet-java/compare/apache-parquet-1.18.2-rc1...apache-parquet-1.18.2-rc2",
+      "sources": [
         {
           "id": "parquet-gh-rel-apache-parquet-1-18-2-rc2",
           "title": "Apache Parquet 1.18.2 RC2",
@@ -22,7 +32,7 @@
       ]
     },
     {
-      "text": "Benchmark results show that plain PFOR delivers the highest decode throughput and compression ratio among PFOR-based schemes for Parquet.",
+      "text": "The discussion compares PFOR and other compression schemes for Parquet, showing PFOR delivers the highest decode throughput and compression ratio. The authors r\u2026",
       "sources": [
         {
           "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
@@ -30,41 +40,19 @@
           "url": "https://lists.apache.org/thread/669rvfch65xcfdqqtj22nlsvkzthxmy3"
         }
       ]
-    },
-    {
-      "text": "A focused discussion proposes adding a new FINITE_VECTOR type to Parquet, raising backward\u2011compatibility concerns and how Iceberg should handle unannotated list data.",
-      "sources": [
-        {
-          "id": "parquet-ml-l74wtjl9qtxy5dozvo236dsx885zto0f",
-          "title": "Re: [DISCUSS] Numeric Vector type: physical representation (outcome of focused call)",
-          "url": "https://lists.apache.org/thread/l74wtjl9qtxy5dozvo236dsx885zto0f"
-        }
-      ]
-    },
-    {
-      "text": "The FILE logical type can contain both inline data and a URI, leading to reader inconsistencies; the proposal is to treat inline data as authoritative.",
-      "sources": [
-        {
-          "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
-          "title": "[DISCUSS] Ambiguity in the FILE logical type when inline and uri are both set",
-          "url": "https://lists.apache.org/thread/yrghnfgghh6l86vg8hfhovo655c9qwtq"
-        }
-      ]
     }
   ],
   "generation": {
-    "method": "llm",
-    "provider": "groq",
-    "model": "openai/gpt-oss-20b",
+    "method": "local",
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-08T12:30:44.320879+00:00",
-  "item_count": 8,
+  "generated_at": "2026-11-09T14:45:15.226540+00:00",
+  "item_count": 9,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-03",
-    "to": "2026-11-05",
-    "thread_count": 8
+    "to": "2026-11-09",
+    "thread_count": 9
   }
 }

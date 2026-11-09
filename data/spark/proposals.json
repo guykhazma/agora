@@ -1,7 +1,7 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-11-08T12:30:17.266755+00:00",
-  "total": 699,
+  "generated_at": "2026-11-09T14:51:55.920860+00:00",
+  "total": 701,
   "proposals": [
     {
       "id": "spark-jira-SPARK-60765",
@@ -1234,7 +1234,7 @@
         "apache-spark"
       ],
       "_content_hash": "78b1e7ceaf5f",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-jira-SPARK-51207",
@@ -1472,7 +1472,7 @@
         "kubernetes-operator"
       ],
       "_content_hash": "8abb53a49d86",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-jira-SPARK-49834",
@@ -1823,7 +1823,7 @@
         "shuffle"
       ],
       "_content_hash": "55eda4e9c18e",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-jira-SPARK-26247",
@@ -2009,6 +2009,50 @@
       "initiative_id": "spark-init-spark-ml-31rx0xmwbhloljsowc9ksl6kk5vbb3r4"
     },
     {
+      "id": "spark-ml-skccwj4vyrcqy3jm6207ywqf5xjzt5zo",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] SPIP: Bring GraphFrames into Apache Spark",
+      "url": "https://lists.apache.org/thread/skccwj4vyrcqy3jm6207ywqf5xjzt5zo",
+      "author": "Sem via dev <de...@spark.apache.org>",
+      "state": "open",
+      "created_at": "2026-11-08T19:39:51+00:00",
+      "updated_at": "2026-11-09T08:21:08+00:00",
+      "body": "Hello Apache Spark community,\n\nI would like to start a discussion about merging the GraphFrames\nproject into the Apache Spark project.\n\nSPIP:\nhttps://docs.google.com/document/d/1v8OEV5Qqk5LE1XID4ZiPF5rLkAk-Zz6fp0tns9Z_TA8/edit?usp=sharing\n\nShepherd: Ruifeng Zheng\n\nFollowing the deprecation of GraphX, there is no public, non-deprecated\nAPI for working with graph-like data. At the same time, the GraphFrames\nproject (https://github.com/graphframes/graphframes) provides a solid\nfoundation for representing and processing connected data as Spark's\nDataFrames, as well as a rich standard library of ready-to-use graph\nalgorithms such as PageRank, Connected Components and Node Embeddings.\n\nThe proposal suggests moving the GraphFrames code (Apache 2.0 licence)\nto the Apache Spark project as an in-tree module.\n\nPlease reply to this thread. A [VOTE] will follow once the discussion\nhas concluded.\n\nBest regards,\nSem\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1v8OEV5Qqk5LE1XID4ZiPF5rLkAk-Zz6fp0tns9Z_TA8/edit?usp=sharing",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: Bring GraphFrames into Apache Spark"
+        }
+      ],
+      "llm_summary": "The discussion proposes merging the GraphFrames library into the Apache Spark project as an in\u2011tree module, aiming to provide a unified graph API and reduce the maintenance burden of a separate project. It highlights the benefits of eliminating separate installations, improving consistency across Scala, Python, and Spark Connect, and addresses historical reasons for its separation. The community is evaluating integration challenges and the timeline for inclusion in future Spark releases.",
+      "llm_status": "discussion",
+      "comment_count": 2,
+      "participant_count": 2,
+      "llm_key_points": [
+        "Proposal to merge GraphFrames into Spark to unify graph APIs and reduce separate maintenance",
+        "Discussion includes historical context and integration challenges for future releases"
+      ],
+      "llm_topics": [
+        "graph-frames",
+        "in-tree-module",
+        "maintenance"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "08f3deb97520",
+      "llm_title": "Bring GraphFrames into Apache Spark",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-skccwj4vyrcqy3jm6207ywqf5xjzt5zo"
+    },
+    {
       "id": "spark-ml-0282t19qy3fsh9b4j2q9qwbwpln4c3jw",
       "source": "mailing_list",
       "kind": "thread",
@@ -2017,24 +2061,53 @@
       "author": "Jungtaek Lim <ka...@gmail.com>",
       "state": "open",
       "created_at": "2026-11-07T09:10:49+00:00",
-      "updated_at": "2026-11-08T08:57:11+00:00",
+      "updated_at": "2026-11-09T03:28:23+00:00",
       "body": "Bumping this, since I just figured out we do not do this today while we\nlook to be in a sort of reaching consensus.\n\nShould we update AGENT.md to check the release date for the dependency\nupgrade and block it? Hand-written code change can bypass it, but AI review\nwould point it out again. If some area is unclear from the discussion e.g.\ntransitive dependencies being pulled from Apache project, that could be\nleft as it is, say, agent to only concern about direct dependency the code\nchange is about to change (and Apache projects to be excluded, though I\ndon't know whether this is really necessary.)\n\n\nOn Thu, Apr 23, 2026 at 10:18\u202fPM Wenchen Fan <cl...@gmail.com> wrote:\n\n> > we may want to extend our exceptions to include all ASF project releases\n>\n> I think it's a good idea to avoid cascading the delay, but for now we are\n> still discussing this delay for Spark, so there is no real cascading today.\n> We can revisit this if many Apache projects start to delay dependency\n> upgrades as well.\n>\n> On Thu, Apr 23, 2026 at 9:13\u202fPM Steve Loughran <st...@cloudera.com>\n> wrote:\n>\n>>\n>> The \"malicious release manager\" is an interesting attack, one that the\n>> ASF \"we trust the community\" doesn't defend against. The risk here is that\n>> someone generates a set of malicious artifacts (maybe just publishes them\n>> to maven), while the source code is safe.\n>>\n>> To help defend against this, here's some code which will do a\n>> bytecode-level diff between JARs, ignoring debugging stuff, generated\n>> metadata etc. Enjoy\n>>\n>> https://github.com/steveloughran/auditor\n>>\n>> This wouldn't defend against someone adding a malicious dependency to the\n>> artifacts they publish on maven, so really the tool should audit that too.\n>> But you can at least check out a spark branch, build the binaries and then\n>> audit the RC's artifacts against them to look for tangible variations.\n>>\n>> On Wed, 22 Apr 2026 at 23:53, Tian Gao via dev <de...@spark.apache.org>\n>> wrote:\n>>\n>>> So are you suggesting ",
       "labels": [],
       "linked_resources": [],
-      "llm_summary": "The discussion proposes adding a buffer period before upgrading dependencies, suggesting that AGENT.md be updated to check release dates and block upgrades until the buffer passes. It considers exceptions for ASF projects and highlights security concerns such as malicious artifacts, recommending auditing tools. The thread remains in discussion.",
+      "llm_summary": "The discussion centers on adding a seven\u2011day buffer before upgrading third\u2011party dependencies in the Apache Spark repo, to allow time for review and mitigate malicious releases. Participants debate enforcing this via AGENTS.md, handling Apache project dependencies, and integrating CVE checks, while noting that contributors can still submit PRs. The consensus leans toward implementing the buffer with some flexibility for exceptions.",
       "llm_status": "discussion",
-      "comment_count": 2,
-      "participant_count": 3,
+      "comment_count": 7,
+      "participant_count": 4,
+      "llm_key_points": [],
+      "llm_topics": [],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "4e24e66ba64e",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-o936ns7w0sqrh1c480glq9t4n6wqlfwf"
+    },
+    {
+      "id": "spark-ml-v3g18cbdd5vgpp2khvx2j3nsy8sgplqm",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Review request: Pluggable root pool comparator (SPARK-58126)",
+      "url": "https://lists.apache.org/thread/v3g18cbdd5vgpp2khvx2j3nsy8sgplqm",
+      "author": "\"christian.neuenroth.icloud.com via dev\" <de...@spark.apache.org>",
+      "state": "open",
+      "created_at": "2026-11-08T15:22:31+00:00",
+      "updated_at": "2026-11-08T15:22:31+00:00",
+      "body": "Hi all,\n\nI\u2019d like to ask for a review and feedback on SPARK-58126, implemented in PR #57257.\n\nThe PR introduces an opt-in extension point for customizing the ordering of the scheduler\u2019s root pool through a configurable java.util.Comparator[SchedulableInfo].\n\nThe motivation is to allow use cases such as priority-based, deadline-aware, or SLA-driven scheduling without requiring users to patch Spark itself.\n\nThe design has evolved based on the feedback received so far. The current approach deliberately keeps the API surface minimal and avoids exposing Spark\u2019s internal, mutable scheduling implementation:\n\n* A single new immutable @DeveloperApi type, SchedulableInfo, exposes the scheduling-relevant information needed by custom comparators.\n* A new configuration property, spark.scheduler.rootPool.comparator.class, allows users to provide their own comparator.\n* Existing scheduling behavior (FAIR/FIFO) remains unchanged unless the new configuration is explicitly set.\n* Internal scheduler abstractions remain internal.\n\nThe implementation is complete and intentionally minimal: only six files are touched, with a very small addition to the Developer API.\n\nI\u2019d appreciate feedback on the overall design, API surface, and implementation. In particular, I\u2019d like to get broader community feedback on whether this is a suitable extension point for Spark\u2019s scheduler.\n\nThanks in advance for taking the time to review!\n\nBest regards,\nChristian\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "The PR introduces an opt\u2011in extension point that lets users supply a custom java.util.Comparator to order Spark\u2019s root pool, exposing only a minimal immutable SchedulableInfo API and a new configuration property. Existing FAIR/FIFO scheduling remains unchanged unless the property is set, and the implementation touches only a handful of files. The discussion seeks community feedback on the design and suitability of this extension point.",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
       "llm_key_points": [
-        "Introduce a buffer period before dependency upgrades",
-        "Update AGENT.md to enforce release date checks",
-        "Consider exceptions for ASF project releases",
-        "Discuss security auditing of artifacts"
+        "Introduces configurable root pool comparator",
+        "Minimal API surface via SchedulableInfo",
+        "Preserves existing scheduling behavior",
+        "Seeks community feedback"
       ],
       "llm_topics": [
-        "dependency-upgrade",
-        "security-audit",
-        "release-process"
+        "scheduler",
+        "extension-point",
+        "configuration"
       ],
       "summary_generation": {
         "method": "llm",
@@ -2042,10 +2115,10 @@
         "model": "openai/gpt-oss-20b",
         "prompt_version": 1
       },
-      "_content_hash": "a8c6c42afd21",
-      "llm_title": "Buffer time before dependency upgrade",
+      "_content_hash": "6af9eab8161e",
+      "llm_title": "Pluggable root pool comparator review",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-31rx0xmwbhloljsowc9ksl6kk5vbb3r4"
+      "initiative_id": "spark-init-spark-jira-SPARK-23521"
     },
     {
       "id": "spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t",
@@ -2081,7 +2154,7 @@
       "llm_title": "",
       "_content_hash": "027ea0dadf99",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-mpjb2ndql6k1dqyx6y1hr7d3f9rmnmz1",
@@ -2103,14 +2176,14 @@
           "title": "\ufeffSPIP: Extend DSv2 Push-Downs including Join, Set Operation, and Window Function Support"
         }
       ],
-      "llm_summary": "The discussion proposes extending Spark's Data Source V2 push-down framework to support additional relational operators such as full outer, semi, and anti joins, set operations (UNION, INTERSECT, EXCEPT), and window functions. It introduces opt\u2011in interfaces that allow data sources to decline specific push\u2011downs, with a reference implementation using JDBC/H2, and considers enabling the feature by default. The goal is to reduce network traffic and leverage native execution engines of external sources.",
+      "llm_summary": "The discussion proposes extending Spark\u2019s Data Source V2 push-down framework to support additional relational operators such as full outer, semi, anti joins, set operations (UNION, INTERSECT, EXCEPT), and window functions. By allowing external sources to execute these operations natively, the proposal aims to reduce network traffic and improve query performance. It builds on prior join push-down work and introduces opt\u2011in interfaces for each new capability.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
         "Add opt\u2011in interfaces for additional join types",
-        "Enable set operations and window functions push\u2011down",
-        "Reference implementation with JDBC/H2"
+        "Support set operations and window functions",
+        "Enable push\u2011down by default with source opt\u2011out"
       ],
       "llm_topics": [
         "data-source-v2",
@@ -2124,7 +2197,7 @@
         "prompt_version": 1
       },
       "_content_hash": "5a727cc81e92",
-      "llm_title": "Extend DSv2 push-down with joins, set ops, windows",
+      "llm_title": "Extend DSv2 push-down with joins and windows",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
@@ -2426,7 +2499,7 @@
       "llm_title": "",
       "_content_hash": "4ab5eb9bb687",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-j5sm6do6pvgohohot6bb4rvbvlkzvf4c",
@@ -2459,7 +2532,7 @@
       "llm_title": "",
       "_content_hash": "1ca658189193",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-rv8l97x6398rc8rljrpolrvnk7cv29mf",
@@ -2492,7 +2565,7 @@
       "llm_title": "",
       "_content_hash": "60de73621d6b",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-om9p5coq4z6z9rlmtthflo71ddlr2bg7",
@@ -3704,7 +3777,7 @@
       "_content_hash": "10849487e050",
       "llm_title": "Apache Spark 4.2.1 Release",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw"
+      "initiative_id": "spark-init-spark-ml-skccwj4vyrcqy3jm6207ywqf5xjzt5zo"
     },
     {
       "id": "spark-ml-96goypb9vq64h9t5jkmw8n8yo3xtrogv",
@@ -4985,7 +5058,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -5477,7 +5550,7 @@
       ],
       "llm_title": "",
       "_content_hash": "0f69235d488e",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-rwhj82w65y3rj7bypmbtynwl5pgwrbjw",
@@ -6351,7 +6424,7 @@
         "kubernetes-operator"
       ],
       "_content_hash": "321a70dec377",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-54kpt80xz2bt2wh1zwss8ckp2tmq7pno",
@@ -6530,7 +6603,7 @@
         "announce"
       ],
       "_content_hash": "6d1e0cb11e41",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-5y9k1mhzvl8sty42s3lwk3mof1kclpjg",
@@ -7101,7 +7174,7 @@
         "announce"
       ],
       "_content_hash": "90e3583d3164",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-40s5tn9228h8o3p8vdvt49l6dcbxlmoc",
@@ -7696,7 +7769,7 @@
         "datafusion-comet"
       ],
       "_content_hash": "5f4dae60fa77",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-xq88d310v6nzwtppqsk69x9r9r2qgtmh",
@@ -7865,7 +7938,7 @@
         "spark-community"
       ],
       "_content_hash": "a33aeaa3db50",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-4gk7hqfwsz1s05hj47zyg8dqnqhcsmmr",
@@ -8061,7 +8134,7 @@
         "spark-community"
       ],
       "_content_hash": "6895e1ddb24b",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-v9qmqs2n15g5dp1gzv9jpc3qh6bg3w7c",
@@ -8820,7 +8893,7 @@
         "spark"
       ],
       "_content_hash": "34e97449307d",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-czlg2bbh3hc22810qdcptg04hzrtv424",
@@ -9183,7 +9256,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "c3cf5385686c",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-8x7w4k9yqs385fqqctvdnrtrfhkcr766",
@@ -9300,7 +9373,7 @@
         "apache"
       ],
       "_content_hash": "89d4d89686b1",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-wh7jh98xjw9bk8jzw2gr8rk0zn3o5jm9",
@@ -10053,7 +10126,7 @@
         "docker-official"
       ],
       "_content_hash": "f1487e6acb2b",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-hjfsbtgthpnwk285wdb500fnz3bd1mjx",
@@ -10367,7 +10440,7 @@
         "apache"
       ],
       "_content_hash": "c6025214cd89",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-ft6t2qtkn7sosf18t02pjlv86p631t5x",
@@ -10920,7 +10993,7 @@
         "spark"
       ],
       "_content_hash": "ea685f8cf1cb",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-jml8gjom8pyxs04jm3xx6ttds0z0376g",
@@ -11262,7 +11335,7 @@
         "release"
       ],
       "_content_hash": "e2fe6a545972",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-7t82jvvdy1c57vzm5drztygfb39mk1bz",
@@ -12260,7 +12333,7 @@
         "apache"
       ],
       "_content_hash": "2862de796730",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-5fppyngm9gbw1dx9w67cht7hhrcbw08x",
@@ -12623,7 +12696,7 @@
         "apache"
       ],
       "_content_hash": "7f438d9bc5b2",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-hc37pwjvcsvdoydzb2d7ksvg951tq21v",
@@ -12907,7 +12980,7 @@
         "apache"
       ],
       "_content_hash": "6da8d9650cc2",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-wok5jwmzgm5jtg9dzdhq4von5mtg1897",
@@ -13145,7 +13218,7 @@
         "dongjoon"
       ],
       "_content_hash": "e5f3a2a7742d",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-6z3167c04l5s46j6vs07d90gjxxcts6t",
@@ -13440,7 +13513,7 @@
         "announce"
       ],
       "_content_hash": "c911229e0f39",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-9w2cgqy2xsr91p9jb9802l5monlw36bz",
@@ -14061,7 +14134,7 @@
         "release"
       ],
       "_content_hash": "f52fa49848aa",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-9tm9ggr64b5ykv9yp52vxd18dpknrrtg",
@@ -14088,7 +14161,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "0311dbb42d72",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-zzlr1g6g11qlpr8xrr3tpszoh52tf2m9",
@@ -14477,7 +14550,7 @@
         "operator"
       ],
       "_content_hash": "57a2b5de51f4",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-khl9oglldblfnop56fowvgsy0m06pngf",
@@ -14960,7 +15033,7 @@
         "sedona"
       ],
       "_content_hash": "7402c800001a",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-tvf0msobcg1s3v9x14xtbpb7dgvk3zzj",
@@ -14994,7 +15067,7 @@
         "dependency-management"
       ],
       "_content_hash": "220ebb400088",
-      "initiative_id": "spark-init-spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw",
+      "initiative_id": "spark-init-spark-ml-skccwj4vyrcqy3jm6207ywqf5xjzt5zo",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -15029,7 +15102,7 @@
         "spark"
       ],
       "_content_hash": "667a8bdd654d",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-xzjcog2hfczlxxp12cfy3x6zdycr1ogc",
@@ -15606,7 +15679,7 @@
         "docker-hub"
       ],
       "_content_hash": "33a900be7810",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-l5ko8ggmlnz29s9m71dkv1pqq8rphqc3",
@@ -15635,7 +15708,7 @@
         "download-spark"
       ],
       "_content_hash": "0159eb8af124",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-r8nqo8pmdt01m9rdfmh8dlkbl3t51yyf",
@@ -15944,7 +16017,7 @@
         "apache-spark"
       ],
       "_content_hash": "99853a2065e3",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-0blhqx9yhxdhxsmy9fq11ppgg9k0v83j",
@@ -16568,7 +16641,7 @@
         "apache"
       ],
       "_content_hash": "ace6d952b2c1",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-yrbo7wz4y56ytxf448lsogh6rcp20lz8",
@@ -18047,7 +18120,7 @@
         "released-apache"
       ],
       "_content_hash": "ba0a3406bf6d",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-0558xk1dqp5fyox4rw0kdsgj7v2700c3",
@@ -18409,7 +18482,7 @@
         "announce"
       ],
       "_content_hash": "e930d40dece4",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-blb0sq2tnztw4pwfn9cxf5n67rcyvsqo",
@@ -19902,7 +19975,7 @@
         "sedona"
       ],
       "_content_hash": "1be94736a18c",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-qrvo6xrt8zvp5ss73z5spt9q89r0htwo",
@@ -19945,7 +20018,7 @@
         "api"
       ],
       "_content_hash": "eda4f3ad4f74",
-      "initiative_id": "spark-init-spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw",
+      "initiative_id": "spark-init-spark-ml-skccwj4vyrcqy3jm6207ywqf5xjzt5zo",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -20450,7 +20523,7 @@
         "announce"
       ],
       "_content_hash": "b950bf1685a7",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-gfmow613gnlbo475czv2qgxwsv6s13z1",
@@ -21886,7 +21959,7 @@
         "release"
       ],
       "_content_hash": "b0c1dccdf643",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-z01s19z7qf1jm5xoxsmgp6734tbhcqxb",
@@ -23042,7 +23115,7 @@
         "spark"
       ],
       "_content_hash": "bb2e07d0a0dc",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-w3v4fjk9lvxvp3lr5tngg0hvhfrkl5b0",
@@ -23799,7 +23872,7 @@
         "announce"
       ],
       "_content_hash": "e2b9cd3f1267",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-3y4p28s1qf4tgkgs45j4ho2z3xrqkqfm",
@@ -24196,7 +24269,7 @@
         "spark-jira"
       ],
       "_content_hash": "fcfe96f9a833",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-ztlwoz1v1sn81ssks12tb19x37zozxlz",
@@ -24693,7 +24766,7 @@
         "xinrong-meng"
       ],
       "_content_hash": "5c4d2d893ca1",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j",
@@ -25048,7 +25121,7 @@
         "announce"
       ],
       "_content_hash": "beda6a0798ba",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-pfp3mbso57m2ks7r928vjlgnljfd1n45",
@@ -25243,7 +25316,7 @@
         "release"
       ],
       "_content_hash": "9c29a985fa52",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-nlk9n25cznksqqf0j9wxdxg62x8vtj87",
@@ -25554,7 +25627,7 @@
         "result"
       ],
       "_content_hash": "f47e09858f4a",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-kvcf74n603nspg4j7whhst06zdmk66th",
@@ -25672,7 +25745,7 @@
         "java-based-kubernetes"
       ],
       "_content_hash": "9726f0a6bbee",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-9f5z5lw2tg0yfvhwxvqspyyh45bppkf1",
@@ -25898,7 +25971,7 @@
         "apache"
       ],
       "_content_hash": "5749a8bad614",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-2x8nvb5sbzyld4l4c0r8jfftp5ygkh1c",
@@ -26486,7 +26559,7 @@
         "announce"
       ],
       "_content_hash": "411f3bc51134",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-d6yqo61nk9c7c0mcz14m4c1c1wml5jhc",
@@ -27149,7 +27222,7 @@
         "dongjoon"
       ],
       "_content_hash": "db37b4685b24",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-pyby097xs0m8t9t755pwrpr9zydm7bop",
@@ -27624,7 +27697,7 @@
         "apache"
       ],
       "_content_hash": "8c5b7b788790",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-o1o9n1t036rmfp45q1jrjs0zzzx0j156",
@@ -27655,7 +27728,7 @@
         "xinrong"
       ],
       "_content_hash": "49d9c3a18bc5",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-lr1h56rs88sdpt503swzp0rx4htfkf61",
@@ -27682,7 +27755,7 @@
         "announce"
       ],
       "_content_hash": "f3c5a8a9a19e",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-0o61jn9cmg6r0f22ljgjg5c31z8fn0zn",
@@ -28344,7 +28417,7 @@
         "download-spark"
       ],
       "_content_hash": "564abd9deefd",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-kylocl9zb6p686qwhypcx4wv2y4hv2h1",
@@ -28840,7 +28913,7 @@
         "release"
       ],
       "_content_hash": "11ef119282b3",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-ml-qqny4lodp13wkljmrpxcl046x82qjdlt"
     },
     {
       "id": "spark-ml-y6hby3k9nqds4fgx0b1w5yhhlqb2f7gb",
@@ -29228,7 +29301,7 @@
         "spark"
       ],
       "_content_hash": "033d720f0836",
-      "initiative_id": "spark-init-spark-jira-SPARK-56978"
+      "initiative_id": "spark-init-spark-ml-31rx0xmwbhloljsowc9ksl6kk5vbb3r4"
     },
     {
       "id": "spark-ml-zys6wylgmdq3gm47go306tsr0ovto0g3",
@@ -29505,7 +29578,7 @@
         "result"
       ],
       "_content_hash": "c6e5548b9d17",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-cpz2bvlvmng8h36o7d2wbh211jjqq0f5",
@@ -29650,7 +29723,7 @@
         "docker-images"
       ],
       "_content_hash": "5759fa56ff69",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-l1793y5224n8bqkp3s6ltgkykso4htb3",
@@ -29688,7 +29761,7 @@
         "docker"
       ],
       "_content_hash": "53424d08a946",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-lt20887byz07o15qwpk8mjb6nhjp7hoz",
@@ -29842,7 +29915,7 @@
         "announce"
       ],
       "_content_hash": "0ab406715a3d",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-pbkggpgjpwopjgsn80tcmgh9b87fc9p0",
@@ -30066,7 +30139,7 @@
         "apache"
       ],
       "_content_hash": "c6e02031c5de",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-smpwykpoqr0y5r5xgc9jpt1fjm72fvck",
@@ -30869,7 +30942,7 @@
         "docker-images"
       ],
       "_content_hash": "0019b42af4f4",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-sjj6jpzv0l0ysj2nkn7jrnq5jqr2mz8h",
@@ -31115,7 +31188,7 @@
         "download-spark"
       ],
       "_content_hash": "52b312ebbcc6",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-z2qqpghwfznspr3n4ozopnpq9rp19k1d",
@@ -31892,7 +31965,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",
@@ -32464,7 +32537,7 @@
         "release"
       ],
       "_content_hash": "4ec947e6e0d8",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-yov8xsggo3g2qr2p1rrr2xtps25wkbvj",
@@ -32614,7 +32687,7 @@
         "release"
       ],
       "_content_hash": "0f9591a09142",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-z0ywwnqocc3vzmbm8y4cfw0fdcofvct4",
@@ -32790,7 +32863,7 @@
         "download-spark"
       ],
       "_content_hash": "c0f02131c02b",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-jmkpt7yohhmh2mzjvdd127hos2snx33k",
@@ -32831,7 +32904,7 @@
         "spark"
       ],
       "_content_hash": "b7018fa0cada",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-21v99v1hdr43bozmplbwwgg09g764k3q",
@@ -33659,7 +33732,7 @@
         "announce-spark"
       ],
       "_content_hash": "00193636e2bd",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-n936z3211rw8z9t9gz6d0n47opvcfjo9",
@@ -33885,7 +33958,7 @@
         "announce"
       ],
       "_content_hash": "e25a6f6005fb",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-obcw512wvjdjkpf61wxj78tnc9jp71x2",
@@ -34114,7 +34187,7 @@
         "shuffle"
       ],
       "_content_hash": "3252490c10fc",
-      "initiative_id": "spark-init-spark-jira-SPARK-57703"
+      "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
     {
       "id": "spark-ml-z2rbq1bwvb6xhl3w9ogbop0boqzg94m8",

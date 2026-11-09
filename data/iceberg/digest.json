@@ -1,5 +1,5 @@
 {
-  "summary": "The change aims to avoid catalog lookups and side effects, but some participants question whether it should be opt\u2011in and note that it does not address all use cases, such as non\u2011Hadoop FileIOs in Glue. The discussion highlights a missing detail in the Iceberg spec regarding how negative nanosecond timestamps should be rounded when converting to microseconds for bucket hashing. Current implementations use floor division, and the proposal is to update Appendix\u202fB to explicitly state that rounding should be toward negative infinity. The discussion updates the Variant tracking document, outlines upcoming milestones, and notes the cancellation of the December call with a planned sync in January 2027.",
+  "summary": "The plan aims to clean up the public API while minimizing regressions, with the community asked to agree on the approach. Participants debate whether this change should be opt\u2011in or default, noting that it does not address cases where the FileIO implementation is not HadoopConfigurable (e.g., S3FileIO, GCSFileIO, ADLSFileIO). Regular sync meetings have been held with notes and recordings shared, and the December call was cancelled due to holidays. Proponents argue that nesting aligns with the REST spec and existing catalog APIs, while noting potential awkwardness if multi\u2011table indexes are introduced.",
   "highlights": [
     {
       "text": "The document records the outcomes of the Iceberg Spark integration sync meetings, covering recent Spark 4.2 enhancements such as schema evolution, default value\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "The thread discusses a proposal to replace the catalogName(String) parameter in DeleteOrphanFilesSparkAction with a Hadoop configuration, defaulting to the tabl\u2026",
+      "text": "The discussion proposes adding a clarification to the Iceberg spec that nanoseconds should be converted to microseconds using floor division (rounding toward ne\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-0m2gc9yqt77cpy2nvcthm9vkvgsgwrqq",
-          "title": "Re: [DISCUSS] Spark: use the catalog's Hadoop configuration when listing orphan files (#17862)",
-          "url": "https://lists.apache.org/thread/0m2gc9yqt77cpy2nvcthm9vkvgsgwrqq"
+          "id": "iceberg-ml-hcc1yo2pcyrc089rgywo8nh0tt9gs5yl",
+          "title": "[DISCUSS] Clarify rounding before bucket hashing for nanosecond timestamps",
+          "url": "https://lists.apache.org/thread/hcc1yo2pcyrc089rgywo8nh0tt9gs5yl"
         }
       ]
     },
     {
-      "text": "The biweekly V4 AMT metadata sync has been shifted to a weekly schedule on Tuesdays, consolidating various metadata updates into a single, more frequent session\u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-hlh6zhw142pggs4kx2y9f9djzv3dcd8j",
-          "title": "V4 Metadata Sync Scheduling",
-          "url": "https://lists.apache.org/thread/hlh6zhw142pggs4kx2y9f9djzv3dcd8j"
-        }
-      ]
-    },
-    {
-      "text": "Alex proposes a phased migration to Jackson 3, keeping both Jackson 2 and 3 during a transition period, adding compatibility tests, and removing Jackson 2 types\u2026",
+      "text": "The discussion proposes a phased migration to Jackson 3 by shipping both versions, adding compatibility tests, and removing Jackson 2 types through shims in the\u2026",
       "sources": [
         {
           "id": "iceberg-ml-vj3x5knqb1h71j2sgpsbgbbsdb1kz7b6",
           "title": "Re: [DISCUSS] Migrating Iceberg to Jackson 3",
           "url": "https://lists.apache.org/thread/vj3x5knqb1h71j2sgpsbgbbsdb1kz7b6"
+        }
+      ]
+    },
+    {
+      "text": "Iceberg 1.13.0",
+      "sources": [
+        {
+          "id": "iceberg-gh-m64",
+          "title": "Iceberg 1.13.0",
+          "url": "https://github.com/apache/iceberg/milestone/64"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-08T12:34:21.178235+00:00",
-  "item_count": 11,
+  "generated_at": "2026-11-09T14:48:34.784575+00:00",
+  "item_count": 10,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-02",
-    "to": "2026-11-08",
-    "thread_count": 11
+    "from": "2026-11-03",
+    "to": "2026-11-09",
+    "thread_count": 10
   }
 }

@@ -1,7 +1,7 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-11-09T14:46:08.088202+00:00",
-  "total": 309,
+  "generated_at": "2026-11-10T14:01:15.643456+00:00",
+  "total": 310,
   "proposals": [
     {
       "id": "parquet-gh-m35",
@@ -2975,61 +2975,60 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
-      "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
+      "id": "parquet-ml-rc4dso5jd5qqbf1b6cxcw88ld70l52l3",
       "source": "mailing_list",
       "kind": "thread",
-      "title": "[DISCUSS] Ambiguity in the FILE logical type when inline and uri are both set",
-      "url": "https://lists.apache.org/thread/yrghnfgghh6l86vg8hfhovo655c9qwtq",
-      "author": "Stefan Grafberger via dev <de...@parquet.apache.org>",
+      "title": "[Result][VOTE][Format] Add FINITE_VECTOR logical type",
+      "url": "https://lists.apache.org/thread/rc4dso5jd5qqbf1b6cxcw88ld70l52l3",
+      "author": "Rok Mihevc <ro...@gmail.com>",
       "state": "open",
-      "created_at": "2026-11-03T13:19:10+00:00",
-      "updated_at": "2026-11-08T20:34:24+00:00",
-      "body": "Hi all,\n\nWhile preparing support for the FILE logical type, we found that a value\nwith both inline and uri set can resolve to different bytes in different\nengines while all of them remain spec compliant. For example, if the object\nat uri is overwritten after the value is written, one reader returns the\ninline bytes and another returns the new object. We want our behavior to\nmatch other engines, so we'd like the spec to define which bytes such a\nvalue resolves to.\n\nWe propose restoring the meaning from the original FILE PR [1]: if inline\nis set, it supplies the bytes, and any locator fields that are set (uri,\noffset, size) are provenance only. This keeps the clarification from [2]\nthat inline and a locator may both be set, so inline can still serve as a\ncached copy of the referenced bytes. We'd also like to allow size with\ninline alone, as its length, so readers can get it without reading the\ninline bytes. When inline and uri are both set, we'd specify that checksum,\nlike the locator, describes the source at uri as it was when inline was\ncopied from it, which the spec currently leaves open. I opened a draft PR\nwith the corresponding changes at [3].\n\nWe also considered making inline and the locator fields mutually exclusive,\nbut that would make values invalid that current writers already produce\n(for example, Hardwood [4] and the proposed parquet-testing fixtures [5])\nand would remove the only way to record where an inline copy came from, for\nuse cases like finding every copy of a file for a deletion request or\nexplicitly refreshing an inline copy from its source. \"Inline wins\"\ninvalidates no data and only narrows what readers may return.\n\nLooking forward to hearing your thoughts.\n\nThanks,\nStefan\n\n[1] https://github.com/apache/parquet-format/pull/585\n[2] https://github.com/apache/parquet-format/pull/603\n[3] https://github.com/apache/parquet-format/pull/635\n[4] https://github.com/hardwood-hq/hardwood/pull/1494\n[5] https://github.com/apache/parquet-testing/pull/128\n",
+      "created_at": "2026-11-09T21:34:48+00:00",
+      "updated_at": "2026-11-10T11:14:37+00:00",
+      "body": "Hi all,\n\nThe vote to add the FINITE_VECTOR logical type to the Parquet format\n(parquet-format PR 624 [1], at commit 70b3023) passes with:\n\n+1 (binding): 7\n  Ryan Blue, Gang Wu, Julien Le Dem, Daniel Weeks, Andrew Lamb,\n  Fokko Driesprong, Antoine Pitrou\n+1 (non-binding): 11\n  Russell Spitzer, Prateek Gaur, Steven Wu, Divjot Arora,\n  Alkis Evlogimenos, Neelesh Salian, Gunnar Morling,\n  Sebastian Baunsgaard, Philipp Fischbeck, Uro\u0161 Stankovi\u0107,\n  Rok Mihevc\n+0: 0\n-1: 0\n\nThanks to everyone who reviewed, discussed and voted!\n\nRok\n\n[1] https://github.com/apache/parquet-format/pull/624\n[2] https://lists.apache.org/thread/fm2373y1d0pk20x6rw8jdkl6kwvfoc32\n",
       "labels": [],
       "linked_resources": [
         {
-          "url": "https://github.com/apache/parquet-format/pull/585",
+          "url": "https://github.com/apache/parquet-format/pull/624",
           "kind": "github_pr"
         },
         {
-          "url": "https://github.com/apache/parquet-format/pull/603",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-format/pull/635",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/hardwood-hq/hardwood/pull/1494",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-testing/pull/128",
+          "url": "https://github.com/apache/parquet-site/pull/221",
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion centers on how Parquet readers should resolve a FILE logical type value when both inline data and a URI locator are present, as different engines currently return different bytes. The proposal is to adopt the original FILE PR semantics where inline data takes precedence and locator fields are provenance-only, allowing size with inline alone and specifying checksum semantics. This change would standardize behavior without invalidating existing data.",
-      "llm_status": "discussion",
-      "comment_count": 4,
-      "participant_count": 5,
+      "llm_summary": "Vote VETOED \u2014 1 veto(es) recorded",
+      "llm_status": "abandoned",
+      "comment_count": 3,
+      "participant_count": 3,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 0,
+        "vetoes": 1,
+        "result": "vetoed",
+        "voters": [
+          {
+            "voter": "Rok Mihevc <ro...@gmail.com>",
+            "vote": "-1"
+          }
+        ]
+      },
       "llm_key_points": [
-        "Ambiguity in resolving bytes when both inline and uri are set",
-        "Proposal to make inline win and keep locator provenance"
+        "Hi all,\n\nThe vote to add the FINITE_VECTOR logical type to the Parquet format\n(parquet-format PR 624 [1], at commit 70b3023) passes with:\n\n+1 (binding",
+        "Voters include: Rok Mihevc..."
       ],
       "llm_topics": [
-        "file-logical-type",
-        "spec-clarification"
+        "vector-logical",
+        "ryan-blue",
+        "daniel-weeks",
+        "andrew-lamb"
       ],
       "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
+        "method": "local",
         "prompt_version": 1
       },
-      "_content_hash": "6d86b0c1b742",
-      "llm_title": "Ambiguity in FILE logical type when inline and uri set",
+      "_content_hash": "958c6d5bc135",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-rc4dso5jd5qqbf1b6cxcw88ld70l52l3"
     },
     {
       "id": "parquet-ml-d2zdnmyxb7lh1l2w565z1s7n2plb4m5g",
@@ -3040,13 +3039,13 @@
       "author": "Manu Zhang <ow...@gmail.com>",
       "state": "open",
       "created_at": "2026-11-05T08:07:52+00:00",
-      "updated_at": "2026-11-08T03:53:02+00:00",
+      "updated_at": "2026-11-09T21:35:42+00:00",
       "body": "Hi everyone,\n\nI propose the following RC to be released as official Apache Parquet 1.18.2\nrelease.\n\nThe commit id is 74cdf619d5a14795e037053896376a3a3379567c\n* This corresponds to the tag: apache-parquet-1.18.2-rc2\n*\nhttps://github.com/apache/parquet-java/tree/74cdf619d5a14795e037053896376a3a3379567c\n\nThe release tarball, signature, and checksums are here:\n* https://dist.apache.org/repos/dist/dev/parquet/apache-parquet-1.18.2-rc2\n\nYou can find the KEYS file here:\n* https://downloads.apache.org/parquet/KEYS\n\nYou can find the changelog here:\nhttps://github.com/apache/parquet-java/releases/tag/apache-parquet-1.18.2-rc2\n\nBinary artifacts are staged in Nexus here:\n* https://repository.apache.org/content/groups/staging/org/apache/parquet/\n* Staging repository ID: orgapacheparquet-1093\n\nPlease download, verify, and test.\n\nPlease vote in the next 72 hours.\n\n[ ] +1 Release this as Apache Parquet 1.18.2\n[ ] +0\n[ ] -1 Do not release this because...\n",
       "labels": [],
       "linked_resources": [],
       "llm_summary": "Vote VETOED \u2014 1 veto(es) recorded",
       "llm_status": "abandoned",
-      "comment_count": 7,
+      "comment_count": 8,
       "participant_count": 6,
       "vote_data": {
         "binding_plus1": 3,
@@ -3095,7 +3094,7 @@
         "method": "local",
         "prompt_version": 1
       },
-      "_content_hash": "c98a7e2b5b89",
+      "_content_hash": "fbc298e715c7",
       "observed_history": [
         {
           "field": "vote_result",
@@ -3116,7 +3115,7 @@
       "author": "Rok Mihevc <ro...@gmail.com>",
       "state": "open",
       "created_at": "2026-11-04T00:00:58+00:00",
-      "updated_at": "2026-11-05T12:58:26+00:00",
+      "updated_at": "2026-11-09T21:26:22+00:00",
       "body": "Hi all,\n\nI'd like to start a vote to add the FINITE_VECTOR logical type to the\nParquet format, as specified in parquet-format PR 624 [1] (at commit\n0596fde).\nIf you'd like to discuss this proposal please use the active discussion\nthread [2].\n\nFINITE_VECTOR is roughly:\n- annotates the same structure used for LIST, giving unaware readers a\nfallback\n- every non-null vector has exactly num_elements elements\n- elements are required (non-null) and finite (no NaN, null, +Inf or -Inf)\n\nWriters must enforce these rules, and readers may rely on them. This\nproposal does not add a new physical representation and doesn't preclude\none later.\n\nThis came out of active discussions on the list [2][3] and the community\nsyncs. The type was renamed from VECTOR to FINITE_VECTOR to indicate it's\nspecific requirements and to leave room for a more general vector type.\n\nImplementations:\n- parquet-java: [4]\n- parquet-cpp: [5]\n\nThis vote will be open for at least 72 hours.\n\n[ ] +1: Add FINITE_VECTOR to the Parquet spec\n[ ] +0: Not going to block, but prefer ...\n[ ] -1: Do not add FINITE_VECTOR to Parquet because ...\n\nThanks to everyone who took part in the discussions and reviews!\n\nRok\n\n[1] https://github.com/apache/parquet-format/pull/624\n[2] https://lists.apache.org/thread/kgmgn2vmrz49thbfhv8b66lglsyd81xt\n[3] https://lists.apache.org/thread/xot5f3ghhtc82n1bf0wdl9zqwlrzqks3\n[4] https://github.com/apache/parquet-java/pull/3876\n[5] https://github.com/apache/arrow/pull/55348\n",
       "labels": [],
       "linked_resources": [
@@ -3133,15 +3132,15 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "Vote PASSED with 3 binding +1 votes and 13 non-binding +1",
-      "llm_status": "released",
-      "comment_count": 22,
+      "llm_summary": "Vote VETOED \u2014 1 veto(es) recorded",
+      "llm_status": "abandoned",
+      "comment_count": 25,
       "participant_count": 18,
       "vote_data": {
         "binding_plus1": 3,
         "nonbinding_plus1": 13,
-        "vetoes": 0,
-        "result": "passed",
+        "vetoes": 1,
+        "result": "vetoed",
         "voters": [
           {
             "voter": "Alkis Evlogimenos via dev <de...@parquet.apache.org>",
@@ -3188,6 +3187,10 @@
             "vote": "+1"
           },
           {
+            "voter": "Rok Mihevc <ro...@gmail.com>",
+            "vote": "-1"
+          },
+          {
             "voter": "Russell Spitzer <ru...@gmail.com>",
             "vote": "+1"
           },
@@ -3224,7 +3227,7 @@
         "method": "local",
         "prompt_version": 1
       },
-      "_content_hash": "d8da2d928fc1",
+      "_content_hash": "db4bd4988e71",
       "observed_history": [
         {
           "field": "vote_result",
@@ -3232,9 +3235,73 @@
           "to": "passed",
           "observed_at": "2026-11-05T13:47:37.970100+00:00",
           "source_updated_at": "2026-11-05T12:58:26+00:00"
+        },
+        {
+          "field": "vote_result",
+          "from": "passed",
+          "to": "vetoed",
+          "observed_at": "2026-11-10T14:00:25.610957+00:00",
+          "source_updated_at": "2026-11-09T21:26:22+00:00"
         }
       ],
-      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
+      "initiative_id": "parquet-init-parquet-ml-rc4dso5jd5qqbf1b6cxcw88ld70l52l3"
+    },
+    {
+      "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Ambiguity in the FILE logical type when inline and uri are both set",
+      "url": "https://lists.apache.org/thread/yrghnfgghh6l86vg8hfhovo655c9qwtq",
+      "author": "Stefan Grafberger via dev <de...@parquet.apache.org>",
+      "state": "open",
+      "created_at": "2026-11-03T13:19:10+00:00",
+      "updated_at": "2026-11-08T20:34:24+00:00",
+      "body": "Hi all,\n\nWhile preparing support for the FILE logical type, we found that a value\nwith both inline and uri set can resolve to different bytes in different\nengines while all of them remain spec compliant. For example, if the object\nat uri is overwritten after the value is written, one reader returns the\ninline bytes and another returns the new object. We want our behavior to\nmatch other engines, so we'd like the spec to define which bytes such a\nvalue resolves to.\n\nWe propose restoring the meaning from the original FILE PR [1]: if inline\nis set, it supplies the bytes, and any locator fields that are set (uri,\noffset, size) are provenance only. This keeps the clarification from [2]\nthat inline and a locator may both be set, so inline can still serve as a\ncached copy of the referenced bytes. We'd also like to allow size with\ninline alone, as its length, so readers can get it without reading the\ninline bytes. When inline and uri are both set, we'd specify that checksum,\nlike the locator, describes the source at uri as it was when inline was\ncopied from it, which the spec currently leaves open. I opened a draft PR\nwith the corresponding changes at [3].\n\nWe also considered making inline and the locator fields mutually exclusive,\nbut that would make values invalid that current writers already produce\n(for example, Hardwood [4] and the proposed parquet-testing fixtures [5])\nand would remove the only way to record where an inline copy came from, for\nuse cases like finding every copy of a file for a deletion request or\nexplicitly refreshing an inline copy from its source. \"Inline wins\"\ninvalidates no data and only narrows what readers may return.\n\nLooking forward to hearing your thoughts.\n\nThanks,\nStefan\n\n[1] https://github.com/apache/parquet-format/pull/585\n[2] https://github.com/apache/parquet-format/pull/603\n[3] https://github.com/apache/parquet-format/pull/635\n[4] https://github.com/hardwood-hq/hardwood/pull/1494\n[5] https://github.com/apache/parquet-testing/pull/128\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/parquet-format/pull/585",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/pull/603",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/pull/635",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/hardwood-hq/hardwood/pull/1494",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-testing/pull/128",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "The discussion centers on how Parquet readers should resolve a FILE logical type value when both inline data and a URI locator are present, as different engines currently return different bytes. The proposal is to adopt the original FILE PR semantics where inline data takes precedence and locator fields are provenance-only, allowing size with inline alone and specifying checksum semantics. This change would standardize behavior without invalidating existing data.",
+      "llm_status": "discussion",
+      "comment_count": 4,
+      "participant_count": 5,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "llm_key_points": [
+        "Ambiguity in resolving bytes when both inline and uri are set",
+        "Proposal to make inline win and keep locator provenance"
+      ],
+      "llm_topics": [
+        "file-logical-type",
+        "spec-clarification"
+      ],
+      "llm_title": "Ambiguity in FILE logical type when inline and uri set",
+      "_content_hash": "6d86b0c1b742",
+      "observed_history": [],
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
     {
       "id": "parquet-ml-hhrrv38766df6rrlky61bbs830m26sko",
@@ -3334,19 +3401,19 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion compares PFOR and other compression schemes for Parquet, showing PFOR delivers the highest decode throughput and compression ratio. The authors recommend including Delta mode in the initial specification and starting with conventional bit packing, deferring interleaving and UTL optimizations to later stages.",
+      "llm_summary": "The discussion compares PFOR compression with other schemes, showing PFOR delivers the highest decoding throughput and compression ratio on Graviton4. The authors recommend including Delta mode in the initial PFOR specification to improve compression for sorted data, while deferring interleaving and Unified Transposed Layout (UTL) to a later phase.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "PFOR achieves highest decode throughput and compression ratio",
-        "Recommendation to include Delta mode in initial spec",
+        "PFOR achieves best decoding speed and compression ratio",
+        "Include Delta mode in initial PFOR spec",
         "Interleaving and UTL to be added later"
       ],
       "llm_topics": [
         "compression",
-        "performance",
-        "parquet"
+        "parquet",
+        "performance"
       ],
       "summary_generation": {
         "method": "llm",
@@ -3355,7 +3422,7 @@
         "prompt_version": 1
       },
       "_content_hash": "4b5ed49e28c0",
-      "llm_title": "FastLanes Benchmark Results and Recommendations",
+      "llm_title": "FastLanes for Parquet Benchmark and Design Decisions",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
@@ -3456,7 +3523,7 @@
       "llm_title": "Numeric Vector type: physical representation",
       "_content_hash": "e1d80a60aefc",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
+      "initiative_id": "parquet-init-parquet-ml-rc4dso5jd5qqbf1b6cxcw88ld70l52l3"
     },
     {
       "id": "parquet-ml-32p118d0oozy6025gthjorgwd2d58vmx",
@@ -4304,7 +4371,7 @@
       "llm_title": "",
       "_content_hash": "02f2e806b6ae",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-ml-35gq1hkn3kdtjvzyq6d0yvordgwsccqk"
+      "initiative_id": "parquet-init-parquet-ml-rc4dso5jd5qqbf1b6cxcw88ld70l52l3"
     },
     {
       "id": "parquet-ml-f1qgt2x0gg8ybwgcgshc67k1hso5t2qd",
@@ -5095,7 +5162,7 @@
       ],
       "_content_hash": "24860a81d3e5",
       "llm_title": "",
-      "initiative_id": "parquet-init-parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt"
+      "initiative_id": "parquet-init-parquet-ml-rc4dso5jd5qqbf1b6cxcw88ld70l52l3"
     },
     {
       "id": "parquet-ml-qlf8lg90gqq41lllyy9mk2f0skqvftqj",

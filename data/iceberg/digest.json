@@ -1,5 +1,5 @@
 {
-  "summary": "The plan aims to clean up the public API while minimizing regressions, with the community asked to agree on the approach. Participants debate whether this change should be opt\u2011in or default, noting that it does not address cases where the FileIO implementation is not HadoopConfigurable (e.g., S3FileIO, GCSFileIO, ADLSFileIO). Regular sync meetings have been held with notes and recordings shared, and the December call was cancelled due to holidays. Proponents argue that nesting aligns with the REST spec and existing catalog APIs, while noting potential awkwardness if multi\u2011table indexes are introduced.",
+  "summary": "The thread discusses adding a batch signing endpoint to the REST catalog spec to support the new FILE type where each row may reference an external object. Participants highlight the need to include authorization context per element, potentially altering the request design to accommodate file reference permissions. The community largely agrees, suggesting a refactor-first approach that deprecates Jackson\u2011typed APIs before adding Jackson 3 support, and recommends splitting the work into several PRs. The discussion highlights a community health dashboard inspired by LF CHAOSS, with plans to extend it as an ASF infrastructure service for projects.",
   "highlights": [
     {
       "text": "The document records the outcomes of the Iceberg Spark integration sync meetings, covering recent Spark 4.2 enhancements such as schema evolution, default value\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "The discussion proposes adding a clarification to the Iceberg spec that nanoseconds should be converted to microseconds using floor division (rounding toward ne\u2026",
+      "text": "The thread discusses adding a batch signing endpoint to the REST catalog spec to support the new FILE type where each row may reference an external object. Part\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-hcc1yo2pcyrc089rgywo8nh0tt9gs5yl",
-          "title": "[DISCUSS] Clarify rounding before bucket hashing for nanosecond timestamps",
-          "url": "https://lists.apache.org/thread/hcc1yo2pcyrc089rgywo8nh0tt9gs5yl"
+          "id": "iceberg-ml-mfo1bbd6gcc7969obj7wzzbrhmsdwq38",
+          "title": "Re: [DISCUSS] REST Spec: Batch remote signing endpoint",
+          "url": "https://lists.apache.org/thread/mfo1bbd6gcc7969obj7wzzbrhmsdwq38"
         }
       ]
     },
     {
-      "text": "The discussion proposes a phased migration to Jackson 3 by shipping both versions, adding compatibility tests, and removing Jackson 2 types through shims in the\u2026",
+      "text": "The discussion proposes adding generative AI and embedding functions to Iceberg Spark/Flink connectors, aiming for vendor\u2011agnostic SQL functions for multimodal \u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-zv614sbcz0doshl4xpddpcj3oolfgo3b",
+          "title": "[DISCUSS] AI Functions for FILE/VECTOR types",
+          "url": "https://lists.apache.org/thread/zv614sbcz0doshl4xpddpcj3oolfgo3b"
+        }
+      ]
+    },
+    {
+      "text": "Alex proposes a phased migration that ships both Jackson 2 and 3 during a transition period, introduces shims to replace Jackson 2 types in the serde and REST l\u2026",
       "sources": [
         {
           "id": "iceberg-ml-vj3x5knqb1h71j2sgpsbgbbsdb1kz7b6",
           "title": "Re: [DISCUSS] Migrating Iceberg to Jackson 3",
           "url": "https://lists.apache.org/thread/vj3x5knqb1h71j2sgpsbgbbsdb1kz7b6"
-        }
-      ]
-    },
-    {
-      "text": "Iceberg 1.13.0",
-      "sources": [
-        {
-          "id": "iceberg-gh-m64",
-          "title": "Iceberg 1.13.0",
-          "url": "https://github.com/apache/iceberg/milestone/64"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-09T14:48:34.784575+00:00",
+  "generated_at": "2026-11-10T14:04:13.642650+00:00",
   "item_count": 10,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-03",
-    "to": "2026-11-09",
+    "from": "2026-11-05",
+    "to": "2026-11-10",
     "thread_count": 10
   }
 }

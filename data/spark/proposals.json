@@ -1,8 +1,55 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-11-10T14:07:10.728110+00:00",
-  "total": 703,
+  "generated_at": "2026-11-11T13:22:51.837674+00:00",
+  "total": 704,
   "proposals": [
+    {
+      "id": "spark-jira-SPARK-60031",
+      "source": "jira",
+      "kind": "issue",
+      "title": "SPIP: External Lookup Join",
+      "url": "https://issues.apache.org/jira/browse/SPARK-60031",
+      "author": "Jungtaek Lim",
+      "state": "open",
+      "created_at": "2026-10-07T08:07:53+00:00",
+      "updated_at": "2026-11-10T22:39:05+00:00",
+      "body": "We want to make stream data to be joined with external storages which are (more) efficient to the access pattern of \u201clookup\u201d based on the key (retrieving specific data on demand) instead of loading the data in prior before joining.\r\n\r\nFor example, suppose we want to join the employee data with department data, to show the department name they belong to. (This is called \u201cenrichment\u201d.) Instead of loading the whole (or pruned) department data from the external storage at once, we read the employee data, and retrieve the department data by associated data (e.g. department ID) the employee belongs to, and join the department name with employee data.\r\n\r\nThis will enable us to achieve low latency on join operation since we do not wait for loading the data to process but process the stream side immediately with querying the static side on demand. This also helps to achieve better throughput for the case where Spark cannot derive the efficient filter to prune the static side outstandingly, since the new join would only require the data \u201cas needed\u201d rather than scanning partial/whole data.\r\n\r\n\u00a0\r\n\r\nSPIP doc: [https://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0]",
+      "labels": [
+        "SPIP"
+      ],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: External Lookup Join"
+        }
+      ],
+      "comment_count": 1,
+      "llm_summary": "The proposal introduces a method to join streaming data with external storage by performing on-demand lookups instead of loading the entire static side. This approach aims to reduce latency and improve throughput, especially when the static side cannot be efficiently pruned. It defines an interface for third\u2011party connectors to support equality joins, with range joins as a future goal.",
+      "llm_status": "discussion",
+      "llm_key_points": [
+        "On-demand lookup join for streaming data",
+        "Reduces latency by avoiding full static side load",
+        "Defines interface for third\u2011party connectors",
+        "Supports equality joins, range joins as stretch goal"
+      ],
+      "llm_topics": [
+        "external-lookup",
+        "performance",
+        "streaming"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "bc8fe1c33291",
+      "llm_title": "External Lookup Join",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-jira-SPARK-60031"
+    },
     {
       "id": "spark-jira-SPARK-60765",
       "source": "jira",
@@ -47,52 +94,6 @@
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60031",
       "llm_title": "Extend DSv2 push-down with joins and windows"
-    },
-    {
-      "id": "spark-jira-SPARK-60031",
-      "source": "jira",
-      "kind": "issue",
-      "title": "SPIP: External Lookup Join",
-      "url": "https://issues.apache.org/jira/browse/SPARK-60031",
-      "author": "Jungtaek Lim",
-      "state": "open",
-      "created_at": "2026-10-07T08:07:53+00:00",
-      "updated_at": "2026-10-29T07:46:02+00:00",
-      "body": "We want to make stream data to be joined with external storages which are (more) efficient to the access pattern of \u201clookup\u201d based on the key (retrieving specific data on demand) instead of loading the data in prior before joining.\r\n\r\nFor example, suppose we want to join the employee data with department data, to show the department name they belong to. (This is called \u201cenrichment\u201d.) Instead of loading the whole (or pruned) department data from the external storage at once, we read the employee data, and retrieve the department data by associated data (e.g. department ID) the employee belongs to, and join the department name with employee data.\r\n\r\nThis will enable us to achieve low latency on join operation since we do not wait for loading the data to process but process the stream side immediately with querying the static side on demand. This also helps to achieve better throughput for the case where Spark cannot derive the efficient filter to prune the static side outstandingly, since the new join would only require the data \u201cas needed\u201d rather than scanning partial/whole data.\r\n\r\n\u00a0\r\n\r\nSPIP doc: [https://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0]",
-      "labels": [
-        "SPIP"
-      ],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1fBPM5cku8UJXacG2fw9df1zqALJ-WFm8E9-b9oiFP5M/edit?tab=t.0",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSPIP: External Lookup Join"
-        }
-      ],
-      "comment_count": 1,
-      "llm_summary": "The proposal introduces an on-demand lookup join that streams data can use to retrieve matching records from external storage, avoiding full static side loads. This approach reduces latency and improves throughput when the static side cannot be efficiently pruned. It defines an interface for third\u2011party connectors without adding new data source implementations.",
-      "llm_status": "discussion",
-      "llm_key_points": [
-        "Enable low\u2011latency joins by on\u2011demand lookup",
-        "Improve throughput when static side cannot be pruned",
-        "Define interface for third\u2011party connectors"
-      ],
-      "llm_topics": [
-        "external-lookup-join",
-        "performance",
-        "streaming"
-      ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "bc8fe1c33291",
-      "llm_title": "External Lookup Join for Streaming",
-      "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
     {
       "id": "spark-jira-SPARK-55278",
@@ -268,7 +269,7 @@
       ],
       "_content_hash": "3391d939e739",
       "llm_title": "OIDC Credential Propagation",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr",
+      "initiative_id": "spark-init-spark-jira-SPARK-57703",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -844,7 +845,7 @@
         "spip"
       ],
       "_content_hash": "185384a72ca3",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-jira-SPARK-19904",
@@ -1043,7 +1044,7 @@
         "apache-spark"
       ],
       "_content_hash": "850a90f060e2",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-jira-SPARK-24615",
@@ -1163,7 +1164,7 @@
         "umbrella-issue"
       ],
       "_content_hash": "cc44e5d48a2a",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-jira-SPARK-39591",
@@ -2017,68 +2018,8 @@
       "author": "Dongjoon Hyun via dev <de...@spark.apache.org>",
       "state": "open",
       "created_at": "2026-11-10T07:16:48+00:00",
-      "updated_at": "2026-11-10T11:15:24+00:00",
+      "updated_at": "2026-11-10T17:42:36+00:00",
       "body": "Please vote on releasing the following candidate as Apache Spark Connect Swift Client 0.8.0.\n\n- Support Swift 6.4 as the minimum supported version\n- Tested with Apache Spark 4.0.5 / 4.1.4 / 4.2.1 / 4.3.0\n- Many feature parity improvements\n\nThis vote is open for the next 72 hours and passes if a majority +1 PMC votes are cast, with a minimum of 3 +1 votes.\n\n[ ] +1 Release this package as Apache Spark Connect Swift Client 0.8.0\n[ ] -1 Do not release this package because ...\n\nTAG:\nhttps://github.com/apache/spark-connect-swift/releases/tag/0.8.0-rc.1\n(commit: 8f5014348186d37529f1e577b71a2a313f051edc)\n\nRELEASE FILES:\nhttps://dist.apache.org/repos/dist/dev/spark/spark-connect-swift-0.8.0-rc.1/\n\nLIST OF ISSUES:\nhttps://github.com/apache/spark-connect-swift/milestone/3\nhttps://issues.apache.org/jira/projects/SPARK/versions/12357278\n\nThanks,\nDongjoon.\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
-      "labels": [],
-      "linked_resources": [],
-      "llm_summary": "Vote in progress: 0 binding +1, 4 non-binding +1",
-      "llm_status": "proposal",
-      "comment_count": 5,
-      "participant_count": 5,
-      "vote_data": {
-        "binding_plus1": 0,
-        "nonbinding_plus1": 4,
-        "vetoes": 0,
-        "result": "open",
-        "voters": [
-          {
-            "voter": "Hyukjin Kwon via dev <de...@spark.apache.org>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Kousuke Saruta <fr...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "Peter Toth <pe...@gmail.com>",
-            "vote": "+1"
-          },
-          {
-            "voter": "raviston Thanasekar <ra...@gmail.com>",
-            "vote": "+1"
-          }
-        ],
-        "closes_at": "2026-11-13T07:16:48+00:00"
-      },
-      "llm_key_points": [
-        "Please vote on releasing the following candidate as Apache Spark Connect Swift Client 0.8.0.",
-        "Voters include: Hyukjin Kwon via dev, Kousuke Saruta, Peter Toth..."
-      ],
-      "llm_topics": [
-        "apache-spark",
-        "swift-client",
-        "spark-connect",
-        "connect-swift"
-      ],
-      "summary_generation": {
-        "method": "local",
-        "prompt_version": 1
-      },
-      "_content_hash": "0fbe60d5c50f",
-      "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
-    },
-    {
-      "id": "spark-ml-4qfqgwz9qwm5syoxh1bt88d6rf1wmq25",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[VOTE] Release Apache Spark K8s Operator 1.1.0 (RC1)",
-      "url": "https://lists.apache.org/thread/4qfqgwz9qwm5syoxh1bt88d6rf1wmq25",
-      "author": "Dongjoon Hyun via dev <de...@spark.apache.org>",
-      "state": "open",
-      "created_at": "2026-11-09T18:50:02+00:00",
-      "updated_at": "2026-11-10T08:41:31+00:00",
-      "body": "Please vote on releasing the following candidate as Apache Spark K8s Operator 1.1.0.\n\n- Built with Apache Spark 4.3.0\n- Support Java 27\n- Support Kueue (K8s-native job queueing system)\n- Deprecated v1beta1 CRDs\n\nThis vote is open for the next 72 hours and passes if a majority +1 PMC votes are cast, with a minimum of 3 +1 votes.\n\n[ ] +1 Release this package as Apache Spark K8s Operator 1.1.0\n[ ] -1 Do not release this package because ...\n\nTAG:\nhttps://github.com/apache/spark-kubernetes-operator/releases/tag/1.1.0-rc.1\n(commit: 1faa654f0f6cc50752e7157a915c2f2f3cf28c2c)\n\nRELEASE FILES:\nhttps://dist.apache.org/repos/dist/dev/spark/spark-kubernetes-operator-1.1.0-rc.1/\n\nLIST OF ISSUES:\nhttps://github.com/apache/spark-kubernetes-operator/milestone/4\nhttps://issues.apache.org/jira/projects/SPARK/versions/12357280\n\nThanks,\nDongjoon.\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
       "labels": [],
       "linked_resources": [],
       "llm_summary": "Vote in progress: 0 binding +1, 7 non-binding +1",
@@ -2096,6 +2037,114 @@
             "vote": "+1"
           },
           {
+            "voter": "Hyukjin Kwon via dev <de...@spark.apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Kousuke Saruta <fr...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Peter Toth <pe...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Uro\u0161 Bojani\u0107 via dev <de...@spark.apache.org>",
+            "vote": "+1"
+          },
+          {
+            "voter": "huaxin gao <hu...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "raviston Thanasekar <ra...@gmail.com>",
+            "vote": "+1"
+          }
+        ],
+        "closes_at": "2026-11-13T07:16:48+00:00"
+      },
+      "llm_key_points": [
+        "Please vote on releasing the following candidate as Apache Spark Connect Swift Client 0.8.0.",
+        "Voters include: \"L. C. Hsieh\", Hyukjin Kwon via dev, Kousuke Saruta..."
+      ],
+      "llm_topics": [
+        "apache-spark",
+        "swift-client",
+        "spark-connect",
+        "connect-swift"
+      ],
+      "summary_generation": {
+        "method": "local",
+        "prompt_version": 1
+      },
+      "_content_hash": "0b1d8f8bb98c",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+    },
+    {
+      "id": "spark-ml-sscb3n2hs2f3kol1qp4zn9kb4bzpwsp1",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Adjusted Apache Spark 4.4.0 Release Timeline",
+      "url": "https://lists.apache.org/thread/sscb3n2hs2f3kol1qp4zn9kb4bzpwsp1",
+      "author": "Yicong Huang via dev <de...@spark.apache.org>",
+      "state": "open",
+      "created_at": "2026-11-10T16:14:59+00:00",
+      "updated_at": "2026-11-10T16:14:59+00:00",
+      "body": "Hi all,\n\nI\u2019m happy to serve as the release manager for the Apache Spark 4.4 release\nline! I\u2019d like to start a discussion on the release timeline for Apache\nSpark 4.4.0.\n\nAccording to our previous release cadence, we should have cut the branch on\nNovember 1. Since we\u2019re already a bit behind schedule, I\u2019d like to propose\nthe following timeline:\n\n   - *Branch cut:* November 16, 2026 (Monday), giving the community about a\n   week to wrap up ongoing changes.\n   - *QA period:* After the branch cut, we\u2019ll enter the QA period, focusing\n   on bug fixes, testing, stability, documentation, and release blockers. In\n   general, no new features should be merged into branch-4.4 during this\n   period.\n   - *Target release:* Mid-January 2027, to avoid the holiday season and\n   allow sufficient time for stabilization and release preparation.\n\nIf you have any feature PRs you\u2019d like to include in Apache Spark 4.4.0,\nplease try to get them merged before the branch cut.\n\nIf there are no objections, I\u2019ll proceed with updating the website and\nsending a separate branch-cut announcement to the dev mailing list.\n\nPlease let me know if you have any thoughts or concerns about the proposed\ntimeline.\n\nBest regards,\nYicong Huang\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "Release manager proposes new timeline for Spark 4.4.0: branch cut Nov 16, 2026, followed by QA, with target release mid-January 2027. Community asked to merge feature PRs before branch cut and to voice concerns.",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [
+        "Branch cut postponed to Nov 16, 2026",
+        "Target release set for mid-January 2027 after QA"
+      ],
+      "llm_topics": [
+        "release-cadence",
+        "timeline"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "a0f1e85ef4f3",
+      "llm_title": "Apache Spark 4.4.0 Release Timeline",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-31rx0xmwbhloljsowc9ksl6kk5vbb3r4"
+    },
+    {
+      "id": "spark-ml-4qfqgwz9qwm5syoxh1bt88d6rf1wmq25",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[VOTE] Release Apache Spark K8s Operator 1.1.0 (RC1)",
+      "url": "https://lists.apache.org/thread/4qfqgwz9qwm5syoxh1bt88d6rf1wmq25",
+      "author": "Dongjoon Hyun via dev <de...@spark.apache.org>",
+      "state": "open",
+      "created_at": "2026-11-09T18:50:02+00:00",
+      "updated_at": "2026-11-10T14:51:13+00:00",
+      "body": "Please vote on releasing the following candidate as Apache Spark K8s Operator 1.1.0.\n\n- Built with Apache Spark 4.3.0\n- Support Java 27\n- Support Kueue (K8s-native job queueing system)\n- Deprecated v1beta1 CRDs\n\nThis vote is open for the next 72 hours and passes if a majority +1 PMC votes are cast, with a minimum of 3 +1 votes.\n\n[ ] +1 Release this package as Apache Spark K8s Operator 1.1.0\n[ ] -1 Do not release this package because ...\n\nTAG:\nhttps://github.com/apache/spark-kubernetes-operator/releases/tag/1.1.0-rc.1\n(commit: 1faa654f0f6cc50752e7157a915c2f2f3cf28c2c)\n\nRELEASE FILES:\nhttps://dist.apache.org/repos/dist/dev/spark/spark-kubernetes-operator-1.1.0-rc.1/\n\nLIST OF ISSUES:\nhttps://github.com/apache/spark-kubernetes-operator/milestone/4\nhttps://issues.apache.org/jira/projects/SPARK/versions/12357280\n\nThanks,\nDongjoon.\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "Vote in progress: 0 binding +1, 8 non-binding +1",
+      "llm_status": "proposal",
+      "comment_count": 9,
+      "participant_count": 9,
+      "vote_data": {
+        "binding_plus1": 0,
+        "nonbinding_plus1": 8,
+        "vetoes": 0,
+        "result": "open",
+        "voters": [
+          {
+            "voter": "\"L. C. Hsieh\" <vi...@gmail.com>",
+            "vote": "+1"
+          },
+          {
             "voter": "Kousuke Saruta via dev <de...@spark.apache.org>",
             "vote": "+1"
           },
@@ -2105,6 +2154,10 @@
           },
           {
             "voter": "Qi Tan <qi...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Uro\u0161 Bojani\u0107 via dev <de...@spark.apache.org>",
             "vote": "+1"
           },
           {
@@ -2136,7 +2189,7 @@
         "method": "local",
         "prompt_version": 1
       },
-      "_content_hash": "5610461f0615",
+      "_content_hash": "10081135d8b7",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-45923"
     },
@@ -2160,19 +2213,18 @@
           "title": "\ufeffSPIP: Bring GraphFrames into Apache Spark"
         }
       ],
-      "llm_summary": "The discussion proposes merging the GraphFrames library into the Apache Spark project to provide a unified DataFrame\u2011based graph API, improve maintenance, and enable Spark Connect users to access graph functionality without separate installations. It aims to preserve existing GraphX while adding GraphFrames as an in\u2011tree module and will be released in a future Spark version.",
+      "llm_summary": "The discussion proposes merging the GraphFrames library into the Apache Spark project as an in\u2011tree module, aiming to provide a unified DataFrame\u2011based graph API and improve long\u2011term maintenance. It highlights the benefits of eliminating separate installation steps, addressing compatibility gaps for Spark Connect, and consolidating development effort. The community is evaluating the feasibility, scope, and roadmap for the integration.",
       "llm_status": "discussion",
       "comment_count": 3,
       "participant_count": 3,
       "llm_key_points": [
-        "Merge GraphFrames into Spark to provide built\u2011in graph processing via DataFrames",
-        "Improve maintenance and integration, supporting Spark Connect and reducing separate releases",
-        "Preserve GraphX and avoid rewriting algorithms or adding new graph query languages"
+        "Propose moving GraphFrames into Spark core",
+        "Aim to unify graph API and improve maintenance",
+        "Discuss integration, compatibility, and roadmap"
       ],
       "llm_topics": [
         "graph-processing",
-        "spark-connect",
-        "maintenance"
+        "in-tree-modules"
       ],
       "summary_generation": {
         "method": "llm",
@@ -2205,12 +2257,19 @@
           "title": "\ufeffSPIP: Extending Spark 3.5 LTS Period For Security Fixes"
         }
       ],
-      "llm_summary": "Szehon proposes a new Spark 3.5.10 release to provide security fixes and extend the 3.5 LTS period until November 2027. The discussion considers the timing relative to the upcoming 4.3 RC3 vote and whether any additional patches should be included. Participants are asked for interest and willingness to help drive the release.",
+      "llm_summary": "Szehon Ho proposes a Spark 3.5.10 release to provide security fixes and extend the 3.5 LTS period until November 2027, following the recent 4.3 RC3 vote. The discussion highlights accumulated changes, the need for community support, and timing considerations relative to the 4.3 release cycle.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
-      "llm_key_points": [],
-      "llm_topics": [],
+      "llm_key_points": [
+        "Interest in releasing Spark 3.5.10 for security fixes and LTS extension",
+        "Timing of the release relative to the 4.3 RC3 vote and community support needs"
+      ],
+      "llm_topics": [
+        "lifecycle",
+        "security",
+        "release"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -2218,8 +2277,9 @@
         "prompt_version": 1
       },
       "_content_hash": "c0ed1f09ee9f",
+      "llm_title": "Spark 3.5.10 Release Discussion",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-8qwojcsfshkdcnqrqckrc8f8lndg16ds",
@@ -2247,6 +2307,12 @@
       "llm_status": "discussion",
       "comment_count": 4,
       "participant_count": 2,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
       "llm_key_points": [
         "Bot reviews 4-8 PRs concurrently",
         "Failure rate rises with PR size",
@@ -2257,14 +2323,8 @@
         "automation",
         "code-review"
       ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "b4e72f38c678",
       "llm_title": "Automated AI code review on Spark PRs",
+      "_content_hash": "b4e72f38c678",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
@@ -2285,6 +2345,12 @@
       "llm_status": "discussion",
       "comment_count": 8,
       "participant_count": 4,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
       "llm_key_points": [
         "Introduce a 7\u2011day buffer before dependency upgrades",
         "AGENTS.md should enforce release\u2011date checks and block upgrades"
@@ -2294,16 +2360,10 @@
         "policy-enforcement",
         "security"
       ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "9de3f0768906",
       "llm_title": "Buffer time before dependency upgrades",
+      "_content_hash": "9de3f0768906",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-v3g18cbdd5vgpp2khvx2j3nsy8sgplqm",
@@ -2400,12 +2460,20 @@
           "title": "\ufeffSPIP: Extend DSv2 Push-Downs including Join, Set Operation, and Window Function Support"
         }
       ],
-      "llm_summary": "The thread discusses extending Spark's Data Source V2 push\u2011down framework to support additional relational operators such as full outer, semi, and anti joins, set operations, and window functions. The proposal introduces opt\u2011in interfaces for external sources to decline push\u2011down and considers making the join push\u2011down configuration public and enabled by default. The discussion aims to reduce network traffic by delegating more query logic to remote engines.",
+      "llm_summary": "The discussion proposes extending Spark Data Source V2 push-down to support additional relational operators such as full outer, semi, and anti joins, set operations, and window functions. It introduces opt\u2011in interfaces that allow sources to decline push\u2011down, aiming to reduce data transfer and improve performance for external data sources.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
-      "llm_key_points": [],
-      "llm_topics": [],
+      "llm_key_points": [
+        "Introduce opt\u2011in interfaces for full outer, semi, and anti joins",
+        "Add support for set operations and window functions in push\u2011down",
+        "Sources can decline push\u2011down, enabling flexible optimization"
+      ],
+      "llm_topics": [
+        "data-source-v2",
+        "push-down",
+        "performance"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -2413,6 +2481,7 @@
         "prompt_version": 1
       },
       "_content_hash": "5a727cc81e92",
+      "llm_title": "Extend DSv2 push-down with joins and windows",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
@@ -3085,7 +3154,7 @@
       },
       "_content_hash": "f87e7b1cc157",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-15689"
+      "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
     {
       "id": "spark-ml-rc7f5f9ogggv6rqy7w5m2753yq5n5ckq",
@@ -3766,7 +3835,7 @@
       "llm_title": "Release Apache Spark 4.0.5",
       "_content_hash": "9c6b5b82100b",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-3x26ywb5vfrkq6x9prcjl9bghd6y2wwn",
@@ -3900,7 +3969,7 @@
       "_content_hash": "10849487e050",
       "llm_title": "Apache Spark 4.2.1 Release",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-skccwj4vyrcqy3jm6207ywqf5xjzt5zo"
+      "initiative_id": "spark-init-spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw"
     },
     {
       "id": "spark-ml-96goypb9vq64h9t5jkmw8n8yo3xtrogv",
@@ -5181,7 +5250,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -5209,7 +5278,7 @@
       ],
       "llm_title": "",
       "_content_hash": "743c6531b219",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-wp82v45rc51ztx191fzmoh1vb4tttzc8",
@@ -5237,7 +5306,7 @@
       ],
       "llm_title": "",
       "_content_hash": "7fdb1a55fcf3",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-02525gm3m2wkc23kvp96l4ztvnpgo9ys",
@@ -5600,7 +5669,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "56e5487627dc",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-0vdnpt0j9c4ptlhvl117b3w5moqxw8bc",
@@ -5636,7 +5705,7 @@
         "peter-toth"
       ],
       "_content_hash": "37899491df81",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-4qozg1rdvv2vvltp858sygj31jrpskx5",
@@ -5870,7 +5939,7 @@
         "cloud"
       ],
       "_content_hash": "7e43e189262d",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-bmqbpo4fp08y009hvgsv7s0kg9qo1c8p",
@@ -6098,7 +6167,7 @@
         "peter-toth"
       ],
       "_content_hash": "2943026d2e40",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-ml-jo46380xglltc06rrfmdyv3k7r7x6sxw"
     },
     {
       "id": "spark-ml-sgq3c866w29mgw1ox1vbzmocm16fqskt",
@@ -6214,7 +6283,7 @@
         "token-distribution"
       ],
       "_content_hash": "eaff08a2e76c",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr",
+      "initiative_id": "spark-init-spark-jira-SPARK-57703",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -6428,7 +6497,7 @@
         "oidc"
       ],
       "_content_hash": "eac6695c87c6",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-5h0wsksd5q7dycs7m4txvqnqbrn6c4ph",
@@ -6627,7 +6696,7 @@
         "oauth-based-environments"
       ],
       "_content_hash": "88a476e436ea",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-y44ork7yp93lh4o4vwzfdz1966x8j21j",
@@ -6877,7 +6946,7 @@
         "branch-merge"
       ],
       "_content_hash": "bb99b167e934",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr",
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -7690,7 +7759,7 @@
         "vote"
       ],
       "_content_hash": "5b11af2bda09",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-pjbnfycmp5lt28bc242rvl4ln2t4nof3",
@@ -7736,7 +7805,7 @@
         "security"
       ],
       "_content_hash": "046734127fcf",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr",
+      "initiative_id": "spark-init-spark-jira-SPARK-57703",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -7775,7 +7844,7 @@
         "peter-toth"
       ],
       "_content_hash": "b38e7b779ac6",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-xvv4qt9dpnb1kszxdqlxyv9b46749ypo",
@@ -7829,7 +7898,7 @@
         "nano-second"
       ],
       "_content_hash": "53046a3b7d73",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-locxv3h4tkbsvcf8t600kyvx16xw6xl3",
@@ -8718,7 +8787,7 @@
         "spip"
       ],
       "_content_hash": "1e90262c1fcd",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-c3go78wsq2bc6q87lcxr0cjngrw548hy",
@@ -8794,7 +8863,7 @@
         "cdc-support"
       ],
       "_content_hash": "123d8c3bfe8c",
-      "initiative_id": "spark-init-spark-jira-SPARK-60031"
+      "initiative_id": "spark-init-spark-ml-n9osxrmv7239sgj5qqo5qks17jd79vrj"
     },
     {
       "id": "spark-ml-sjmsbpdp4q6op466c4l0jb869frzth0f",
@@ -9855,7 +9924,7 @@
         "vote-passes"
       ],
       "_content_hash": "f6a4f948416b",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-dylmft4n6v7mqb4b47hvjxhoz6hkhqkb",
@@ -9960,7 +10029,7 @@
         "support-schedule"
       ],
       "_content_hash": "188db29c161c",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-dhxx6pohs7fvqc3knzhtoj4tbcgrwxts",
@@ -10218,7 +10287,7 @@
         "learning-spark"
       ],
       "_content_hash": "dcb74edc120f",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-64wvb2mko1f193zx9x1fpxnwkxxpq1h3",
@@ -10536,7 +10605,7 @@
         "apache-spark"
       ],
       "_content_hash": "ac030e3bd291",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-x4pn230qw1rtcpv36o9530f3hkzllrck",
@@ -10851,7 +10920,7 @@
         "apache"
       ],
       "_content_hash": "3e3df829f2cf",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-s1szvkkw7krshx8kht1bnzbq8h3cmyft",
@@ -10891,7 +10960,7 @@
         "release"
       ],
       "_content_hash": "4b0729a96783",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-4r6q8187b30p0ppclw0pyfjp8h8xs3rq",
@@ -10922,7 +10991,7 @@
         "security-fixes"
       ],
       "_content_hash": "76edeb3f9870",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-wfg7gfxqzysr08qkq6gh0wtnw5t3nqtl",
@@ -11489,7 +11558,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "6a5711920c44",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-tyopctz8r5r2omww9l0z5hrr1oysmwf3",
@@ -13068,7 +13137,7 @@
         "feature-freeze"
       ],
       "_content_hash": "368b848db49c",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr",
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -13281,7 +13350,7 @@
         "apache-spark"
       ],
       "_content_hash": "b1796e2be8d5",
-      "initiative_id": "spark-init-spark-ml-v1ng3dygqg1rcj08dx4q5vssf7zon61w"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-cfdlfl19k8gpc8m4ollmppyo0qbdpbh4",
@@ -13372,7 +13441,7 @@
         "release"
       ],
       "_content_hash": "a07f3d993e3f",
-      "initiative_id": "spark-init-spark-ml-v1ng3dygqg1rcj08dx4q5vssf7zon61w"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-p0y46b1986pm4hmg5fy9zbf3g1k8ngrx",
@@ -13888,7 +13957,7 @@
         "binding"
       ],
       "_content_hash": "0cfb04e25f4e",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-rx5pqh01c86slpqv9161hqwgm5lwxxzq",
@@ -14084,7 +14153,7 @@
         "release"
       ],
       "_content_hash": "05d6213c6e90",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-4t4l9dfq9ozmo5b11govl2j9obt6vjb4",
@@ -14149,7 +14218,7 @@
         "discuss"
       ],
       "_content_hash": "c73481e96ce1",
-      "initiative_id": "spark-init-spark-jira-SPARK-55278"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-zxdn5hj7tb0zb21b4xxzfxz717sx31fj",
@@ -14450,7 +14519,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "98f789695745",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-rrn979v01kjqs4tqyj3lr4xj111h4z0v",
@@ -15190,7 +15259,7 @@
         "dependency-management"
       ],
       "_content_hash": "220ebb400088",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr",
+      "initiative_id": "spark-init-spark-jira-SPARK-57703",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -16504,7 +16573,7 @@
         "subset-argument"
       ],
       "_content_hash": "e68b1d71e82d",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-v9djkznh8sz5smdl7mx9zt5kxd51g18y",
@@ -17664,7 +17733,7 @@
         "adding-support"
       ],
       "_content_hash": "40b9018af93b",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-jqttq6g9bm5gv65orvwswb41zbj5krck",
@@ -18065,7 +18134,7 @@
         "vote"
       ],
       "_content_hash": "8889f8660299",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-ml-xsq58800smtc5xo15kfzyj5kfw5yh7wj"
     },
     {
       "id": "spark-ml-fz2tdzc0100m146mtrk76zv1wg1bdzfk",
@@ -18403,7 +18472,7 @@
         "enable-spark"
       ],
       "_content_hash": "fdf8f92b5cec",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-njqjcryq0lot9rkbf10mtvf7d1t602bj",
@@ -19807,7 +19876,7 @@
         "spark"
       ],
       "_content_hash": "410e31643790",
-      "initiative_id": "spark-init-spark-ml-v1ng3dygqg1rcj08dx4q5vssf7zon61w"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-v1ng3dygqg1rcj08dx4q5vssf7zon61w",
@@ -19885,7 +19954,7 @@
         "release"
       ],
       "_content_hash": "d9ff54d6c19a",
-      "initiative_id": "spark-init-spark-ml-v1ng3dygqg1rcj08dx4q5vssf7zon61w"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-lttktocm6g6pvhg8zmp37jbhpf51wbyv",
@@ -19935,7 +20004,7 @@
         "release"
       ],
       "_content_hash": "0fa236649c2f",
-      "initiative_id": "spark-init-spark-ml-v1ng3dygqg1rcj08dx4q5vssf7zon61w"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-4fnlnvhsqym72k53jw8cjhcdjbhpmm95",
@@ -20040,7 +20109,7 @@
         "release"
       ],
       "_content_hash": "9bd912688ff5",
-      "initiative_id": "spark-init-spark-ml-v1ng3dygqg1rcj08dx4q5vssf7zon61w"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-lropros35npnmsg9tgrxfk76sprqjv35",
@@ -20071,7 +20140,7 @@
         "jira"
       ],
       "_content_hash": "66668887790f",
-      "initiative_id": "spark-init-spark-ml-v1ng3dygqg1rcj08dx4q5vssf7zon61w"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-gpsw7k5q4v4y4n8d25zoj47ck6pxldq5",
@@ -20141,7 +20210,7 @@
         "api"
       ],
       "_content_hash": "eda4f3ad4f74",
-      "initiative_id": "spark-init-spark-ml-skccwj4vyrcqy3jm6207ywqf5xjzt5zo",
+      "initiative_id": "spark-init-spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -20184,7 +20253,7 @@
         "lts-period"
       ],
       "_content_hash": "5e4a9be2e683",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-hfpgp3mz0lq6w9ysqv92zkygwn8bmcpk",
@@ -20592,7 +20661,7 @@
         "apache"
       ],
       "_content_hash": "c477dc28e3fe",
-      "initiative_id": "spark-init-spark-ml-v1ng3dygqg1rcj08dx4q5vssf7zon61w"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-jmnvlqkhmfv5lg5l1fw4gyq1xgsx92nw",
@@ -20619,7 +20688,7 @@
         "apache"
       ],
       "_content_hash": "b35686693544",
-      "initiative_id": "spark-init-spark-ml-v1ng3dygqg1rcj08dx4q5vssf7zon61w"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-04k62jn7k6dqhtov44yg9c6gkowyy47n",
@@ -21568,7 +21637,7 @@
         "bug-fix"
       ],
       "_content_hash": "37fa0ac3c76c",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr",
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -23238,7 +23307,7 @@
         "spark"
       ],
       "_content_hash": "bb2e07d0a0dc",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-w3v4fjk9lvxvp3lr5tngg0hvhfrkl5b0",
@@ -23368,7 +23437,7 @@
         "discuss"
       ],
       "_content_hash": "fe2f594a7167",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx"
     },
     {
       "id": "spark-ml-g9kj4zv7slct25fox0plxzcd1h8dvjm6",
@@ -23694,7 +23763,7 @@
         "feature-list"
       ],
       "_content_hash": "3468b0707bf6",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr",
+      "initiative_id": "spark-init-spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -24597,7 +24666,7 @@
         "spip-doc"
       ],
       "_content_hash": "efe9674f1fa4",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-rqso3mf3ll1p2sfw02wzcxbjo2xno6go",
@@ -25045,7 +25114,7 @@
         "commits"
       ],
       "_content_hash": "9462da0713bc",
-      "initiative_id": "spark-init-spark-ml-f28h0brncmkoyv5mtsqtxx38hx309c2j"
+      "initiative_id": "spark-init-spark-jira-SPARK-15689"
     },
     {
       "id": "spark-ml-ht21nokxqd40bsjjt2w79r9w6rxv512o",
@@ -29424,7 +29493,7 @@
         "spark"
       ],
       "_content_hash": "033d720f0836",
-      "initiative_id": "spark-init-spark-ml-31rx0xmwbhloljsowc9ksl6kk5vbb3r4"
+      "initiative_id": "spark-init-spark-jira-SPARK-56978"
     },
     {
       "id": "spark-ml-zys6wylgmdq3gm47go306tsr0ovto0g3",
@@ -31678,7 +31747,7 @@
         "schedulers-proposal"
       ],
       "_content_hash": "5f028ab2916e",
-      "initiative_id": "spark-init-spark-ml-0w9cn6vrrf3hxsybj2s2bw7b2ppo6omr"
+      "initiative_id": "spark-init-spark-jira-SPARK-57703"
     },
     {
       "id": "spark-ml-dx7jcycj0dxc1n613ckwxxtbtl8mlvcb",

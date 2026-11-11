@@ -1,13 +1,23 @@
 {
-  "summary": "1.19.0 The discussion centers on how Parquet readers should resolve a FILE logical type value when both inline data and a URI locator are present, as different engines currently return different bytes. The authors recommend including Delta mode in the initial PFOR specification to improve compression for sorted data, while deferring interleaving and Unified Transposed Layout (UTL) to a later phase. ## What's Changed * MINOR: [1.18.x] Revert \"Set version to 1.18.2 for release\" by @manuzhang in https://github.com/apache/parquet-java/pull/3931 **Full Changelog**: https://github.com/apache/parquet-java/compare/apache-parquet-1.18.2-rc0...apache-parquet-1.18.2-rc1 The discussion centers on adding a new FINITE_VECTOR type to Parquet and how Iceberg should handle unannotated list data. Participants raise backward\u2011compatibility concerns, arguing that Iceberg should accept existing LIST<FLOAT>/LI",
+  "summary": "The proposal introduces a new Parquet data layout where pages are independently cut per column based on size and density, decoupling them from row group boundaries. The design preserves row\u2011group statistics for data skipping while using a modular footer to store the new metadata. Participants debate the impact on compatibility and whether the spec should be clarified to enforce this \"inline wins\" rule. It discusses design choices such as including Delta mode, starting with conventional bit packing, and adding interleaving later, and proposes renaming the proposal to FASTLANES to leverage existing mindshare.",
   "highlights": [
     {
-      "text": "1.19.0",
+      "text": "The proposal introduces a new Parquet data layout where pages are independently cut per column based on size and density, decoupling them from row group boundar\u2026",
       "sources": [
         {
-          "id": "parquet-gh-m35",
-          "title": "1.19.0",
-          "url": "https://github.com/apache/parquet-java/milestone/35"
+          "id": "parquet-ml-98w1f5posp0dd0mnsm0m1n9nbl8l8bfo",
+          "title": "[DISCUSS] Proposal: Page-First Data Layout",
+          "url": "https://lists.apache.org/thread/98w1f5posp0dd0mnsm0m1n9nbl8l8bfo"
+        }
+      ]
+    },
+    {
+      "text": "## What's Changed * MINOR: [1.18.x] Fix vector-plugin parent versions by @manuzhang in https://github.com/apache/parquet-java/pull/3847 * [1.18.x] Bump Jackson \u2026",
+      "sources": [
+        {
+          "id": "parquet-gh-rel-apache-parquet-1-18-2",
+          "title": "Apache Parquet Java 1.18.2",
+          "url": "https://github.com/apache/parquet-java/releases/tag/apache-parquet-1.18.2"
         }
       ]
     },
@@ -22,17 +32,7 @@
       ]
     },
     {
-      "text": "**Full Changelog**: https://github.com/apache/parquet-java/compare/apache-parquet-1.18.2-rc1...apache-parquet-1.18.2-rc2",
-      "sources": [
-        {
-          "id": "parquet-gh-rel-apache-parquet-1-18-2-rc2",
-          "title": "Apache Parquet 1.18.2 RC2",
-          "url": "https://github.com/apache/parquet-java/releases/tag/apache-parquet-1.18.2-rc2"
-        }
-      ]
-    },
-    {
-      "text": "The discussion compares PFOR compression with other schemes, showing PFOR delivers the highest decoding throughput and compression ratio on Graviton4. The autho\u2026",
+      "text": "The thread presents benchmark results comparing FastLanes (PFOR) to other compression schemes, showing superior decoding speed and compression ratio. It discuss\u2026",
       "sources": [
         {
           "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-10T14:00:29.466067+00:00",
-  "item_count": 7,
+  "generated_at": "2026-11-11T13:14:57.108420+00:00",
+  "item_count": 6,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-03",
-    "to": "2026-11-09",
-    "thread_count": 7
+    "from": "2026-11-05",
+    "to": "2026-11-11",
+    "thread_count": 6
   }
 }

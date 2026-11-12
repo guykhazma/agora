@@ -1,7 +1,7 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-11-11T13:15:51.501499+00:00",
-  "total": 314,
+  "generated_at": "2026-11-12T14:19:00.435120+00:00",
+  "total": 315,
   "proposals": [
     {
       "id": "parquet-gh-rel-apache-parquet-1-18-2",
@@ -3075,32 +3075,137 @@
       "author": "Julien Le Dem via dev <de...@parquet.apache.org>",
       "state": "open",
       "created_at": "2026-11-11T02:10:07+00:00",
-      "updated_at": "2026-11-11T12:13:45+00:00",
+      "updated_at": "2026-11-12T10:10:25+00:00",
       "body": "On behalf of the Apache Parquet PMC, I'm happy to announce that Russell\nSpitzer\nhas accepted an invitation to become a committer on Apache Parquet.\nCongrats, welcome, and thank you for your contributions!\n\nJulien\n",
       "labels": [],
       "linked_resources": [],
-      "llm_summary": "> > Thanks, > Vinoo Ganesh | vinoo.ganesh@gmail.com > > <Vi...@gmail.com> > > > On Tue, Nov 10, 2026 at 9:15\u202fPM Neelesh Salian <ne...@gmail.com> > wrote: > > > Congratulations Russell! > > > > Thanks, > > Vinoo Ganesh | vinoo.ganesh@gmail.com > > > > <Vi...@gmail.com> > > > > > > On Tue, Nov 10, 2026 at 9:15\u202fPM Neelesh Salian <neeleshssalian@gmail.com > > > > wrote: > > > > > Congratulations Russell! El mi\u00e9, 11 nov 2026 a las 10:47, Jones, Danny via dev (<de...@parquet.apache.org>) escribi\u00f3: > > Congratulations Russell!",
+      "llm_summary": "> > Thanks, > Vinoo Ganesh | vinoo.ganesh@gmail.com > > <Vi...@gmail.com> > > > On Tue, Nov 10, 2026 at 9:15\u202fPM Neelesh Salian <ne...@gmail.com> > wrote: > > > Congratulations Russell! > > Best, > Rok > > On Wed, Nov 11, 2026 at 12:24\u202fPM Fokko Driesprong <fo...@driesprong.frl> > wrote: > > > Congrats Russell, great to have you as a committer! > > > > Best, > > Rok > > > > On Wed, Nov 11, 2026 at 12:24\u202fPM Fokko Driesprong <fo...@driesprong.frl> > > wrote: > > > > > Congrats Russell, great to have you as a committer!",
       "llm_status": "abandoned",
-      "comment_count": 11,
-      "participant_count": 12,
+      "comment_count": 23,
+      "participant_count": 24,
       "llm_key_points": [
         "Congrats and welcome, Russell!",
         "Congratulations Russell!",
-        "Congrats and welcome, Russell!"
+        "Congratulations, Russell."
       ],
       "llm_topics": [
         "apache-parquet",
         "parquet-pmc",
         "russell",
-        "parquet"
+        "congratulations-russell"
       ],
       "summary_generation": {
         "method": "local",
         "prompt_version": 1
       },
-      "_content_hash": "0d5fb646408c",
+      "_content_hash": "e85a3c4ab6d5",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-ml-fzxrc5bg8xqzgxoop6qsh3v7w1ly5k7f"
+    },
+    {
+      "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations (+ apologies)",
+      "url": "https://lists.apache.org/thread/669rvfch65xcfdqqtj22nlsvkzthxmy3",
+      "author": "PRATEEK GAUR <pr...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-11-05T00:24:18+00:00",
+      "updated_at": "2026-11-12T06:00:30+00:00",
+      "body": "Hi all,\n\nThanks, Antoine, for proposing this comparison framework. Following the\nearlier mailing-list\ndiscussions, I compared the options across the three areas you identified:\nspeed, storage\nefficiency, and development and maintenance effort. I also tried to\nconsider the likely reader-adoption\ncost across implementations.\n\n*TL'DR* : My current preference for the 4 outstanding decisions is\nsummarized below.\n\nInitial PFOR design\n|-- Include PFOR-Frame\n|   `-- Start with conventional bit packing\n|       `-- Evaluate interleaving separately\n|\n`-- Include PFOR-Delta\n    |-- Payload: DBP layout, with or without patching\n    |   `-- Tentative preference: with exception patching\n    |\n    `-- Start with conventional ordering\n        `-- Add FastLanes ordering as a follow-up\n\n\n*Longer version* :\n\nPFOR numbers at a glance (median over 43 datasets, Graviton4):\n\nDecode throughput (GB/s, higher is better)\nPFOR          [####################] 27.14 GB/s\nLZ4              [###                                  ]  4.32 GB/s\nBSS+LZ4     [##                                   ]  2.86 GB/s\nDBP             [##                                   ]  2.33 GB/s\nBSS+ZSTD [##                                   ]  2.23 GB/s\n\nCompression ratio (higher is better)\nPFOR          [####################] 4.03x\nBSS+ZSTD [##################    ] 3.68x\nDBP            [#################      ] 3.33x\nBSS+LZ4    [################        ] 3.23x\nLZ4             [#######                          ] 1.36x\n\nConventional PFOR reaches great decoding speeds using *widely available\nfixed-width bit-unpacking*\nprimitives. Given these results, I see four remaining PFOR design\ndecisions. I lay out my preference\nand reasoning alongside it.\n\n1. PFOR-Frame only vs. PFOR-Frame plus PFOR-Delta\n\n- *Decision*: Should the initial PFOR specification include Delta mode\nalongside Frame mode?\n- *My view*: Include Delta mode.\n- *Reason*: It improves compression for sorted or slowly changing integer\ncolumns such as timestamps\n  and seq",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA",
+          "kind": "google_doc",
+          "fetched": false
+        },
+        {
+          "url": "https://docs.google.com/document/d/1L2pfrHfAZG4vKTHc-OD8p9alIUD-sUFg",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffPFOR and FastLanes for Parquet \u00b7 measured on 128-bit Arm"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/51249",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/51250",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/51295",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "The discussion compares PFOR and FastLanes encoding schemes for Parquet, presenting benchmark results that show PFOR achieves the highest decode throughput and compression ratio. Participants recommend including Delta mode in the initial specification, adopting the FastLanes name, and deferring interleaving and Unified Transpose Layout to later stages. The focus remains on balancing decoding speed, compression, and implementation complexity.",
+      "llm_status": "discussion",
+      "comment_count": 2,
+      "participant_count": 2,
+      "llm_key_points": [
+        "PFOR outperforms other encodings in decode speed",
+        "Delta mode should be included to improve compression",
+        "Rename to FastLanes and defer interleaving/UTL to later"
+      ],
+      "llm_topics": [
+        "encoding",
+        "performance"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "8691c83218af",
+      "llm_title": "FastLanes for Parquet benchmark results",
+      "observed_history": [],
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+    },
+    {
+      "id": "parquet-ml-5xn8o9rvrv1rsjs811t2gn0tkjq0zl02",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] SERIALIZED_VALUE: a logical type for serialized messages",
+      "url": "https://lists.apache.org/thread/5xn8o9rvrv1rsjs811t2gn0tkjq0zl02",
+      "author": "Neelesh Salian <ne...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-11-11T18:26:18+00:00",
+      "updated_at": "2026-11-11T18:26:18+00:00",
+      "body": "Hi all,\n\nThanks to everyone who reviewed the WIRE proposal [1]. Following Micah's\nsuggestion, I've split out the\nlogical type, which is the foundation and stands on its own, so it can move\nfirst. Projection will follow\nas a separate proposal once there is agreement from one or more engines to\nuse it.\n\n*Proposal Document: *\nhttps://docs.google.com/document/d/1RWH8P2PfMWMXvJuwtGXLe1HQbDjmL_gqR6wmhC7x3Ac/edit?usp=sharing\n\nSERIALIZED_VALUE is an annotation for a BINARY column that holds serialized\nmessages, such as protobuf,\nFlatBuffers, or thrift. It records which format the bytes are in, and for\nformats that have a schema it\nstores that schema in the file. Parquet itself never decodes the bytes, and\na reader that does not know\nthe type reads the column as plain BINARY. The doc also adds a security\nsection, as Steve suggested in the previous thread.\n\nI'd like feedback on whether this is the right direction. If it is, I'll\nopen an issue and add it to the Active Proposals list.\n\nThanks,\nNeelesh\n\n[1] https://lists.apache.org/thread/s0tmjgfnvwn793d7v8mor8r8sz0hb44t\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1RWH8P2PfMWMXvJuwtGXLe1HQbDjmL_gqR6wmhC7x3Ac/edit?usp=sharing",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeff[DESIGN] A SERIALIZED_VALUE logical type for Parquet"
+        }
+      ],
+      "llm_summary": "The discussion proposes a new Parquet logical type, SERIALIZED_VALUE, to annotate BYTE_ARRAY columns that store serialized messages such as protobuf, FlatBuffers, or Thrift. It records the format and schema location, allowing readers to interpret the bytes without decoding them themselves, and keeps the original data intact. Feedback is requested before adding it to the Active Proposals list.",
+      "llm_status": "discussion",
+      "comment_count": 0,
+      "participant_count": 1,
+      "llm_key_points": [
+        "Introduces SERIALIZED_VALUE logical type for BYTE_ARRAY columns storing serialized messages",
+        "Records format and schema, enabling cross-engine interpretation without decoding"
+      ],
+      "llm_topics": [
+        "logical-types",
+        "parquet",
+        "serialization"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "20db80dc3055",
+      "llm_title": "SERIALIZED_VALUE logical type for Parquet",
+      "observed_history": [],
+      "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
     },
     {
       "id": "parquet-ml-98w1f5posp0dd0mnsm0m1n9nbl8l8bfo",
@@ -3134,18 +3239,18 @@
           "title": "\ufeffThe Modular Footer aims to reduce the metadata I/O and decoding work needed to start a scan. The goals and motivation f"
         }
       ],
-      "llm_summary": "The proposal introduces a new Parquet data layout where pages are independently cut per column based on size and density, decoupling them from row group boundaries. This allows writers to buffer and page larger columns without forcing all columns to close pages simultaneously, improving page sizing and reducing unnecessary dictionary resets. The design preserves row\u2011group statistics for data skipping while using a modular footer to store the new metadata.",
+      "llm_summary": "The proposal introduces a Page\u2011First Data Layout for Parquet, allowing each column to cut pages independently of row\u2011group boundaries. By using a modular footer, writers can buffer per\u2011column data and emit pages only when a target size is reached, improving page sizing and reducing unnecessary IO. The design preserves row\u2011group statistics for data skipping while enabling more efficient storage for wide or sparse schemas.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
         "Decouple page boundaries from row groups",
-        "Allow per\u2011column page cutting based on size/density",
-        "Preserve row\u2011group statistics for data skipping"
+        "Use modular footer for metadata",
+        "Improve page sizing and reduce IO while preserving statistics"
       ],
       "llm_topics": [
-        "data-layout",
-        "performance"
+        "performance",
+        "data-layout"
       ],
       "summary_generation": {
         "method": "llm",
@@ -3154,7 +3259,7 @@
         "prompt_version": 1
       },
       "_content_hash": "8129ebe87c54",
-      "llm_title": "Page-First Data Layout Proposal",
+      "llm_title": "Page-First Data Layout",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
@@ -3175,6 +3280,10 @@
       "llm_status": "released",
       "comment_count": 0,
       "participant_count": 1,
+      "summary_generation": {
+        "method": "local",
+        "prompt_version": 1
+      },
       "llm_key_points": [],
       "llm_topics": [
         "apache-parquet",
@@ -3182,10 +3291,7 @@
         "announce-apache",
         "parquet"
       ],
-      "summary_generation": {
-        "method": "local",
-        "prompt_version": 1
-      },
+      "llm_title": "",
       "_content_hash": "7eb1928e2c0f",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-ml-q195nbqqcbbfkl5j0m5ohxom4s8tzsj3"
@@ -3228,6 +3334,12 @@
       "llm_status": "discussion",
       "comment_count": 5,
       "participant_count": 6,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
       "llm_key_points": [
         "Ambiguity in resolving bytes when inline and URI are both set",
         "Proposal to make inline data authoritative and locator fields provenance only",
@@ -3238,77 +3350,10 @@
         "spec-clarification",
         "compatibility"
       ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "bf34275c2511",
       "llm_title": "FILE logical type ambiguity with inline and uri",
+      "_content_hash": "bf34275c2511",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-2-rc2"
-    },
-    {
-      "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "Re: [DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations (+ apologies)",
-      "url": "https://lists.apache.org/thread/669rvfch65xcfdqqtj22nlsvkzthxmy3",
-      "author": "PRATEEK GAUR <pr...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-11-05T00:24:18+00:00",
-      "updated_at": "2026-11-10T22:05:25+00:00",
-      "body": "Hi all,\n\nThanks, Antoine, for proposing this comparison framework. Following the\nearlier mailing-list\ndiscussions, I compared the options across the three areas you identified:\nspeed, storage\nefficiency, and development and maintenance effort. I also tried to\nconsider the likely reader-adoption\ncost across implementations.\n\n*TL'DR* : My current preference for the 4 outstanding decisions is\nsummarized below.\n\nInitial PFOR design\n|-- Include PFOR-Frame\n|   `-- Start with conventional bit packing\n|       `-- Evaluate interleaving separately\n|\n`-- Include PFOR-Delta\n    |-- Payload: DBP layout, with or without patching\n    |   `-- Tentative preference: with exception patching\n    |\n    `-- Start with conventional ordering\n        `-- Add FastLanes ordering as a follow-up\n\n\n*Longer version* :\n\nPFOR numbers at a glance (median over 43 datasets, Graviton4):\n\nDecode throughput (GB/s, higher is better)\nPFOR          [####################] 27.14 GB/s\nLZ4              [###                                  ]  4.32 GB/s\nBSS+LZ4     [##                                   ]  2.86 GB/s\nDBP             [##                                   ]  2.33 GB/s\nBSS+ZSTD [##                                   ]  2.23 GB/s\n\nCompression ratio (higher is better)\nPFOR          [####################] 4.03x\nBSS+ZSTD [##################    ] 3.68x\nDBP            [#################      ] 3.33x\nBSS+LZ4    [################        ] 3.23x\nLZ4             [#######                          ] 1.36x\n\nConventional PFOR reaches great decoding speeds using *widely available\nfixed-width bit-unpacking*\nprimitives. Given these results, I see four remaining PFOR design\ndecisions. I lay out my preference\nand reasoning alongside it.\n\n1. PFOR-Frame only vs. PFOR-Frame plus PFOR-Delta\n\n- *Decision*: Should the initial PFOR specification include Delta mode\nalongside Frame mode?\n- *My view*: Include Delta mode.\n- *Reason*: It improves compression for sorted or slowly changing integer\ncolumns such as timestamps\n  and seq",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA",
-          "kind": "google_doc",
-          "fetched": false
-        },
-        {
-          "url": "https://docs.google.com/document/d/1L2pfrHfAZG4vKTHc-OD8p9alIUD-sUFg",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffPFOR and FastLanes for Parquet \u00b7 measured on 128-bit Arm"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/51249",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/51250",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/51295",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "The thread presents benchmark results comparing FastLanes (PFOR) to other compression schemes, showing superior decoding speed and compression ratio. It discusses design choices such as including Delta mode, starting with conventional bit packing, and adding interleaving later, and proposes renaming the proposal to FASTLANES to leverage existing mindshare.",
-      "llm_status": "discussion",
-      "comment_count": 1,
-      "participant_count": 2,
-      "llm_key_points": [
-        "FastLanes achieves higher decoding throughput and compression ratio than LZ4 and BSS+ZSTD",
-        "Design decisions include adding Delta mode and planning interleaving and UTL later",
-        "Proposal to rename to FASTLANES to capitalize on existing terminology"
-      ],
-      "llm_topics": [
-        "compression",
-        "performance"
-      ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "314e1b8901e6",
-      "llm_title": "FastLanes Benchmark Results and Recommendations",
-      "observed_history": [],
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
     {
       "id": "parquet-ml-rc4dso5jd5qqbf1b6cxcw88ld70l52l3",

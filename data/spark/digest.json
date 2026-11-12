@@ -1,6 +1,36 @@
 {
-  "summary": "The proposal introduces a method to join streaming data with external storage by performing on-demand lookups instead of loading the entire static side. The discussion proposes merging the GraphFrames library into the Apache Spark project as an in\u2011tree module, aiming to provide a unified DataFrame\u2011based graph API and improve long\u2011term maintenance. Szehon Ho proposes a Spark 3.5.10 release to provide security fixes and extend the 3.5 LTS period until November 2027, following the recent 4.3 RC3 vote. The PR introduces an opt\u2011in extension point that lets users supply a custom java.util.Comparator to order Spark\u2019s root pool, exposing only a minimal immutable SchedulableInfo API and a new configuration property.",
+  "summary": "The proposal extends Spark\u2019s Real-Time Mode to eligible distributed batch SQL and DataFrame queries, enabling pipelined shuffle that overlaps producer, transfer, and consumer stages to reduce latency and improve throughput. It also covers write restrictions, leakage prevention, backward\u2011compatibility via a capability signal, and flexible mask functions, with tests for each guarantee. The proposal introduces a method to join streaming data with external storage by performing on-demand lookups instead of loading the entire static side. Monitoring shows a failure rate that rises sharply with PR size, prompting consideration of limiting large PRs or splitting them.",
   "highlights": [
+    {
+      "text": "The proposal extends Spark\u2019s Real-Time Mode to eligible distributed batch SQL and DataFrame queries, enabling pipelined shuffle that overlaps producer, transfer\u2026",
+      "sources": [
+        {
+          "id": "spark-ml-db86x3yx97okrkklfyfc6obo59mvzoqn",
+          "title": "[DISCUSS] SPIP: Extend Real-Time Mode to Distributed Batch SQL and DataFrame Queries",
+          "url": "https://lists.apache.org/thread/db86x3yx97okrkklfyfc6obo59mvzoqn"
+        }
+      ]
+    },
+    {
+      "text": "The discussion proposes adding an ai_query function to PySpark that allows users to send prompt columns to AI models and receive responses as new columns. It wo\u2026",
+      "sources": [
+        {
+          "id": "spark-ml-y3nrtt4zcjcsqzgov5s7f833032zt6qh",
+          "title": "[DISCUSS] Add ai_query to PySpark",
+          "url": "https://lists.apache.org/thread/y3nrtt4zcjcsqzgov5s7f833032zt6qh"
+        }
+      ]
+    },
+    {
+      "text": "The updated SPIP document details how Spark enforces row\u2011filter and column\u2011mask policies, introducing a dedicated PolicyEnforcement operator and a security barr\u2026",
+      "sources": [
+        {
+          "id": "spark-ml-zzl3hxdll1y0bdcc1bg8hyh3sr3ofpcp",
+          "title": "Re: [DISCUSS] SPIP: Pluggable Row-Filter and Column-Mask Enforcement in Catalyst",
+          "url": "https://lists.apache.org/thread/zzl3hxdll1y0bdcc1bg8hyh3sr3ofpcp"
+        }
+      ]
+    },
     {
       "text": "The proposal introduces a method to join streaming data with external storage by performing on-demand lookups instead of loading the entire static side. This ap\u2026",
       "sources": [
@@ -10,36 +40,6 @@
           "url": "https://issues.apache.org/jira/browse/SPARK-60031"
         }
       ]
-    },
-    {
-      "text": "Release manager proposes new timeline for Spark 4.4.0: branch cut Nov 16, 2026, followed by QA, with target release mid-January 2027. Community asked to merge f\u2026",
-      "sources": [
-        {
-          "id": "spark-ml-sscb3n2hs2f3kol1qp4zn9kb4bzpwsp1",
-          "title": "[DISCUSS] Adjusted Apache Spark 4.4.0 Release Timeline",
-          "url": "https://lists.apache.org/thread/sscb3n2hs2f3kol1qp4zn9kb4bzpwsp1"
-        }
-      ]
-    },
-    {
-      "text": "The discussion proposes merging the GraphFrames library into the Apache Spark project as an in\u2011tree module, aiming to provide a unified DataFrame\u2011based graph AP\u2026",
-      "sources": [
-        {
-          "id": "spark-ml-skccwj4vyrcqy3jm6207ywqf5xjzt5zo",
-          "title": "[DISCUSS] SPIP: Bring GraphFrames into Apache Spark",
-          "url": "https://lists.apache.org/thread/skccwj4vyrcqy3jm6207ywqf5xjzt5zo"
-        }
-      ]
-    },
-    {
-      "text": "Szehon Ho proposes a Spark 3.5.10 release to provide security fixes and extend the 3.5 LTS period until November 2027, following the recent 4.3 RC3 vote. The di\u2026",
-      "sources": [
-        {
-          "id": "spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2",
-          "title": "Re: [DISCUSS] Release Apache Spark 3.5.10",
-          "url": "https://lists.apache.org/thread/tvzxk1d53hwrrrorszjzploggj8ljsl2"
-        }
-      ]
     }
   ],
   "generation": {
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-11T13:21:42.160470+00:00",
-  "item_count": 7,
+  "generated_at": "2026-11-12T14:24:41.345139+00:00",
+  "item_count": 9,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-08",
-    "to": "2026-11-10",
-    "thread_count": 7
+    "from": "2026-11-09",
+    "to": "2026-11-12",
+    "thread_count": 9
   }
 }

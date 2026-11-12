@@ -1,8 +1,28 @@
 {
-  "summary": "The proposal introduces a new Parquet data layout where pages are independently cut per column based on size and density, decoupling them from row group boundaries. The design preserves row\u2011group statistics for data skipping while using a modular footer to store the new metadata. Participants debate the impact on compatibility and whether the spec should be clarified to enforce this \"inline wins\" rule. It discusses design choices such as including Delta mode, starting with conventional bit packing, and adding interleaving later, and proposes renaming the proposal to FASTLANES to leverage existing mindshare.",
+  "summary": "Participants recommend including Delta mode in the initial specification, adopting the FastLanes name, and deferring interleaving and Unified Transpose Layout to later stages. The discussion proposes a new Parquet logical type, SERIALIZED_VALUE, to annotate BYTE_ARRAY columns that store serialized messages such as protobuf, FlatBuffers, or Thrift. It records the format and schema location, allowing readers to interpret the bytes without decoding them themselves, and keeps the original data intact. The proposal introduces a Page\u2011First Data Layout for Parquet, allowing each column to cut pages independently of row\u2011group boundaries.",
   "highlights": [
     {
-      "text": "The proposal introduces a new Parquet data layout where pages are independently cut per column based on size and density, decoupling them from row group boundar\u2026",
+      "text": "The discussion compares PFOR and FastLanes encoding schemes for Parquet, presenting benchmark results that show PFOR achieves the highest decode throughput and \u2026",
+      "sources": [
+        {
+          "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
+          "title": "Re: [DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations (+ apologies)",
+          "url": "https://lists.apache.org/thread/669rvfch65xcfdqqtj22nlsvkzthxmy3"
+        }
+      ]
+    },
+    {
+      "text": "The discussion proposes a new Parquet logical type, SERIALIZED_VALUE, to annotate BYTE_ARRAY columns that store serialized messages such as protobuf, FlatBuffer\u2026",
+      "sources": [
+        {
+          "id": "parquet-ml-5xn8o9rvrv1rsjs811t2gn0tkjq0zl02",
+          "title": "[DISCUSS] SERIALIZED_VALUE: a logical type for serialized messages",
+          "url": "https://lists.apache.org/thread/5xn8o9rvrv1rsjs811t2gn0tkjq0zl02"
+        }
+      ]
+    },
+    {
+      "text": "The proposal introduces a Page\u2011First Data Layout for Parquet, allowing each column to cut pages independently of row\u2011group boundaries. By using a modular footer\u2026",
       "sources": [
         {
           "id": "parquet-ml-98w1f5posp0dd0mnsm0m1n9nbl8l8bfo",
@@ -20,26 +40,6 @@
           "url": "https://github.com/apache/parquet-java/releases/tag/apache-parquet-1.18.2"
         }
       ]
-    },
-    {
-      "text": "The discussion centers on how Parquet readers should resolve a FILE logical type value when both inline data and a URI locator are present, as different engines\u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
-          "title": "[DISCUSS] Ambiguity in the FILE logical type when inline and uri are both set",
-          "url": "https://lists.apache.org/thread/yrghnfgghh6l86vg8hfhovo655c9qwtq"
-        }
-      ]
-    },
-    {
-      "text": "The thread presents benchmark results comparing FastLanes (PFOR) to other compression schemes, showing superior decoding speed and compression ratio. It discuss\u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
-          "title": "Re: [DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations (+ apologies)",
-          "url": "https://lists.apache.org/thread/669rvfch65xcfdqqtj22nlsvkzthxmy3"
-        }
-      ]
     }
   ],
   "generation": {
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-11T13:14:57.108420+00:00",
+  "generated_at": "2026-11-12T14:18:09.331039+00:00",
   "item_count": 6,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-05",
-    "to": "2026-11-11",
+    "from": "2026-11-09",
+    "to": "2026-11-12",
     "thread_count": 6
   }
 }

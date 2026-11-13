@@ -1,5 +1,5 @@
 {
-  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. The discussion centers on how to interpret Parquet files that contain field IDs for only some columns, a scenario that current implementations handle inconsistently. The thread discusses adding a batch signing endpoint to the REST catalog spec to support the new FILE type where each row may reference an external object. Participants highlight the need to include authorization context per element, potentially altering the request design to accommodate file reference permissions.",
+  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. Kevin Liu raises the question of whether Iceberg V4 should cease writing new ORC and Avro files due to feature gaps, while still supporting reads for backward compatibility. Benchmarks indicate that conversion is quick for sequential IDs but can be costly for random UUID keys, suggesting the use of a secondary index for large tables. The proposal is to adopt a per\u2011field resolution rule\u2014using an embedded ID when present and falling back to the name mapping otherwise\u2014aligning with the Column Projection specification.",
   "highlights": [
     {
       "text": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filt\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "The discussion centers on how to interpret Parquet files that contain field IDs for only some columns, a scenario that current implementations handle inconsiste\u2026",
+      "text": "Manu proposes disabling GitHub Copilot automatic reviews in the iceberg-cpp project because the default reviews are often low quality and contain false positive\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-tct2yp45ytsb6dqw1tq7b8gnfnp7jndo",
-          "title": "[DISCUSS] Name mapping for data files that carry only some field IDs",
-          "url": "https://lists.apache.org/thread/tct2yp45ytsb6dqw1tq7b8gnfnp7jndo"
+          "id": "iceberg-ml-6sbp6m633mpdrbwbq898frh9ogppb0r7",
+          "title": "[DISCUSS] Disable Copilot reviews in iceberg-cpp",
+          "url": "https://lists.apache.org/thread/6sbp6m633mpdrbwbq898frh9ogppb0r7"
         }
       ]
     },
     {
-      "text": "The discussion centers on a new branch, rest-v4-changes, that isolates OpenAPI spec updates for introducing Iceberg V4 tables. Contributors are asked to review \u2026",
+      "text": "A new 1.12.x branch has been created pointing to the apache-iceberg-1.12.0 release tag. The author notes that several bug fixes have been applied and a patch re\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-zrn1jb7g9wm7jgn4fx3klmtxs03k65zg",
-          "title": "Re: [DISCUSS] Initial IRC changes needed for Iceberg V4",
-          "url": "https://lists.apache.org/thread/zrn1jb7g9wm7jgn4fx3klmtxs03k65zg"
+          "id": "iceberg-ml-drhczwkksm7r266fqgovpb6s72zt6cbp",
+          "title": "[FYI] 1.12.x release tag created",
+          "url": "https://lists.apache.org/thread/drhczwkksm7r266fqgovpb6s72zt6cbp"
         }
       ]
     },
     {
-      "text": "Iceberg 1.13.0",
+      "text": "Kevin Liu raises the question of whether Iceberg V4 should cease writing new ORC and Avro files due to feature gaps, while still supporting reads for backward c\u2026",
       "sources": [
         {
-          "id": "iceberg-gh-m64",
-          "title": "Iceberg 1.13.0",
-          "url": "https://github.com/apache/iceberg/milestone/64"
+          "id": "iceberg-ml-5jfzckl0cc9z683kz9vfv41pmhrm1tdb",
+          "title": "[DISCUSS] Should V4 stop writing ORC and Avro data files?",
+          "url": "https://lists.apache.org/thread/5jfzckl0cc9z683kz9vfv41pmhrm1tdb"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-12T14:21:55.841346+00:00",
+  "generated_at": "2026-11-13T13:45:45.313825+00:00",
   "item_count": 11,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-09",
-    "to": "2026-11-12",
+    "from": "2026-11-11",
+    "to": "2026-11-13",
     "thread_count": 11
   }
 }

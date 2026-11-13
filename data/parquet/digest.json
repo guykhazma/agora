@@ -1,8 +1,18 @@
 {
-  "summary": "Participants recommend including Delta mode in the initial specification, adopting the FastLanes name, and deferring interleaving and Unified Transpose Layout to later stages. The discussion proposes a new Parquet logical type, SERIALIZED_VALUE, to annotate BYTE_ARRAY columns that store serialized messages such as protobuf, FlatBuffers, or Thrift. It records the format and schema location, allowing readers to interpret the bytes without decoding them themselves, and keeps the original data intact. The proposal introduces a Page\u2011First Data Layout for Parquet, allowing each column to cut pages independently of row\u2011group boundaries.",
+  "summary": "Participants question whether this truly extends PME, which currently protects at module boundaries, and call for clarification of scope and implementation details. Participants decide to include Delta mode, rename the proposal to FastLanes, and plan future work on interleaving and Unified Transpose Layout. The proposal introduces a SERIALIZED_VALUE logical type for Parquet BYTE_ARRAY columns that hold serialized messages such as protobuf, FlatBuffers, or Thrift. By using a modular footer, the layout preserves row-group statistics for efficient data skipping while improving page sizing and reducing overhead for wide or sparse schemas.",
   "highlights": [
     {
-      "text": "The discussion compares PFOR and FastLanes encoding schemes for Parquet, presenting benchmark results that show PFOR achieves the highest decode throughput and \u2026",
+      "text": "The discussion proposes adding an EXTERNAL_PROTECT_V1 algorithm to Parquet Modular Encryption (PME) to enable per-value encryption or tokenization and allow ext\u2026",
+      "sources": [
+        {
+          "id": "parquet-ml-5chljsblgpzzg5d8bocv1txt14hrbkhl",
+          "title": "[DISCUSS] Extending PME beyond AES: value-level protection and externally supplied cryptography",
+          "url": "https://lists.apache.org/thread/5chljsblgpzzg5d8bocv1txt14hrbkhl"
+        }
+      ]
+    },
+    {
+      "text": "The discussion compares PFOR variants for Parquet, showing PFOR as the fastest decoding option with the best compression ratio. Participants decide to include D\u2026",
       "sources": [
         {
           "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
@@ -12,7 +22,7 @@
       ]
     },
     {
-      "text": "The discussion proposes a new Parquet logical type, SERIALIZED_VALUE, to annotate BYTE_ARRAY columns that store serialized messages such as protobuf, FlatBuffer\u2026",
+      "text": "The proposal introduces a SERIALIZED_VALUE logical type for Parquet BYTE_ARRAY columns that hold serialized messages such as protobuf, FlatBuffers, or Thrift. I\u2026",
       "sources": [
         {
           "id": "parquet-ml-5xn8o9rvrv1rsjs811t2gn0tkjq0zl02",
@@ -22,22 +32,12 @@
       ]
     },
     {
-      "text": "The proposal introduces a Page\u2011First Data Layout for Parquet, allowing each column to cut pages independently of row\u2011group boundaries. By using a modular footer\u2026",
+      "text": "The proposal introduces a new Parquet data layout that decouples page boundaries from row groups, allowing each column to cut pages independently based on its o\u2026",
       "sources": [
         {
           "id": "parquet-ml-98w1f5posp0dd0mnsm0m1n9nbl8l8bfo",
           "title": "[DISCUSS] Proposal: Page-First Data Layout",
           "url": "https://lists.apache.org/thread/98w1f5posp0dd0mnsm0m1n9nbl8l8bfo"
-        }
-      ]
-    },
-    {
-      "text": "## What's Changed * MINOR: [1.18.x] Fix vector-plugin parent versions by @manuzhang in https://github.com/apache/parquet-java/pull/3847 * [1.18.x] Bump Jackson \u2026",
-      "sources": [
-        {
-          "id": "parquet-gh-rel-apache-parquet-1-18-2",
-          "title": "Apache Parquet Java 1.18.2",
-          "url": "https://github.com/apache/parquet-java/releases/tag/apache-parquet-1.18.2"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-12T14:18:09.331039+00:00",
-  "item_count": 6,
+  "generated_at": "2026-11-13T13:41:19.291483+00:00",
+  "item_count": 7,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-09",
-    "to": "2026-11-12",
-    "thread_count": 6
+    "to": "2026-11-13",
+    "thread_count": 7
   }
 }

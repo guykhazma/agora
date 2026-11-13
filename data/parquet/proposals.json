@@ -1,7 +1,7 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-11-12T14:19:00.435120+00:00",
-  "total": 315,
+  "generated_at": "2026-11-13T13:41:52.476546+00:00",
+  "total": 316,
   "proposals": [
     {
       "id": "parquet-gh-rel-apache-parquet-1-18-2",
@@ -3067,6 +3067,44 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-5chljsblgpzzg5d8bocv1txt14hrbkhl",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Extending PME beyond AES: value-level protection and externally supplied cryptography",
+      "url": "https://lists.apache.org/thread/5chljsblgpzzg5d8bocv1txt14hrbkhl",
+      "author": "Akil Raza via dev <de...@parquet.apache.org>",
+      "state": "open",
+      "created_at": "2026-11-12T17:12:00+00:00",
+      "updated_at": "2026-11-13T13:24:03+00:00",
+      "body": "Hi all,\n\nWe would like to start a discussion on extending Parquet Modular\nEncryption (PME) beyond the two AES algorithms it defines today, to\nsupport encryption or tokenization of individual values and externally\nsupplied cryptography.\n\nProblem\n\nPME currently protects Parquet data and metadata using AES-GCM or\nAES-GCM-CTR at the boundaries of Parquet encryption modules, including\ndata pages, page headers, column metadata and the footer. Decryption\ndepends on key availability: a reader with access to the required key\ncan decrypt the module, and a reader without the key cannot.\n\nWe have additional requirements that the algorithms currently defined\nby PME do not address:\n\n- Encryption or tokenization at individual-value granularity within a\n  column.\n- Support for a data-owner-provided or third-party encryption or\n  tokenization implementation, including its own cryptographic\n  algorithm and an authorization policy that decides what each reader\n  can see, not only whether it can get the key.\n- Support for algorithms that PME does not define today and that may\n  be introduced independently in the future.\n\nProposal\n\nWe propose adding a new algorithm, EXTERNAL_PROTECT_V1. The main\nchange is to decouple data processing from encryption: a user can\nsupply their own encryption provider, either in the application's own\nprocess or as a call to a separate service. The provider performs the\nencryption or tokenization. The Parquet implementation does not load\nthe provider itself; the application creates it and passes it in.\n\nThis is intended to support capabilities that the existing built-in\nalgorithms do not provide:\n\n- Individual-value encryption or tokenization, such as\n  format-preserving encryption, rather than encryption only at the\n  existing Parquet module boundaries.\n- Externally controlled cryptography and authorization, where the work\n  is done by an external system such as an HSM or another service. The\n  provider can be invoked during reads and writes with the column\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "The discussion proposes adding an EXTERNAL_PROTECT_V1 algorithm to Parquet Modular Encryption (PME) to enable per-value encryption or tokenization and allow external cryptography providers, decoupling encryption from data processing and supporting fine-grained access control beyond key availability. Participants question whether this truly extends PME, which currently protects at module boundaries, and call for clarification of scope and implementation details.",
+      "llm_status": "discussion",
+      "comment_count": 2,
+      "participant_count": 3,
+      "llm_key_points": [
+        "Introduce EXTERNAL_PROTECT_V1 for per-value encryption",
+        "Decouple encryption from data processing via external providers",
+        "Clarify scope relative to PME modules"
+      ],
+      "llm_topics": [
+        "fine-grained-access",
+        "external-cryptography",
+        "value-encryption"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "b1ced685941c",
+      "llm_title": "Extending PME beyond AES: value-level protection",
+      "observed_history": [],
+      "initiative_id": "parquet-init-parquet-ml-5chljsblgpzzg5d8bocv1txt14hrbkhl"
+    },
+    {
       "id": "parquet-ml-fzxrc5bg8xqzgxoop6qsh3v7w1ly5k7f",
       "source": "mailing_list",
       "kind": "thread",
@@ -3075,14 +3113,14 @@
       "author": "Julien Le Dem via dev <de...@parquet.apache.org>",
       "state": "open",
       "created_at": "2026-11-11T02:10:07+00:00",
-      "updated_at": "2026-11-12T10:10:25+00:00",
+      "updated_at": "2026-11-13T01:46:24+00:00",
       "body": "On behalf of the Apache Parquet PMC, I'm happy to announce that Russell\nSpitzer\nhas accepted an invitation to become a committer on Apache Parquet.\nCongrats, welcome, and thank you for your contributions!\n\nJulien\n",
       "labels": [],
       "linked_resources": [],
-      "llm_summary": "> > Thanks, > Vinoo Ganesh | vinoo.ganesh@gmail.com > > <Vi...@gmail.com> > > > On Tue, Nov 10, 2026 at 9:15\u202fPM Neelesh Salian <ne...@gmail.com> > wrote: > > > Congratulations Russell! > > Best, > Rok > > On Wed, Nov 11, 2026 at 12:24\u202fPM Fokko Driesprong <fo...@driesprong.frl> > wrote: > > > Congrats Russell, great to have you as a committer! > > > > Best, > > Rok > > > > On Wed, Nov 11, 2026 at 12:24\u202fPM Fokko Driesprong <fo...@driesprong.frl> > > wrote: > > > > > Congrats Russell, great to have you as a committer!",
+      "llm_summary": "> > > > Thanks, > > Vinoo Ganesh | vinoo.ganesh@gmail.com > > > > <Vi...@gmail.com> > > > > > > On Tue, Nov 10, 2026 at 9:15\u202fPM Neelesh Salian <neeleshssalian@gmail.com > > > > wrote: > > > > > Congratulations Russell! > > Best, > Rok > > On Wed, Nov 11, 2026 at 12:24\u202fPM Fokko Driesprong <fo...@driesprong.frl> > wrote: > > > Congrats Russell, great to have you as a committer! > > > > Best, > > Rok > > > > On Wed, Nov 11, 2026 at 12:24\u202fPM Fokko Driesprong <fo...@driesprong.frl> > > wrote: > > > > > Congrats Russell, great to have you as a committer!",
       "llm_status": "abandoned",
-      "comment_count": 23,
-      "participant_count": 24,
+      "comment_count": 25,
+      "participant_count": 26,
       "llm_key_points": [
         "Congrats and welcome, Russell!",
         "Congratulations Russell!",
@@ -3098,7 +3136,7 @@
         "method": "local",
         "prompt_version": 1
       },
-      "_content_hash": "e85a3c4ab6d5",
+      "_content_hash": "03032c4f3562",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-ml-fzxrc5bg8xqzgxoop6qsh3v7w1ly5k7f"
     },
@@ -3139,17 +3177,18 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion compares PFOR and FastLanes encoding schemes for Parquet, presenting benchmark results that show PFOR achieves the highest decode throughput and compression ratio. Participants recommend including Delta mode in the initial specification, adopting the FastLanes name, and deferring interleaving and Unified Transpose Layout to later stages. The focus remains on balancing decoding speed, compression, and implementation complexity.",
+      "llm_summary": "The discussion compares PFOR variants for Parquet, showing PFOR as the fastest decoding option with the best compression ratio. Participants decide to include Delta mode, rename the proposal to FastLanes, and plan future work on interleaving and Unified Transpose Layout. The focus remains on improving performance and compression for integer columns.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
       "llm_key_points": [
-        "PFOR outperforms other encodings in decode speed",
-        "Delta mode should be included to improve compression",
-        "Rename to FastLanes and defer interleaving/UTL to later"
+        "PFOR achieves highest decode throughput and compression ratio",
+        "Decision to include Delta mode and rename to FastLanes",
+        "Future work: interleaving and Unified Transpose Layout"
       ],
       "llm_topics": [
-        "encoding",
+        "compression",
+        "parquet",
         "performance"
       ],
       "summary_generation": {
@@ -3159,7 +3198,7 @@
         "prompt_version": 1
       },
       "_content_hash": "8691c83218af",
-      "llm_title": "FastLanes for Parquet benchmark results",
+      "llm_title": "FastLanes Benchmark Results for Parquet",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
@@ -3183,13 +3222,16 @@
           "title": "\ufeff[DESIGN] A SERIALIZED_VALUE logical type for Parquet"
         }
       ],
-      "llm_summary": "The discussion proposes a new Parquet logical type, SERIALIZED_VALUE, to annotate BYTE_ARRAY columns that store serialized messages such as protobuf, FlatBuffers, or Thrift. It records the format and schema location, allowing readers to interpret the bytes without decoding them themselves, and keeps the original data intact. Feedback is requested before adding it to the Active Proposals list.",
+      "llm_summary": "The proposal introduces a SERIALIZED_VALUE logical type for Parquet BYTE_ARRAY columns that hold serialized messages such as protobuf, FlatBuffers, or Thrift. It records the format and schema location without decoding the bytes, enabling cross\u2011engine consistency while preserving the original data. The discussion seeks feedback before formalizing the proposal.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "Introduces SERIALIZED_VALUE logical type for BYTE_ARRAY columns storing serialized messages",
-        "Records format and schema, enabling cross-engine interpretation without decoding"
+        "Adds SERIALIZED_VALUE logical type for BYTE_ARRAY columns",
+        "Stores message format and schema reference, no decoding by Parquet",
+        "Preserves original bytes for audit and regulated data",
+        "Enables consistent interpretation across Spark, Flink, Trino",
+        "Supports protobuf, FlatBuffers, and Thrift serialization"
       ],
       "llm_topics": [
         "logical-types",
@@ -3203,7 +3245,7 @@
         "prompt_version": 1
       },
       "_content_hash": "20db80dc3055",
-      "llm_title": "SERIALIZED_VALUE logical type for Parquet",
+      "llm_title": "SERIALIZED_VALUE logical type for serialized messages",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7"
     },
@@ -3239,18 +3281,18 @@
           "title": "\ufeffThe Modular Footer aims to reduce the metadata I/O and decoding work needed to start a scan. The goals and motivation f"
         }
       ],
-      "llm_summary": "The proposal introduces a Page\u2011First Data Layout for Parquet, allowing each column to cut pages independently of row\u2011group boundaries. By using a modular footer, writers can buffer per\u2011column data and emit pages only when a target size is reached, improving page sizing and reducing unnecessary IO. The design preserves row\u2011group statistics for data skipping while enabling more efficient storage for wide or sparse schemas.",
+      "llm_summary": "The proposal introduces a new Parquet data layout that decouples page boundaries from row groups, allowing each column to cut pages independently based on its own size and density. By using a modular footer, the layout preserves row-group statistics for efficient data skipping while improving page sizing and reducing overhead for wide or sparse schemas.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "Decouple page boundaries from row groups",
-        "Use modular footer for metadata",
-        "Improve page sizing and reduce IO while preserving statistics"
+        "Decouple page boundaries from row groups for independent column page cuts",
+        "Use modular footer to efficiently represent new layout",
+        "Preserve row-group statistics for data skipping while improving page sizing"
       ],
       "llm_topics": [
-        "performance",
-        "data-layout"
+        "data-layout",
+        "performance"
       ],
       "summary_generation": {
         "method": "llm",
@@ -3259,7 +3301,7 @@
         "prompt_version": 1
       },
       "_content_hash": "8129ebe87c54",
-      "llm_title": "Page-First Data Layout",
+      "llm_title": "Page-First Data Layout Proposal",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },

@@ -1,5 +1,5 @@
 {
-  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. Kevin Liu raises the question of whether Iceberg V4 should cease writing new ORC and Avro files due to feature gaps, while still supporting reads for backward compatibility. Benchmarks indicate that conversion is quick for sequential IDs but can be costly for random UUID keys, suggesting the use of a secondary index for large tables. The proposal is to adopt a per\u2011field resolution rule\u2014using an embedded ID when present and falling back to the name mapping otherwise\u2014aligning with the Column Projection specification.",
+  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. Benchmarks show conversion is fast for sequential IDs but slower for random UUID keys, prompting consideration of secondary indexing. Kevin Liu raises the question of whether Iceberg V4 should cease writing new ORC and Avro files due to feature gaps, while still supporting reads for backward compatibility. The author lists 12 open pull requests spanning Core, Hive, AWS/Snowflake, and Spark, all with green CI and no merge conflicts.",
   "highlights": [
     {
       "text": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filt\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "Manu proposes disabling GitHub Copilot automatic reviews in the iceberg-cpp project because the default reviews are often low quality and contain false positive\u2026",
+      "text": "Iceberg 1.13.0",
       "sources": [
         {
-          "id": "iceberg-ml-6sbp6m633mpdrbwbq898frh9ogppb0r7",
-          "title": "[DISCUSS] Disable Copilot reviews in iceberg-cpp",
-          "url": "https://lists.apache.org/thread/6sbp6m633mpdrbwbq898frh9ogppb0r7"
+          "id": "iceberg-gh-m64",
+          "title": "Iceberg 1.13.0",
+          "url": "https://github.com/apache/iceberg/milestone/64"
         }
       ]
     },
     {
-      "text": "A new 1.12.x branch has been created pointing to the apache-iceberg-1.12.0 release tag. The author notes that several bug fixes have been applied and a patch re\u2026",
+      "text": "Yufei proposes a biweekly 30\u2011minute call to speed up UDF implementation and reviews. Several contributors have expressed interest and are already working on rel\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-drhczwkksm7r266fqgovpb6s72zt6cbp",
-          "title": "[FYI] 1.12.x release tag created",
-          "url": "https://lists.apache.org/thread/drhczwkksm7r266fqgovpb6s72zt6cbp"
+          "id": "iceberg-ml-gm7pvw2cntp15mv86bvktq5vbnxmcso8",
+          "title": "[DISCUSS] biweekly UDF sync",
+          "url": "https://lists.apache.org/thread/gm7pvw2cntp15mv86bvktq5vbnxmcso8"
         }
       ]
     },
     {
-      "text": "Kevin Liu raises the question of whether Iceberg V4 should cease writing new ORC and Avro files due to feature gaps, while still supporting reads for backward c\u2026",
+      "text": "The discussion centers on how Iceberg readers should resolve Parquet files that contain field IDs for only some columns. Current implementations differ, leading\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-5jfzckl0cc9z683kz9vfv41pmhrm1tdb",
-          "title": "[DISCUSS] Should V4 stop writing ORC and Avro data files?",
-          "url": "https://lists.apache.org/thread/5jfzckl0cc9z683kz9vfv41pmhrm1tdb"
+          "id": "iceberg-ml-tct2yp45ytsb6dqw1tq7b8gnfnp7jndo",
+          "title": "[DISCUSS] Name mapping for data files that carry only some field IDs",
+          "url": "https://lists.apache.org/thread/tct2yp45ytsb6dqw1tq7b8gnfnp7jndo"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-13T13:45:45.313825+00:00",
+  "generated_at": "2026-11-14T12:48:41.001516+00:00",
   "item_count": 11,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-11",
-    "to": "2026-11-13",
+    "to": "2026-11-14",
     "thread_count": 11
   }
 }

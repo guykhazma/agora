@@ -1,18 +1,8 @@
 {
-  "summary": "A proposal to add an ai_query function to PySpark that takes a prompt column and returns model responses, with a prototype that passed end\u2011to\u2011end tests on Databricks and Amazon Bedrock. Participants discuss monitoring, increasing parallelism, handling large PRs, and suggest improvements such as cleaner invocation via GitHub UI and more concise review comments. The discussion proposes extending Spark\u2019s Real-Time Mode to eligible batch SQL and DataFrame queries, enabling pipelined shuffle that overlaps producer, transfer, and consumer stages to reduce latency. The proposal introduces a method to join streaming data with external storage by performing on-demand lookups instead of loading the entire static side.",
+  "summary": "The discussion centers on a proposed ai_query function for PySpark that allows AI inference directly in DataFrames, with a prototype that passed tests on Databricks and Amazon Bedrock. It focuses on adding support for parallel reads, avoiding driver bottlenecks, and limiting the operations a trusted engine can accept, while not implementing the access controls themselves. The proposal extends Spark\u2019s Real\u2011Time Mode to eligible distributed batch SQL and DataFrame queries, enabling pipelined shuffle that overlaps producer, transfer, and consumer stages to reduce latency. Huaxin Gao updated the SPIP proposal to address reviewer feedback, adding explicit security guarantees, a policy row\u2011filter barrier, and a dedicated PolicyEnforcement operator.",
   "highlights": [
     {
-      "text": "A proposal to add an ai_query function to PySpark that takes a prompt column and returns model responses, with a prototype that passed end\u2011to\u2011end tests on Datab\u2026",
-      "sources": [
-        {
-          "id": "spark-ml-y3nrtt4zcjcsqzgov5s7f833032zt6qh",
-          "title": "[DISCUSS] Add ai_query to PySpark",
-          "url": "https://lists.apache.org/thread/y3nrtt4zcjcsqzgov5s7f833032zt6qh"
-        }
-      ]
-    },
-    {
-      "text": "The discussion proposes the first Spark community sync on Nov 30, 2026, with a 50\u2011minute agenda covering recent changes, SPIP status, release updates, and an op\u2026",
+      "text": "The discussion proposes scheduling the first Spark community sync on Monday, Nov 30, 2026 at 8:30\u202fAM PST, with a 50\u2011minute agenda covering recent changes, SPIP \u2026",
       "sources": [
         {
           "id": "spark-ml-r8ms8fgfvtr0zr3hmxn7p01fb8lry352",
@@ -22,22 +12,32 @@
       ]
     },
     {
-      "text": "The discussion proposes extending Spark Connect to act as a barrier between trusted and untrusted Spark code, enabling secure enforcement of fine\u2011grained access\u2026",
+      "text": "The team is testing an AI review bot that processes PRs in parallel, currently reviewing 4\u20138 at a time. They report a failure rate that rises with PR size and d\u2026",
+      "sources": [
+        {
+          "id": "spark-ml-8qwojcsfshkdcnqrqckrc8f8lndg16ds",
+          "title": "Re: [DISCUSS] Automated AI code review on new Spark PRs (trial)",
+          "url": "https://lists.apache.org/thread/8qwojcsfshkdcnqrqckrc8f8lndg16ds"
+        }
+      ]
+    },
+    {
+      "text": "The discussion centers on a proposed ai_query function for PySpark that allows AI inference directly in DataFrames, with a prototype that passed tests on Databr\u2026",
+      "sources": [
+        {
+          "id": "spark-ml-y3nrtt4zcjcsqzgov5s7f833032zt6qh",
+          "title": "[DISCUSS] Add ai_query to PySpark",
+          "url": "https://lists.apache.org/thread/y3nrtt4zcjcsqzgov5s7f833032zt6qh"
+        }
+      ]
+    },
+    {
+      "text": "The discussion proposes extending Spark Connect to act as a security barrier between trusted and untrusted Spark code, enabling fine\u2011grained access controls suc\u2026",
       "sources": [
         {
           "id": "spark-ml-osfljr4zdz2q57jh7q707zmv5y00fpgc",
           "title": "Re: [DISCUSS] Spark Connect Data Source for Spark FGAC",
           "url": "https://lists.apache.org/thread/osfljr4zdz2q57jh7q707zmv5y00fpgc"
-        }
-      ]
-    },
-    {
-      "text": "Yicong Huang proposes a revised release schedule for Spark 4.4.0, moving the branch cut to November 16 and targeting a mid\u2011January release to avoid holiday seas\u2026",
-      "sources": [
-        {
-          "id": "spark-ml-sscb3n2hs2f3kol1qp4zn9kb4bzpwsp1",
-          "title": "[DISCUSS] Adjusted Apache Spark 4.4.0 Release Timeline",
-          "url": "https://lists.apache.org/thread/sscb3n2hs2f3kol1qp4zn9kb4bzpwsp1"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-14T12:52:17.872513+00:00",
+  "generated_at": "2026-11-15T13:20:20.938788+00:00",
   "item_count": 9,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-10",
-    "to": "2026-11-14",
+    "to": "2026-11-15",
     "thread_count": 9
   }
 }

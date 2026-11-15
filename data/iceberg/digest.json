@@ -1,5 +1,5 @@
 {
-  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. Benchmarks show conversion is fast for sequential IDs but slower for random UUID keys, prompting consideration of secondary indexing. Kevin Liu raises the question of whether Iceberg V4 should cease writing new ORC and Avro files due to feature gaps, while still supporting reads for backward compatibility. The author lists 12 open pull requests spanning Core, Hive, AWS/Snowflake, and Spark, all with green CI and no merge conflicts.",
+  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. Contributors highlighted Spark pull requests to include in the patch and a CVE scan workflow issue that was addressed by a separate PR. Benchmarks show conversion is fast for sequential IDs but slower for random UUID keys, prompting consideration of secondary indexing. Kevin Liu raises the question of whether Iceberg V4 should cease writing new ORC and Avro files due to feature gaps, while still supporting reads for backward compatibility.",
   "highlights": [
     {
       "text": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filt\u2026",
@@ -8,6 +8,16 @@
           "id": "iceberg-doc-19nno1RoPznb",
           "title": "Iceberg Spark Community Sync Notes",
           "url": "https://docs.google.com/document/d/19nno1RoPznbbxKOZZddZNHHafa7XULjbN6RPExdr2n4"
+        }
+      ]
+    },
+    {
+      "text": "Max created a 1.12.x branch pointing to the apache-iceberg-1.12.0 release tag and noted that several bug fixes have been made, with a potential patch release in\u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-drhczwkksm7r266fqgovpb6s72zt6cbp",
+          "title": "[FYI] 1.12.x release tag created",
+          "url": "https://lists.apache.org/thread/drhczwkksm7r266fqgovpb6s72zt6cbp"
         }
       ]
     },
@@ -30,16 +40,6 @@
           "url": "https://lists.apache.org/thread/gm7pvw2cntp15mv86bvktq5vbnxmcso8"
         }
       ]
-    },
-    {
-      "text": "The discussion centers on how Iceberg readers should resolve Parquet files that contain field IDs for only some columns. Current implementations differ, leading\u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-tct2yp45ytsb6dqw1tq7b8gnfnp7jndo",
-          "title": "[DISCUSS] Name mapping for data files that carry only some field IDs",
-          "url": "https://lists.apache.org/thread/tct2yp45ytsb6dqw1tq7b8gnfnp7jndo"
-        }
-      ]
     }
   ],
   "generation": {
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-14T12:48:41.001516+00:00",
+  "generated_at": "2026-11-15T13:16:16.923892+00:00",
   "item_count": 11,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-11",
-    "to": "2026-11-14",
+    "to": "2026-11-15",
     "thread_count": 11
   }
 }

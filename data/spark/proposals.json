@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-11-14T12:53:13.009269+00:00",
+  "generated_at": "2026-11-15T13:21:15.503203+00:00",
   "total": 714,
   "proposals": [
     {
@@ -2010,47 +2010,37 @@
       "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
     },
     {
-      "id": "spark-ml-y3nrtt4zcjcsqzgov5s7f833032zt6qh",
+      "id": "spark-ml-r8ms8fgfvtr0zr3hmxn7p01fb8lry352",
       "source": "mailing_list",
       "kind": "thread",
-      "title": "[DISCUSS] Add ai_query to PySpark",
-      "url": "https://lists.apache.org/thread/y3nrtt4zcjcsqzgov5s7f833032zt6qh",
-      "author": "Alejandro Morgante <al...@gmail.com>",
+      "title": "[DISCUSS] First Spark Community Sync",
+      "url": "https://lists.apache.org/thread/r8ms8fgfvtr0zr3hmxn7p01fb8lry352",
+      "author": "huaxin gao <hu...@gmail.com>",
       "state": "open",
-      "created_at": "2026-11-12T00:37:06+00:00",
-      "updated_at": "2026-11-14T06:13:55+00:00",
-      "body": "(Resending now that I\u2019m subscribed, as my earlier message doesn\u2019t appear in\nthe public archive. Apologies if you receive this twice)\n\nHi Spark devs,\n\nI\u2019d like to propose *ai_query* for *PySpark*. It takes a prompt column and\nreturns the model\u2019s response as a column. *Databricks SQL* and *Google\nBigQuery *offer similar capabilities through *ai_query\n<https://docs.databricks.com/aws/en/sql/language-manual/functions/ai_query>\n*and\n*AI*.*GENERATE*\n<https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/bigqueryml-syntax-ai-generate>,\nrespectively. Here\u2019s what this could look like in a *PySpark DataFrame.*\n\nfrom pyspark.sql.ai import ai_query, register_modelfrom\npyspark.sql.functions import col, concat, lit\nregister_model(\n    \"summarizer\",\n    \"databricks-gpt-oss-20b\",\n    provider=\"databricks\",\n    profile=\"my-workspace\",\n    auth_type=\"databricks-cli\",\n)\ndf.withColumn(\n    \"summary\",\n    ai_query(\n        endpoint=\"summarizer\",\n        request=concat(lit(\"Summarize in one sentence: \"), col(\"description\")),\n    ),\n)\n\n*register_model* maps *summarizer* to a model endpoint. You can switch\nbetween *Databricks Model Serving* and *Amazon Bedrock* by changing the\nregistration, while keeping the same DataFrame code.\n*The prototype passed end-to-end tests with both providers using Spark and\nArrow.*\nWhat do you think of this *API* for *PySpark*? *I\u2019d love to hear how you\u2019d\nuse it and what you\u2019d change.*\n\nDraft PR #60311 <https://github.com/apache/spark/pull/60311>\nJIRA SPARK-61404 <https://issues.apache.org/jira/browse/SPARK-61404>\n\nThanks,\nMorgan\n",
+      "created_at": "2026-11-14T00:29:46+00:00",
+      "updated_at": "2026-11-15T12:31:21+00:00",
+      "body": "Hi all,\n\nFollowing up on the earlier discussion (\nhttps://lists.apache.org/thread/ckpv8z0fqw42xkbrskqf3ggsl1yb81c4), I'd like\nto set up the first Spark community sync on Monday, Nov 30, at 8:30 AM PST\n(11:30 AM Eastern, 5:30 PM Central Europe, 12:30 AM in Asia), for about 50\nminutes. If this time doesn't work for you, please let me know.\n\nSuggested agenda:\n1. Recent important changes (10 min)\n2. SPIPs: status, and 1 or 2 presented in more depth (25 min)\n3. Release status (5 min)\n4. Open floor: anyone can bring a topic (10 min)\n\nI'll share a tentative agenda in a Google Doc:\nhttps://docs.google.com/document/d/1Qo_zyUsnfpLJj3PhLWsk2PtFR14fOclkragRrjOdhn0/edit?tab=t.0#heading=h.clnf11kayby\nAnyone can add topics they'd like to discuss.\n\nAs discussed in that thread, I'll post a summary to dev@ after each sync,\nand any action items will be discussed on the list before anything is acted\non.\n\nThanks,\nHuaxin\n",
       "labels": [],
       "linked_resources": [
         {
-          "url": "https://docs.google.com/document/d/16WwnJjON3mT0ls1aF20nlHMS72-wU1LQfR9BTH5x_vM/edit?usp=sharing",
+          "url": "https://docs.google.com/document/d/1Qo_zyUsnfpLJj3PhLWsk2PtFR14fOclkragRrjOdhn0/edit?tab=t.0#heading=h.clnf11kayby",
           "kind": "google_doc",
           "fetched": true,
-          "title": "\ufeffAI Functions & Highly Variable UDFS: SPIP"
-        },
-        {
-          "url": "https://docs.google.com/document/d/1mAivaYyJaB_Hi676TvrXJA8CXsC1JS6fxJVGeo1yi5A/edit",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeff[SPIP] AI_QUERY for Apache Spark"
-        },
-        {
-          "url": "https://github.com/apache/spark/pull/60311",
-          "kind": "github_pr"
+          "title": "\ufeffApache Spark Community Sync"
         }
       ],
-      "llm_summary": "A proposal to add an ai_query function to PySpark that takes a prompt column and returns model responses, with a prototype that passed end\u2011to\u2011end tests on Databricks and Amazon Bedrock. The discussion has moved toward a cross\u2011language, native SQL implementation backed by Catalyst, aiming to improve performance and reliability for AI inference workloads.",
+      "llm_summary": "The discussion proposes scheduling the first Spark community sync on Monday, Nov 30, 2026 at 8:30\u202fAM PST, with a 50\u2011minute agenda covering recent changes, SPIP status, release status, and an open floor. Participants are encouraged to add topics via a shared Google Doc and will receive post\u2011meeting notes on the dev mailing list.",
       "llm_status": "discussion",
-      "comment_count": 3,
-      "participant_count": 3,
+      "comment_count": 5,
+      "participant_count": 5,
       "llm_key_points": [
-        "Prototype passed tests with Databricks and Bedrock",
-        "Planning a cross\u2011language native SQL implementation"
+        "Scheduling first community sync",
+        "Agenda includes recent changes, SPIPs, release status, open floor",
+        "Participants to add topics via Google Doc"
       ],
       "llm_topics": [
-        "ai-inference",
-        "cross-language",
-        "performance"
+        "community-sync",
+        "meeting-agenda"
       ],
       "summary_generation": {
         "method": "llm",
@@ -2058,10 +2048,10 @@
         "model": "openai/gpt-oss-20b",
         "prompt_version": 1
       },
-      "_content_hash": "1be70e9a004a",
-      "llm_title": "Add ai_query to PySpark",
+      "_content_hash": "325420afe8f8",
+      "llm_title": "First Spark Community Sync",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-60031"
+      "initiative_id": "spark-init-spark-ml-r8ms8fgfvtr0zr3hmxn7p01fb8lry352"
     },
     {
       "id": "spark-ml-vtkh3dkjf01q6fm4p4sh5b86oqtp7mxw",
@@ -2072,7 +2062,7 @@
       "author": "Sem via dev <de...@spark.apache.org>",
       "state": "open",
       "created_at": "2026-11-12T09:33:07+00:00",
-      "updated_at": "2026-11-14T02:10:28+00:00",
+      "updated_at": "2026-11-15T08:59:50+00:00",
       "body": "Hello Apache Spark Community!\n\nI would live to start a vote on bringing the GraphFrames into Apache\nSpark, as proposed.\n\nSPIP doc:\nhttps://docs.google.com/document/d/1v8OEV5Qqk5LE1XID4ZiPF5rLkAk-Zz6fp0tns9Z_TA8/edit?usp=sharing\nDiscussion thread:\nhttps://lists.apache.org/thread/skccwj4vyrcqy3jm6207ywqf5xjzt5zo\n\nThe vote will be open for at least 72 hours, and passes if a majority\n+1 PMC votes are cast, with a minimum of 3 +1 votes.\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
       "labels": [],
       "linked_resources": [
@@ -2083,13 +2073,13 @@
           "title": "\ufeffSPIP: Bring GraphFrames into Apache Spark"
         }
       ],
-      "llm_summary": "Vote in progress: 0 binding +1, 20 non-binding +1",
+      "llm_summary": "Vote in progress: 0 binding +1, 24 non-binding +1",
       "llm_status": "proposal",
-      "comment_count": 20,
-      "participant_count": 20,
+      "comment_count": 24,
+      "participant_count": 24,
       "vote_data": {
         "binding_plus1": 0,
-        "nonbinding_plus1": 20,
+        "nonbinding_plus1": 24,
         "vetoes": 0,
         "result": "open",
         "voters": [
@@ -2114,6 +2104,10 @@
             "vote": "+1"
           },
           {
+            "voter": "Hemil Shah <he...@gmail.com>",
+            "vote": "+1"
+          },
+          {
             "voter": "Holden Karau <ho...@gmail.com>",
             "vote": "+1"
           },
@@ -2134,7 +2128,19 @@
             "vote": "+1"
           },
           {
+            "voter": "Mridul Muralidharan <mr...@gmail.com>",
+            "vote": "+1"
+          },
+          {
             "voter": "Nicholas Chammas <ni...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Peter Toth <pe...@gmail.com>",
+            "vote": "+1"
+          },
+          {
+            "voter": "Pratham Manja <pr...@gmail.com>",
             "vote": "+1"
           },
           {
@@ -2190,42 +2196,46 @@
         "method": "local",
         "prompt_version": 1
       },
-      "_content_hash": "4fcbf53d3959",
+      "_content_hash": "1e343b9fcb83",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-vtkh3dkjf01q6fm4p4sh5b86oqtp7mxw"
     },
     {
-      "id": "spark-ml-r8ms8fgfvtr0zr3hmxn7p01fb8lry352",
+      "id": "spark-ml-8qwojcsfshkdcnqrqckrc8f8lndg16ds",
       "source": "mailing_list",
       "kind": "thread",
-      "title": "[DISCUSS] First Spark Community Sync",
-      "url": "https://lists.apache.org/thread/r8ms8fgfvtr0zr3hmxn7p01fb8lry352",
-      "author": "huaxin gao <hu...@gmail.com>",
+      "title": "Re: [DISCUSS] Automated AI code review on new Spark PRs (trial)",
+      "url": "https://lists.apache.org/thread/8qwojcsfshkdcnqrqckrc8f8lndg16ds",
+      "author": "Hyukjin Kwon via dev <de...@spark.apache.org>",
       "state": "open",
-      "created_at": "2026-11-14T00:29:46+00:00",
-      "updated_at": "2026-11-14T01:50:10+00:00",
-      "body": "Hi all,\n\nFollowing up on the earlier discussion (\nhttps://lists.apache.org/thread/ckpv8z0fqw42xkbrskqf3ggsl1yb81c4), I'd like\nto set up the first Spark community sync on Monday, Nov 30, at 8:30 AM PST\n(11:30 AM Eastern, 5:30 PM Central Europe, 12:30 AM in Asia), for about 50\nminutes. If this time doesn't work for you, please let me know.\n\nSuggested agenda:\n1. Recent important changes (10 min)\n2. SPIPs: status, and 1 or 2 presented in more depth (25 min)\n3. Release status (5 min)\n4. Open floor: anyone can bring a topic (10 min)\n\nI'll share a tentative agenda in a Google Doc:\nhttps://docs.google.com/document/d/1Qo_zyUsnfpLJj3PhLWsk2PtFR14fOclkragRrjOdhn0/edit?tab=t.0#heading=h.clnf11kayby\nAnyone can add topics they'd like to discuss.\n\nAs discussed in that thread, I'll post a summary to dev@ after each sync,\nand any action items will be discussed on the list before anything is acted\non.\n\nThanks,\nHuaxin\n",
+      "created_at": "2026-11-03T22:50:32+00:00",
+      "updated_at": "2026-11-14T21:52:04+00:00",
+      "body": "Just FYI. Now, the bot is reviewing 4 at a time. The review takes around 1\nhour. So sometimes it takes time. I am still monitoring.\n\nOn Fri, 23 Oct 2026 at 07:09, Hyukjin Kwon <gu...@apache.org> wrote:\n\n> FYI, I am monitoring and controlling details now. Effort, timeout,\n> security stuff.\n>\n> On Thu, 22 Oct 2026 at 22:51, Dongjoon Hyun <do...@apache.org> wrote:\n>\n>> Got it. Thank you!\n>>\n>> Dongjoon.\n>>\n>> On 2026/10/22 11:44:04 Hyukjin Kwon wrote:\n>> > Just to reduce any surprise, I set another bot to monitor the bot\n>> itself.\n>> > If it does anything wrong, it halts immediately, and removes/reverts\n>> > whatever was wrong.\n>> >\n>> > For committers, please directly remove the `ai-review-requested` label\n>> if\n>> > there seems anything wrong. That would make the bot stop too.\n>> >\n>> > On Thu, 22 Oct 2026 at 20:21, Hyukjin Kwon <gu...@apache.org>\n>> wrote:\n>> >\n>> > > Ok .. I managed to enable the bots. Please try `ai-review-requested`\n>> label\n>> > > out (only commiters can do). and please let me know if there are\n>> anything\n>> > > suspicious or not working well \ud83d\udc4d\n>> > >\n>> > > On Tue, 20 Oct 2026 at 08:31, Dongjoon Hyun <do...@apache.org>\n>> wrote:\n>> > >\n>> > >> Thank you so much for keeping working and sharing the status,\n>> Hyukjin.\n>> > >>\n>> > >> Dongjoon.\n>> > >>\n>> > >> On 2026/10/19 21:50:36 Hyukjin Kwon wrote:\n>> > >> > update: I am still struggling / testing. `ai-review-requested`\n>> label\n>> > >> does\n>> > >> > not work for now.\n>> > >> >\n>> > >> > On Fri, 16 Oct 2026 at 07:05, Hyukjin Kwon <gu...@apache.org>\n>> > >> wrote:\n>> > >> >\n>> > >> > > headsup. I will stop the bot today. Will likely introduce\n>> > >> > > `ai-review-requested` label (only committers can set) to trigger\n>> the\n>> > >> review\n>> > >> > > most likely today for testing it out, see\n>> > >> > > https://github.com/apache/spark/pull/59502\n>> > >> > >\n>> > >> > > On Mon, 12 Oct 2026 at 08:14, Hyukjin Kwon <gurwls223@apache.org\n>> >\n>> > >> wrote:\n>> > >> > >\n>> > >> > >> Another quick",
       "labels": [],
       "linked_resources": [
         {
-          "url": "https://docs.google.com/document/d/1Qo_zyUsnfpLJj3PhLWsk2PtFR14fOclkragRrjOdhn0/edit?tab=t.0#heading=h.clnf11kayby",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffApache Spark Community Sync"
+          "url": "https://github.com/apache/spark/pull/59502",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/spark/pull/59184",
+          "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion proposes the first Spark community sync on Nov 30, 2026, with a 50\u2011minute agenda covering recent changes, SPIP status, release updates, and an open floor. Participants are invited to add topics via a shared Google Doc, and notes will be posted to dev@ after the meeting. Decisions will be made on the mailing list rather than during the call.",
+      "llm_summary": "The team is testing an AI review bot that processes PRs in parallel, currently reviewing 4\u20138 at a time. They report a failure rate that rises with PR size and discuss timeout, security, and the need to trigger reviews via labels rather than the GitHub UI. The discussion also covers how to make bot comments more concise and the limitations of using a bot account for review requests.",
       "llm_status": "discussion",
-      "comment_count": 2,
-      "participant_count": 2,
+      "comment_count": 9,
+      "participant_count": 4,
       "llm_key_points": [
-        "Schedule first community sync on Nov 30, 2026",
-        "Agenda includes recent changes, SPIP status, release status, and open floor",
-        "Notes will be posted to dev@ after the sync and decisions made on the mailing list"
+        "parallelism and failure rates",
+        "security and credential concerns",
+        "label-based trigger vs UI",
+        "review comment length"
       ],
       "llm_topics": [
-        "community-events",
-        "meeting"
+        "automated-code-review",
+        "performance",
+        "security"
       ],
       "summary_generation": {
         "method": "llm",
@@ -2233,10 +2243,65 @@
         "model": "openai/gpt-oss-20b",
         "prompt_version": 1
       },
-      "_content_hash": "4a0fe755f4df",
-      "llm_title": "Spark Community Sync",
+      "_content_hash": "79fabf7337a3",
+      "llm_title": "Automated AI code review on new Spark PRs",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-r8ms8fgfvtr0zr3hmxn7p01fb8lry352"
+      "initiative_id": "spark-init-spark-jira-SPARK-60031"
+    },
+    {
+      "id": "spark-ml-y3nrtt4zcjcsqzgov5s7f833032zt6qh",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Add ai_query to PySpark",
+      "url": "https://lists.apache.org/thread/y3nrtt4zcjcsqzgov5s7f833032zt6qh",
+      "author": "Alejandro Morgante <al...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-11-12T00:37:06+00:00",
+      "updated_at": "2026-11-14T16:45:30+00:00",
+      "body": "(Resending now that I\u2019m subscribed, as my earlier message doesn\u2019t appear in\nthe public archive. Apologies if you receive this twice)\n\nHi Spark devs,\n\nI\u2019d like to propose *ai_query* for *PySpark*. It takes a prompt column and\nreturns the model\u2019s response as a column. *Databricks SQL* and *Google\nBigQuery *offer similar capabilities through *ai_query\n<https://docs.databricks.com/aws/en/sql/language-manual/functions/ai_query>\n*and\n*AI*.*GENERATE*\n<https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/bigqueryml-syntax-ai-generate>,\nrespectively. Here\u2019s what this could look like in a *PySpark DataFrame.*\n\nfrom pyspark.sql.ai import ai_query, register_modelfrom\npyspark.sql.functions import col, concat, lit\nregister_model(\n    \"summarizer\",\n    \"databricks-gpt-oss-20b\",\n    provider=\"databricks\",\n    profile=\"my-workspace\",\n    auth_type=\"databricks-cli\",\n)\ndf.withColumn(\n    \"summary\",\n    ai_query(\n        endpoint=\"summarizer\",\n        request=concat(lit(\"Summarize in one sentence: \"), col(\"description\")),\n    ),\n)\n\n*register_model* maps *summarizer* to a model endpoint. You can switch\nbetween *Databricks Model Serving* and *Amazon Bedrock* by changing the\nregistration, while keeping the same DataFrame code.\n*The prototype passed end-to-end tests with both providers using Spark and\nArrow.*\nWhat do you think of this *API* for *PySpark*? *I\u2019d love to hear how you\u2019d\nuse it and what you\u2019d change.*\n\nDraft PR #60311 <https://github.com/apache/spark/pull/60311>\nJIRA SPARK-61404 <https://issues.apache.org/jira/browse/SPARK-61404>\n\nThanks,\nMorgan\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/16WwnJjON3mT0ls1aF20nlHMS72-wU1LQfR9BTH5x_vM/edit?usp=sharing",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffAI Functions & Highly Variable UDFS: SPIP"
+        },
+        {
+          "url": "https://docs.google.com/document/d/1mAivaYyJaB_Hi676TvrXJA8CXsC1JS6fxJVGeo1yi5A/edit",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeff[SPIP] AI_QUERY for Apache Spark"
+        },
+        {
+          "url": "https://github.com/apache/spark/pull/60311",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "The discussion centers on a proposed ai_query function for PySpark that allows AI inference directly in DataFrames, with a prototype that passed tests on Databricks and Amazon Bedrock. The community is debating whether to keep it PySpark\u2011only or move to a cross\u2011language, native SQL implementation, and a SPIP is underway to formalize the feature. The goal is to provide a high\u2011performance, reliable AI inference layer within Spark.",
+      "llm_status": "discussion",
+      "comment_count": 4,
+      "participant_count": 3,
+      "llm_key_points": [
+        "Prototype passed end\u2011to\u2011end tests with Databricks and Bedrock",
+        "Cross\u2011language native SQL implementation is being explored",
+        "SPIP for ai_query is in progress"
+      ],
+      "llm_topics": [
+        "ai-integration",
+        "performance",
+        "cross-language"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "e9c7e5a28a04",
+      "llm_title": "Add ai_query to PySpark",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
     {
       "id": "spark-ml-osfljr4zdz2q57jh7q707zmv5y00fpgc",
@@ -2258,12 +2323,20 @@
           "title": "\ufeffSpark Reading From Spark / Spark Connect Data Source for Spark"
         }
       ],
-      "llm_summary": "The discussion proposes extending Spark Connect to act as a barrier between trusted and untrusted Spark code, enabling secure enforcement of fine\u2011grained access controls. It suggests adding support for parallel reads and leveraging the ADBC spec to avoid driver bottlenecks. The proposal focuses on providing a security boundary rather than implementing the access controls themselves.",
+      "llm_summary": "The discussion proposes extending Spark Connect to act as a security barrier between trusted and untrusted Spark code, enabling fine\u2011grained access controls such as row and column masking to be enforced separately from user supplied code. It focuses on adding support for parallel reads, avoiding driver bottlenecks, and limiting the operations a trusted engine can accept, while not implementing the access controls themselves.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
-      "llm_key_points": [],
-      "llm_topics": [],
+      "llm_key_points": [
+        "Proposes using Spark Connect as a barrier between trusted and untrusted code",
+        "Focuses on read restrictions and fine\u2011grained access control",
+        "Requires small additions for parallel reads and operation filtering"
+      ],
+      "llm_topics": [
+        "fine-grained-access",
+        "spark-connect",
+        "security"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -2271,8 +2344,9 @@
         "prompt_version": 1
       },
       "_content_hash": "6614550c2b01",
+      "llm_title": "Spark Connect Data Source for Spark FGAC",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-osfljr4zdz2q57jh7q707zmv5y00fpgc"
+      "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
     {
       "id": "spark-ml-sscb3n2hs2f3kol1qp4zn9kb4bzpwsp1",
@@ -2291,6 +2365,12 @@
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
       "llm_key_points": [
         "Proposed branch cut on Nov 16 and release in mid-Jan",
         "Community prefers original target or faster QA to avoid holiday delays"
@@ -2300,14 +2380,8 @@
         "timeline",
         "holiday-scheduling"
       ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "84bbcffca174",
       "llm_title": "Apache Spark 4.4.0 Release Timeline",
+      "_content_hash": "84bbcffca174",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
@@ -2524,19 +2598,18 @@
           "title": "\ufeff[DESIGN] A SERIALIZED_VALUE logical type for Parquet"
         }
       ],
-      "llm_summary": "A discussion proposes adding a SERIALIZED_VALUE logical type to Parquet, allowing BYTE_ARRAY columns to carry serialized protobuf, FlatBuffers, or Thrift messages along with their schema. Spark could automatically read the schema from the file, eliminating the need for users to supply descriptors on each call. The proposal aims to preserve original bytes for audit or regulated data while enabling cross\u2011engine consistency.",
+      "llm_summary": "A new Parquet logical type, SERIALIZED_VALUE, is proposed to annotate BYTE_ARRAY columns that contain serialized protobuf, FlatBuffers, or Thrift messages, storing the format and schema within the file. Spark would be able to read and decode these messages automatically, eliminating the need for users to supply descriptors on each call. The discussion seeks community feedback on adopting this type and potentially developing a Spark SPIP for direct field projection.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
       "llm_key_points": [
-        "Proposal of SERIALIZED_VALUE logical type to annotate BYTE_ARRAY columns with serialized messages and schema",
-        "Spark could read schema from file for automatic decoding",
-        "Scope limited to formats with schemas, with potential for future extensions"
+        "Introduces SERIALIZED_VALUE logical type for Parquet",
+        "Stores serialization format and schema in the file for automatic decoding"
       ],
       "llm_topics": [
         "parquet",
-        "serialization",
-        "spark"
+        "spark",
+        "serialization"
       ],
       "summary_generation": {
         "method": "llm",
@@ -2545,7 +2618,7 @@
         "prompt_version": 1
       },
       "_content_hash": "3e77999d2bbd",
-      "llm_title": "Spark support for Parquet SERIALIZED_VALUE type",
+      "llm_title": "Spark support for Parquet SERIALIZED_VALUE",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
@@ -2706,53 +2779,6 @@
       "initiative_id": "spark-init-spark-ml-4qfqgwz9qwm5syoxh1bt88d6rf1wmq25"
     },
     {
-      "id": "spark-ml-8qwojcsfshkdcnqrqckrc8f8lndg16ds",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "Re: [DISCUSS] Automated AI code review on new Spark PRs (trial)",
-      "url": "https://lists.apache.org/thread/8qwojcsfshkdcnqrqckrc8f8lndg16ds",
-      "author": "Hyukjin Kwon via dev <de...@spark.apache.org>",
-      "state": "open",
-      "created_at": "2026-11-03T22:50:32+00:00",
-      "updated_at": "2026-11-12T21:59:56+00:00",
-      "body": "Just FYI. Now, the bot is reviewing 4 at a time. The review takes around 1\nhour. So sometimes it takes time. I am still monitoring.\n\nOn Fri, 23 Oct 2026 at 07:09, Hyukjin Kwon <gu...@apache.org> wrote:\n\n> FYI, I am monitoring and controlling details now. Effort, timeout,\n> security stuff.\n>\n> On Thu, 22 Oct 2026 at 22:51, Dongjoon Hyun <do...@apache.org> wrote:\n>\n>> Got it. Thank you!\n>>\n>> Dongjoon.\n>>\n>> On 2026/10/22 11:44:04 Hyukjin Kwon wrote:\n>> > Just to reduce any surprise, I set another bot to monitor the bot\n>> itself.\n>> > If it does anything wrong, it halts immediately, and removes/reverts\n>> > whatever was wrong.\n>> >\n>> > For committers, please directly remove the `ai-review-requested` label\n>> if\n>> > there seems anything wrong. That would make the bot stop too.\n>> >\n>> > On Thu, 22 Oct 2026 at 20:21, Hyukjin Kwon <gu...@apache.org>\n>> wrote:\n>> >\n>> > > Ok .. I managed to enable the bots. Please try `ai-review-requested`\n>> label\n>> > > out (only commiters can do). and please let me know if there are\n>> anything\n>> > > suspicious or not working well \ud83d\udc4d\n>> > >\n>> > > On Tue, 20 Oct 2026 at 08:31, Dongjoon Hyun <do...@apache.org>\n>> wrote:\n>> > >\n>> > >> Thank you so much for keeping working and sharing the status,\n>> Hyukjin.\n>> > >>\n>> > >> Dongjoon.\n>> > >>\n>> > >> On 2026/10/19 21:50:36 Hyukjin Kwon wrote:\n>> > >> > update: I am still struggling / testing. `ai-review-requested`\n>> label\n>> > >> does\n>> > >> > not work for now.\n>> > >> >\n>> > >> > On Fri, 16 Oct 2026 at 07:05, Hyukjin Kwon <gu...@apache.org>\n>> > >> wrote:\n>> > >> >\n>> > >> > > headsup. I will stop the bot today. Will likely introduce\n>> > >> > > `ai-review-requested` label (only committers can set) to trigger\n>> the\n>> > >> review\n>> > >> > > most likely today for testing it out, see\n>> > >> > > https://github.com/apache/spark/pull/59502\n>> > >> > >\n>> > >> > > On Mon, 12 Oct 2026 at 08:14, Hyukjin Kwon <gurwls223@apache.org\n>> >\n>> > >> wrote:\n>> > >> > >\n>> > >> > >> Another quick",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/spark/pull/59502",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/spark/pull/59184",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "The discussion covers the deployment of an AI code review bot for Spark pull requests, noting its current parallelism, review duration, and failure rates. Participants discuss monitoring, increasing parallelism, handling large PRs, and suggest improvements such as cleaner invocation via GitHub UI and more concise review comments.",
-      "llm_status": "discussion",
-      "comment_count": 7,
-      "participant_count": 3,
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "llm_key_points": [
-        "Bot processes multiple PRs concurrently, review takes ~1 hour",
-        "Failure rates increase with PR size; large PRs often timeout",
-        "Suggestions to invoke via GitHub UI and shorten comments"
-      ],
-      "llm_topics": [
-        "automated-code-review",
-        "performance",
-        "security"
-      ],
-      "llm_title": "Automated AI code review on Spark PRs",
-      "_content_hash": "c11458537ecd",
-      "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-60031"
-    },
-    {
       "id": "spark-ml-db86x3yx97okrkklfyfc6obo59mvzoqn",
       "source": "mailing_list",
       "kind": "thread",
@@ -2772,14 +2798,14 @@
           "title": "\ufeff[SPIP] Break the Stage Barrier: Pipelined Spark SQL for Agentic Workloads"
         }
       ],
-      "llm_summary": "The discussion proposes extending Spark\u2019s Real-Time Mode to eligible batch SQL and DataFrame queries, enabling pipelined shuffle that overlaps producer, transfer, and consumer stages to reduce latency. Early prototype results show a 1.64\u00d7 speedup on distributed TPC\u2011H Q3 and a 95.6% reduction in shuffle writes, while keeping materialized shuffle as the default for unsupported plans.",
+      "llm_summary": "The proposal extends Spark\u2019s Real\u2011Time Mode to eligible distributed batch SQL and DataFrame queries, enabling pipelined shuffle that overlaps producer, transfer, and consumer stages to reduce latency. Early prototypes show a 1.64\u00d7 speedup on TPC\u2011H Q3 and aim to lower p95 agent\u2011step latency while preserving exact results. The discussion is open for community feedback.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 3,
       "llm_key_points": [
-        "Enables pipelined shuffle for eligible batch SQL/DataFrame queries to overlap stages and reduce latency",
-        "Prototype shows ~1.6\u00d7 speedup on TPC\u2011H Q3 and 95% reduction in shuffle writes",
-        "Opt\u2011in via planner, retaining materialized shuffle for unsupported plans"
+        "Pipelined shuffle for eligible batch stages",
+        "Opt\u2011in planner selection of shuffle boundaries",
+        "Prototype shows ~1.6\u00d7 speedup on TPC\u2011H"
       ],
       "llm_topics": [
         "real-time-mode",
@@ -2823,12 +2849,20 @@
           "title": "\ufeffSPIP: Pluggable Row-Filter and Column-Mask Enforcement in Catalyst"
         }
       ],
-      "llm_summary": "The thread discusses the updated SPIP v2 document, outlining new security guarantees, a dedicated PolicyEnforcement operator, and stricter handling of writes and leaks. It highlights how the policy row filter acts as a security barrier, how older Spark versions are closed, and how masking functions are now flexible. The discussion includes mapping of reviewer comments and confirmation that the changes address prior concerns.",
+      "llm_summary": "Huaxin Gao updated the SPIP proposal to address reviewer feedback, adding explicit security guarantees, a policy row\u2011filter barrier, and a dedicated PolicyEnforcement operator. The revision also clarifies handling of writes, metadata leaks, older Spark compatibility, and bypass paths, with corresponding tests. Reviewers largely acknowledged the changes, though some did not contribute further.",
       "llm_status": "discussion",
       "comment_count": 1,
       "participant_count": 2,
-      "llm_key_points": [],
-      "llm_topics": [],
+      "llm_key_points": [
+        "Added explicit security guarantees and failure behaviors",
+        "Introduced a policy row\u2011filter as a security barrier",
+        "Implemented a dedicated PolicyEnforcement operator to preserve guarantees"
+      ],
+      "llm_topics": [
+        "security",
+        "policy-enforcement",
+        "catalyst-optimizer"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -2836,6 +2870,7 @@
         "prompt_version": 1
       },
       "_content_hash": "9014c1191e18",
+      "llm_title": "SPIP Row-Filter and Column-Mask Enforcement",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
@@ -2859,18 +2894,12 @@
           "title": "\ufeffSPIP: Bring GraphFrames into Apache Spark"
         }
       ],
-      "llm_summary": "The discussion proposes bringing the GraphFrames library into the Apache Spark project as an in\u2011tree module, providing a non\u2011deprecated, DataFrame\u2011based graph API and unifying maintenance with Spark. It aims to replace the deprecated GraphX API, simplify installation for Spark Connect users, and strengthen long\u2011term support by integrating GraphFrames\u2019 algorithms into Spark\u2019s release cycle. The proposal outlines the migration scope, compatibility considerations, and the benefits of a single, cohesive graph processing experience.",
+      "llm_summary": "The discussion proposes merging the GraphFrames library into the Apache Spark project to provide a unified DataFrame-based graph API",
       "llm_status": "discussion",
       "comment_count": 3,
       "participant_count": 3,
-      "llm_key_points": [
-        "Merge GraphFrames into Spark to replace deprecated GraphX and provide a native graph API",
-        "Unify maintenance and simplify installation for Spark Connect users by integrating GraphFrames as an in\u2011tree module"
-      ],
-      "llm_topics": [
-        "graph-processing",
-        "in-tree-module"
-      ],
+      "llm_key_points": [],
+      "llm_topics": [],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -2878,7 +2907,6 @@
         "prompt_version": 1
       },
       "_content_hash": "1c94b6b5b3e7",
-      "llm_title": "Merge GraphFrames into Apache Spark",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-vtkh3dkjf01q6fm4p4sh5b86oqtp7mxw"
     },
@@ -2902,21 +2930,18 @@
           "title": "\ufeffSPIP: Extending Spark 3.5 LTS Period For Security Fixes"
         }
       ],
-      "llm_summary": "The thread discusses whether to release Spark 3.5.10, noting accumulated security and hardening changes since 3.5.9 and the approved LTS extension until November 2027. It considers timing relative to the upcoming 4.3 RC3 vote and whether any outstanding patches should be included. Participants are asked for interest and willingness to drive the release.",
+      "llm_summary": "Szehon proposes a new Spark 3.5.10 release to extend the 3.5 LTS with security fixes, following the 4.3 RC3 vote. The 3.5 branch has accumulated 36 changes since 3.5.9, and the LTS extension would provide security\u2011only support until November 2027. The discussion seeks community interest and readiness to drive the release.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "Interest in releasing Spark 3.5.10",
-        "Accumulated security fixes since 3.5.9",
-        "LTS extension to Nov 2027",
-        "Timing relative to 4.3 RC3 vote",
-        "Need to include any outstanding patches"
+        "Proposal to release Spark 3.5.10 to extend LTS with security fixes",
+        "3.5 branch has 36 changes and will receive security\u2011only support until Nov 2027"
       ],
       "llm_topics": [
-        "release-management",
-        "security-fixes",
-        "lifecycle"
+        "lifecycle",
+        "security",
+        "release"
       ],
       "summary_generation": {
         "method": "llm",
@@ -2927,7 +2952,7 @@
       "_content_hash": "c0ed1f09ee9f",
       "llm_title": "Spark 3.5.10 Release Discussion",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t"
     },
     {
       "id": "spark-ml-0282t19qy3fsh9b4j2q9qwbwpln4c3jw",
@@ -2964,7 +2989,7 @@
       "llm_title": "Buffer time before dependency upgrades",
       "_content_hash": "9de3f0768906",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-60031"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-v3g18cbdd5vgpp2khvx2j3nsy8sgplqm",
@@ -3061,20 +3086,12 @@
           "title": "\ufeffSPIP: Extend DSv2 Push-Downs including Join, Set Operation, and Window Function Support"
         }
       ],
-      "llm_summary": "The discussion proposes extending Spark\u2019s Data Source V2 push\u2011down framework to support full outer, semi, and anti joins, alias tolerance, set operations (UNION, INTERSECT, EXCEPT), and window functions. It introduces opt\u2011in interfaces that sources can decline, with a JDBC/H2 reference implementation, while explicitly excluding cross\u2011source push\u2011down. The goal is to reduce network traffic and leverage source engines for larger portions of queries.",
+      "llm_summary": "The discussion proposes extending Spark's Data Source V2 push\u2011down framework to support additional relational operators\u2014full outer",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
-      "llm_key_points": [
-        "Adds opt\u2011in interfaces for advanced join types and alias tolerance",
-        "Extends push\u2011down to set operations and window functions",
-        "Reference implementation uses JDBC/H2 and does not cover cross\u2011source push\u2011down"
-      ],
-      "llm_topics": [
-        "data-source-v2",
-        "push-down",
-        "performance"
-      ],
+      "llm_key_points": [],
+      "llm_topics": [],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -3082,7 +3099,6 @@
         "prompt_version": 1
       },
       "_content_hash": "5a727cc81e92",
-      "llm_title": "Extend DSv2 Push-Down with Joins, Set Ops, and Window Functions",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
@@ -4392,7 +4408,7 @@
       "llm_title": "Release Apache Spark 4.0.5",
       "_content_hash": "9c6b5b82100b",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t"
     },
     {
       "id": "spark-ml-3x26ywb5vfrkq6x9prcjl9bghd6y2wwn",
@@ -4483,7 +4499,7 @@
       "_content_hash": "10849487e050",
       "llm_title": "Apache Spark 4.2.1 Release",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-96goypb9vq64h9t5jkmw8n8yo3xtrogv",
@@ -5764,7 +5780,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -5792,7 +5808,7 @@
       ],
       "llm_title": "",
       "_content_hash": "743c6531b219",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t"
     },
     {
       "id": "spark-ml-wp82v45rc51ztx191fzmoh1vb4tttzc8",
@@ -5820,7 +5836,7 @@
       ],
       "llm_title": "",
       "_content_hash": "7fdb1a55fcf3",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t"
     },
     {
       "id": "spark-ml-02525gm3m2wkc23kvp96l4ztvnpgo9ys",
@@ -7460,7 +7476,7 @@
         "branch-merge"
       ],
       "_content_hash": "bb99b167e934",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2",
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -8319,7 +8335,7 @@
         "security"
       ],
       "_content_hash": "046734127fcf",
-      "initiative_id": "spark-init-spark-ml-cqn5nq4tdtp3hkh8w5thhlv6fyk9fomw",
+      "initiative_id": "spark-init-spark-jira-SPARK-49834",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -8358,7 +8374,7 @@
         "peter-toth"
       ],
       "_content_hash": "b38e7b779ac6",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-xvv4qt9dpnb1kszxdqlxyv9b46749ypo",
@@ -8987,7 +9003,7 @@
         "latest-version"
       ],
       "_content_hash": "5a104dabc998",
-      "initiative_id": "spark-init-spark-ml-o936ns7w0sqrh1c480glq9t4n6wqlfwf"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-cqbxzvtyvpgfy8nqodjpo2ochfw01lzk",
@@ -9097,7 +9113,7 @@
         "latest-version"
       ],
       "_content_hash": "7daddd8987aa",
-      "initiative_id": "spark-init-spark-ml-o936ns7w0sqrh1c480glq9t4n6wqlfwf"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-ldlgoxdtfjl36o2bydswhm00h2hphfpt",
@@ -10438,7 +10454,7 @@
         "vote-passes"
       ],
       "_content_hash": "f6a4f948416b",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t"
     },
     {
       "id": "spark-ml-dylmft4n6v7mqb4b47hvjxhoz6hkhqkb",
@@ -10543,7 +10559,7 @@
         "support-schedule"
       ],
       "_content_hash": "188db29c161c",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t"
     },
     {
       "id": "spark-ml-dhxx6pohs7fvqc3knzhtoj4tbcgrwxts",
@@ -10801,7 +10817,7 @@
         "learning-spark"
       ],
       "_content_hash": "dcb74edc120f",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t"
     },
     {
       "id": "spark-ml-64wvb2mko1f193zx9x1fpxnwkxxpq1h3",
@@ -11505,7 +11521,7 @@
         "security-fixes"
       ],
       "_content_hash": "76edeb3f9870",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t"
     },
     {
       "id": "spark-ml-wfg7gfxqzysr08qkq6gh0wtnw5t3nqtl",
@@ -12507,7 +12523,7 @@
         "spark"
       ],
       "_content_hash": "e091dadd9056",
-      "initiative_id": "spark-init-spark-ml-cqn5nq4tdtp3hkh8w5thhlv6fyk9fomw"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-9k9dpt7xbyyfl7pkd4z0crloq2jdyy31",
@@ -13651,7 +13667,7 @@
         "feature-freeze"
       ],
       "_content_hash": "368b848db49c",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2",
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -13864,7 +13880,7 @@
         "apache-spark"
       ],
       "_content_hash": "b1796e2be8d5",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-cfdlfl19k8gpc8m4ollmppyo0qbdpbh4",
@@ -13955,7 +13971,7 @@
         "release"
       ],
       "_content_hash": "a07f3d993e3f",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-p0y46b1986pm4hmg5fy9zbf3g1k8ngrx",
@@ -14471,7 +14487,7 @@
         "binding"
       ],
       "_content_hash": "0cfb04e25f4e",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-rx5pqh01c86slpqv9161hqwgm5lwxxzq",
@@ -14549,7 +14565,7 @@
         "llms-txt-files"
       ],
       "_content_hash": "22b613cf87ce",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-ml-q9p2nj5x0z9p6cy32c9vd9lo43v4qxls"
     },
     {
       "id": "spark-ml-zvq9qv00hcgrg49mz5t3dnv9tlqq2xks",
@@ -14631,7 +14647,7 @@
         "llms-txt-files"
       ],
       "_content_hash": "ba28583874e9",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-ml-q9p2nj5x0z9p6cy32c9vd9lo43v4qxls"
     },
     {
       "id": "spark-ml-tydpbkpx6wopy38kxqz7q889gf0qo5wm",
@@ -14667,7 +14683,7 @@
         "release"
       ],
       "_content_hash": "05d6213c6e90",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-4t4l9dfq9ozmo5b11govl2j9obt6vjb4",
@@ -14732,7 +14748,7 @@
         "discuss"
       ],
       "_content_hash": "c73481e96ce1",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-zxdn5hj7tb0zb21b4xxzfxz717sx31fj",
@@ -14811,7 +14827,7 @@
         "allison-wang"
       ],
       "_content_hash": "568c9af2a118",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-ml-q9p2nj5x0z9p6cy32c9vd9lo43v4qxls"
     },
     {
       "id": "spark-ml-vjngbkzvlwjsgxwhp1moqp7t20yggqgp",
@@ -15229,7 +15245,7 @@
         "spip"
       ],
       "_content_hash": "4e572fa0845f",
-      "initiative_id": "spark-init-spark-ml-cqn5nq4tdtp3hkh8w5thhlv6fyk9fomw"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-zhcv1og8767151zd9rdl1tpp53wz64pf",
@@ -15409,7 +15425,7 @@
         "automation"
       ],
       "_content_hash": "6d600aecc60b",
-      "initiative_id": "spark-init-spark-ml-cqn5nq4tdtp3hkh8w5thhlv6fyk9fomw",
+      "initiative_id": "spark-init-spark-jira-SPARK-49834",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -15773,7 +15789,7 @@
         "dependency-management"
       ],
       "_content_hash": "220ebb400088",
-      "initiative_id": "spark-init-spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw",
+      "initiative_id": "spark-init-spark-jira-SPARK-49834",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -17087,7 +17103,7 @@
         "subset-argument"
       ],
       "_content_hash": "e68b1d71e82d",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t"
     },
     {
       "id": "spark-ml-v9djkznh8sz5smdl7mx9zt5kxd51g18y",
@@ -19966,7 +19982,7 @@
         "artifact-management"
       ],
       "_content_hash": "e55e7513664b",
-      "initiative_id": "spark-init-spark-ml-cqn5nq4tdtp3hkh8w5thhlv6fyk9fomw",
+      "initiative_id": "spark-init-spark-jira-SPARK-49834",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -20724,7 +20740,7 @@
         "api"
       ],
       "_content_hash": "eda4f3ad4f74",
-      "initiative_id": "spark-init-spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw",
+      "initiative_id": "spark-init-spark-jira-SPARK-49834",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -20767,7 +20783,7 @@
         "lts-period"
       ],
       "_content_hash": "5e4a9be2e683",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t"
     },
     {
       "id": "spark-ml-hfpgp3mz0lq6w9ysqv92zkygwn8bmcpk",
@@ -21175,7 +21191,7 @@
         "apache"
       ],
       "_content_hash": "c477dc28e3fe",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-jmnvlqkhmfv5lg5l1fw4gyq1xgsx92nw",
@@ -21202,7 +21218,7 @@
         "apache"
       ],
       "_content_hash": "b35686693544",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-jira-SPARK-55278"
     },
     {
       "id": "spark-ml-04k62jn7k6dqhtov44yg9c6gkowyy47n",
@@ -22151,7 +22167,7 @@
         "bug-fix"
       ],
       "_content_hash": "37fa0ac3c76c",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2",
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -22533,7 +22549,7 @@
         "archives-archive"
       ],
       "_content_hash": "1c19076a1dd9",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-ml-q9p2nj5x0z9p6cy32c9vd9lo43v4qxls"
     },
     {
       "id": "spark-ml-oyogozm8y642w0bc5h1cx2xst7fyz3ms",
@@ -22786,7 +22802,7 @@
         "release"
       ],
       "_content_hash": "b1a212827551",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-ml-q9p2nj5x0z9p6cy32c9vd9lo43v4qxls"
     },
     {
       "id": "spark-ml-1kr0hhx3c6ml132gqvy5424gz8qnnqd5",
@@ -22907,7 +22923,7 @@
         "release"
       ],
       "_content_hash": "984729e261a5",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-ml-q9p2nj5x0z9p6cy32c9vd9lo43v4qxls"
     },
     {
       "id": "spark-ml-xqws8pbhhdtxg0s0s2g5q6mhxx2s80k5",
@@ -22987,7 +23003,7 @@
         "release"
       ],
       "_content_hash": "574d0aa54ae9",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-ml-q9p2nj5x0z9p6cy32c9vd9lo43v4qxls"
     },
     {
       "id": "spark-ml-40d961d0yjnxkxfb4rnd7qjf45onxrxo",
@@ -23116,7 +23132,7 @@
         "release"
       ],
       "_content_hash": "bee538c767ff",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-ml-q9p2nj5x0z9p6cy32c9vd9lo43v4qxls"
     },
     {
       "id": "spark-ml-ys7zsod8cs9c7qllmf0p0msk6z2mz2ym",
@@ -23301,7 +23317,7 @@
         "release"
       ],
       "_content_hash": "80a88ba1c22d",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-ml-q9p2nj5x0z9p6cy32c9vd9lo43v4qxls"
     },
     {
       "id": "spark-ml-zctzq0gq22mdq7ycnfrxlypxtk537hwb",
@@ -23379,7 +23395,7 @@
         "jul"
       ],
       "_content_hash": "2c486f438b96",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-ml-q9p2nj5x0z9p6cy32c9vd9lo43v4qxls"
     },
     {
       "id": "spark-ml-7pyfy90nbs8ltqyorpgzpl3cp24xrx8s",
@@ -23951,7 +23967,7 @@
         "discuss"
       ],
       "_content_hash": "fe2f594a7167",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t"
     },
     {
       "id": "spark-ml-g9kj4zv7slct25fox0plxzcd1h8dvjm6",
@@ -24277,7 +24293,7 @@
         "feature-list"
       ],
       "_content_hash": "3468b0707bf6",
-      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2",
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -27183,7 +27199,7 @@
         "apache-spark"
       ],
       "_content_hash": "daf43ae537f9",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-ml-q9p2nj5x0z9p6cy32c9vd9lo43v4qxls"
     },
     {
       "id": "spark-ml-7y38qd5cdzyo8v6qkwbl4k3zrb9k0gdg",
@@ -32671,7 +32687,7 @@
         "release"
       ],
       "_content_hash": "87cbc1c552f5",
-      "initiative_id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb"
+      "initiative_id": "spark-init-spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t"
     },
     {
       "id": "spark-ml-jslhkh9sb5czvdsn7nz4t40xoyvznlc7",

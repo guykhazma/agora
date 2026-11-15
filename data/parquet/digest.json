@@ -1,5 +1,5 @@
 {
-  "summary": "It records the format and schema location without decoding the bytes, allowing engines to interpret the data while preserving the original payload. Participants question whether this truly extends PME, which currently protects at module boundaries, and call for clarification of scope and implementation details. Participants decide to include Delta mode, rename the proposal to FastLanes, and plan future work on interleaving and Unified Transpose Layout. By using a modular footer, the layout preserves row\u2011group statistics for efficient data skipping while allowing writers to buffer and emit pages based on column size and density, improving performance for wide, sparse, or asymmetric schemas.",
+  "summary": "The discussion proposes adding a SERIALIZED_VALUE logical type to Parquet for BYTE_ARRAY columns that hold serialized messages such as protobuf, FlatBuffers, or Thrift. Participants question whether this truly extends PME, which currently protects at module boundaries, and call for clarification of scope and implementation details. Participants favor including Delta mode in the initial PFOR specification, rename the proposal to FastLanes, and defer adding interleaving and Unified Transpose Layout to later iterations. This aims to improve page sizing and reduce overhead for wide or sparse schemas while preserving row-group statistics for efficient data skipping.",
   "highlights": [
     {
       "text": "Parquet-Java currently writes DataPageV2 pages with unencrypted levels, diverging from other Apache implementations that encrypt the entire page. This incompati\u2026",
@@ -12,12 +12,22 @@
       ]
     },
     {
-      "text": "The proposal introduces a SERIALIZED_VALUE logical type for Parquet BYTE_ARRAY columns that store serialized messages such as protobuf, FlatBuffers, or Thrift. \u2026",
+      "text": "The discussion proposes adding a SERIALIZED_VALUE logical type to Parquet for BYTE_ARRAY columns that hold serialized messages such as protobuf, FlatBuffers, or\u2026",
       "sources": [
         {
           "id": "parquet-ml-5xn8o9rvrv1rsjs811t2gn0tkjq0zl02",
           "title": "[DISCUSS] SERIALIZED_VALUE: a logical type for serialized messages",
           "url": "https://lists.apache.org/thread/5xn8o9rvrv1rsjs811t2gn0tkjq0zl02"
+        }
+      ]
+    },
+    {
+      "text": "The proposal introduces a SERIALIZED_VALUE logical type for BYTE_ARRAY columns that store serialized protobuf, FlatBuffers, or Thrift messages. It records the m\u2026",
+      "sources": [
+        {
+          "id": "parquet-repo-apache%2Fparquet-format-gh-i640",
+          "title": "[Proposal] SERIALIZED_VALUE logical type for serialized messages",
+          "url": "https://github.com/apache/parquet-format/issues/640"
         }
       ]
     },
@@ -30,16 +40,6 @@
           "url": "https://lists.apache.org/thread/5chljsblgpzzg5d8bocv1txt14hrbkhl"
         }
       ]
-    },
-    {
-      "text": "The discussion compares PFOR variants for Parquet, showing PFOR as the fastest decoding option with the best compression ratio. Participants decide to include D\u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
-          "title": "Re: [DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations (+ apologies)",
-          "url": "https://lists.apache.org/thread/669rvfch65xcfdqqtj22nlsvkzthxmy3"
-        }
-      ]
     }
   ],
   "generation": {
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-14T12:45:12.468740+00:00",
-  "item_count": 8,
+  "generated_at": "2026-11-15T13:13:07.386957+00:00",
+  "item_count": 9,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-09",
     "to": "2026-11-14",
-    "thread_count": 8
+    "thread_count": 9
   }
 }

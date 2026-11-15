@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-11-14T12:45:44.712129+00:00",
+  "generated_at": "2026-11-15T13:13:40.958069+00:00",
   "total": 318,
   "proposals": [
     {
@@ -27,11 +27,18 @@
           "title": "\ufeff[DESIGN] A SERIALIZED_VALUE logical type for Parquet"
         }
       ],
-      "llm_summary": "",
-      "llm_status": "discussion",
+      "llm_summary": "The proposal introduces a SERIALIZED_VALUE logical type for BYTE_ARRAY columns that store serialized protobuf, FlatBuffers, or Thrift messages. It records the message format and embeds the schema and root message type name within the Parquet file. The discussion is documented in mailing lists and a Google Doc.",
+      "llm_status": "proposal",
       "comment_count": 0,
-      "llm_key_points": [],
-      "llm_topics": [],
+      "llm_key_points": [
+        "Introduce logical type for serialized messages",
+        "Store format, schema, and root type in file"
+      ],
+      "llm_topics": [
+        "logical-types",
+        "serialization",
+        "parquet"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -40,7 +47,8 @@
       },
       "_content_hash": "2a46e6aec494",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i640"
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i640",
+      "llm_title": "SERIALIZED_VALUE logical type proposal"
     },
     {
       "id": "parquet-gh-rel-apache-parquet-1-18-2",
@@ -3135,6 +3143,12 @@
       "llm_status": "discussion",
       "comment_count": 3,
       "participant_count": 3,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
       "llm_key_points": [
         "DataPageV2 levels are written unencrypted in parquet-java, causing incompatibility",
         "Proposal to break backward compatibility to enforce full-page encryption across implementations"
@@ -3144,14 +3158,8 @@
         "parquet-compatibility",
         "security"
       ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "64bb1ddbf2f1",
       "llm_title": "Break DataPageV2 Encryption in Parquet-Java",
+      "_content_hash": "64bb1ddbf2f1",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i640"
     },
@@ -3175,21 +3183,12 @@
           "title": "\ufeff[DESIGN] A SERIALIZED_VALUE logical type for Parquet"
         }
       ],
-      "llm_summary": "The proposal introduces a SERIALIZED_VALUE logical type for Parquet BYTE_ARRAY columns that store serialized messages such as protobuf, FlatBuffers, or Thrift. It records the format and schema location without decoding the bytes, allowing engines to interpret the data while preserving the original payload. The discussion seeks feedback on its usefulness and plans to separate projection into a future proposal.",
+      "llm_summary": "The discussion proposes adding a SERIALIZED_VALUE logical type to Parquet for BYTE_ARRAY columns that hold serialized messages such as protobuf, FlatBuffers, or Thrift. The type records the message format and schema location, allowing the original bytes to be preserved while enabling readers that understand the type to decode them. The proposal aims to support use cases like audit logs and regulated data where the exact byte representation must be retained, though some participants question its necessity for intermediate data.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
-      "llm_key_points": [
-        "Adds a logical type for binary columns holding serialized messages",
-        "Records format and schema without decoding the bytes",
-        "Preserves original payload for audit and regulated data",
-        "Separates projection into a future proposal"
-      ],
-      "llm_topics": [
-        "logical-types",
-        "serialization",
-        "parquet"
-      ],
+      "llm_key_points": [],
+      "llm_topics": [],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -3197,7 +3196,6 @@
         "prompt_version": 1
       },
       "_content_hash": "768a95e4a32a",
-      "llm_title": "SERIALIZED_VALUE logical type for serialized messages",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i640"
     },
@@ -3313,19 +3311,18 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion compares PFOR variants for Parquet, showing PFOR as the fastest decoding option with the best compression ratio. Participants decide to include Delta mode, rename the proposal to FastLanes, and plan future work on interleaving and Unified Transpose Layout. The focus remains on improving performance and compression for integer columns.",
+      "llm_summary": "The discussion presents benchmark results comparing PFOR, LZ4, BSS+LZ4, DBP, and BSS+ZSTD on Graviton4, showing PFOR achieves the highest decode throughput and compression ratio. Participants favor including Delta mode in the initial PFOR specification, rename the proposal to FastLanes, and defer adding interleaving and Unified Transpose Layout to later iterations.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
       "llm_key_points": [
-        "PFOR achieves highest decode throughput and compression ratio",
-        "Decision to include Delta mode and rename to FastLanes",
-        "Future work: interleaving and Unified Transpose Layout"
+        "Include Delta mode with PFOR-Frame for better compression",
+        "Rename proposal to FastLanes and postpone interleaving/UTL"
       ],
       "llm_topics": [
+        "performance",
         "compression",
-        "parquet",
-        "performance"
+        "parquet"
       ],
       "summary_generation": {
         "method": "llm",
@@ -3334,6 +3331,7 @@
         "prompt_version": 1
       },
       "_content_hash": "8691c83218af",
+      "llm_title": "FastLanes for Parquet Benchmark and Design Decisions",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
@@ -3369,14 +3367,14 @@
           "title": "\ufeffThe Modular Footer aims to reduce the metadata I/O and decoding work needed to start a scan. The goals and motivation f"
         }
       ],
-      "llm_summary": "The proposal introduces a new Parquet data layout where pages are the atomic unit and can be cut independently per column, eliminating the need to align pages across columns or force page cuts at row\u2011group boundaries. By using a modular footer, the layout preserves row\u2011group statistics for efficient data skipping while allowing writers to buffer and emit pages based on column size and density, improving performance for wide, sparse, or asymmetric schemas.",
+      "llm_summary": "The proposal introduces a page-first data layout for Parquet that decouples page boundaries from row groups, allowing each column to independently decide when to cut pages. This aims to improve page sizing and reduce overhead for wide or sparse schemas while preserving row-group statistics for efficient data skipping. The discussion invites feedback on the feasibility and impact of the new layout.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "Pages are cut independently per column",
-        "Row group constraints are removed for better page sizing",
-        "Modular footer preserves statistics while enabling flexible layout"
+        "Decouples page boundaries from row groups",
+        "Allows per-column page cutting for better page sizing",
+        "Preserves row-group statistics for data skipping"
       ],
       "llm_topics": [
         "data-layout",
@@ -4404,7 +4402,7 @@
       "llm_title": "",
       "_content_hash": "7a564df9ef8b",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm"
     },
     {
       "id": "parquet-ml-v11pw7sbnkdxzjhkmcbsx06clyvjv0xx",
@@ -8952,7 +8950,7 @@
       ],
       "_content_hash": "e08701ee20f6",
       "llm_title": "New page layouts for byte arrays",
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
     {
       "id": "parquet-ml-8tlhnk2rrqo72onsr45on1zs1mhmcytj",

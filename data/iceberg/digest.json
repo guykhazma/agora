@@ -1,5 +1,5 @@
 {
-  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. Contributors highlighted Spark pull requests to include in the patch and a CVE scan workflow issue that was addressed by a separate PR. Benchmarks show conversion is fast for sequential IDs but slower for random UUID keys, prompting consideration of secondary indexing. Kevin Liu raises the question of whether Iceberg V4 should cease writing new ORC and Avro files due to feature gaps, while still supporting reads for backward compatibility.",
+  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. The discussion centers on whether Iceberg V4 should cease writing new ORC and Avro files due to feature gaps and limited upstream development, while still supporting them for reading to maintain backward compatibility. Benchmarks show conversion is fast for sequential IDs but slower for random UUID keys, raising concerns about contention with concurrent compactions. The proposal is to adopt a per\u2011field resolution that falls back to name mapping when an ID is missing, aligning with the Column Projection rule, but the community remains divided between this and the original per\u2011file intent.",
   "highlights": [
     {
       "text": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filt\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "Max created a 1.12.x branch pointing to the apache-iceberg-1.12.0 release tag and noted that several bug fixes have been made, with a potential patch release in\u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-drhczwkksm7r266fqgovpb6s72zt6cbp",
-          "title": "[FYI] 1.12.x release tag created",
-          "url": "https://lists.apache.org/thread/drhczwkksm7r266fqgovpb6s72zt6cbp"
-        }
-      ]
-    },
-    {
-      "text": "Iceberg 1.13.0",
-      "sources": [
-        {
-          "id": "iceberg-gh-m64",
-          "title": "Iceberg 1.13.0",
-          "url": "https://github.com/apache/iceberg/milestone/64"
-        }
-      ]
-    },
-    {
-      "text": "Yufei proposes a biweekly 30\u2011minute call to speed up UDF implementation and reviews. Several contributors have expressed interest and are already working on rel\u2026",
+      "text": "A proposal to hold 30\u2011minute biweekly calls to accelerate UDF implementation and reviews, gathering participants to discuss blockers and next steps.",
       "sources": [
         {
           "id": "iceberg-ml-gm7pvw2cntp15mv86bvktq5vbnxmcso8",
           "title": "[DISCUSS] biweekly UDF sync",
           "url": "https://lists.apache.org/thread/gm7pvw2cntp15mv86bvktq5vbnxmcso8"
+        }
+      ]
+    },
+    {
+      "text": "The discussion centers on whether Iceberg V4 should cease writing new ORC and Avro files due to feature gaps and limited upstream development, while still suppo\u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-5jfzckl0cc9z683kz9vfv41pmhrm1tdb",
+          "title": "[DISCUSS] Should V4 stop writing ORC and Avro data files?",
+          "url": "https://lists.apache.org/thread/5jfzckl0cc9z683kz9vfv41pmhrm1tdb"
+        }
+      ]
+    },
+    {
+      "text": "Max created a 1.12.x branch pointing to the 1.12.0 release tag and opened a discussion about a potential 1.12.1 patch release that would include bug fixes and C\u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-drhczwkksm7r266fqgovpb6s72zt6cbp",
+          "title": "[FYI] 1.12.x release tag created",
+          "url": "https://lists.apache.org/thread/drhczwkksm7r266fqgovpb6s72zt6cbp"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-15T13:16:16.923892+00:00",
+  "generated_at": "2026-11-16T14:25:17.545405+00:00",
   "item_count": 11,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-11",
-    "to": "2026-11-15",
+    "to": "2026-11-16",
     "thread_count": 11
   }
 }

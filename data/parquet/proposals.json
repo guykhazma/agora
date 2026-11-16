@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-11-15T13:13:40.958069+00:00",
+  "generated_at": "2026-11-16T14:21:41.538816+00:00",
   "total": 318,
   "proposals": [
     {
@@ -3122,7 +3122,7 @@
       "author": "Russell Spitzer <ru...@gmail.com>",
       "state": "open",
       "created_at": "2026-11-13T21:17:37+00:00",
-      "updated_at": "2026-11-14T07:53:03+00:00",
+      "updated_at": "2026-11-16T12:47:07+00:00",
       "body": "Hopefully this got your attention. I promise this is not an exaggeration. I\ndo want to break encryption in parquet-java but I promise it's for a good\nreason.\n\n*TLDR; Parquet-java is writing unencrypted levels with V2Pages, breaking\ncompatibility with all other Apache implementations. We should fix this\neven if it means breaking compatibility with older parquet-java readers.*\n\nSo first a quick story\n\nWhen modular encryption was introduced, it treated DataPageV1 as a nice\nblob of data. Levels and Values all lived together in a happy pile of data.\nEncryption took this happy pile of data and encrypted it all together, just\nlike compression. Whatever was compressed was encrypted.\n\nDataPageV2 is different: the levels are not compressed with the page\nvalues. A V2Page contains uncompressed levels, followed by compressed\nvalues. I do not think this was intentional, but the writer implementation\nin parquet-java re-used existing patterns, causing us to write unencrypted\nlevels alongside encrypted values. A V1 page is written with everything\nencrypted, a V2 page is written with the levels in plaintext.\n\nNow this would only be a minor security issue (Talk to your security team,\nit may be a bigger deal for you) except many implementations did this\ncorrectly.\n\nPME DataPageV2 Interop: Divergent encryption of rep/def levels between\nparquet-java and Arrow <https://github.com/apache/parquet-java/issues/3934>\n\nNow, Parquet-Java (and Trino to my knowledge) writes and reads V2Pages as\nif they don't have encrypted levels. However, Parquet-C++, Parquet-rs,\nParquet-Go, Polars, and DuckDB all write or read V2 pages as if the entire\npage is encrypted.\n\nSo there is essentially a fork now. Implementations either do not encrypt\nthe whole page or they do encrypt the whole page. This only affects\nencrypted columns written with V2 pages, which parquet-java doesn't write\nby default.\n\nMy suggestion is that we unify the two by breaking Parquet-Java's backward\ncompatibility. It's arguable that we are d",
       "labels": [],
       "linked_resources": [
@@ -3139,27 +3139,28 @@
           "kind": "github_issue"
         }
       ],
-      "llm_summary": "Parquet-Java currently writes DataPageV2 pages with unencrypted levels, diverging from other Apache implementations that encrypt the entire page. This incompatibility leads to security concerns and interoperability issues. The discussion proposes breaking backward compatibility to unify encryption behavior across libraries.",
+      "llm_summary": "Parquet-Java currently writes DataPageV2 pages with unencrypted repetition and definition levels, which conflicts with other Apache implementations that encrypt the entire page. This incompatibility has prompted a proposal to break backward compatibility and unify the encryption behavior across all libraries. A pull request has been submitted to update the spec and fix the implementation.",
       "llm_status": "discussion",
-      "comment_count": 3,
-      "participant_count": 3,
+      "comment_count": 4,
+      "participant_count": 4,
+      "llm_key_points": [
+        "Parquet-Java writes unencrypted levels in DataPageV2 pages, breaking compatibility",
+        "Other implementations encrypt the entire DataPageV2 page",
+        "Proposal to break backward compatibility and update the encryption spec"
+      ],
+      "llm_topics": [
+        "data-page-encryption",
+        "interoperability",
+        "parquet-compatibility"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
         "model": "openai/gpt-oss-20b",
         "prompt_version": 1
       },
-      "llm_key_points": [
-        "DataPageV2 levels are written unencrypted in parquet-java, causing incompatibility",
-        "Proposal to break backward compatibility to enforce full-page encryption across implementations"
-      ],
-      "llm_topics": [
-        "data-page-encryption",
-        "parquet-compatibility",
-        "security"
-      ],
+      "_content_hash": "97b4eeecfce2",
       "llm_title": "Break DataPageV2 Encryption in Parquet-Java",
-      "_content_hash": "64bb1ddbf2f1",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i640"
     },
@@ -3183,12 +3184,20 @@
           "title": "\ufeff[DESIGN] A SERIALIZED_VALUE logical type for Parquet"
         }
       ],
-      "llm_summary": "The discussion proposes adding a SERIALIZED_VALUE logical type to Parquet for BYTE_ARRAY columns that hold serialized messages such as protobuf, FlatBuffers, or Thrift. The type records the message format and schema location, allowing the original bytes to be preserved while enabling readers that understand the type to decode them. The proposal aims to support use cases like audit logs and regulated data where the exact byte representation must be retained, though some participants question its necessity for intermediate data.",
+      "llm_summary": "The proposal introduces a SERIALIZED_VALUE logical type for Parquet that annotates BYTE_ARRAY columns containing serialized messages such as protobuf, FlatBuffers, or Thrift, recording the format and schema without decoding the bytes. It aims to preserve the original data for use cases like audit logs or regulated data while allowing engines to interpret the payload consistently. The discussion focuses on its niche applicability and potential benefits for data that must remain unchanged.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
-      "llm_key_points": [],
-      "llm_topics": [],
+      "llm_key_points": [
+        "Adds a logical type to annotate binary columns with message format and schema",
+        "Parquet does not decode bytes; readers can interpret based on annotation",
+        "Use case for preserving original serialized data, e.g., audit logs"
+      ],
+      "llm_topics": [
+        "logical-types",
+        "parquet",
+        "serialization"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -3196,6 +3205,7 @@
         "prompt_version": 1
       },
       "_content_hash": "768a95e4a32a",
+      "llm_title": "SERIALIZED_VALUE logical type for serialized messages",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i640"
     },
@@ -3311,13 +3321,14 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion presents benchmark results comparing PFOR, LZ4, BSS+LZ4, DBP, and BSS+ZSTD on Graviton4, showing PFOR achieves the highest decode throughput and compression ratio. Participants favor including Delta mode in the initial PFOR specification, rename the proposal to FastLanes, and defer adding interleaving and Unified Transpose Layout to later iterations.",
+      "llm_summary": "The thread presents benchmark results comparing PFOR, FastLanes, and other compression schemes for Parquet, highlighting PFOR's superior decode throughput and compression ratio. It discusses design decisions such as including Delta mode, adopting a Unified Transpose Layout, and renaming the proposal to FastLanes. Participants weigh trade\u2011offs between speed, compression, and implementation complexity.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
       "llm_key_points": [
-        "Include Delta mode with PFOR-Frame for better compression",
-        "Rename proposal to FastLanes and postpone interleaving/UTL"
+        "PFOR achieves highest decode throughput and compression ratio",
+        "Delta mode and Unified Transpose Layout improve performance",
+        "Proposal renamed to FastLanes to leverage existing terminology"
       ],
       "llm_topics": [
         "performance",
@@ -3331,7 +3342,7 @@
         "prompt_version": 1
       },
       "_content_hash": "8691c83218af",
-      "llm_title": "FastLanes for Parquet Benchmark and Design Decisions",
+      "llm_title": "FastLanes Parquet Benchmark Results",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
@@ -3367,14 +3378,14 @@
           "title": "\ufeffThe Modular Footer aims to reduce the metadata I/O and decoding work needed to start a scan. The goals and motivation f"
         }
       ],
-      "llm_summary": "The proposal introduces a page-first data layout for Parquet that decouples page boundaries from row groups, allowing each column to independently decide when to cut pages. This aims to improve page sizing and reduce overhead for wide or sparse schemas while preserving row-group statistics for efficient data skipping. The discussion invites feedback on the feasibility and impact of the new layout.",
+      "llm_summary": "The proposal introduces a new Parquet data layout where pages are the atomic unit and writers can cut pages independently per column, eliminating the need to align pages across columns or force page cuts at row group boundaries. This approach better handles columns with varying sizes and densities, reduces unnecessary small pages, and preserves row\u2011group statistics for efficient data skipping. The modular footer is used to efficiently represent the new layout\u2019s metadata.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "Decouples page boundaries from row groups",
-        "Allows per-column page cutting for better page sizing",
-        "Preserves row-group statistics for data skipping"
+        "Pages are independent per column",
+        "Row group constraints removed",
+        "Modular footer used for metadata"
       ],
       "llm_topics": [
         "data-layout",
@@ -4402,7 +4413,7 @@
       "llm_title": "",
       "_content_hash": "7a564df9ef8b",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-ml-7ghf93l0ss74l3k4jo9qc2bdmrmng3hm"
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
     {
       "id": "parquet-ml-v11pw7sbnkdxzjhkmcbsx06clyvjv0xx",
@@ -8950,7 +8961,7 @@
       ],
       "_content_hash": "e08701ee20f6",
       "llm_title": "New page layouts for byte arrays",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0"
     },
     {
       "id": "parquet-ml-8tlhnk2rrqo72onsr45on1zs1mhmcytj",
@@ -9874,7 +9885,7 @@
       ],
       "_content_hash": "ed042ff61c14",
       "llm_title": "Discussion on Deprecating Parquet-Avro Reflect",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i640"
+      "initiative_id": "parquet-init-parquet-ml-c91s61tqkbbrc7xj180xh2rx89yx8pfk"
     },
     {
       "id": "parquet-ml-lhxxzo68r1tpcthvfs64motl1njvzlo0",
@@ -10265,7 +10276,7 @@
         "vote-thread"
       ],
       "_content_hash": "5b089dd0f010",
-      "initiative_id": "parquet-init-parquet-ml-tgkomrqsynzd5tm3385wm4tfk933lx6w"
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i640"
     },
     {
       "id": "parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo",

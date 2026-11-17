@@ -1,5 +1,5 @@
 {
-  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. The discussion centers on whether Iceberg V4 should cease writing new ORC and Avro files due to feature gaps and limited upstream development, while still supporting them for reading to maintain backward compatibility. Benchmarks show conversion is fast for sequential IDs but slower for random UUID keys, raising concerns about contention with concurrent compactions. The proposal is to adopt a per\u2011field resolution that falls back to name mapping when an ID is missing, aligning with the Column Projection rule, but the community remains divided between this and the original per\u2011file intent.",
+  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. Current Iceberg UDF spec treats the deterministic flag as a weak hint, leading to ambiguity and potential inconsistencies in checks, indexes, and derived columns. The discussion centers on whether Iceberg V4 should cease writing new ORC and Avro data files due to missing features and limited upstream development, while still supporting them for reading to maintain backward compatibility. Neelesh proposes moving the default Iceberg table format from version 2 to 3, noting that Java and Go already support most of v3 while PyIceberg and Rust lag behind.",
   "highlights": [
     {
       "text": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filt\u2026",
@@ -12,7 +12,17 @@
       ]
     },
     {
-      "text": "A proposal to hold 30\u2011minute biweekly calls to accelerate UDF implementation and reviews, gathering participants to discuss blockers and next steps.",
+      "text": "The discussion centers on clarifying what \"deterministic\" means for UDFs used in stored expressions, especially when different engines compute the same expressi\u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-18qjst8jmj1sr9qvmyppfjlqgtn39p5g",
+          "title": "[DISCUSS] Cross-engine determinism for functions in stored expressions",
+          "url": "https://lists.apache.org/thread/18qjst8jmj1sr9qvmyppfjlqgtn39p5g"
+        }
+      ]
+    },
+    {
+      "text": "Yufei proposes a 30\u2011minute biweekly call to accelerate UDF implementation and reviews, citing limited review capacity. Participants express interest, discuss sc\u2026",
       "sources": [
         {
           "id": "iceberg-ml-gm7pvw2cntp15mv86bvktq5vbnxmcso8",
@@ -22,22 +32,12 @@
       ]
     },
     {
-      "text": "The discussion centers on whether Iceberg V4 should cease writing new ORC and Avro files due to feature gaps and limited upstream development, while still suppo\u2026",
+      "text": "The discussion proposes adding an initial snapshot load option to Spark streaming reads, allowing queries to read the current snapshot before incremental proces\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-5jfzckl0cc9z683kz9vfv41pmhrm1tdb",
-          "title": "[DISCUSS] Should V4 stop writing ORC and Avro data files?",
-          "url": "https://lists.apache.org/thread/5jfzckl0cc9z683kz9vfv41pmhrm1tdb"
-        }
-      ]
-    },
-    {
-      "text": "Max created a 1.12.x branch pointing to the 1.12.0 release tag and opened a discussion about a potential 1.12.1 patch release that would include bug fixes and C\u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-drhczwkksm7r266fqgovpb6s72zt6cbp",
-          "title": "[FYI] 1.12.x release tag created",
-          "url": "https://lists.apache.org/thread/drhczwkksm7r266fqgovpb6s72zt6cbp"
+          "id": "iceberg-ml-qgbm6pjbnb7cl2cjzlqlg7fh8gpptk4j",
+          "title": "[DISCUSS] Spark: support initial snapshot load for streaming reads (#18068)",
+          "url": "https://lists.apache.org/thread/qgbm6pjbnb7cl2cjzlqlg7fh8gpptk4j"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-16T14:25:17.545405+00:00",
+  "generated_at": "2026-11-17T15:18:11.815891+00:00",
   "item_count": 11,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-11",
-    "to": "2026-11-16",
+    "to": "2026-11-17",
     "thread_count": 11
   }
 }

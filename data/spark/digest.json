@@ -1,8 +1,28 @@
 {
-  "summary": "The proposal outlines adding support for parallel reads, mTLS, and limiting operations on the trusted side, while noting that actual enforcement of restrictions remains the responsibility of catalogs. The team monitors failure rates, which rise sharply for large PRs, and is adjusting parallelism and timeouts while addressing security concerns around credential exposure. The discussion is moving toward a cross-language, native SQL implementation backed by Catalyst to address performance and reliability issues of high-variance UDFs. The proposal introduces a method to join streaming data with external storage by performing on-demand lookups instead of loading the entire static side.",
+  "summary": "The discussion centers on an updated SPIP document that introduces detailed security guarantees (G1\u2013G5), a dedicated PolicyEnforcement operator, and safeguards against leaks and unauthorized writes. This would fill a gap left by the existing ROWS and RANGE frames, enabling correct semantics for uneven group sizes without changing current query behavior or adding new operators. It outlines adding parallel read support, leveraging ADBC, and limiting trusted engine operations to safe subsets, while clarifying that the proposal does not implement the restrictions themselves. The team monitors failure rates, which rise sharply for large PRs, and is adjusting parallelism and timeouts while addressing security concerns around credential exposure.",
   "highlights": [
     {
-      "text": "The discussion centers on adding the SQL\u2011standard GROUPS window frame to Spark SQL, which currently only supports ROWS and RANGE. The proposal outlines semantic\u2026",
+      "text": "The discussion centers on an updated SPIP document that introduces detailed security guarantees (G1\u2013G5), a dedicated PolicyEnforcement operator, and safeguards \u2026",
+      "sources": [
+        {
+          "id": "spark-ml-zzl3hxdll1y0bdcc1bg8hyh3sr3ofpcp",
+          "title": "Re: [DISCUSS] SPIP: Pluggable Row-Filter and Column-Mask Enforcement in Catalyst",
+          "url": "https://lists.apache.org/thread/zzl3hxdll1y0bdcc1bg8hyh3sr3ofpcp"
+        }
+      ]
+    },
+    {
+      "text": "The discussion asks whether Spark Connect Gateway, which includes cryptographic libraries in its container image, must undergo the ASF export process before its\u2026",
+      "sources": [
+        {
+          "id": "spark-ml-pmll1n9x0wk871yb0t8b15k3ssbx3m4s",
+          "title": "[DISCUSS] Does Spark Connect Gateway need to go through the ASF export process?",
+          "url": "https://lists.apache.org/thread/pmll1n9x0wk871yb0t8b15k3ssbx3m4s"
+        }
+      ]
+    },
+    {
+      "text": "The discussion proposes adding the SQL-standard GROUPS window frame type to Spark SQL, which defines frame boundaries by peer groups rather than physical rows o\u2026",
       "sources": [
         {
           "id": "spark-ml-o6v6zf285k5t76qvc6fwf346h3c8tbfo",
@@ -12,32 +32,12 @@
       ]
     },
     {
-      "text": "The proposal extends Spark\u2019s Real-Time Mode to eligible batch SQL and DataFrame queries, enabling pipelined shuffle that overlaps producer, transfer, and consum\u2026",
+      "text": "The proposal extends Spark\u2019s Real-Time Mode to eligible batch SQL and DataFrame queries, allowing downstream stages to consume intermediate data as it arrives a\u2026",
       "sources": [
         {
           "id": "spark-ml-db86x3yx97okrkklfyfc6obo59mvzoqn",
           "title": "[DISCUSS] SPIP: Extend Real-Time Mode to Distributed Batch SQL and DataFrame Queries",
           "url": "https://lists.apache.org/thread/db86x3yx97okrkklfyfc6obo59mvzoqn"
-        }
-      ]
-    },
-    {
-      "text": "Huaxin Gao proposes the first Spark community sync on Nov 30 at 8:30 AM PST",
-      "sources": [
-        {
-          "id": "spark-ml-r8ms8fgfvtr0zr3hmxn7p01fb8lry352",
-          "title": "[DISCUSS] First Spark Community Sync",
-          "url": "https://lists.apache.org/thread/r8ms8fgfvtr0zr3hmxn7p01fb8lry352"
-        }
-      ]
-    },
-    {
-      "text": "The thread discusses adding a built-in ADBC data source to Spark to complement JDBC, aiming to improve analytical read performance by leveraging columnar Arrow \u2026",
-      "sources": [
-        {
-          "id": "spark-ml-30sg02r7z27nyh6bo2yf72kb0gr3mto0",
-          "title": "Re: [DISCUSS] SPIP: ADBC Data Source",
-          "url": "https://lists.apache.org/thread/30sg02r7z27nyh6bo2yf72kb0gr3mto0"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-17T15:22:41.451995+00:00",
-  "item_count": 9,
+  "generated_at": "2026-11-18T15:00:54.730517+00:00",
+  "item_count": 8,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-10",
-    "to": "2026-11-17",
-    "thread_count": 9
+    "from": "2026-11-15",
+    "to": "2026-11-18",
+    "thread_count": 8
   }
 }

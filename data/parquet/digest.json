@@ -1,8 +1,18 @@
 {
-  "summary": "Participants note that implementations already default to 1\u202fMB pages and suggest replacing the absolute recommendation with a trade\u2011off explanation or bandwidth guidance. It records the message format and schema location without decoding the bytes, allowing engines to preserve original data for audit or regulated use. Participants recommend adding a Delta mode, renaming the proposal to FastLanes, and deferring interleaving and Unified Transpose Layout to later stages. The proposal introduces a Page-First Data Layout for Parquet, allowing each column to independently decide when to cut pages without being bound to row group boundaries.",
+  "summary": "The discussion centers on the ambiguity that arises when a FILE logical type value contains both inline data and a URI locator, which can lead to different readers returning different bytes. Participants propose that the inline bytes should win, treating locator fields as provenance only, and that this change would not invalidate existing data. Participants suggest updating the guide to remove the fixed recommendation and provide guidance on selecting page sizes based on workload and storage type. The proposal introduces a SERIALIZED_VALUE logical type for Parquet BYTE_ARRAY columns that records the serialization format and schema of messages such as protobuf, FlatBuffers, or Thrift.",
   "highlights": [
     {
-      "text": "The discussion centers on removing the 8KB page size recommendation from the configuration guide, arguing that small pages limit compression opportunities and i\u2026",
+      "text": "The discussion centers on the ambiguity that arises when a FILE logical type value contains both inline data and a URI locator, which can lead to different read\u2026",
+      "sources": [
+        {
+          "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
+          "title": "[DISCUSS] Ambiguity in the FILE logical type when inline and uri are both set",
+          "url": "https://lists.apache.org/thread/yrghnfgghh6l86vg8hfhovo655c9qwtq"
+        }
+      ]
+    },
+    {
+      "text": "The discussion centers on removing the 8KB page size recommendation from the Parquet configuration guide, arguing that small pages limit compression and inflate\u2026",
       "sources": [
         {
           "id": "parquet-ml-4g8ng2mbrzj01g43dp8fcx7dz49rs529",
@@ -22,22 +32,12 @@
       ]
     },
     {
-      "text": "The proposal introduces a SERIALIZED_VALUE logical type for Parquet BYTE_ARRAY columns that store serialized messages such as protobuf, FlatBuffers, or Thrift. \u2026",
+      "text": "The proposal introduces a SERIALIZED_VALUE logical type for Parquet BYTE_ARRAY columns that records the serialization format and schema of messages such as prot\u2026",
       "sources": [
         {
           "id": "parquet-ml-5xn8o9rvrv1rsjs811t2gn0tkjq0zl02",
           "title": "[DISCUSS] SERIALIZED_VALUE: a logical type for serialized messages",
           "url": "https://lists.apache.org/thread/5xn8o9rvrv1rsjs811t2gn0tkjq0zl02"
-        }
-      ]
-    },
-    {
-      "text": "The proposal introduces a SERIALIZED_VALUE logical type for BYTE_ARRAY columns that store serialized protobuf, FlatBuffers, or Thrift messages. It records the m\u2026",
-      "sources": [
-        {
-          "id": "parquet-repo-apache%2Fparquet-format-gh-i640",
-          "title": "[Proposal] SERIALIZED_VALUE logical type for serialized messages",
-          "url": "https://github.com/apache/parquet-format/issues/640"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-17T15:13:54.713318+00:00",
-  "item_count": 9,
+  "generated_at": "2026-11-18T14:51:21.532475+00:00",
+  "item_count": 7,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-10",
-    "to": "2026-11-16",
-    "thread_count": 9
+    "from": "2026-11-12",
+    "to": "2026-11-18",
+    "thread_count": 7
   }
 }

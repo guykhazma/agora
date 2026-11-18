@@ -1,5 +1,5 @@
 {
-  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. Current Iceberg UDF spec treats the deterministic flag as a weak hint, leading to ambiguity and potential inconsistencies in checks, indexes, and derived columns. The discussion centers on whether Iceberg V4 should cease writing new ORC and Avro data files due to missing features and limited upstream development, while still supporting them for reading to maintain backward compatibility. Neelesh proposes moving the default Iceberg table format from version 2 to 3, noting that Java and Go already support most of v3 while PyIceberg and Rust lag behind.",
+  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. Participants largely agree on keeping read support for backward compatibility while favoring Parquet (and potentially Vortex) for new writes, and suggest a migration guide if formats are deprecated. Benchmarks show conversion is quick for sequential IDs but can be slow for random UUID keys, raising concerns about contention with compaction in low\u2011latency commit scenarios. Iceberg 1.13.0 The discussion focuses on clarifying what \"deterministic\" means for user-defined functions used in stored expressions across different engines, highlighting its importance for check constraints, stats-only fields, and derived columns.",
   "highlights": [
     {
       "text": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filt\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "The discussion centers on clarifying what \"deterministic\" means for UDFs used in stored expressions, especially when different engines compute the same expressi\u2026",
+      "text": "The discussion centers on extending Iceberg\u2019s vector type to support new element types such as float16 and int8, weighing benefits in storage, performance, and \u2026",
       "sources": [
         {
-          "id": "iceberg-ml-18qjst8jmj1sr9qvmyppfjlqgtn39p5g",
-          "title": "[DISCUSS] Cross-engine determinism for functions in stored expressions",
-          "url": "https://lists.apache.org/thread/18qjst8jmj1sr9qvmyppfjlqgtn39p5g"
+          "id": "iceberg-ml-fgqq8jwvb1qj9kskk3qxssxlvk2nn4x7",
+          "title": "[DISCUSS] Vector Type and Int8 Float16",
+          "url": "https://lists.apache.org/thread/fgqq8jwvb1qj9kskk3qxssxlvk2nn4x7"
         }
       ]
     },
     {
-      "text": "Yufei proposes a 30\u2011minute biweekly call to accelerate UDF implementation and reviews, citing limited review capacity. Participants express interest, discuss sc\u2026",
+      "text": "The iceberg-rust community is debating how to adjust its weekly sync meeting time after daylight saving time changes. Options include keeping the meeting at 15:\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-gm7pvw2cntp15mv86bvktq5vbnxmcso8",
-          "title": "[DISCUSS] biweekly UDF sync",
-          "url": "https://lists.apache.org/thread/gm7pvw2cntp15mv86bvktq5vbnxmcso8"
+          "id": "iceberg-ml-rmgj7c4rglc9szdvosv3lo15sw9grxf2",
+          "title": "[DISCUSS] iceberg-rust community sync time after the DST change",
+          "url": "https://lists.apache.org/thread/rmgj7c4rglc9szdvosv3lo15sw9grxf2"
         }
       ]
     },
     {
-      "text": "The discussion proposes adding an initial snapshot load option to Spark streaming reads, allowing queries to read the current snapshot before incremental proces\u2026",
+      "text": "The team is debating whether to add support for Spark 4.3 or skip it, with a preference to focus on completing Spark 4.2 support. The discussion reaffirms the p\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-qgbm6pjbnb7cl2cjzlqlg7fh8gpptk4j",
-          "title": "[DISCUSS] Spark: support initial snapshot load for streaming reads (#18068)",
-          "url": "https://lists.apache.org/thread/qgbm6pjbnb7cl2cjzlqlg7fh8gpptk4j"
+          "id": "iceberg-ml-67tn0zg4sjs47nfsortgdl1d3fnwx34v",
+          "title": "Re: [Discuss] Spark versioning strategy with accelerated Spark releases.",
+          "url": "https://lists.apache.org/thread/67tn0zg4sjs47nfsortgdl1d3fnwx34v"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-17T15:18:11.815891+00:00",
-  "item_count": 11,
+  "generated_at": "2026-11-18T14:56:06.863613+00:00",
+  "item_count": 10,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-11",
-    "to": "2026-11-17",
-    "thread_count": 11
+    "from": "2026-11-17",
+    "to": "2026-11-18",
+    "thread_count": 10
   }
 }

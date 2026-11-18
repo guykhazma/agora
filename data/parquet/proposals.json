@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-11-17T15:14:51.602955+00:00",
+  "generated_at": "2026-11-18T14:52:15.484844+00:00",
   "total": 319,
   "proposals": [
     {
@@ -3114,6 +3114,65 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Ambiguity in the FILE logical type when inline and uri are both set",
+      "url": "https://lists.apache.org/thread/yrghnfgghh6l86vg8hfhovo655c9qwtq",
+      "author": "Stefan Grafberger via dev <de...@parquet.apache.org>",
+      "state": "open",
+      "created_at": "2026-11-03T13:19:10+00:00",
+      "updated_at": "2026-11-18T14:19:05+00:00",
+      "body": "Hi all,\n\nWhile preparing support for the FILE logical type, we found that a value\nwith both inline and uri set can resolve to different bytes in different\nengines while all of them remain spec compliant. For example, if the object\nat uri is overwritten after the value is written, one reader returns the\ninline bytes and another returns the new object. We want our behavior to\nmatch other engines, so we'd like the spec to define which bytes such a\nvalue resolves to.\n\nWe propose restoring the meaning from the original FILE PR [1]: if inline\nis set, it supplies the bytes, and any locator fields that are set (uri,\noffset, size) are provenance only. This keeps the clarification from [2]\nthat inline and a locator may both be set, so inline can still serve as a\ncached copy of the referenced bytes. We'd also like to allow size with\ninline alone, as its length, so readers can get it without reading the\ninline bytes. When inline and uri are both set, we'd specify that checksum,\nlike the locator, describes the source at uri as it was when inline was\ncopied from it, which the spec currently leaves open. I opened a draft PR\nwith the corresponding changes at [3].\n\nWe also considered making inline and the locator fields mutually exclusive,\nbut that would make values invalid that current writers already produce\n(for example, Hardwood [4] and the proposed parquet-testing fixtures [5])\nand would remove the only way to record where an inline copy came from, for\nuse cases like finding every copy of a file for a deletion request or\nexplicitly refreshing an inline copy from its source. \"Inline wins\"\ninvalidates no data and only narrows what readers may return.\n\nLooking forward to hearing your thoughts.\n\nThanks,\nStefan\n\n[1] https://github.com/apache/parquet-format/pull/585\n[2] https://github.com/apache/parquet-format/pull/603\n[3] https://github.com/apache/parquet-format/pull/635\n[4] https://github.com/hardwood-hq/hardwood/pull/1494\n[5] https://github.com/apache/parquet-testing/pull/128\n",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://github.com/apache/parquet-format/pull/585",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/pull/603",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-format/pull/635",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/hardwood-hq/hardwood/pull/1494",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/parquet-testing/pull/128",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "The discussion centers on the ambiguity that arises when a FILE logical type value contains both inline data and a URI locator, which can lead to different readers returning different bytes. Participants propose that the inline bytes should win, treating locator fields as provenance only, and that this change would not invalidate existing data. The consensus leans toward adopting this \u201cinline wins\u201d rule while maintaining compatibility with current writers.",
+      "llm_status": "discussion",
+      "comment_count": 6,
+      "participant_count": 6,
+      "llm_key_points": [
+        "Ambiguity when both inline and uri are set",
+        "Proposal that inline bytes win and locator fields are provenance only",
+        "Consensus leaning toward inline wins without breaking compatibility"
+      ],
+      "llm_topics": [
+        "file-logical-type",
+        "spec-clarification",
+        "compatibility"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "75e34ea49140",
+      "llm_title": "FILE logical type ambiguity with inline and uri",
+      "observed_history": [],
+      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-2-rc2"
+    },
+    {
       "id": "parquet-ml-4g8ng2mbrzj01g43dp8fcx7dz49rs529",
       "source": "mailing_list",
       "kind": "thread",
@@ -3122,18 +3181,18 @@
       "author": "Alkis Evlogimenos via dev <de...@parquet.apache.org>",
       "state": "open",
       "created_at": "2026-11-16T18:19:58+00:00",
-      "updated_at": "2026-11-16T22:03:28+00:00",
+      "updated_at": "2026-11-17T23:59:56+00:00",
       "body": "Hi all,\n\nThe configuration guide [1] recommends 8KB pages. I think we should remove\nthis recommendation.\n\n8KB is pretty small for compression. Pages are compressed independently, so\nsmall pages limit compression opportunities. They also make page indexes\nmuch larger: for the same data volume, 8KB pages mean roughly 128x as many\nentries as 1MB pages. parquet-java, Arrow C++, and Arrow Rust all default\nto 1MB page size targets.\n\nSmall pages can help selective reads by reducing unnecessary decompression\nand decoding. But this is a workload tradeoff, and 8KB seems like a poor\ngeneral recommendation.\n\nShould we remove the specific size and explain the tradeoff instead? If\nthere is support I am happy to send a PR for this doc-only change.\n\nCheers,\n\n[1] https://parquet.apache.org/docs/file-format/configurations/\n",
       "labels": [],
       "linked_resources": [],
-      "llm_summary": "The discussion centers on removing the 8KB page size recommendation from the configuration guide, arguing that small pages limit compression opportunities and inflate page indexes. Participants note that implementations already default to 1\u202fMB pages and suggest replacing the absolute recommendation with a trade\u2011off explanation or bandwidth guidance. The consensus is to delete the 8KB recommendation and provide clearer guidance on when to use different page sizes.",
+      "llm_summary": "The discussion centers on removing the 8KB page size recommendation from the Parquet configuration guide, arguing that small pages limit compression and inflate index size. Implementations such as parquet-java, Arrow C++, and Arrow Rust already use 1MB pages, and the community agrees that a nuanced trade\u2011off explanation would be more useful. Participants suggest updating the guide to remove the fixed recommendation and provide guidance on selecting page sizes based on workload and storage type.",
       "llm_status": "discussion",
-      "comment_count": 6,
-      "participant_count": 7,
+      "comment_count": 7,
+      "participant_count": 8,
       "llm_key_points": [
-        "Small pages limit compression and inflate page indexes",
-        "Existing implementations already use 1\u202fMB default",
-        "Consensus to remove recommendation and explain trade\u2011offs"
+        "8KB pages limit compression and increase index size",
+        "1MB pages are the current default in major implementations",
+        "A nuanced trade\u2011off explanation is preferred over a fixed recommendation"
       ],
       "llm_topics": [
         "page-size",
@@ -3146,7 +3205,7 @@
         "model": "openai/gpt-oss-20b",
         "prompt_version": 1
       },
-      "_content_hash": "4008985be852",
+      "_content_hash": "d67e851c27f5",
       "llm_title": "Remove 8KB page size recommendation",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
@@ -3181,6 +3240,12 @@
       "llm_status": "discussion",
       "comment_count": 8,
       "participant_count": 5,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
       "llm_key_points": [
         "Parquet-Java writes unencrypted levels in DataPageV2, breaking compatibility with other implementations",
         "Proposal to encrypt entire DataPageV2 page and update spec, to be fixed in 1.19.0"
@@ -3190,14 +3255,8 @@
         "data-page-v2",
         "compatibility"
       ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "fa8f387fa8f7",
       "llm_title": "Fix DataPageV2 Encryption in Parquet-Java",
+      "_content_hash": "fa8f387fa8f7",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-2-rc2"
     },
@@ -3221,20 +3280,12 @@
           "title": "\ufeff[DESIGN] A SERIALIZED_VALUE logical type for Parquet"
         }
       ],
-      "llm_summary": "The proposal introduces a SERIALIZED_VALUE logical type for Parquet BYTE_ARRAY columns that store serialized messages such as protobuf, FlatBuffers, or Thrift. It records the message format and schema location without decoding the bytes, allowing engines to preserve original data for audit or regulated use. The discussion notes the niche use case but seeks consensus before formalizing the feature.",
+      "llm_summary": "The proposal introduces a SERIALIZED_VALUE logical type for Parquet BYTE_ARRAY columns that records the serialization format and schema of messages such as protobuf, FlatBuffers, or Thrift. It allows the file to carry metadata about the payload without decoding the bytes, enabling different engines to interpret the data consistently while preserving the original bytes. The discussion seeks feedback on its usefulness and potential adoption.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
-      "llm_key_points": [
-        "Adds a SERIALIZED_VALUE logical type to Parquet for binary columns",
-        "Encodes format and schema but leaves decoding to readers",
-        "Aims to preserve original bytes for audit and regulated data"
-      ],
-      "llm_topics": [
-        "logical-types",
-        "serialization",
-        "audit-logs"
-      ],
+      "llm_key_points": [],
+      "llm_topics": [],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -3242,7 +3293,6 @@
         "prompt_version": 1
       },
       "_content_hash": "768a95e4a32a",
-      "llm_title": "SERIALIZED_VALUE logical type for serialized messages",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i640"
     },
@@ -3358,7 +3408,7 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion compares PFOR variants for Parquet, showing that plain PFOR delivers the highest decode throughput and compression ratio. Participants recommend adding a Delta mode, renaming the proposal to FastLanes, and deferring interleaving and Unified Transpose Layout to later stages. The debate focuses on design trade\u2011offs and naming conventions for the new encoding scheme.",
+      "llm_summary": "The discussion compares PFOR variants and other compression schemes, showing PFOR delivers the best decode throughput and compression ratio. Participants decide to include Delta mode, rename the proposal to FastLanes, and plan to add Unified Transpose Layout later. The focus remains on improving performance while maintaining compatibility with Parquet.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
@@ -3406,19 +3456,18 @@
           "title": "\ufeffThe Modular Footer aims to reduce the metadata I/O and decoding work needed to start a scan. The goals and motivation f"
         }
       ],
-      "llm_summary": "The proposal introduces a Page-First Data Layout for Parquet, allowing each column to independently decide when to cut pages without being bound to row group boundaries. This decouples physical constraints, enabling better page sizing for columns with varying densities and reducing unnecessary dictionary resets. The goal is to preserve row-group statistics for data skipping while improving write efficiency and read performance.",
+      "llm_summary": "The proposal introduces a Page-First Data Layout for Parquet, allowing writers to cut pages independently per column rather than aligning them to row-group boundaries. This decoupling aims to improve page sizing and reduce unnecessary dictionary resets, while still preserving row-group statistics for efficient data skipping. The design leverages a modular footer to encode the new layout metadata.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "Allows independent page cutting per column",
-        "Removes row group constraints",
-        "Improves page sizing and statistics"
+        "Decouple page boundaries from row groups to allow independent page cutting per column",
+        "Use a modular footer to represent the new layout metadata",
+        "Preserve row-group statistics for data skipping while improving page sizing"
       ],
       "llm_topics": [
-        "page-layout",
         "performance",
-        "data-organization"
+        "data-layout"
       ],
       "summary_generation": {
         "method": "llm",
@@ -3463,65 +3512,6 @@
       "_content_hash": "7eb1928e2c0f",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-ml-q195nbqqcbbfkl5j0m5ohxom4s8tzsj3"
-    },
-    {
-      "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "[DISCUSS] Ambiguity in the FILE logical type when inline and uri are both set",
-      "url": "https://lists.apache.org/thread/yrghnfgghh6l86vg8hfhovo655c9qwtq",
-      "author": "Stefan Grafberger via dev <de...@parquet.apache.org>",
-      "state": "open",
-      "created_at": "2026-11-03T13:19:10+00:00",
-      "updated_at": "2026-11-10T22:41:56+00:00",
-      "body": "Hi all,\n\nWhile preparing support for the FILE logical type, we found that a value\nwith both inline and uri set can resolve to different bytes in different\nengines while all of them remain spec compliant. For example, if the object\nat uri is overwritten after the value is written, one reader returns the\ninline bytes and another returns the new object. We want our behavior to\nmatch other engines, so we'd like the spec to define which bytes such a\nvalue resolves to.\n\nWe propose restoring the meaning from the original FILE PR [1]: if inline\nis set, it supplies the bytes, and any locator fields that are set (uri,\noffset, size) are provenance only. This keeps the clarification from [2]\nthat inline and a locator may both be set, so inline can still serve as a\ncached copy of the referenced bytes. We'd also like to allow size with\ninline alone, as its length, so readers can get it without reading the\ninline bytes. When inline and uri are both set, we'd specify that checksum,\nlike the locator, describes the source at uri as it was when inline was\ncopied from it, which the spec currently leaves open. I opened a draft PR\nwith the corresponding changes at [3].\n\nWe also considered making inline and the locator fields mutually exclusive,\nbut that would make values invalid that current writers already produce\n(for example, Hardwood [4] and the proposed parquet-testing fixtures [5])\nand would remove the only way to record where an inline copy came from, for\nuse cases like finding every copy of a file for a deletion request or\nexplicitly refreshing an inline copy from its source. \"Inline wins\"\ninvalidates no data and only narrows what readers may return.\n\nLooking forward to hearing your thoughts.\n\nThanks,\nStefan\n\n[1] https://github.com/apache/parquet-format/pull/585\n[2] https://github.com/apache/parquet-format/pull/603\n[3] https://github.com/apache/parquet-format/pull/635\n[4] https://github.com/hardwood-hq/hardwood/pull/1494\n[5] https://github.com/apache/parquet-testing/pull/128\n",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://github.com/apache/parquet-format/pull/585",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-format/pull/603",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-format/pull/635",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/hardwood-hq/hardwood/pull/1494",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/parquet-testing/pull/128",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "The discussion centers on how Parquet readers should resolve a FILE logical type value when both inline data and a URI locator are present, as different engines currently return different bytes. The proposal is to make the inline data the authoritative source, treating locator fields as provenance only, while allowing size to be specified with inline alone. Participants debate the impact on compatibility and whether the spec should be clarified to enforce this \"inline wins\" rule.",
-      "llm_status": "discussion",
-      "comment_count": 5,
-      "participant_count": 6,
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "llm_key_points": [
-        "Ambiguity in resolving bytes when inline and URI are both set",
-        "Proposal to make inline data authoritative and locator fields provenance only",
-        "Compatibility concerns and debate over spec clarification"
-      ],
-      "llm_topics": [
-        "file-logical-type",
-        "spec-clarification",
-        "compatibility"
-      ],
-      "llm_title": "FILE logical type ambiguity with inline and uri",
-      "_content_hash": "bf34275c2511",
-      "observed_history": [],
-      "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-2-rc2"
     },
     {
       "id": "parquet-ml-rc4dso5jd5qqbf1b6cxcw88ld70l52l3",
@@ -10458,7 +10448,7 @@
       ],
       "_content_hash": "0be810ca0235",
       "llm_title": "Enable Page Index and Size Stats by Default",
-      "initiative_id": "parquet-init-parquet-ml-o98otqpkppn2jknm0pskgj5pwp0rvptb"
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
     {
       "id": "parquet-ml-07jpgltw3gpm9lcy72zos717mj54yzwq",

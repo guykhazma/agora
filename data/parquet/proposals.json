@@ -1,7 +1,7 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-11-18T14:52:15.484844+00:00",
-  "total": 319,
+  "generated_at": "2026-11-19T14:57:56.950316+00:00",
+  "total": 320,
   "proposals": [
     {
       "id": "parquet-repo-apache%2Fparquet-format-gh-i640",
@@ -3114,6 +3114,105 @@
       "initiative_id": "parquet-init-parquet-gh-m5"
     },
     {
+      "id": "parquet-ml-m3gs0h5qqd14j45pfktxxjk0q621qshb",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Page sizes in the OffsetIndex, to let readers bound memory up front",
+      "url": "https://lists.apache.org/thread/m3gs0h5qqd14j45pfktxxjk0q621qshb",
+      "author": "Gunnar Morling via dev <de...@parquet.apache.org>",
+      "state": "open",
+      "created_at": "2026-11-18T21:06:35+00:00",
+      "updated_at": "2026-11-19T11:36:57+00:00",
+      "body": "Hey all,\n\nFollowing up on the resource exhaustion point in the security posture\nthread, I'd like to gauge interest in a small addition to the Parquet page\nindex.\n\nIn Hardwood, we've been exploring how to bound a read's memory, so that a\nfile from an untrusted source fails cleanly instead of exhausting the heap,\nwhich matters in particular in shared environments. Today a reader can\nenforce such a bound before decompressing and decoding a page, but not\nbefore fetching it (or at least its header, at the cost of a round trip per\npage).\n\nThe page index already gets us most of the way: it gives each data page's\nvalue count (from first_row_index, or for repeated columns from the\noptional level histograms) and, since 2.10, its decoded BYTE_ARRAY bytes\n(unencoded_byte_array_data_bytes). What's missing is a data page's\nuncompressed_page_size, which is only in its page header, and the\nuncompressed size of a column chunk's dictionary page, which has no entry\nin the OffsetIndex. The only up-front figure,\nColumnMetaData.total_uncompressed_size, covers a whole column chunk, which\nis too coarse to control a read page by page.\n\nIf the OffsetIndex carried those two, a reader could, together with the\nexisting optional statistics, bound what every page will allocate from\nfooter and index alone, and plan or reject a read before fetching any page.\n\nThe new fields would be optional at first. A reader enforcing a bound would\ntreat them as binding and fail the read if a page needs more than it\ndeclares. If a later version required writers to emit them, such a reader\ncould also reject files written to that version that lack them.\n\nWould this be something the community is interested in? Perhaps this could\nalso be part of the ongoing modular footer work (apache/parquet-format#622)?\n\nBest,\n\n--Gunnar\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "Gunnar proposes adding uncompressed page size and dictionary page size to the Parquet OffsetIndex so readers can bound memory usage before fetching pages, preventing heap exhaustion. The community sees it as worth discussing, with questions about real-world benefit and implementation.",
+      "llm_status": "discussion",
+      "comment_count": 2,
+      "participant_count": 2,
+      "llm_key_points": [
+        "Add uncompressed_page_size to OffsetIndex",
+        "Enable memory-bound reads before page fetch",
+        "Community interest and questions about real-world benefit"
+      ],
+      "llm_topics": [
+        "secondary-indexing",
+        "performance"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "603cd82b17b8",
+      "llm_title": "Page sizes in OffsetIndex",
+      "observed_history": [],
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i640"
+    },
+    {
+      "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "Re: [DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations (+ apologies)",
+      "url": "https://lists.apache.org/thread/669rvfch65xcfdqqtj22nlsvkzthxmy3",
+      "author": "PRATEEK GAUR <pr...@gmail.com>",
+      "state": "open",
+      "created_at": "2026-11-05T00:24:18+00:00",
+      "updated_at": "2026-11-18T17:59:04+00:00",
+      "body": "Hi all,\n\nThanks, Antoine, for proposing this comparison framework. Following the\nearlier mailing-list\ndiscussions, I compared the options across the three areas you identified:\nspeed, storage\nefficiency, and development and maintenance effort. I also tried to\nconsider the likely reader-adoption\ncost across implementations.\n\n*TL'DR* : My current preference for the 4 outstanding decisions is\nsummarized below.\n\nInitial PFOR design\n|-- Include PFOR-Frame\n|   `-- Start with conventional bit packing\n|       `-- Evaluate interleaving separately\n|\n`-- Include PFOR-Delta\n    |-- Payload: DBP layout, with or without patching\n    |   `-- Tentative preference: with exception patching\n    |\n    `-- Start with conventional ordering\n        `-- Add FastLanes ordering as a follow-up\n\n\n*Longer version* :\n\nPFOR numbers at a glance (median over 43 datasets, Graviton4):\n\nDecode throughput (GB/s, higher is better)\nPFOR          [####################] 27.14 GB/s\nLZ4              [###                                  ]  4.32 GB/s\nBSS+LZ4     [##                                   ]  2.86 GB/s\nDBP             [##                                   ]  2.33 GB/s\nBSS+ZSTD [##                                   ]  2.23 GB/s\n\nCompression ratio (higher is better)\nPFOR          [####################] 4.03x\nBSS+ZSTD [##################    ] 3.68x\nDBP            [#################      ] 3.33x\nBSS+LZ4    [################        ] 3.23x\nLZ4             [#######                          ] 1.36x\n\nConventional PFOR reaches great decoding speeds using *widely available\nfixed-width bit-unpacking*\nprimitives. Given these results, I see four remaining PFOR design\ndecisions. I lay out my preference\nand reasoning alongside it.\n\n1. PFOR-Frame only vs. PFOR-Frame plus PFOR-Delta\n\n- *Decision*: Should the initial PFOR specification include Delta mode\nalongside Frame mode?\n- *My view*: Include Delta mode.\n- *Reason*: It improves compression for sorted or slowly changing integer\ncolumns such as timestamps\n  and seq",
+      "labels": [],
+      "linked_resources": [
+        {
+          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA",
+          "kind": "google_doc",
+          "fetched": false
+        },
+        {
+          "url": "https://docs.google.com/document/d/1L2pfrHfAZG4vKTHc-OD8p9alIUD-sUFg",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffPFOR and FastLanes for Parquet \u00b7 measured on 128-bit Arm"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/51249",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/51250",
+          "kind": "github_pr"
+        },
+        {
+          "url": "https://github.com/apache/arrow/pull/51295",
+          "kind": "github_pr"
+        }
+      ],
+      "llm_summary": "The discussion compares various PFOR-based compression schemes for Parquet, showing that plain PFOR delivers the highest decode throughput and compression ratio. The author recommends including Delta mode in the initial specification to improve compression for sorted or slowly changing columns and proposes renaming the scheme to FastLanes. Design decisions around interleaving, unified transposed layout, and future extensions are also debated.",
+      "llm_status": "discussion",
+      "comment_count": 3,
+      "participant_count": 2,
+      "llm_key_points": [
+        "PFOR achieves the highest decode throughput and compression ratio",
+        "Delta mode improves compression for sorted or slowly changing columns",
+        "FastLanes naming and design decisions are debated"
+      ],
+      "llm_topics": [
+        "compression",
+        "performance",
+        "parquet"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "be4f59b938d4",
+      "llm_title": "FastLanes for Parquet: Benchmark results",
+      "observed_history": [],
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+    },
+    {
       "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
       "source": "mailing_list",
       "kind": "thread",
@@ -3122,7 +3221,7 @@
       "author": "Stefan Grafberger via dev <de...@parquet.apache.org>",
       "state": "open",
       "created_at": "2026-11-03T13:19:10+00:00",
-      "updated_at": "2026-11-18T14:19:05+00:00",
+      "updated_at": "2026-11-18T15:09:40+00:00",
       "body": "Hi all,\n\nWhile preparing support for the FILE logical type, we found that a value\nwith both inline and uri set can resolve to different bytes in different\nengines while all of them remain spec compliant. For example, if the object\nat uri is overwritten after the value is written, one reader returns the\ninline bytes and another returns the new object. We want our behavior to\nmatch other engines, so we'd like the spec to define which bytes such a\nvalue resolves to.\n\nWe propose restoring the meaning from the original FILE PR [1]: if inline\nis set, it supplies the bytes, and any locator fields that are set (uri,\noffset, size) are provenance only. This keeps the clarification from [2]\nthat inline and a locator may both be set, so inline can still serve as a\ncached copy of the referenced bytes. We'd also like to allow size with\ninline alone, as its length, so readers can get it without reading the\ninline bytes. When inline and uri are both set, we'd specify that checksum,\nlike the locator, describes the source at uri as it was when inline was\ncopied from it, which the spec currently leaves open. I opened a draft PR\nwith the corresponding changes at [3].\n\nWe also considered making inline and the locator fields mutually exclusive,\nbut that would make values invalid that current writers already produce\n(for example, Hardwood [4] and the proposed parquet-testing fixtures [5])\nand would remove the only way to record where an inline copy came from, for\nuse cases like finding every copy of a file for a deletion request or\nexplicitly refreshing an inline copy from its source. \"Inline wins\"\ninvalidates no data and only narrows what readers may return.\n\nLooking forward to hearing your thoughts.\n\nThanks,\nStefan\n\n[1] https://github.com/apache/parquet-format/pull/585\n[2] https://github.com/apache/parquet-format/pull/603\n[3] https://github.com/apache/parquet-format/pull/635\n[4] https://github.com/hardwood-hq/hardwood/pull/1494\n[5] https://github.com/apache/parquet-testing/pull/128\n",
       "labels": [],
       "linked_resources": [
@@ -3147,14 +3246,14 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion centers on the ambiguity that arises when a FILE logical type value contains both inline data and a URI locator, which can lead to different readers returning different bytes. Participants propose that the inline bytes should win, treating locator fields as provenance only, and that this change would not invalidate existing data. The consensus leans toward adopting this \u201cinline wins\u201d rule while maintaining compatibility with current writers.",
+      "llm_summary": "The discussion centers on how a FILE logical type value that contains both an inline byte array and a URI should be interpreted, as different readers may return different data. The proposal is to make the inline data the authoritative source while treating locator fields as provenance only, thereby resolving the ambiguity and maintaining backward compatibility. Participants largely agree on clarifying the spec to enforce this \"inline wins\" rule.",
       "llm_status": "discussion",
-      "comment_count": 6,
-      "participant_count": 6,
+      "comment_count": 7,
+      "participant_count": 7,
       "llm_key_points": [
-        "Ambiguity when both inline and uri are set",
-        "Proposal that inline bytes win and locator fields are provenance only",
-        "Consensus leaning toward inline wins without breaking compatibility"
+        "Ambiguity in resolving bytes when inline and uri are both set",
+        "Proposal to make inline data authoritative and locator fields provenance only",
+        "Consensus to clarify the spec to avoid inconsistent reader behavior"
       ],
       "llm_topics": [
         "file-logical-type",
@@ -3167,7 +3266,7 @@
         "model": "openai/gpt-oss-20b",
         "prompt_version": 1
       },
-      "_content_hash": "75e34ea49140",
+      "_content_hash": "cb9384579703",
       "llm_title": "FILE logical type ambiguity with inline and uri",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-2-rc2"
@@ -3189,6 +3288,12 @@
       "llm_status": "discussion",
       "comment_count": 7,
       "participant_count": 8,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
       "llm_key_points": [
         "8KB pages limit compression and increase index size",
         "1MB pages are the current default in major implementations",
@@ -3199,14 +3304,8 @@
         "compression",
         "performance"
       ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "d67e851c27f5",
       "llm_title": "Remove 8KB page size recommendation",
+      "_content_hash": "d67e851c27f5",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
@@ -3280,12 +3379,20 @@
           "title": "\ufeff[DESIGN] A SERIALIZED_VALUE logical type for Parquet"
         }
       ],
-      "llm_summary": "The proposal introduces a SERIALIZED_VALUE logical type for Parquet BYTE_ARRAY columns that records the serialization format and schema of messages such as protobuf, FlatBuffers, or Thrift. It allows the file to carry metadata about the payload without decoding the bytes, enabling different engines to interpret the data consistently while preserving the original bytes. The discussion seeks feedback on its usefulness and potential adoption.",
+      "llm_summary": "The proposal introduces a SERIALIZED_VALUE logical type for BYTE_ARRAY columns in Parquet, annotating the format (e.g., protobuf, FlatBuffers, Thrift) and storing the schema so readers can decode the bytes without Parquet itself doing so. It aims to standardize how engines handle serialized messages, enabling archiving of event streams while preserving the original bytes. Feedback is requested on its usefulness and implementation path.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
-      "llm_key_points": [],
-      "llm_topics": [],
+      "llm_key_points": [
+        "Introduces SERIALIZED_VALUE logical type for BYTE_ARRAY columns to store serialized messages with format and schema metadata",
+        "Parquet does not decode bytes; readers interpret based on annotation",
+        "Aims to standardize handling across engines and support archiving event streams"
+      ],
+      "llm_topics": [
+        "logical-types",
+        "parquet",
+        "serialization"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -3293,6 +3400,7 @@
         "prompt_version": 1
       },
       "_content_hash": "768a95e4a32a",
+      "llm_title": "SERIALIZED_VALUE logical type for serialized messages",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i640"
     },
@@ -3372,59 +3480,6 @@
       "initiative_id": "parquet-init-parquet-ml-fzxrc5bg8xqzgxoop6qsh3v7w1ly5k7f"
     },
     {
-      "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
-      "source": "mailing_list",
-      "kind": "thread",
-      "title": "Re: [DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations (+ apologies)",
-      "url": "https://lists.apache.org/thread/669rvfch65xcfdqqtj22nlsvkzthxmy3",
-      "author": "PRATEEK GAUR <pr...@gmail.com>",
-      "state": "open",
-      "created_at": "2026-11-05T00:24:18+00:00",
-      "updated_at": "2026-11-12T06:00:30+00:00",
-      "body": "Hi all,\n\nThanks, Antoine, for proposing this comparison framework. Following the\nearlier mailing-list\ndiscussions, I compared the options across the three areas you identified:\nspeed, storage\nefficiency, and development and maintenance effort. I also tried to\nconsider the likely reader-adoption\ncost across implementations.\n\n*TL'DR* : My current preference for the 4 outstanding decisions is\nsummarized below.\n\nInitial PFOR design\n|-- Include PFOR-Frame\n|   `-- Start with conventional bit packing\n|       `-- Evaluate interleaving separately\n|\n`-- Include PFOR-Delta\n    |-- Payload: DBP layout, with or without patching\n    |   `-- Tentative preference: with exception patching\n    |\n    `-- Start with conventional ordering\n        `-- Add FastLanes ordering as a follow-up\n\n\n*Longer version* :\n\nPFOR numbers at a glance (median over 43 datasets, Graviton4):\n\nDecode throughput (GB/s, higher is better)\nPFOR          [####################] 27.14 GB/s\nLZ4              [###                                  ]  4.32 GB/s\nBSS+LZ4     [##                                   ]  2.86 GB/s\nDBP             [##                                   ]  2.33 GB/s\nBSS+ZSTD [##                                   ]  2.23 GB/s\n\nCompression ratio (higher is better)\nPFOR          [####################] 4.03x\nBSS+ZSTD [##################    ] 3.68x\nDBP            [#################      ] 3.33x\nBSS+LZ4    [################        ] 3.23x\nLZ4             [#######                          ] 1.36x\n\nConventional PFOR reaches great decoding speeds using *widely available\nfixed-width bit-unpacking*\nprimitives. Given these results, I see four remaining PFOR design\ndecisions. I lay out my preference\nand reasoning alongside it.\n\n1. PFOR-Frame only vs. PFOR-Frame plus PFOR-Delta\n\n- *Decision*: Should the initial PFOR specification include Delta mode\nalongside Frame mode?\n- *My view*: Include Delta mode.\n- *Reason*: It improves compression for sorted or slowly changing integer\ncolumns such as timestamps\n  and seq",
-      "labels": [],
-      "linked_resources": [
-        {
-          "url": "https://docs.google.com/document/d/1ZZOtxmq6K8pNU0npijfSglTJVkspXL5GLDKPSGj9HlA",
-          "kind": "google_doc",
-          "fetched": false
-        },
-        {
-          "url": "https://docs.google.com/document/d/1L2pfrHfAZG4vKTHc-OD8p9alIUD-sUFg",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffPFOR and FastLanes for Parquet \u00b7 measured on 128-bit Arm"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/51249",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/51250",
-          "kind": "github_pr"
-        },
-        {
-          "url": "https://github.com/apache/arrow/pull/51295",
-          "kind": "github_pr"
-        }
-      ],
-      "llm_summary": "The discussion compares PFOR variants and other compression schemes, showing PFOR delivers the best decode throughput and compression ratio. Participants decide to include Delta mode, rename the proposal to FastLanes, and plan to add Unified Transpose Layout later. The focus remains on improving performance while maintaining compatibility with Parquet.",
-      "llm_status": "discussion",
-      "comment_count": 2,
-      "participant_count": 2,
-      "llm_key_points": [],
-      "llm_topics": [],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "8691c83218af",
-      "observed_history": [],
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
-    },
-    {
       "id": "parquet-ml-98w1f5posp0dd0mnsm0m1n9nbl8l8bfo",
       "source": "mailing_list",
       "kind": "thread",
@@ -3456,14 +3511,13 @@
           "title": "\ufeffThe Modular Footer aims to reduce the metadata I/O and decoding work needed to start a scan. The goals and motivation f"
         }
       ],
-      "llm_summary": "The proposal introduces a Page-First Data Layout for Parquet, allowing writers to cut pages independently per column rather than aligning them to row-group boundaries. This decoupling aims to improve page sizing and reduce unnecessary dictionary resets, while still preserving row-group statistics for efficient data skipping. The design leverages a modular footer to encode the new layout metadata.",
+      "llm_summary": "The proposal introduces a new Parquet data layout where writers can cut pages independently for each column, removing the need to align pages across columns or force page cuts at row-group boundaries. This decoupling allows better page sizing for columns with varying densities, reduces unnecessary IO and dictionary resets, and preserves row-group statistics for efficient data skipping. The design aims to improve performance for wide, sparse, or asymmetric schemas while remaining backward compatible with existing readers.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "Decouple page boundaries from row groups to allow independent page cutting per column",
-        "Use a modular footer to represent the new layout metadata",
-        "Preserve row-group statistics for data skipping while improving page sizing"
+        "Writers can cut pages independently per column, decoupling from row groups",
+        "Preserves row-group statistics while improving page sizing and reducing IO"
       ],
       "llm_topics": [
         "performance",

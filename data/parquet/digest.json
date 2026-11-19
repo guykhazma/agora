@@ -1,8 +1,28 @@
 {
-  "summary": "The discussion centers on the ambiguity that arises when a FILE logical type value contains both inline data and a URI locator, which can lead to different readers returning different bytes. Participants propose that the inline bytes should win, treating locator fields as provenance only, and that this change would not invalidate existing data. Participants suggest updating the guide to remove the fixed recommendation and provide guidance on selecting page sizes based on workload and storage type. The proposal introduces a SERIALIZED_VALUE logical type for Parquet BYTE_ARRAY columns that records the serialization format and schema of messages such as protobuf, FlatBuffers, or Thrift.",
+  "summary": "The author recommends including Delta mode in the initial specification to improve compression for sorted or slowly changing columns and proposes renaming the scheme to FastLanes. The proposal is to make the inline data the authoritative source while treating locator fields as provenance only, thereby resolving the ambiguity and maintaining backward compatibility. Participants suggest updating the guide to remove the fixed recommendation and provide guidance on selecting page sizes based on workload and storage type. It aims to standardize how engines handle serialized messages, enabling archiving of event streams while preserving the original bytes.",
   "highlights": [
     {
-      "text": "The discussion centers on the ambiguity that arises when a FILE logical type value contains both inline data and a URI locator, which can lead to different read\u2026",
+      "text": "Gunnar proposes adding uncompressed page size and dictionary page size to the Parquet OffsetIndex so readers can bound memory usage before fetching pages, preve\u2026",
+      "sources": [
+        {
+          "id": "parquet-ml-m3gs0h5qqd14j45pfktxxjk0q621qshb",
+          "title": "[DISCUSS] Page sizes in the OffsetIndex, to let readers bound memory up front",
+          "url": "https://lists.apache.org/thread/m3gs0h5qqd14j45pfktxxjk0q621qshb"
+        }
+      ]
+    },
+    {
+      "text": "The discussion compares various PFOR-based compression schemes for Parquet, showing that plain PFOR delivers the highest decode throughput and compression ratio\u2026",
+      "sources": [
+        {
+          "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
+          "title": "Re: [DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations (+ apologies)",
+          "url": "https://lists.apache.org/thread/669rvfch65xcfdqqtj22nlsvkzthxmy3"
+        }
+      ]
+    },
+    {
+      "text": "The discussion centers on how a FILE logical type value that contains both an inline byte array and a URI should be interpreted, as different readers may return\u2026",
       "sources": [
         {
           "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
@@ -20,26 +40,6 @@
           "url": "https://lists.apache.org/thread/4g8ng2mbrzj01g43dp8fcx7dz49rs529"
         }
       ]
-    },
-    {
-      "text": "Parquet-Java currently writes DataPageV2 pages with unencrypted levels, causing incompatibility with other Apache implementations that encrypt the entire page. \u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-745yr5o51q3zf3xs5wd6lmm1zz4lj2ch",
-          "title": "[Discuss] I want to Break DataPageV2 Encryption in Parquet-Java",
-          "url": "https://lists.apache.org/thread/745yr5o51q3zf3xs5wd6lmm1zz4lj2ch"
-        }
-      ]
-    },
-    {
-      "text": "The proposal introduces a SERIALIZED_VALUE logical type for Parquet BYTE_ARRAY columns that records the serialization format and schema of messages such as prot\u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-5xn8o9rvrv1rsjs811t2gn0tkjq0zl02",
-          "title": "[DISCUSS] SERIALIZED_VALUE: a logical type for serialized messages",
-          "url": "https://lists.apache.org/thread/5xn8o9rvrv1rsjs811t2gn0tkjq0zl02"
-        }
-      ]
     }
   ],
   "generation": {
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-18T14:51:21.532475+00:00",
-  "item_count": 7,
+  "generated_at": "2026-11-19T14:57:28.656103+00:00",
+  "item_count": 8,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-12",
-    "to": "2026-11-18",
-    "thread_count": 7
+    "from": "2026-11-13",
+    "to": "2026-11-19",
+    "thread_count": 8
   }
 }

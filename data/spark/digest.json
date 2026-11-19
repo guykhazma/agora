@@ -1,43 +1,43 @@
 {
-  "summary": "The discussion centers on an updated SPIP document that introduces detailed security guarantees (G1\u2013G5), a dedicated PolicyEnforcement operator, and safeguards against leaks and unauthorized writes. This would fill a gap left by the existing ROWS and RANGE frames, enabling correct semantics for uneven group sizes without changing current query behavior or adding new operators. It outlines adding parallel read support, leveraging ADBC, and limiting trusted engine operations to safe subsets, while clarifying that the proposal does not implement the restrictions themselves. The team monitors failure rates, which rise sharply for large PRs, and is adjusting parallelism and timeouts while addressing security concerns around credential exposure.",
+  "summary": "The SPIP proposal introduces a comprehensive security framework for Spark, defining guarantees G1\u2013G5 that cover row filtering, column masking, metadata leakage, and write operations. A dedicated PolicyEnforcement operator is added to prevent optimizer rules from weakening enforcement, and older Spark releases are made to fail closed via a new capability signal. The discussion asks whether Spark Connect Gateway, which includes cryptographic libraries in its container image, must undergo the ASF export process before its 0.1.0 release. The design document outlines semantics, compatibility, and implementation details, and the community is seeking a decision on whether it requires a SPIP, opinions on Python UDAF, and a committer to review.",
   "highlights": [
     {
-      "text": "The discussion centers on an updated SPIP document that introduces detailed security guarantees (G1\u2013G5), a dedicated PolicyEnforcement operator, and safeguards \u2026",
+      "text": "The proposal suggests skipping CI runs on the master branch when a pull request has already passed CI against the latest master commit, aiming to reduce CI usag\u2026",
       "sources": [
         {
-          "id": "spark-ml-zzl3hxdll1y0bdcc1bg8hyh3sr3ofpcp",
-          "title": "Re: [DISCUSS] SPIP: Pluggable Row-Filter and Column-Mask Enforcement in Catalyst",
-          "url": "https://lists.apache.org/thread/zzl3hxdll1y0bdcc1bg8hyh3sr3ofpcp"
+          "id": "spark-ml-r7kv3z4vp9rq1gr44qo13wrmh1gnntp0",
+          "title": "[DISCUSS] Skip the CI in the master branch if the CI passed based on the latest commit in PR?",
+          "url": "https://lists.apache.org/thread/r7kv3z4vp9rq1gr44qo13wrmh1gnntp0"
         }
       ]
     },
     {
-      "text": "The discussion asks whether Spark Connect Gateway, which includes cryptographic libraries in its container image, must undergo the ASF export process before its\u2026",
+      "text": "The team is testing an AI bot that reviews Spark pull requests, currently processing four at a time with a one\u2011hour review window. They monitor failure rates, w\u2026",
       "sources": [
         {
-          "id": "spark-ml-pmll1n9x0wk871yb0t8b15k3ssbx3m4s",
-          "title": "[DISCUSS] Does Spark Connect Gateway need to go through the ASF export process?",
-          "url": "https://lists.apache.org/thread/pmll1n9x0wk871yb0t8b15k3ssbx3m4s"
+          "id": "spark-ml-8qwojcsfshkdcnqrqckrc8f8lndg16ds",
+          "title": "Re: [DISCUSS] Automated AI code review on new Spark PRs (trial)",
+          "url": "https://lists.apache.org/thread/8qwojcsfshkdcnqrqckrc8f8lndg16ds"
         }
       ]
     },
     {
-      "text": "The discussion proposes adding the SQL-standard GROUPS window frame type to Spark SQL, which defines frame boundaries by peer groups rather than physical rows o\u2026",
+      "text": "Serge proposes a new SQL data type OBJECT that matches STRUCT but uses named fields for assignment and comparison, avoiding positional matching issues. The type\u2026",
       "sources": [
         {
-          "id": "spark-ml-o6v6zf285k5t76qvc6fwf346h3c8tbfo",
-          "title": "Re: [DISCUSS] Support GROUPS window frames in Spark SQL",
-          "url": "https://lists.apache.org/thread/o6v6zf285k5t76qvc6fwf346h3c8tbfo"
+          "id": "spark-ml-8swj2oxkh5hxxpv9kvx63ks55pxch9z2",
+          "title": "[DISCUSS] SPIP: Add the OBJECT data type",
+          "url": "https://lists.apache.org/thread/8swj2oxkh5hxxpv9kvx63ks55pxch9z2"
         }
       ]
     },
     {
-      "text": "The proposal extends Spark\u2019s Real-Time Mode to eligible batch SQL and DataFrame queries, allowing downstream stages to consume intermediate data as it arrives a\u2026",
+      "text": "Spark proposes a new OBJECT data type that extends STRUCT by making attribute names part of the type, enabling name-based matching, casting, and manipulation fu\u2026",
       "sources": [
         {
-          "id": "spark-ml-db86x3yx97okrkklfyfc6obo59mvzoqn",
-          "title": "[DISCUSS] SPIP: Extend Real-Time Mode to Distributed Batch SQL and DataFrame Queries",
-          "url": "https://lists.apache.org/thread/db86x3yx97okrkklfyfc6obo59mvzoqn"
+          "id": "spark-jira-SPARK-61931",
+          "title": "SPIP: Add the OBJECT data type",
+          "url": "https://issues.apache.org/jira/browse/SPARK-61931"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-18T15:00:54.730517+00:00",
-  "item_count": 8,
+  "generated_at": "2026-11-19T15:07:33.127323+00:00",
+  "item_count": 9,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-15",
-    "to": "2026-11-18",
-    "thread_count": 8
+    "from": "2026-11-17",
+    "to": "2026-11-19",
+    "thread_count": 9
   }
 }

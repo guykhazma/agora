@@ -1,5 +1,5 @@
 {
-  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. Participants largely agree on Option\u00a03, which introduces these types for vectors while keeping them separate from general Iceberg primitives, and requires readers without native support to fall back to float or int. The discussion centers on an ambiguity in the Iceberg spec regarding Parquet files that contain field IDs for only some columns, leading to inconsistent behavior across Java, PyIceberg, Rust, and Go readers. The discussion proposes adding a new option to Spark streaming reads that allows an initial full snapshot load before incremental processing, improving performance for long-lived tables.",
+  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. The discussion focuses on defining what \"deterministic\" means for UDFs used in stored expressions across different engines, highlighting issues with check constraints, stats-only fields, and derived columns. Iceberg 1.12.1 Yufei proposes a biweekly 30\u2011minute UDF sync to accelerate implementation and reviews, with an open Google Meet link for all participants. Some participants note that similar issues are addressed by other proposals and that the spec may not need to codify container details, but they highlight concerns about orphan cleanup and reachability.",
   "highlights": [
     {
       "text": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filt\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "The community largely agrees",
+      "text": "The discussion focuses on defining what \"deterministic\" means for UDFs used in stored expressions across different engines, highlighting issues with check const\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-5jfzckl0cc9z683kz9vfv41pmhrm1tdb",
-          "title": "[DISCUSS] Should V4 stop writing ORC and Avro data files?",
-          "url": "https://lists.apache.org/thread/5jfzckl0cc9z683kz9vfv41pmhrm1tdb"
+          "id": "iceberg-ml-18qjst8jmj1sr9qvmyppfjlqgtn39p5g",
+          "title": "[DISCUSS] Cross-engine determinism for functions in stored expressions",
+          "url": "https://lists.apache.org/thread/18qjst8jmj1sr9qvmyppfjlqgtn39p5g"
         }
       ]
     },
     {
-      "text": "The discussion focuses on adding float16 and int8 as vector element types in Iceberg v4. Participants largely agree on Option\u00a03, which introduces these types fo\u2026",
+      "text": "Max created a 1.12.x branch pointing to the 1.12.0 tag and announced it. The community discussed a 1.12.1 patch release, backporting bug fixes and CVE fixes, an\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-fgqq8jwvb1qj9kskk3qxssxlvk2nn4x7",
-          "title": "[DISCUSS] Vector Type and Int8 Float16",
-          "url": "https://lists.apache.org/thread/fgqq8jwvb1qj9kskk3qxssxlvk2nn4x7"
+          "id": "iceberg-ml-drhczwkksm7r266fqgovpb6s72zt6cbp",
+          "title": "[FYI] 1.12.x release tag created",
+          "url": "https://lists.apache.org/thread/drhczwkksm7r266fqgovpb6s72zt6cbp"
         }
       ]
     },
     {
-      "text": "The discussion centers on an ambiguity in the Iceberg spec regarding Parquet files that contain field IDs for only some columns, leading to inconsistent behavio\u2026",
+      "text": "Iceberg 1.12.1",
       "sources": [
         {
-          "id": "iceberg-ml-tct2yp45ytsb6dqw1tq7b8gnfnp7jndo",
-          "title": "[DISCUSS] Name mapping for data files that carry only some field IDs",
-          "url": "https://lists.apache.org/thread/tct2yp45ytsb6dqw1tq7b8gnfnp7jndo"
+          "id": "iceberg-gh-m66",
+          "title": "Iceberg 1.12.1",
+          "url": "https://github.com/apache/iceberg/milestone/66"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-19T15:02:29.548836+00:00",
-  "item_count": 11,
+  "generated_at": "2026-11-20T14:43:39.857096+00:00",
+  "item_count": 12,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-18",
-    "to": "2026-11-19",
-    "thread_count": 11
+    "from": "2026-11-19",
+    "to": "2026-11-20",
+    "thread_count": 12
   }
 }

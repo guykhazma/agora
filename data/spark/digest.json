@@ -1,8 +1,33 @@
 {
-  "summary": "The SPIP proposal introduces a comprehensive security framework for Spark, defining guarantees G1\u2013G5 that cover row filtering, column masking, metadata leakage, and write operations. A dedicated PolicyEnforcement operator is added to prevent optimizer rules from weakening enforcement, and older Spark releases are made to fail closed via a new capability signal. The discussion asks whether Spark Connect Gateway, which includes cryptographic libraries in its container image, must undergo the ASF export process before its 0.1.0 release. The design document outlines semantics, compatibility, and implementation details, and the community is seeking a decision on whether it requires a SPIP, opinions on Python UDAF, and a committer to review.",
+  "summary": "Recent discussions focus on extending Data Source V2 push\u2011down to support joins, set operations, and window functions; introducing an OBJECT data type that aligns field names; and exploring CI optimization by skipping redundant runs on master. Parallel efforts include testing an AI bot for pull\u2011request reviews, planning the first community sync, and proposing security enforcement operators and GROUPS window frames.",
   "highlights": [
     {
-      "text": "The proposal suggests skipping CI runs on the master branch when a pull request has already passed CI against the latest master commit, aiming to reduce CI usag\u2026",
+      "text": "Extending Spark's Data Source V2 push\u2011down framework to support joins, set operations, and window functions",
+      "sources": [
+        {
+          "id": "spark-ml-mpjb2ndql6k1dqyx6y1hr7d3f9rmnmz1",
+          "title": "Re: [DISCUSS] SPIP: Extend DSv2 push-down with join, set operation, and window function support",
+          "url": "https://lists.apache.org/thread/mpjb2ndql6k1dqyx6y1hr7d3f9rmnmz1"
+        }
+      ]
+    },
+    {
+      "text": "Proposing a new OBJECT data type that matches STRUCT but requires field names to align, with operations like OBJECT_APPEND and OBJECT_DE",
+      "sources": [
+        {
+          "id": "spark-jira-SPARK-61931",
+          "title": "SPIP: Add the OBJECT data type",
+          "url": "https://issues.apache.org/jira/browse/SPARK-61931"
+        },
+        {
+          "id": "spark-ml-8swj2oxkh5hxxpv9kvx63ks55pxch9z2",
+          "title": "[DISCUSS] SPIP: Add the OBJECT data type",
+          "url": "https://lists.apache.org/thread/8swj2oxkh5hxxpv9kvx63ks55pxch9z2"
+        }
+      ]
+    },
+    {
+      "text": "Suggesting to skip CI runs on the master branch when a pull request has already passed CI against the latest master commit",
       "sources": [
         {
           "id": "spark-ml-r7kv3z4vp9rq1gr44qo13wrmh1gnntp0",
@@ -12,7 +37,7 @@
       ]
     },
     {
-      "text": "The team is testing an AI bot that reviews Spark pull requests, currently processing four at a time with a one\u2011hour review window. They monitor failure rates, w\u2026",
+      "text": "Testing an AI bot that reviews Spark pull requests, processing four at a time with a one\u2011hour review window",
       "sources": [
         {
           "id": "spark-ml-8qwojcsfshkdcnqrqckrc8f8lndg16ds",
@@ -20,39 +45,21 @@
           "url": "https://lists.apache.org/thread/8qwojcsfshkdcnqrqckrc8f8lndg16ds"
         }
       ]
-    },
-    {
-      "text": "Serge proposes a new SQL data type OBJECT that matches STRUCT but uses named fields for assignment and comparison, avoiding positional matching issues. The type\u2026",
-      "sources": [
-        {
-          "id": "spark-ml-8swj2oxkh5hxxpv9kvx63ks55pxch9z2",
-          "title": "[DISCUSS] SPIP: Add the OBJECT data type",
-          "url": "https://lists.apache.org/thread/8swj2oxkh5hxxpv9kvx63ks55pxch9z2"
-        }
-      ]
-    },
-    {
-      "text": "Spark proposes a new OBJECT data type that extends STRUCT by making attribute names part of the type, enabling name-based matching, casting, and manipulation fu\u2026",
-      "sources": [
-        {
-          "id": "spark-jira-SPARK-61931",
-          "title": "SPIP: Add the OBJECT data type",
-          "url": "https://issues.apache.org/jira/browse/SPARK-61931"
-        }
-      ]
     }
   ],
   "generation": {
-    "method": "local",
+    "method": "llm",
+    "provider": "groq",
+    "model": "openai/gpt-oss-20b",
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-19T15:07:33.127323+00:00",
+  "generated_at": "2026-11-20T14:48:06.078051+00:00",
   "item_count": 9,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-17",
-    "to": "2026-11-19",
+    "to": "2026-11-20",
     "thread_count": 9
   }
 }

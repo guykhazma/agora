@@ -1,28 +1,8 @@
 {
-  "summary": "The author recommends including Delta mode in the initial specification to improve compression for sorted or slowly changing columns and proposes renaming the scheme to FastLanes. The proposal is to make the inline data the authoritative source while treating locator fields as provenance only, thereby resolving the ambiguity and maintaining backward compatibility. Participants suggest updating the guide to remove the fixed recommendation and provide guidance on selecting page sizes based on workload and storage type. It aims to standardize how engines handle serialized messages, enabling archiving of event streams while preserving the original bytes.",
+  "summary": "Recent discussions in the Parquet community focus on clarifying how FILE logical types with both inline data and a URI should be interpreted, revisiting the 8\u202fKB page size recommendation, and extending the OffsetIndex to expose page sizes for better memory management. A proposal to introduce a SERIALIZED_VALUE logical type for BYTE_ARRAY columns that store protobuf, FlatBuffers, or Thrift messages is also underway. These threads illustrate ongoing efforts to improve data representation, performance, and interoperability.",
   "highlights": [
     {
-      "text": "Gunnar proposes adding uncompressed page size and dictionary page size to the Parquet OffsetIndex so readers can bound memory usage before fetching pages, preve\u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-m3gs0h5qqd14j45pfktxxjk0q621qshb",
-          "title": "[DISCUSS] Page sizes in the OffsetIndex, to let readers bound memory up front",
-          "url": "https://lists.apache.org/thread/m3gs0h5qqd14j45pfktxxjk0q621qshb"
-        }
-      ]
-    },
-    {
-      "text": "The discussion compares various PFOR-based compression schemes for Parquet, showing that plain PFOR delivers the highest decode throughput and compression ratio\u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
-          "title": "Re: [DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations (+ apologies)",
-          "url": "https://lists.apache.org/thread/669rvfch65xcfdqqtj22nlsvkzthxmy3"
-        }
-      ]
-    },
-    {
-      "text": "The discussion centers on how a FILE logical type value that contains both an inline byte array and a URI should be interpreted, as different readers may return\u2026",
+      "text": "Clarification needed on how a FILE logical type with both inline data and a URI locator should be interpreted, as different readers may return different bytes.",
       "sources": [
         {
           "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
@@ -32,7 +12,7 @@
       ]
     },
     {
-      "text": "The discussion centers on removing the 8KB page size recommendation from the Parquet configuration guide, arguing that small pages limit compression and inflate\u2026",
+      "text": "Discussion to remove the 8\u202fKB page size recommendation in the Parquet documentation, citing that 8\u202fKB is too small for compression.",
       "sources": [
         {
           "id": "parquet-ml-4g8ng2mbrzj01g43dp8fcx7dz49rs529",
@@ -40,19 +20,46 @@
           "url": "https://lists.apache.org/thread/4g8ng2mbrzj01g43dp8fcx7dz49rs529"
         }
       ]
+    },
+    {
+      "text": "Proposal to add uncompressed page size and dictionary page size to the Parquet OffsetIndex so readers can bound memory usage before fetching pages.",
+      "sources": [
+        {
+          "id": "parquet-ml-m3gs0h5qqd14j45pfktxxjk0q621qshb",
+          "title": "[DISCUSS] Page sizes in the OffsetIndex, to let readers bound memory up front",
+          "url": "https://lists.apache.org/thread/m3gs0h5qqd14j45pfktxxjk0q621qshb"
+        }
+      ]
+    },
+    {
+      "text": "Proposal to introduce a SERIALIZED_VALUE logical type for BYTE_ARRAY columns that store serialized protobuf, FlatBuffers, or Thrift messages, recording the message format.",
+      "sources": [
+        {
+          "id": "parquet-ml-5xn8o9rvrv1rsjs811t2gn0tkjq0zl02",
+          "title": "[DISCUSS] SERIALIZED_VALUE: a logical type for serialized messages",
+          "url": "https://lists.apache.org/thread/5xn8o9rvrv1rsjs811t2gn0tkjq0zl02"
+        },
+        {
+          "id": "parquet-repo-apache%2Fparquet-format-gh-i640",
+          "title": "[Proposal] SERIALIZED_VALUE logical type for serialized messages",
+          "url": "https://github.com/apache/parquet-format/issues/640"
+        }
+      ]
     }
   ],
   "generation": {
-    "method": "local",
+    "method": "llm",
+    "provider": "groq",
+    "model": "openai/gpt-oss-20b",
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-19T14:57:28.656103+00:00",
-  "item_count": 8,
+  "generated_at": "2026-11-20T14:38:40.925726+00:00",
+  "item_count": 7,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-13",
-    "to": "2026-11-19",
-    "thread_count": 8
+    "from": "2026-11-14",
+    "to": "2026-11-20",
+    "thread_count": 7
   }
 }

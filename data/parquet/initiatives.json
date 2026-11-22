@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-11-21T14:01:23.507016+00:00",
+  "generated_at": "2026-11-22T13:55:04.119362+00:00",
   "total": 86,
   "initiatives": [
     {
@@ -37,8 +37,8 @@
         "parquet-ml-8tlhnk2rrqo72onsr45on1zs1mhmcytj",
         "parquet-ml-7zfwc3o53btd2xbdb8bqf8lxsrk76cxr",
         "parquet-ml-k9q8nctkmoh0mwd7r470ytqr64f33w9g",
-        "parquet-ml-9xo3mp4n23p8psmrhso5t9q899vxwfjt",
-        "parquet-ml-0gxjk4tphxls0gcrc7lt775pf8s7gtz3",
+        "parquet-ml-zfnmg5p51b7oylft5w5k4670wgkd4zv4",
+        "parquet-ml-oqd9lt7p0jtf217hg0667xhk0zvwbgvt",
         "parquet-ml-21f6xotkqstk81jcsk1t3r94g718jbzc"
       ],
       "proposal_count": 30,
@@ -128,14 +128,13 @@
     },
     {
       "id": "parquet-init-parquet-ml-m3gs0h5qqd14j45pfktxxjk0q621qshb",
-      "title": "Parquet Metadata Optimization",
-      "summary": "This initiative focuses on refining the Parquet file format to improve reader efficiency and reduce overhead. It proposes adding page size metadata to the OffsetIndex, introducing a lightweight byte\u2011offset index for column metadata, enabling page\u2011level GEO statistics for faster pruning, and deprecating rarely used fields such as file_path and file_offset.",
+      "title": "Parquet Index Enhancements",
+      "summary": "The initiative focuses on improving Parquet\u2019s metadata handling by adding page size information to the OffsetIndex, introducing a lightweight byte-offset index for column metadata, and enabling page-level GEO statistics to boost query performance. Discussions also cover deprecating rarely used fields such as file_path and file_offset.",
       "status": "discussion",
       "key_points": [
-        "Add page size metadata to OffsetIndex",
-        "Introduce lightweight byte\u2011offset index for column metadata",
-        "Enable page\u2011level GEO statistics for faster pruning",
-        "Deprecate unused file_path and file_offset fields"
+        "Add page size info to OffsetIndex for memory bounding",
+        "Introduce lightweight byte-offset index for column metadata",
+        "Add page-level GEO statistics to improve query performance and consider deprecating unused fields"
       ],
       "proposal_ids": [
         "parquet-ml-m3gs0h5qqd14j45pfktxxjk0q621qshb",
@@ -155,10 +154,14 @@
     },
     {
       "id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-2-rc2",
-      "title": "Fix DataPageV2 Encryption in Parquet-Java",
-      "summary": "## What's Changed * Bump actions/stale from 10 to 11 by @dependabot[bot] in https://github.com/apache/parquet-java/pull/3705 * Bump com.github.luben:zstd-jni from 1.5.7-11 to 1.5.7-12 by @dependabot[b",
+      "title": "Parquet Release & Versioning",
+      "summary": "A coordinated effort to formalize Parquet\u2019s versioning semantics, automate the release process, and manage patch releases, culminating in recent 1.18.x and 1.19.x releases and a new versioning model that distinguishes format changes from compatibility changes.",
       "status": "released",
-      "key_points": [],
+      "key_points": [
+        "Formal versioning scheme for format changes and compatibility levels",
+        "Automated release workflow using GitHub Actions",
+        "Patch releases with dependency updates and Java version upgrades"
+      ],
       "proposal_ids": [
         "parquet-gh-rel-apache-parquet-1-18-2",
         "parquet-gh-rel-apache-parquet-1-18-2-rc2",
@@ -274,12 +277,12 @@
     {
       "id": "parquet-init-parquet-ml-fzxrc5bg8xqzgxoop6qsh3v7w1ly5k7f",
       "title": "Parquet PMC Membership",
-      "summary": "The initiative involves inviting new committers and PMC members to the Apache Parquet project. While several proposals were abandoned, one remains in discussion, reflecting ongoing efforts to expand leadership. The focus is on strengthening the PMC and committers for better governance.",
+      "summary": "The initiative concerns the appointment of new committers and PMC members for Apache Parquet. Several announcements were made over the years, but most proposals were abandoned; the latest discussion involves Gidon Gershinsky's PMC appointment.",
       "status": "discussion",
       "key_points": [
-        "Multiple invitations to new committers and PMC members",
-        "Several proposals abandoned, one in discussion",
-        "Goal is to strengthen PMC leadership"
+        "Multiple announcements of new PMC members/committers",
+        "Most proposals were abandoned",
+        "Current discussion focuses on Gidon Gershinsky's PMC role"
       ],
       "proposal_ids": [
         "parquet-ml-fzxrc5bg8xqzgxoop6qsh3v7w1ly5k7f",
@@ -319,7 +322,7 @@
     {
       "id": "parquet-init-parquet-ml-rc4dso5jd5qqbf1b6cxcw88ld70l52l3",
       "title": "[VOTE][Format] Add FINITE_VECTOR logical type",
-      "summary": "The initiative seeks to extend Parquet with a new FINITE_VECTOR logical type to support numeric vectors, while addressing backward\u2011compatibility concerns and handling unannotated list data. It also proposes adding a VECTOR repetition level for fixed\u2011size\u2011list serialization and explores writing a version number in the footer to aid compatibility checks.",
+      "summary": "",
       "status": "discussion",
       "key_points": [],
       "proposal_ids": [
@@ -470,9 +473,9 @@
       "archived": false
     },
     {
-      "id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",
+      "id": "parquet-init-parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo",
       "title": "Extended Precision Nanosecond Timestamps",
-      "summary": "The proposal introduces a new geometry logical type for Apache Parquet to enable native geospatial support, aiming for more efficient encoding, statistics, and filtering. It is in early stages, with c",
+      "summary": "The thread proposes adding extension types to Parquet, inspired by Arrow's extension type system, to provide a flexible way to encode more precise column semantics without expanding the Thrift spec. T",
       "status": "released",
       "key_points": [],
       "proposal_ids": [
@@ -481,11 +484,12 @@
         "parquet-ml-tgkomrqsynzd5tm3385wm4tfk933lx6w",
         "parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo",
         "parquet-ml-q20b8kjvs27ly0w2zzxld029nwkc5fhx",
+        "parquet-ml-9xo3mp4n23p8psmrhso5t9q899vxwfjt",
         "parquet-ml-xjg1zrhll5ztqr4n5lv92f6tfwvfb8rm",
         "parquet-ml-wgobz41mfldbhqpg9q4mdwypghg2cxg2",
         "parquet-ml-m6o68jl7fosfxq66p8c85cqr2t2gv611"
       ],
-      "proposal_count": 8,
+      "proposal_count": 9,
       "shared_docs": [],
       "last_activity": "2026-09-11T11:59:55+00:00",
       "signals": [
@@ -1489,24 +1493,6 @@
       "archived": false
     },
     {
-      "id": "parquet-init-parquet-ml-zfnmg5p51b7oylft5w5k4670wgkd4zv4",
-      "title": "Clarify min-max truncation in Parquet statistics",
-      "summary": "The discussion focuses on the truncation of statistics in Parquet, particularly regarding the handling of min and max values for different data types. Participants are debating the implications of exa",
-      "status": "discussion",
-      "key_points": [],
-      "proposal_ids": [
-        "parquet-ml-zfnmg5p51b7oylft5w5k4670wgkd4zv4",
-        "parquet-ml-oqd9lt7p0jtf217hg0667xhk0zvwbgvt"
-      ],
-      "proposal_count": 2,
-      "shared_docs": [],
-      "last_activity": "2024-09-12T07:54:39+00:00",
-      "signals": [
-        "topic:parquet-statistics"
-      ],
-      "archived": false
-    },
-    {
       "id": "parquet-init-parquet-ml-x3472kldrq5kjnld9ztj1jozz25f40hg",
       "title": "[RESULT] Parquet binary protocol extensions",
       "summary": "The author proposes consolidating the fragmented discussion of Parquet extensions into a single Google document to streamline progress. They plan to continue the conversation there and finalize the PR",
@@ -1708,6 +1694,24 @@
       "last_activity": "2024-07-03T04:47:47Z",
       "signals": [],
       "archived": true
+    },
+    {
+      "id": "parquet-init-parquet-ml-0gxjk4tphxls0gcrc7lt775pf8s7gtz3",
+      "title": "Unify Record and Row Terminology",
+      "summary": "The discussion centers around standardizing the terminology in the parquet.thrift file by using 'row' instead of 'record' to avoid confusion. Several contributors agree that this change would enhance clarity, and a PR has been filed to implement this adjustment.",
+      "status": "discussion",
+      "key_points": [
+        "Agreement on using 'row' for consistency",
+        "PR filed to change terminology"
+      ],
+      "proposal_ids": [
+        "parquet-ml-0gxjk4tphxls0gcrc7lt775pf8s7gtz3"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2024-06-13T12:01:54+00:00",
+      "signals": [],
+      "archived": false
     },
     {
       "id": "parquet-init-parquet-ml-v8y1f43vz39ms85691mss3slw1fx5gtw",

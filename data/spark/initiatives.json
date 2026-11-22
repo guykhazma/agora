@@ -1,15 +1,16 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-11-21T13:59:46.169502+00:00",
-  "total": 164,
+  "generated_at": "2026-11-22T13:52:51.870492+00:00",
+  "total": 163,
   "initiatives": [
     {
       "id": "spark-init-spark-jira-SPARK-60031",
-      "title": "Add OBJECT data type",
+      "title": "Skip CI on master if latest commit passed",
       "summary": "",
       "status": "discussion",
       "key_points": [],
       "proposal_ids": [
+        "spark-jira-SPARK-62199",
         "spark-jira-SPARK-61931",
         "spark-jira-SPARK-60031",
         "spark-jira-SPARK-60765",
@@ -20,7 +21,6 @@
         "spark-jira-SPARK-56599",
         "spark-jira-SPARK-42256",
         "spark-ml-8qwojcsfshkdcnqrqckrc8f8lndg16ds",
-        "spark-ml-8swj2oxkh5hxxpv9kvx63ks55pxch9z2",
         "spark-ml-mpjb2ndql6k1dqyx6y1hr7d3f9rmnmz1",
         "spark-ml-r7kv3z4vp9rq1gr44qo13wrmh1gnntp0",
         "spark-ml-1hbd61gj61bo2jhtdddtjfwxlvs5lcpb",
@@ -92,7 +92,7 @@
           "title": "\ufeffSPIP: FILE EXTERNAL, a new DataType for dealing with files and unstructured data"
         }
       ],
-      "last_activity": "2026-11-21T00:24:50+00:00",
+      "last_activity": "2026-11-21T22:22:47+00:00",
       "signals": [
         "shared_doc",
         "cross_source",
@@ -103,14 +103,33 @@
       "archived": false
     },
     {
-      "id": "spark-init-spark-ml-sj3kydnv9s4cf1mc9467k4wtl9p13cjg",
-      "title": "Spark Connect Security & Parallel Reads",
-      "summary": "The initiative seeks to extend Spark Connect to support parallel reads and serve as a security barrier for fine\u2011grained access control between trusted and untrusted Spark code. It includes proposals for a Spark Connect data source that enforces FGAC and for enabling parallel Spark Connect reads. The discussion is ongoing, with some proposals having been vetoed and abandoned.",
+      "id": "spark-init-spark-ml-8swj2oxkh5hxxpv9kvx63ks55pxch9z2",
+      "title": "Add OBJECT data type",
+      "summary": "Serge Rielau proposes a new SQL data type, OBJECT, that matches structured fields by name rather than position, addressing the current limitations of STRUCT. The type includes functions for manipulation and explicit casts for reordering, and is gated by a configuration flag. The discussion focuses on ensuring name-safe structured values across writes, comparisons, and expressions.",
       "status": "discussion",
       "key_points": [
-        "Parallel Spark Connect reads for improved performance",
-        "Spark Connect as a security barrier for FGAC",
-        "Ongoing discussion with some proposals vetoed"
+        "OBJECT matches fields by name, not position",
+        "Explicit casts allow reordering of fields",
+        "Includes OBJECT_APPEND, OBJECT_DELETE, OBJECT_PICK and is gated by spark.sql.objectType.enabled"
+      ],
+      "proposal_ids": [
+        "spark-ml-8swj2oxkh5hxxpv9kvx63ks55pxch9z2"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2026-11-20T20:29:16+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
+      "id": "spark-init-spark-ml-sj3kydnv9s4cf1mc9467k4wtl9p13cjg",
+      "title": "Spark Connect FGAC",
+      "summary": "The initiative seeks to extend Spark Connect to serve as a security barrier between trusted and untrusted Spark code, enabling fine\u2011grained access controls without bypassing read restrictions. It proposes updates to Spark Connect\u2019s data source handling to support these security features.",
+      "status": "discussion",
+      "key_points": [
+        "Use Spark Connect as a security barrier between trusted and untrusted code",
+        "Enable fine\u2011grained access controls while preserving read restrictions",
+        "Update Spark Connect\u2019s data source handling to support FGAC"
       ],
       "proposal_ids": [
         "spark-ml-sj3kydnv9s4cf1mc9467k4wtl9p13cjg",
@@ -279,12 +298,12 @@
     {
       "id": "spark-init-spark-ml-r8ms8fgfvtr0zr3hmxn7p01fb8lry352",
       "title": "Spark Community Sync",
-      "summary": "The Spark community is planning to hold its first community sync on Nov 30, 2026, with a 50\u2011minute agenda covering recent changes, SPIP updates, release status, and an open floor. A proposal has been made to establish a recurring monthly sync modeled after the Iceberg community sync, featuring a shared agenda document where participants can add topics in advance.",
+      "summary": "The initiative proposes establishing a recurring monthly Spark community sync to discuss recent changes, SPIPs, release status, and other topics. A shared agenda document will allow participants to add items ahead of time, fostering an open and collaborative environment.",
       "status": "discussion",
       "key_points": [
-        "Inaugural sync scheduled for Nov 30, 2026 with 50\u2011minute agenda",
-        "Proposal for monthly recurring sync modeled after Iceberg",
-        "Shared agenda document for pre\u2011submitted topics and open floor discussion"
+        "Schedule a recurring monthly sync meeting",
+        "Use a shared agenda document for pre-added topics",
+        "Cover recent changes, SPIPs, release status, and open floor discussions"
       ],
       "proposal_ids": [
         "spark-ml-r8ms8fgfvtr0zr3hmxn7p01fb8lry352",
@@ -300,7 +319,7 @@
     },
     {
       "id": "spark-init-spark-jira-SPARK-49834",
-      "title": "Apache Spark 4.2.1 Release",
+      "title": "Spark support for Parquet SERIALIZED_VALUE",
       "summary": "The users could add the QO rules and rely on the existing structures and patterns of the logical plan trees generated by the current one. Running both analyzers in mixed mode may lead to > unexpected ",
       "status": "proposal",
       "key_points": [],
@@ -309,6 +328,7 @@
         "spark-jira-SPARK-51658",
         "spark-jira-SPARK-49834",
         "spark-ml-zzl3hxdll1y0bdcc1bg8hyh3sr3ofpcp",
+        "spark-ml-jng7pgo8n7jwkkh35mg5wwcxomxq84ty",
         "spark-ml-0282t19qy3fsh9b4j2q9qwbwpln4c3jw",
         "spark-ml-4r7zonlh748wn2fhos6w9vgm5wqr1pgw",
         "spark-ml-pjbnfycmp5lt28bc242rvl4ln2t4nof3",
@@ -333,8 +353,7 @@
         "spark-ml-40l9zsqb8dvxfk46d6dxb106ly98tmcl",
         "spark-ml-w3v4fjk9lvxvp3lr5tngg0hvhfrkl5b0",
         "spark-ml-9f5z5lw2tg0yfvhwxvqspyyh45bppkf1",
-        "spark-ml-kylocl9zb6p686qwhypcx4wv2y4hv2h1",
-        "spark-ml-smpwykpoqr0y5r5xgc9jpt1fjm72fvck"
+        "spark-ml-kylocl9zb6p686qwhypcx4wv2y4hv2h1"
       ],
       "proposal_count": 30,
       "shared_docs": [
@@ -394,12 +413,12 @@
     {
       "id": "spark-init-spark-ml-o6v6zf285k5t76qvc6fwf346h3c8tbfo",
       "title": "Support GROUPS window frames in Spark SQL",
-      "summary": "The thread discusses adding SQL-standard GROUPS window frames to Spark SQL, which currently supports only ROWS and RANGE. A design proposal outlines semantics, implementation feasibility, and potential impact, and the community seeks a decision on whether it requires a SPIP and committer review. The discussion highlights the need for peer-group semantics and the lack of current support.",
+      "summary": "The discussion centers on adding the SQL-standard GROUPS window frame type to Spark SQL, which currently only supports ROWS and RANGE. The proposal argues that GROUPS semantics cannot be expressed by the existing frame types and would not alter current query behavior or add new operators. Participants are debating implementation feasibility, potential SPIP requirements, and related API considerations.",
       "status": "discussion",
       "key_points": [
-        "Proposal to add GROUPS window frames to Spark SQL",
-        "Need decision on SPIP and committer review",
-        "GROUPS semantics differ from ROWS/RANGE and are important for peer-group handling"
+        "Proposal to add GROUPS window frame type",
+        "GROUPS cannot be represented by existing ROWS or RANGE frames",
+        "No change to current query behavior or new operators"
       ],
       "proposal_ids": [
         "spark-ml-o6v6zf285k5t76qvc6fwf346h3c8tbfo"
@@ -553,34 +572,6 @@
       "archived": false
     },
     {
-      "id": "spark-init-spark-ml-jng7pgo8n7jwkkh35mg5wwcxomxq84ty",
-      "title": "Spark support for Parquet SERIALIZED_VALUE type",
-      "summary": "Neelesh proposes a new Parquet logical type, SERIALIZED_VALUE, to annotate BYTE_ARRAY columns that hold serialized protobuf, FlatBuffers, or Thrift messages, storing the format and schema within the file. Spark could read this information automatically, eliminating the need for users to supply schemas on each call and enabling direct projection of message fields. The discussion explores feasibility, benefits, and potential integration steps.",
-      "status": "discussion",
-      "key_points": [
-        "Introduces SERIALIZED_VALUE logical type to store serialized messages with schema",
-        "Spark can read schema from file, reducing user burden",
-        "Enables direct field projection and cross-engine consistency"
-      ],
-      "proposal_ids": [
-        "spark-ml-jng7pgo8n7jwkkh35mg5wwcxomxq84ty"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [
-        {
-          "url": "https://docs.google.com/document/d/1RWH8P2PfMWMXvJuwtGXLe1HQbDjmL_gqR6wmhC7x3Ac/edit?usp=sharing",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeff[DESIGN] A SERIALIZED_VALUE logical type for Parquet"
-        }
-      ],
-      "last_activity": "2026-11-13T01:39:57+00:00",
-      "signals": [
-        "shared_doc"
-      ],
-      "archived": false
-    },
-    {
       "id": "spark-init-spark-ml-nl8n7hggt6l69wjlvqztoko6d1sjvzbb",
       "title": "Apache Spark K8s Operator 1.1.0 released",
       "summary": "> > $ git log --oneline v3.5.0..HEAD | wc -l > 202 > > Also, there are 180 JIRA tickets containing 3.5.1 as fixed version, and 10 resolved issues are either marked as blocker (even correctnes > +1 > >",
@@ -659,77 +650,6 @@
       "archived": false
     },
     {
-      "id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2",
-      "title": "Apache Spark 4.0.4 released",
-      "summary": "On 2026/05/11 18:58:05 Peter Toth wrote: > Hi Devs, > > Apache Spark 4.1.1 was released on Jan 9, 2026 and there are ~100 > unreleased commits on the branch. > > On 2026/05/11 18:58:05 Peter Toth wrot",
-      "status": "released",
-      "key_points": [],
-      "proposal_ids": [
-        "spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2",
-        "spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx",
-        "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
-        "spark-ml-wp82v45rc51ztx191fzmoh1vb4tttzc8",
-        "spark-ml-zkbrojnb6pnhrhfyfynjdt54b3bxfs3v",
-        "spark-ml-2c5fpsz7f2mfwmc4bxy0q9442zl0tcgn",
-        "spark-ml-w14m0omblovt2t0k19jqhfwxl5mzcsv6",
-        "spark-ml-dylmft4n6v7mqb4b47hvjxhoz6hkhqkb",
-        "spark-ml-90fnr43zpvl3r2n3c7px1vypj40ht6gv",
-        "spark-ml-4r6q8187b30p0ppclw0pyfjp8h8xs3rq",
-        "spark-ml-zdpfyjhtk2jhn46z1p268jhyr7o1qt6x",
-        "spark-ml-xn43h3kvx4pgjl3ckccmmcrv70ptvgmn",
-        "spark-ml-6z3167c04l5s46j6vs07d90gjxxcts6t",
-        "spark-ml-c3dyyk5nhd8tvzs86whxj4n5d9lk68kr",
-        "spark-ml-tydpbkpx6wopy38kxqz7q889gf0qo5wm",
-        "spark-ml-gdm1gtko0856pjq3xw03gx68gt5hxl9m",
-        "spark-ml-87bj968jyjvjs9bd2c8rycmtfypvv8gb",
-        "spark-ml-8b483tg6q06w3p03t5co8v8228qngqgw",
-        "spark-ml-408wkyyow602ty14llqlxdzxojcrqgkg",
-        "spark-ml-jmnvlqkhmfv5lg5l1fw4gyq1xgsx92nw",
-        "spark-ml-rv0tv1j7cvfolrgh6rlcxpfl41dkkyhp",
-        "spark-ml-5vhqy8srb073blrrjqr365nko1pd2wcp",
-        "spark-ml-nxmvz2j7kp96otzlnl3kd277knlb6qgb"
-      ],
-      "proposal_count": 23,
-      "shared_docs": [
-        {
-          "url": "https://docs.google.com/document/d/15fb-7DNztzpQMF1MQovK75UmpC6um7KgO8cg_X5oa1I/edit",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffSPIP: Extending Spark 3.5 LTS Period For Security Fixes"
-        }
-      ],
-      "last_activity": "2026-11-09T22:45:45+00:00",
-      "signals": [
-        "shared_doc",
-        "vote_thread",
-        "topic:apache-spark",
-        "topic:spark"
-      ],
-      "archived": false
-    },
-    {
-      "id": "spark-init-spark-jira-SPARK-23521",
-      "title": "Pluggable root pool comparator review",
-      "summary": "Users who need custom ordering (priority-based, deadline-aware, SLA-driven, ...) have no supported extension point today and must patch Spark. Open question: Is @DeveloperApi the right stability level",
-      "status": "implementation",
-      "key_points": [],
-      "proposal_ids": [
-        "spark-jira-SPARK-23521",
-        "spark-ml-v3g18cbdd5vgpp2khvx2j3nsy8sgplqm",
-        "spark-ml-f4fhjvsyt2tlnk6gysrymfoc444kh7jb",
-        "spark-ml-lzrnk0hxxqd7ldh1h3rv0k5gdddm3mgx"
-      ],
-      "proposal_count": 4,
-      "shared_docs": [],
-      "last_activity": "2026-11-08T15:22:31+00:00",
-      "signals": [
-        "cross_source",
-        "topic:dev-list",
-        "topic:root-pool"
-      ],
-      "archived": false
-    },
-    {
       "id": "spark-init-spark-jira-SPARK-57703",
       "title": "Apache Spark 4.3.0 released",
       "summary": "> +1 > > On Mon, 19 Sept 2022 at 09:15, Yikun Jiang <yi...@gmail.com> wrote: > >> Hi, all >> >> I would like to start the discussion for supporting Docker Official Image >> for Spark. > +1 (non-bindin",
@@ -742,12 +662,17 @@
         "spark-jira-SPARK-36057",
         "spark-jira-SPARK-40513",
         "spark-jira-SPARK-25299",
+        "spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2",
         "spark-ml-jp456tktqwdns6gs5jv506b08c6n4f1t",
         "spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10",
         "spark-ml-j5sm6do6pvgohohot6bb4rvbvlkzvf4c",
         "spark-ml-rv8l97x6398rc8rljrpolrvnk7cv29mf",
         "spark-ml-6h87roy79r6jdhx6stfvs4tw54w0zf18",
         "spark-ml-dptwhbfnkwtxv3svx5o6t7pql25p9bow",
+        "spark-ml-vsvly384smwt118vkqwlgjhnz1b5ggbx",
+        "spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8",
+        "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
+        "spark-ml-wp82v45rc51ztx191fzmoh1vb4tttzc8",
         "spark-ml-5ly13yr43dlbx088wj9bj99cglbv7572",
         "spark-ml-4qozg1rdvv2vvltp858sygj31jrpskx5",
         "spark-ml-rwhj82w65y3rj7bypmbtynwl5pgwrbjw",
@@ -758,31 +683,42 @@
         "spark-ml-qprfz03mqscjq0o09nkkosv4fffhod3z",
         "spark-ml-cy2wqt9xtt5fh0qwmsfx9ht762cqpqs1",
         "spark-ml-j71zm1fx4xfwcz675gr0xt7y25kg62nz",
+        "spark-ml-zkbrojnb6pnhrhfyfynjdt54b3bxfs3v",
         "spark-ml-zxx7m3o0blj605c61rj0lhcf84jsc4fk",
         "spark-ml-036j2fhgcs1kmshbo3r6pcmqp1ro5kyk",
         "spark-ml-xvv4qt9dpnb1kszxdqlxyv9b46749ypo",
         "spark-ml-kw6dwlgfkmwksx26l6w19k0wr370191p",
+        "spark-ml-w14m0omblovt2t0k19jqhfwxl5mzcsv6",
+        "spark-ml-dylmft4n6v7mqb4b47hvjxhoz6hkhqkb",
+        "spark-ml-90fnr43zpvl3r2n3c7px1vypj40ht6gv",
         "spark-ml-64wvb2mko1f193zx9x1fpxnwkxxpq1h3",
         "spark-ml-zb71j720m95do24pmdxdww9o4z2kpqv6",
         "spark-ml-n6t46mp9x00cmb2csfgf8t76kchw2h1h",
         "spark-ml-s1szvkkw7krshx8kht1bnzbq8h3cmyft",
+        "spark-ml-4r6q8187b30p0ppclw0pyfjp8h8xs3rq",
         "spark-ml-7t82jvvdy1c57vzm5drztygfb39mk1bz",
         "spark-ml-tyopctz8r5r2omww9l0z5hrr1oysmwf3",
         "spark-ml-loz04s19g0lo42njq4l4ljs94m0o57vh",
         "spark-ml-w7cxfzboh2vmcf1ypyy0gw7851j60vns",
+        "spark-ml-zdpfyjhtk2jhn46z1p268jhyr7o1qt6x",
         "spark-ml-o1b34l69lm0ytf6y5m6y6tvovzx8sbpo",
         "spark-ml-9tm9ggr64b5ykv9yp52vxd18dpknrrtg",
         "spark-ml-5jm5fqbyo0wzyr8bpcyysy41t87kwzo1",
         "spark-ml-1c6hkd0srnqc82fw60vgj158glsq5f3z",
         "spark-ml-l5ko8ggmlnz29s9m71dkv1pqq8rphqc3",
+        "spark-ml-87bj968jyjvjs9bd2c8rycmtfypvv8gb",
         "spark-ml-4r25lhtrg9cog956m2fldodt64dgt45j",
         "spark-ml-fqn0x0r6txrpcv5b3zjxggjw6jssc9no",
         "spark-ml-rt924d38oq37rvgd13g4p0n4nnzpv8h6",
         "spark-ml-1jlmkzlfjfsrjhygvjmsw2y48w9c6q1s",
         "spark-ml-m1nkcpnnf9256ngh24v4kv1tjvfd9zpp",
         "spark-ml-gpsw7k5q4v4y4n8d25zoj47ck6pxldq5",
+        "spark-ml-8b483tg6q06w3p03t5co8v8228qngqgw",
         "spark-ml-04k62jn7k6dqhtov44yg9c6gkowyy47n",
+        "spark-ml-rv0tv1j7cvfolrgh6rlcxpfl41dkkyhp",
         "spark-ml-of245s7z03w99lbj0txyqjvshdsohsk8",
+        "spark-ml-5vhqy8srb073blrrjqr365nko1pd2wcp",
+        "spark-ml-nxmvz2j7kp96otzlnl3kd277knlb6qgb",
         "spark-ml-d90x347og27ooh5svs8nqwfkzo4h9xpx",
         "spark-ml-z89cvb6vhg9387c6bcq00wf0rclz3ydd",
         "spark-ml-gwrglhvmvfyvm26lqknbz83j03t8b92b",
@@ -811,7 +747,7 @@
         "spark-ml-tsq0237k4kx05vk4nms3pxptd1hmqpzs",
         "spark-ml-08xqf5r05gkfc9t5b2sks3xk391drnp9"
       ],
-      "proposal_count": 74,
+      "proposal_count": 90,
       "shared_docs": [
         {
           "url": "https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?tab=t.0#heading=h.fkw9v2um6wxa|https://docs.google.com/document/d/1usJKncCPMiyFUg7aIdpZ0HQsklXIHow_sU_6dfFMjN0/edit?usp=sharing",
@@ -824,6 +760,12 @@
           "kind": "google_doc",
           "fetched": true,
           "title": "\ufeffSupport Docker Official Image for Spark"
+        },
+        {
+          "url": "https://docs.google.com/document/d/15fb-7DNztzpQMF1MQovK75UmpC6um7KgO8cg_X5oa1I/edit",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffSPIP: Extending Spark 3.5 LTS Period For Security Fixes"
         },
         {
           "url": "https://docs.google.com/document/d/1PPqAoJAj48MdjMJNc7DlytXi745z-imFpVaFDnt18Xg/edit?tab=t.0#heading=h.21tncge82jbl",
@@ -856,13 +798,35 @@
           "title": "\ufeffSPIP: Support NanoSecond Timestamp Types"
         }
       ],
-      "last_activity": "2026-11-05T22:40:36+00:00",
+      "last_activity": "2026-11-09T22:45:45+00:00",
       "signals": [
         "shared_doc",
         "cross_source",
         "vote_thread",
-        "topic:apache-spark",
-        "topic:spark"
+        "topic:spark",
+        "topic:apache-spark"
+      ],
+      "archived": false
+    },
+    {
+      "id": "spark-init-spark-jira-SPARK-23521",
+      "title": "Pluggable root pool comparator review",
+      "summary": "Users who need custom ordering (priority-based, deadline-aware, SLA-driven, ...) have no supported extension point today and must patch Spark. Open question: Is @DeveloperApi the right stability level",
+      "status": "implementation",
+      "key_points": [],
+      "proposal_ids": [
+        "spark-jira-SPARK-23521",
+        "spark-ml-v3g18cbdd5vgpp2khvx2j3nsy8sgplqm",
+        "spark-ml-f4fhjvsyt2tlnk6gysrymfoc444kh7jb",
+        "spark-ml-lzrnk0hxxqd7ldh1h3rv0k5gdddm3mgx"
+      ],
+      "proposal_count": 4,
+      "shared_docs": [],
+      "last_activity": "2026-11-08T15:22:31+00:00",
+      "signals": [
+        "cross_source",
+        "topic:dev-list",
+        "topic:root-pool"
       ],
       "archived": false
     },
@@ -983,23 +947,31 @@
         "spark-ml-o9h87grjcot5foczfnz444qph2gg7w5q",
         "spark-ml-vh21614wrjmr7cdd905qhwbwqd25lmjj",
         "spark-ml-nb3wo14j6hpmk52jw8hnfb7vkv6d0ww7",
+        "spark-ml-2c5fpsz7f2mfwmc4bxy0q9442zl0tcgn",
         "spark-ml-czlg2bbh3hc22810qdcptg04hzrtv424",
         "spark-ml-126jm29blxrbb4yfmddqbpl79q9q3xsj",
         "spark-ml-81xghrfwvopp274rgyxfthsstb2xmkz1",
         "spark-ml-tnhhys28btqmwfbccx7582095jotyh7c",
         "spark-ml-ny94y04qzjmddfo3q1qxn0cb921gz11f",
+        "spark-ml-xn43h3kvx4pgjl3ckccmmcrv70ptvgmn",
+        "spark-ml-6z3167c04l5s46j6vs07d90gjxxcts6t",
+        "spark-ml-c3dyyk5nhd8tvzs86whxj4n5d9lk68kr",
+        "spark-ml-tydpbkpx6wopy38kxqz7q889gf0qo5wm",
+        "spark-ml-gdm1gtko0856pjq3xw03gx68gt5hxl9m",
         "spark-ml-kslwp8ddlb1n2s6rc9obnxoslpm9prq8",
         "spark-ml-mj3ggbsqhjr2lblffmyn1rq5zcfckcrn",
         "spark-ml-b162c9ndtyfhd1z7l22jhrrh6px6f2jr",
         "spark-ml-2sbdknnfn119msdq52dq5wk90jy0hc88",
         "spark-ml-hfpgp3mz0lq6w9ysqv92zkygwn8bmcpk",
+        "spark-ml-408wkyyow602ty14llqlxdzxojcrqgkg",
+        "spark-ml-jmnvlqkhmfv5lg5l1fw4gyq1xgsx92nw",
         "spark-ml-oyogozm8y642w0bc5h1cx2xst7fyz3ms",
         "spark-ml-z01s19z7qf1jm5xoxsmgp6734tbhcqxb",
         "spark-ml-znn39lqfjjxxymsw98r4h22tw8vkqj39",
         "spark-ml-ycsdh1n85smdq5mm978v4l294jm8xv15",
         "spark-ml-tsqm0dv01f7jgkv5l4kyvtpw4tc6f420"
       ],
-      "proposal_count": 21,
+      "proposal_count": 29,
       "shared_docs": [
         {
           "url": "https://docs.google.com/document/d/19Whzq127QxVt2Luk0EClgaDtcpBsFUp67NcVdKKyPF8/edit?tab=t.0",
@@ -1019,8 +991,8 @@
         "shared_doc",
         "cross_source",
         "vote_thread",
-        "topic:spark-connect",
-        "topic:apache-spark"
+        "topic:apache-spark",
+        "topic:spark-connect"
       ],
       "archived": false
     },
@@ -1339,24 +1311,6 @@
         "topic:spark-connect",
         "topic:session-affinity"
       ],
-      "archived": false
-    },
-    {
-      "id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8",
-      "title": "Apache Spark 4.1.3 released",
-      "summary": "Apache Spark 4.1.3 is a new patch release of the 4.1 line containing security and correctness fixes based on the branch-4.1. Spark 4.1.3 is also available on PyPI (pyspark, pyspark-connect, pyspark-client) and the Maven Central Repository. > > Apache Spark 4.1.3 is a new patch release of the 4.1 line containing > security and correctness fixes based on the branch-4.1.",
-      "status": "released",
-      "key_points": [
-        "Thanks for that news, do you know when spark-core 4.1.3 will be published\nto Maven central?",
-        "I think the maven central website is having some difficulty, if you look at\nthe pom file directly it's there (\nhttps://r"
-      ],
-      "proposal_ids": [
-        "spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2026-07-30T22:17:53+00:00",
-      "signals": [],
       "archived": false
     },
     {
@@ -3693,6 +3647,24 @@
       "proposal_count": 1,
       "shared_docs": [],
       "last_activity": "2022-07-12T09:58:17+00:00",
+      "signals": [],
+      "archived": false
+    },
+    {
+      "id": "spark-init-spark-ml-smpwykpoqr0y5r5xgc9jpt1fjm72fvck",
+      "title": "[RESULT] SPIP",
+      "summary": "Vote VETOED \u2014 1 veto(es) recorded",
+      "status": "abandoned",
+      "key_points": [
+        "The vote passes with 17 +1s (10 binding +1s).",
+        "Voters include: Herman van Hovell..."
+      ],
+      "proposal_ids": [
+        "spark-ml-smpwykpoqr0y5r5xgc9jpt1fjm72fvck"
+      ],
+      "proposal_count": 1,
+      "shared_docs": [],
+      "last_activity": "2022-06-17T03:37:29+00:00",
       "signals": [],
       "archived": false
     },

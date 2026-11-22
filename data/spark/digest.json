@@ -1,6 +1,16 @@
 {
-  "summary": "Serge Rielau proposes a new SQL data type, OBJECT, that matches structured fields by name rather than position, addressing the current limitations of STRUCT. The Spark community is planning its inaugural sync on Nov 30, 2026, with a 50\u2011minute agenda covering recent changes, SPIP updates, release status, and an open floor. It defines five security guarantees (G1\u2011G5) covering leaks, writes, and metadata, and adds a capability signal to make older Spark releases fail closed for restricted callers. The discussion asks whether Spark Connect Gateway, which includes cryptographic libraries in its container image, must undergo the ASF export process before its 0.1.0 release.",
+  "summary": "Serge Rielau proposes a new SQL data type, OBJECT, that matches structured fields by name rather than position, addressing the current limitations of STRUCT. Huaxin Gao proposes the first Spark community sync on Nov 30 at 8:30\u202fAM PST, covering recent changes, SPIPs, release status, and an open floor. The SPIP proposal has been updated to address reviewer feedback, adding explicit security guarantees, a dedicated PolicyEnforcement operator, and safeguards against older Spark releases. The discussion asks whether Spark Connect Gateway, which includes cryptographic libraries in its container image, must undergo the ASF export process before its 0.1.0 release.",
   "highlights": [
+    {
+      "text": "The proposal introduces an Expression.rowOrderIndependent flag to separate per-row nondeterministic expressions from those that depend on row order, subset, or \u2026",
+      "sources": [
+        {
+          "id": "spark-jira-SPARK-62199",
+          "title": "SPIP: Distinguish row-order-independent nondeterministic expressions in Catalyst",
+          "url": "https://issues.apache.org/jira/browse/SPARK-62199"
+        }
+      ]
+    },
     {
       "text": "Spark proposes a new OBJECT data type that extends STRUCT by making attribute names part of the type, enabling name-based matching, casting, and manipulation fu\u2026",
       "sources": [
@@ -30,16 +40,6 @@
           "url": "https://lists.apache.org/thread/8swj2oxkh5hxxpv9kvx63ks55pxch9z2"
         }
       ]
-    },
-    {
-      "text": "The proposal seeks to broaden Spark\u2019s Data Source V2 push-down to include full outer",
-      "sources": [
-        {
-          "id": "spark-ml-mpjb2ndql6k1dqyx6y1hr7d3f9rmnmz1",
-          "title": "Re: [DISCUSS] SPIP: Extend DSv2 push-down with join, set operation, and window function support",
-          "url": "https://lists.apache.org/thread/mpjb2ndql6k1dqyx6y1hr7d3f9rmnmz1"
-        }
-      ]
     }
   ],
   "generation": {
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-21T13:58:44.859402+00:00",
-  "item_count": 9,
+  "generated_at": "2026-11-22T13:51:53.301725+00:00",
+  "item_count": 10,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-17",
     "to": "2026-11-21",
-    "thread_count": 9
+    "thread_count": 10
   }
 }

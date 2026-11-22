@@ -1,5 +1,5 @@
 {
-  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. The discussion explores how the current deterministic flag in the UDF spec is too vague for cross\u2011engine consistency, especially for check constraints, stats\u2011only fields, and derived columns. The discussion centers on adding a stream-from-snapshot option to Spark streaming reads, allowing an initial full snapshot load before incremental processing. The thread proposes a biweekly 30\u2011minute UDF sync to accelerate implementation and reviews, with an open Google Meet link and recorded sessions.",
+  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. The discussion centers on how to interpret Parquet files that contain field IDs for only some columns, a situation that current Iceberg readers handle inconsistently. The discussion examines the ambiguity of the \"deterministic\" flag for UDFs in stored expressions, noting that inconsistent results across engines can break checks, indexes, and derived columns. The discussion centers on adding a stream-from-snapshot option to Spark streaming reads, allowing an initial full snapshot load before incremental processing.",
   "highlights": [
     {
       "text": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filt\u2026",
@@ -12,7 +12,17 @@
       ]
     },
     {
-      "text": "The discussion centers on how Parquet files that contain some but not all field IDs are interpreted by different Iceberg readers. Current implementations (Java,\u2026",
+      "text": "The team is discussing updating the Iceberg REST catalog OpenAPI spec to replace nullable fields with type arrays as required by OpenAPI v3.1. A pull request ha\u2026",
+      "sources": [
+        {
+          "id": "iceberg-ml-9hh8tjvl4k8hkbh94rvjl9jyjh5w0ldz",
+          "title": "[DISCUSSION] Replace nullable with type arrays in rest catalog openapi spec",
+          "url": "https://lists.apache.org/thread/9hh8tjvl4k8hkbh94rvjl9jyjh5w0ldz"
+        }
+      ]
+    },
+    {
+      "text": "The discussion centers on how to interpret Parquet files that contain field IDs for only some columns, a situation that current Iceberg readers handle inconsist\u2026",
       "sources": [
         {
           "id": "iceberg-ml-tct2yp45ytsb6dqw1tq7b8gnfnp7jndo",
@@ -22,22 +32,12 @@
       ]
     },
     {
-      "text": "The community is debating whether to switch the default Iceberg format version from 2 to 3. Most core implementations (Java, Go, C++) already support v3, but ga\u2026",
+      "text": "A proposal to record row position mappings during compaction so that concurrently committed deletion vectors can be translated onto new files, preventing compac\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-fzf5yg9gno4q35gm8zzcpgfm8zxcfnn7",
-          "title": "[DISCUSS] Make format version 3 the default",
-          "url": "https://lists.apache.org/thread/fzf5yg9gno4q35gm8zzcpgfm8zxcfnn7"
-        }
-      ]
-    },
-    {
-      "text": "The discussion centers on whether to add float16 and int8 as vector element types in Iceberg v4. Participants largely agree on option\u202f3: include these types as \u2026",
-      "sources": [
-        {
-          "id": "iceberg-ml-fgqq8jwvb1qj9kskk3qxssxlvk2nn4x7",
-          "title": "[DISCUSS] Vector Type and Int8 Float16",
-          "url": "https://lists.apache.org/thread/fgqq8jwvb1qj9kskk3qxssxlvk2nn4x7"
+          "id": "iceberg-ml-2gwjy0c810tzktfcfcnz3vps06p2k3kp",
+          "title": "DISCUSS] Resolving compaction conflicts with concurrent deletion vectors",
+          "url": "https://lists.apache.org/thread/2gwjy0c810tzktfcfcnz3vps06p2k3kp"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-21T14:05:35.982750+00:00",
+  "generated_at": "2026-11-22T13:59:08.998537+00:00",
   "item_count": 12,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-19",
-    "to": "2026-11-21",
+    "to": "2026-11-22",
     "thread_count": 12
   }
 }

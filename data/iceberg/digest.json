@@ -1,5 +1,5 @@
 {
-  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. The discussion centers on how to interpret Parquet files that contain field IDs for only some columns, a situation that current Iceberg readers handle inconsistently. The discussion examines the ambiguity of the \"deterministic\" flag for UDFs in stored expressions, noting that inconsistent results across engines can break checks, indexes, and derived columns. The discussion centers on adding a stream-from-snapshot option to Spark streaming reads, allowing an initial full snapshot load before incremental processing.",
+  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. The discussion centers on how to interpret Parquet files that contain field IDs for only some columns, a situation that current Iceberg readers handle inconsistently. Participants propose a per\u2011field resolution rule\u2014use an embedded ID when present, otherwise fall back to the name mapping\u2014to bring uniformity and clarify the spec. The session concluded with action items for developers to prepare for the next major update and to ensure a smooth transition to the stable release.",
   "highlights": [
     {
       "text": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filt\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "The team is discussing updating the Iceberg REST catalog OpenAPI spec to replace nullable fields with type arrays as required by OpenAPI v3.1. A pull request ha\u2026",
+      "text": "The thread lists critical P0 issues that must be resolved before the 0.8.0 release candidate of iceberg-go. Several regressions from 0.7.0 were identified and c\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-9hh8tjvl4k8hkbh94rvjl9jyjh5w0ldz",
-          "title": "[DISCUSSION] Replace nullable with type arrays in rest catalog openapi spec",
-          "url": "https://lists.apache.org/thread/9hh8tjvl4k8hkbh94rvjl9jyjh5w0ldz"
+          "id": "iceberg-ml-78rdcjzhdbz4cpg08dyj4oor8tmq99z9",
+          "title": "[DISCUSS] iceberg-go v0.8.0: proposed release blockers",
+          "url": "https://lists.apache.org/thread/78rdcjzhdbz4cpg08dyj4oor8tmq99z9"
         }
       ]
     },
     {
-      "text": "The discussion centers on how to interpret Parquet files that contain field IDs for only some columns, a situation that current Iceberg readers handle inconsist\u2026",
+      "text": "Anurag outlines a concrete release schedule for Iceberg 1.13, with a milestone freeze on Dec\u202f15, a first RC on Jan\u202f6, and a target release by Jan\u202f20. The plan i\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-tct2yp45ytsb6dqw1tq7b8gnfnp7jndo",
-          "title": "[DISCUSS] Name mapping for data files that carry only some field IDs",
-          "url": "https://lists.apache.org/thread/tct2yp45ytsb6dqw1tq7b8gnfnp7jndo"
+          "id": "iceberg-ml-p0y5frlm21oc1hj7t38po2ldm1t9sx3n",
+          "title": "Re: [DISCUSS] Iceberg 1.13 release (Java)",
+          "url": "https://lists.apache.org/thread/p0y5frlm21oc1hj7t38po2ldm1t9sx3n"
         }
       ]
     },
     {
-      "text": "A proposal to record row position mappings during compaction so that concurrently committed deletion vectors can be translated onto new files, preventing compac\u2026",
+      "text": "The community is debating whether to switch the default Iceberg format version from 2 to 3. While Java and Go already support most v3 features, gaps remain in P\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-2gwjy0c810tzktfcfcnz3vps06p2k3kp",
-          "title": "DISCUSS] Resolving compaction conflicts with concurrent deletion vectors",
-          "url": "https://lists.apache.org/thread/2gwjy0c810tzktfcfcnz3vps06p2k3kp"
+          "id": "iceberg-ml-fzf5yg9gno4q35gm8zzcpgfm8zxcfnn7",
+          "title": "[DISCUSS] Make format version 3 the default",
+          "url": "https://lists.apache.org/thread/fzf5yg9gno4q35gm8zzcpgfm8zxcfnn7"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-22T13:59:08.998537+00:00",
+  "generated_at": "2026-11-23T17:04:09.512711+00:00",
   "item_count": 12,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-19",
-    "to": "2026-11-22",
+    "to": "2026-11-23",
     "thread_count": 12
   }
 }

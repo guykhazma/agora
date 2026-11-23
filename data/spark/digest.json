@@ -1,6 +1,16 @@
 {
-  "summary": "Serge Rielau proposes a new SQL data type, OBJECT, that matches structured fields by name rather than position, addressing the current limitations of STRUCT. Huaxin Gao proposes the first Spark community sync on Nov 30 at 8:30\u202fAM PST, covering recent changes, SPIPs, release status, and an open floor. The SPIP proposal has been updated to address reviewer feedback, adding explicit security guarantees, a dedicated PolicyEnforcement operator, and safeguards against older Spark releases. The discussion asks whether Spark Connect Gateway, which includes cryptographic libraries in its container image, must undergo the ASF export process before its 0.1.0 release.",
+  "summary": "Serge Rielau proposes a new SQL data type, OBJECT, that matches structured fields by name rather than position, addressing the current limitations of STRUCT. The discussion centers on a proposal to broaden Spark Data Source V2 push-down capabilities to include full outer, semi, and anti joins, alias tolerance, set operations (UNION, INTERSECT, EXCEPT), and window functions. The discussion proposes the first Spark community sync on Nov 30, 2026, at 8:30\u202fAM PST, with a 50\u2011minute agenda covering recent changes, SPIPs, release status, and an open floor. Huaxin updated the SPIP document to incorporate reviewer feedback, adding detailed security guarantees, a dedicated PolicyEnforcement operator, and stricter handling of writes to protected tables.",
   "highlights": [
+    {
+      "text": "The SPIP proposes a stable, public DataSource V2 API that lets tables declare read access policies\u2014readable columns, row filters, and column masks\u2014that Spark en\u2026",
+      "sources": [
+        {
+          "id": "spark-jira-SPARK-59726",
+          "title": "SPIP: Pluggable Row-Filter and Column-Mask Enforcement in Catalyst",
+          "url": "https://issues.apache.org/jira/browse/SPARK-59726"
+        }
+      ]
+    },
     {
       "text": "The proposal introduces an Expression.rowOrderIndependent flag to separate per-row nondeterministic expressions from those that depend on row order, subset, or \u2026",
       "sources": [
@@ -30,16 +40,6 @@
           "url": "https://lists.apache.org/thread/8qwojcsfshkdcnqrqckrc8f8lndg16ds"
         }
       ]
-    },
-    {
-      "text": "Serge Rielau proposes a new SQL data type, OBJECT, that matches structured fields by name rather than position, addressing the current limitations of STRUCT. Th\u2026",
-      "sources": [
-        {
-          "id": "spark-ml-8swj2oxkh5hxxpv9kvx63ks55pxch9z2",
-          "title": "[DISCUSS] SPIP: Add the OBJECT data type",
-          "url": "https://lists.apache.org/thread/8swj2oxkh5hxxpv9kvx63ks55pxch9z2"
-        }
-      ]
     }
   ],
   "generation": {
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-22T13:51:53.301725+00:00",
-  "item_count": 10,
+  "generated_at": "2026-11-23T16:56:43.980403+00:00",
+  "item_count": 11,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-17",
-    "to": "2026-11-21",
-    "thread_count": 10
+    "to": "2026-11-23",
+    "thread_count": 11
   }
 }

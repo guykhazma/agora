@@ -1,43 +1,43 @@
 {
-  "summary": "Serge Rielau proposes a new SQL data type, OBJECT, that matches structured fields by name rather than position, addressing the current limitations of STRUCT. The discussion centers on a proposal to broaden Spark Data Source V2 push-down capabilities to include full outer, semi, and anti joins, alias tolerance, set operations (UNION, INTERSECT, EXCEPT), and window functions. The discussion proposes the first Spark community sync on Nov 30, 2026, at 8:30\u202fAM PST, with a 50\u2011minute agenda covering recent changes, SPIPs, release status, and an open floor. Huaxin updated the SPIP document to incorporate reviewer feedback, adding detailed security guarantees, a dedicated PolicyEnforcement operator, and stricter handling of writes to protected tables.",
+  "summary": "This change would allow Catalyst to push down unrelated filters, dynamic partition pruning, and other optimizations for expensive nondeterministic UDFs while preserving existing deterministic=false guarantees. The discussion centers on a proposal to add SQL\u2011standard GROUPS window frames to Spark SQL, detailing semantics, implementation feasibility, and testing. Serge Rielau proposes a new SQL data type, OBJECT, that matches structured fields by name rather than position, addressing the current limitations of STRUCT. The thread reports updates to the SPIP proposal, adding detailed security guarantees, a dedicated PolicyEnforcement operator, and handling of restricted writes and leaks.",
   "highlights": [
     {
-      "text": "The SPIP proposes a stable, public DataSource V2 API that lets tables declare read access policies\u2014readable columns, row filters, and column masks\u2014that Spark en\u2026",
+      "text": "The discussion proposes adding an opt\u2011in Expression.rowOrderIndependent property to Catalyst, which would separate row\u2011order\u2011independent nondeterministic expres\u2026",
       "sources": [
         {
-          "id": "spark-jira-SPARK-59726",
-          "title": "SPIP: Pluggable Row-Filter and Column-Mask Enforcement in Catalyst",
-          "url": "https://issues.apache.org/jira/browse/SPARK-59726"
+          "id": "spark-ml-bgnofkm2srk0ypnlqpscn6mb45k7ywnk",
+          "title": "[DISCUSS] SPIP: Distinguish row-order-independent nondeterministic expressions in Catalyst",
+          "url": "https://lists.apache.org/thread/bgnofkm2srk0ypnlqpscn6mb45k7ywnk"
         }
       ]
     },
     {
-      "text": "The proposal introduces an Expression.rowOrderIndependent flag to separate per-row nondeterministic expressions from those that depend on row order, subset, or \u2026",
+      "text": "The discussion centers on a proposal to add SQL\u2011standard GROUPS window frames to Spark SQL, detailing semantics, implementation feasibility, and testing. Review\u2026",
       "sources": [
         {
-          "id": "spark-jira-SPARK-62199",
-          "title": "SPIP: Distinguish row-order-independent nondeterministic expressions in Catalyst",
-          "url": "https://issues.apache.org/jira/browse/SPARK-62199"
+          "id": "spark-ml-o6v6zf285k5t76qvc6fwf346h3c8tbfo",
+          "title": "Re: [DISCUSS] Support GROUPS window frames in Spark SQL",
+          "url": "https://lists.apache.org/thread/o6v6zf285k5t76qvc6fwf346h3c8tbfo"
         }
       ]
     },
     {
-      "text": "Spark proposes a new OBJECT data type that extends STRUCT by making attribute names part of the type, enabling name-based matching, casting, and manipulation fu\u2026",
-      "sources": [
-        {
-          "id": "spark-jira-SPARK-61931",
-          "title": "SPIP: Add the OBJECT data type",
-          "url": "https://issues.apache.org/jira/browse/SPARK-61931"
-        }
-      ]
-    },
-    {
-      "text": "The team is testing an AI review bot that processes PRs in parallel, currently reviewing 4\u20138 at a time. They report a 18% overall failure rate, higher for large\u2026",
+      "text": "The team is testing an AI review bot that processes multiple pull requests in parallel, currently reviewing 4\u20138 PRs at a time and taking about an hour per revie\u2026",
       "sources": [
         {
           "id": "spark-ml-8qwojcsfshkdcnqrqckrc8f8lndg16ds",
           "title": "Re: [DISCUSS] Automated AI code review on new Spark PRs (trial)",
           "url": "https://lists.apache.org/thread/8qwojcsfshkdcnqrqckrc8f8lndg16ds"
+        }
+      ]
+    },
+    {
+      "text": "The Spark community is planning its inaugural community sync on Nov 30, 2026, with a proposed agenda covering recent changes, SPIPs, release status, and open di\u2026",
+      "sources": [
+        {
+          "id": "spark-ml-r8ms8fgfvtr0zr3hmxn7p01fb8lry352",
+          "title": "[DISCUSS] First Spark Community Sync",
+          "url": "https://lists.apache.org/thread/r8ms8fgfvtr0zr3hmxn7p01fb8lry352"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-23T16:56:43.980403+00:00",
+  "generated_at": "2026-11-24T16:50:04.292020+00:00",
   "item_count": 11,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-17",
-    "to": "2026-11-23",
+    "from": "2026-11-18",
+    "to": "2026-11-24",
     "thread_count": 11
   }
 }

@@ -1,8 +1,8 @@
 {
-  "summary": "The discussion proposes updating the Parquet row group size recommendation, noting that the current 512\u202fMB\u20131\u202fGB guideline is outdated and that modern defaults are smaller. It outlines trade\u2011offs such as finer pruning with smaller groups, parallelism limits, writer memory usage, and footer size, and suggests a more nuanced, workload\u2011dependent recommendation. Participants discuss design decisions such as including Delta mode, renaming the proposal to FastLanes, and adding Unified Transpose Layout, weighing performance and clarity. The proposal is that inline data takes precedence, with locator fields serving only provenance, and that the spec be clarified to prevent inconsistent results.",
+  "summary": "Recent discussions in the Parquet community focus on refining storage recommendations and improving reader efficiency. Contributors are debating updates to the recommended row group size, proposing the removal of the 8\u202fKB page size guideline, and adding uncompressed page size metadata to the OffsetIndex to help readers bound memory usage. Parallel threads examine encoding performance with PFOR-based integer encodings and clarify the interpretation of FILE logical types when both inline data and a URI are present.",
   "highlights": [
     {
-      "text": "The discussion proposes updating the Parquet row group size recommendation, noting that the current 512\u202fMB\u20131\u202fGB guideline is outdated and that modern defaults a\u2026",
+      "text": "Proposed update to the recommended Parquet row group size",
       "sources": [
         {
           "id": "parquet-ml-vmbhp03spx6q2jfxv8zcnn9ynf67wocy",
@@ -12,27 +12,7 @@
       ]
     },
     {
-      "text": "The thread compares PFOR and FastLanes encoding options for Parquet, presenting benchmark results that show PFOR achieves high decoding throughput and compressi\u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
-          "title": "Re: [DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations (+ apologies)",
-          "url": "https://lists.apache.org/thread/669rvfch65xcfdqqtj22nlsvkzthxmy3"
-        }
-      ]
-    },
-    {
-      "text": "The discussion centers on how a FILE logical type value with both inline data and a URI locator should be interpreted, as different readers can return different\u2026",
-      "sources": [
-        {
-          "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
-          "title": "[DISCUSS] Ambiguity in the FILE logical type when inline and uri are both set",
-          "url": "https://lists.apache.org/thread/yrghnfgghh6l86vg8hfhovo655c9qwtq"
-        }
-      ]
-    },
-    {
-      "text": "The discussion centers on removing the 8KB page size recommendation in the Parquet documentation. Contributors agree that 8KB is too small for compression and p\u2026",
+      "text": "Discussion to remove the 8\u202fKB page size recommendation from documentation",
       "sources": [
         {
           "id": "parquet-ml-4g8ng2mbrzj01g43dp8fcx7dz49rs529",
@@ -40,19 +20,41 @@
           "url": "https://lists.apache.org/thread/4g8ng2mbrzj01g43dp8fcx7dz49rs529"
         }
       ]
+    },
+    {
+      "text": "Proposal to include uncompressed page size and dictionary page size in the Parquet OffsetIndex for memory\u2011bound readers",
+      "sources": [
+        {
+          "id": "parquet-ml-m3gs0h5qqd14j45pfktxxjk0q621qshb",
+          "title": "[DISCUSS] Page sizes in the OffsetIndex, to let readers bound memory up front",
+          "url": "https://lists.apache.org/thread/m3gs0h5qqd14j45pfktxxjk0q621qshb"
+        }
+      ]
+    },
+    {
+      "text": "Clarification of FILE logical type behavior when both inline data and a URI are specified",
+      "sources": [
+        {
+          "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
+          "title": "[DISCUSS] Ambiguity in the FILE logical type when inline and uri are both set",
+          "url": "https://lists.apache.org/thread/yrghnfgghh6l86vg8hfhovo655c9qwtq"
+        }
+      ]
     }
   ],
   "generation": {
-    "method": "local",
+    "method": "llm",
+    "provider": "groq",
+    "model": "openai/gpt-oss-20b",
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-23T16:59:07.076457+00:00",
-  "item_count": 6,
+  "generated_at": "2026-11-24T16:52:16.270007+00:00",
+  "item_count": 5,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-16",
+    "from": "2026-11-19",
     "to": "2026-11-23",
-    "thread_count": 6
+    "thread_count": 5
   }
 }

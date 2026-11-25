@@ -1,8 +1,8 @@
 {
-  "summary": "Recent discussions in the Parquet community focus on refining storage recommendations and improving reader efficiency. Contributors are debating updates to the recommended row group size, proposing the removal of the 8\u202fKB page size guideline, and adding uncompressed page size metadata to the OffsetIndex to help readers bound memory usage. Parallel threads examine encoding performance with PFOR-based integer encodings and clarify the interpretation of FILE logical types when both inline data and a URI are present.",
+  "summary": "Recent discussions in the Parquet community focus on revising size recommendations for row groups and page sizes, with proposals to drop the 8\u202fKB page size guideline and to adjust row group sizes for object storage. Additional threads evaluate encoding performance, noting FastLanes and PFOR deliver high decode throughput, and address ambiguities in the FILE logical type when both inline data and URI are present. A proposal to include uncompressed page sizes in the OffsetIndex aims to help readers bound memory usage ahead of time.",
   "highlights": [
     {
-      "text": "Proposed update to the recommended Parquet row group size",
+      "text": "Revising the Parquet row group size recommendation to better suit object storage, moving away from the outdated 512\u202fMB\u20131\u202fGB guideline.",
       "sources": [
         {
           "id": "parquet-ml-vmbhp03spx6q2jfxv8zcnn9ynf67wocy",
@@ -12,7 +12,7 @@
       ]
     },
     {
-      "text": "Discussion to remove the 8\u202fKB page size recommendation from documentation",
+      "text": "Removing the 8\u202fKB page size recommendation from the documentation, citing its inadequacy for compression and proposing a larger default.",
       "sources": [
         {
           "id": "parquet-ml-4g8ng2mbrzj01g43dp8fcx7dz49rs529",
@@ -22,17 +22,17 @@
       ]
     },
     {
-      "text": "Proposal to include uncompressed page size and dictionary page size in the Parquet OffsetIndex for memory\u2011bound readers",
+      "text": "Benchmarking FastLanes and PFOR encodings, showing high decode throughput and compression ratios, and agreeing to include them in Parquet.",
       "sources": [
         {
-          "id": "parquet-ml-m3gs0h5qqd14j45pfktxxjk0q621qshb",
-          "title": "[DISCUSS] Page sizes in the OffsetIndex, to let readers bound memory up front",
-          "url": "https://lists.apache.org/thread/m3gs0h5qqd14j45pfktxxjk0q621qshb"
+          "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
+          "title": "Re: [DISCUSS] Breakdown of FastLanes for Parquet: Benchmark results and recommendations (+ apologies)",
+          "url": "https://lists.apache.org/thread/669rvfch65xcfdqqtj22nlsvkzthxmy3"
         }
       ]
     },
     {
-      "text": "Clarification of FILE logical type behavior when both inline data and a URI are specified",
+      "text": "Clarifying the FILE logical type when both inline data and a URI are set, noting that different readers may return different bytes.",
       "sources": [
         {
           "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
@@ -49,7 +49,7 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-24T16:52:16.270007+00:00",
+  "generated_at": "2026-11-25T16:54:08.981738+00:00",
   "item_count": 5,
   "period": "last_7_days",
   "coverage": {

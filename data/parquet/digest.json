@@ -1,8 +1,8 @@
 {
-  "summary": "Recent discussions in the Parquet community focus on revising size recommendations for row groups and page sizes, with proposals to drop the 8\u202fKB page size guideline and to adjust row group sizes for object storage. Additional threads evaluate encoding performance, noting FastLanes and PFOR deliver high decode throughput, and address ambiguities in the FILE logical type when both inline data and URI are present. A proposal to include uncompressed page sizes in the OffsetIndex aims to help readers bound memory usage ahead of time.",
+  "summary": "Recent discussions focus on optimizing Parquet performance and clarifying type semantics. Contributors are revising row group and page size recommendations, evaluating compression codecs, and resolving ambiguity in the FILE logical type when both inline data and URI are present.",
   "highlights": [
     {
-      "text": "Revising the Parquet row group size recommendation to better suit object storage, moving away from the outdated 512\u202fMB\u20131\u202fGB guideline.",
+      "text": "Revising row group size recommendation to balance pruning, parallelism, writer memory, and footer size.",
       "sources": [
         {
           "id": "parquet-ml-vmbhp03spx6q2jfxv8zcnn9ynf67wocy",
@@ -12,17 +12,7 @@
       ]
     },
     {
-      "text": "Removing the 8\u202fKB page size recommendation from the documentation, citing its inadequacy for compression and proposing a larger default.",
-      "sources": [
-        {
-          "id": "parquet-ml-4g8ng2mbrzj01g43dp8fcx7dz49rs529",
-          "title": "[DISCUSS] Remove the 8KB page size recommendation",
-          "url": "https://lists.apache.org/thread/4g8ng2mbrzj01g43dp8fcx7dz49rs529"
-        }
-      ]
-    },
-    {
-      "text": "Benchmarking FastLanes and PFOR encodings, showing high decode throughput and compression ratios, and agreeing to include them in Parquet.",
+      "text": "Benchmarking FastLanes: PFOR outperforms other codecs in decode throughput and compression ratio.",
       "sources": [
         {
           "id": "parquet-ml-669rvfch65xcfdqqtj22nlsvkzthxmy3",
@@ -32,12 +22,22 @@
       ]
     },
     {
-      "text": "Clarifying the FILE logical type when both inline data and a URI are set, noting that different readers may return different bytes.",
+      "text": "Clarifying FILE logical type ambiguity when both inline data and URI are set.",
       "sources": [
         {
           "id": "parquet-ml-yrghnfgghh6l86vg8hfhovo655c9qwtq",
           "title": "[DISCUSS] Ambiguity in the FILE logical type when inline and uri are both set",
           "url": "https://lists.apache.org/thread/yrghnfgghh6l86vg8hfhovo655c9qwtq"
+        }
+      ]
+    },
+    {
+      "text": "Proposing removal of the 8KB page size recommendation due to insufficient compression.",
+      "sources": [
+        {
+          "id": "parquet-ml-4g8ng2mbrzj01g43dp8fcx7dz49rs529",
+          "title": "[DISCUSS] Remove the 8KB page size recommendation",
+          "url": "https://lists.apache.org/thread/4g8ng2mbrzj01g43dp8fcx7dz49rs529"
         }
       ]
     }
@@ -49,12 +49,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-25T16:54:08.981738+00:00",
-  "item_count": 5,
+  "generated_at": "2026-11-26T16:08:07.660901+00:00",
+  "item_count": 4,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-19",
     "to": "2026-11-23",
-    "thread_count": 5
+    "thread_count": 4
   }
 }

@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-11-25T16:54:47.348191+00:00",
+  "generated_at": "2026-11-26T16:08:36.157378+00:00",
   "total": 321,
   "proposals": [
     {
@@ -3131,12 +3131,20 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion proposes revising the Parquet row group size recommendation, noting that the current 512MB-1GB guideline is outdated for object storage and that smaller row groups can improve pruning and parallelism while larger groups increase writer memory usage and footer size. It suggests a balanced approach that considers tradeoffs and the relationship between row groups and pages.",
+      "llm_summary": "The discussion proposes replacing the outdated 512MB-1GB row group recommendation with a set of tradeoffs that consider pruning, parallelism, writer memory, and footer size. It notes that current defaults are much smaller and that object storage has no block boundaries, so a single size does not fit all workloads.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
-      "llm_key_points": [],
-      "llm_topics": [],
+      "llm_key_points": [
+        "Row group size affects pruning, parallelism, writer memory, and footer size",
+        "Current defaults are smaller than 512MB-1GB and object storage has no blocks",
+        "Recommendation should reflect tradeoffs and no single size fits all"
+      ],
+      "llm_topics": [
+        "row-group-sizing",
+        "performance",
+        "storage"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -3144,6 +3152,7 @@
         "prompt_version": 1
       },
       "_content_hash": "25f909a6d7db",
+      "llm_title": "Update row group size recommendation",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-ml-vmbhp03spx6q2jfxv8zcnn9ynf67wocy"
     },
@@ -3184,17 +3193,18 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion evaluates PFOR and FastLanes encoding for Parquet, presenting benchmark results that show high decode throughput and compression ratios. Participants agree to include Delta mode in the initial specification and consider renaming the proposal to FastLanes, while deferring interleaving and unified transpose layout to later stages. The focus remains on achieving efficient decoding with SIMD-friendly layouts.",
+      "llm_summary": "The discussion compares PFOR, LZ4, BSS+LZ4, DBP, and BSS+ZSTD for Parquet, showing PFOR delivers the highest decode throughput and compression ratio. Participants agree to include Delta mode in the initial specification, rename the proposal to FastLanes, and postpone interleaving and Unified Transpose Layout to later stages.",
       "llm_status": "discussion",
       "comment_count": 5,
       "participant_count": 3,
       "llm_key_points": [
-        "PFOR shows superior decode speed and compression",
-        "Delta mode inclusion recommended",
-        "Naming and layout extensions (interleaving, UTL) deferred"
+        "PFOR outperforms other codecs in decode speed and compression",
+        "Decision to include Delta mode and rename to FastLanes",
+        "Interleaving and Unified Transpose Layout to be added later"
       ],
       "llm_topics": [
-        "encoding",
+        "parquet",
+        "compression",
         "performance"
       ],
       "summary_generation": {
@@ -3204,7 +3214,7 @@
         "prompt_version": 1
       },
       "_content_hash": "529ea5d174e3",
-      "llm_title": "FastLanes for Parquet benchmark results",
+      "llm_title": "FastLanes Parquet Benchmark Results",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
@@ -3420,16 +3430,19 @@
           "title": "\ufeff[DESIGN] A SERIALIZED_VALUE logical type for Parquet"
         }
       ],
-      "llm_summary": "The proposal introduces a SERIALIZED_VALUE logical type for BYTE_ARRAY columns that hold serialized messages such as protobuf, FlatBuffers, or Thrift, recording the format and schema without decoding the bytes. It aims to provide a consistent, engine\u2011agnostic way to store and later interpret these messages while preserving the original bytes for archival purposes. The discussion highlights the niche use case and debates its necessity versus existing approaches.",
+      "llm_summary": "The proposal introduces a SERIALIZED_VALUE logical type for BYTE_ARRAY columns that store serialized messages such as protobuf, FlatBuffers, or Thrift, recording the format and schema without decoding the bytes. It aims to standardize how different engines interpret these payloads and support event archiving while keeping the original bytes intact. Feedback highlights concerns about the niche use case and suggests alternative approaches like struct columns or expanding fields.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
       "llm_key_points": [
-        "Introduces a logical type that annotates binary columns with format and schema information",
-        "Parquet does not decode the bytes, leaving decoding to readers for cross\u2011engine consistency",
-        "Debate centers on the niche use case of preserving original serialized messages for archival"
+        "Adds a SERIALIZED_VALUE logical type to annotate BYTE_ARRAY columns with format and schema",
+        "Feedback questions the niche use case and compares to struct columns or field expansion"
       ],
-      "llm_topics": [],
+      "llm_topics": [
+        "logical-types",
+        "serialization",
+        "parquet"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -3548,14 +3561,14 @@
           "title": "\ufeffThe Modular Footer aims to reduce the metadata I/O and decoding work needed to start a scan. The goals and motivation f"
         }
       ],
-      "llm_summary": "The proposal introduces a page-first data layout for Parquet, allowing each column to independently decide when to cut pages without being constrained by row group boundaries. By using a modular footer, the new layout can represent the data more efficiently, producing better-sized pages and reducing unnecessary dictionary resets. This change aims to improve write flexibility and read performance, especially for wide or sparse schemas.",
+      "llm_summary": "The proposal introduces a new Parquet data layout that decouples page boundaries from row groups, allowing each column to independently decide when to cut pages. By using a modular footer, writers can buffer data per column and avoid prematurely closing pages, improving page sizing and reducing unnecessary dictionary resets. The design preserves row\u2011group statistics for data skipping while enabling more efficient storage for uneven column sizes.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "Decouple page boundaries from row groups for independent column page cuts",
-        "Use modular footer to efficiently represent the new layout",
-        "Improves page sizing and reduces dictionary resets, enhancing read performance"
+        "Decouples page boundaries from row groups",
+        "Uses modular footer for independent page cutting",
+        "Improves page sizing and reduces dictionary overhead"
       ],
       "llm_topics": [
         "data-layout",
@@ -3568,7 +3581,7 @@
         "prompt_version": 1
       },
       "_content_hash": "8129ebe87c54",
-      "llm_title": "Page-First Data Layout",
+      "llm_title": "Page-First Data Layout Proposal",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },

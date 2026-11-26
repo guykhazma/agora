@@ -1,17 +1,17 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-11-25T16:54:47.364714+00:00",
+  "generated_at": "2026-11-26T16:08:36.168424+00:00",
   "total": 85,
   "initiatives": [
     {
       "id": "parquet-init-parquet-ml-vmbhp03spx6q2jfxv8zcnn9ynf67wocy",
-      "title": "Parquet Storage Recommendations",
-      "summary": "The initiative seeks to revise Parquet storage guidelines by updating the row group size recommendation to better suit object storage and improve pruning, while also removing the outdated 8KB page size recommendation in favor of more effective compression guidance. These changes aim to enhance performance and efficiency for modern data workloads.",
+      "title": "Parquet Size Recommendations",
+      "summary": "The initiative seeks to modernize Parquet configuration guidance by replacing the outdated 512\u202fMB\u20131\u202fGB row group recommendation with a trade\u2011off based approach that accounts for pruning, parallelism, writer memory, and footer size. It also proposes removing the 8\u202fKB page size recommendation, arguing that such a small page is suboptimal for compression and should be replaced with more flexible guidance.",
       "status": "discussion",
       "key_points": [
-        "Update row group size recommendation to smaller, object\u2011storage\u2011friendly sizes",
-        "Remove the 8KB page size recommendation and provide new compression guidance",
-        "Improve query pruning and compression efficiency"
+        "Replace the 512\u202fMB\u20131\u202fGB row group recommendation with trade\u2011off based guidance considering pruning, parallelism, writer memory, and footer size.",
+        "Remove the 8\u202fKB page size recommendation and suggest larger page sizes for better compression.",
+        "Provide updated documentation that reflects these new recommendations and best practices."
       ],
       "proposal_ids": [
         "parquet-ml-vmbhp03spx6q2jfxv8zcnn9ynf67wocy",
@@ -20,13 +20,15 @@
       "proposal_count": 2,
       "shared_docs": [],
       "last_activity": "2026-11-23T14:59:49+00:00",
-      "signals": [],
+      "signals": [
+        "topic:performance"
+      ],
       "archived": false
     },
     {
       "id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533",
       "title": "Ambiguity in FILE type when inline and uri set",
-      "summary": "The initiative introduces new logical types such as FILE",
+      "summary": "",
       "status": "discussion",
       "key_points": [],
       "proposal_ids": [
@@ -123,20 +125,16 @@
         "cross_source",
         "vote_thread",
         "topic:performance",
-        "topic:encoding"
+        "topic:parquet"
       ],
       "archived": false
     },
     {
       "id": "parquet-init-parquet-ml-m3gs0h5qqd14j45pfktxxjk0q621qshb",
-      "title": "Parquet Metadata Optimization",
-      "summary": "The initiative focuses on improving Parquet file metadata handling by adding page size information to the OffsetIndex, introducing a lightweight byte-offset index for faster column metadata lookup, and enhancing statistics support for GEO columns while cleaning up unused fields.",
+      "title": "Page sizes in OffsetIndex",
+      "summary": "The initiative focuses on improving Parquet\u2019s metadata handling by adding page size information to the OffsetIndex",
       "status": "discussion",
-      "key_points": [
-        "Add page size info to OffsetIndex for memory bounding",
-        "Append a compact byte-offset index to the footer for faster metadata access",
-        "Provide page-level GEO statistics and clean up unused metadata fields"
-      ],
+      "key_points": [],
       "proposal_ids": [
         "parquet-ml-m3gs0h5qqd14j45pfktxxjk0q621qshb",
         "parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt",
@@ -155,14 +153,10 @@
     },
     {
       "id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-2-rc2",
-      "title": "Parquet Release & Versioning",
-      "summary": "The initiative focuses on managing Apache Parquet\u2019s release cycle, including patch releases such as 1.18.x and 1.19.x, and proposing a coherent versioning scheme that aligns format changes with SemVer principles. It also covers automation of releases, documentation updates, and community voting on format changes and feature compatibility.",
+      "title": "Fix DataPageV2 Encryption in Parquet-Java",
+      "summary": "## What's Changed * Bump actions/stale from 10 to 11 by @dependabot[bot] in https://github.com/apache/parquet-java/pull/3705 * Bump com.github.luben:zstd-jni from 1.5.7-11 to 1.5.7-12 by @dependabot[b",
       "status": "released",
-      "key_points": [
-        "Coordinated patch releases and release management",
-        "Proposed versioning scheme using SemVer and format versioning",
-        "Automation of releases and documentation improvements"
-      ],
+      "key_points": [],
       "proposal_ids": [
         "parquet-gh-rel-apache-parquet-1-18-2",
         "parquet-gh-rel-apache-parquet-1-18-2-rc2",
@@ -277,13 +271,13 @@
     },
     {
       "id": "parquet-init-parquet-ml-fzxrc5bg8xqzgxoop6qsh3v7w1ly5k7f",
-      "title": "PMC Member Additions",
-      "summary": "The initiative focuses on inviting and appointing new members and committers to the Apache Parquet Project Management Committee. Several announcements were made over the years, but most proposals were abandoned, with the latest discussion concerning Gidon Gershinsky's appointment.",
+      "title": "Parquet PMC Membership",
+      "summary": "This initiative focuses on expanding the Apache Parquet Project Management Committee by inviting new committers and members. Several proposals were submitted over the years, but most have been abandoned, with the latest discussion still ongoing. The goal is to strengthen governance and community involvement.",
       "status": "discussion",
       "key_points": [
-        "Inviting new committers and PMC members",
-        "Multiple announcements over several years",
-        "Most proposals were abandoned, latest is a discussion"
+        "Expansion of PMC",
+        "Committer invitations",
+        "Abandoned proposals"
       ],
       "proposal_ids": [
         "parquet-ml-fzxrc5bg8xqzgxoop6qsh3v7w1ly5k7f",

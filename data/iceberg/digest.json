@@ -1,5 +1,5 @@
 {
-  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. Compaction rewrites in Iceberg fail when concurrent deletion vectors are added to source files, causing costly retries. Options include keeping the meeting at 15:00 UTC year\u2011round or pinning it to 8\u202fAM US Pacific time, with contributors from the US, Europe, and Asia weighing in on the impact of each choice. The session concluded with action items for developers to prepare for the next major update and to ensure a smooth transition to the stable release.",
+  "summary": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filtering improvements, along with bug fixes for ORC variant handling and vectorized reads. The discussion proposes adding a new stream-from-snapshot option to Spark\u2019s Iceberg connector, allowing users to choose whether to load the current snapshot first or start from the oldest ancestor. The community debates whether this initial snapshot load should be the default or an opt\u2011in feature, citing concerns about data consistency when deletes or overwrites occur. Options include keeping the meeting at 15:00 UTC year\u2011round or pinning it to 8\u202fAM US Pacific time, with contributors from the US, Europe, and Asia weighing in on the impact of each choice.",
   "highlights": [
     {
       "text": "This document records the Iceberg Spark integration updates, covering new features such as DSv2 validation, geometry bounds in Parquet writers, and runtime filt\u2026",
@@ -12,32 +12,32 @@
       ]
     },
     {
-      "text": "The discussion focuses on clarifying what \"deterministic\" means for UDFs used in stored expressions, especially when different engines evaluate the same express\u2026",
+      "text": "The discussion proposes adding a new stream-from-snapshot option to Spark\u2019s Iceberg connector, allowing users to choose whether to load the current snapshot fir\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-18qjst8jmj1sr9qvmyppfjlqgtn39p5g",
-          "title": "[DISCUSS] Cross-engine determinism for functions in stored expressions",
-          "url": "https://lists.apache.org/thread/18qjst8jmj1sr9qvmyppfjlqgtn39p5g"
+          "id": "iceberg-ml-qgbm6pjbnb7cl2cjzlqlg7fh8gpptk4j",
+          "title": "[DISCUSS] Spark: support initial snapshot load for streaming reads (#18068)",
+          "url": "https://lists.apache.org/thread/qgbm6pjbnb7cl2cjzlqlg7fh8gpptk4j"
         }
       ]
     },
     {
-      "text": "Compaction rewrites in Iceberg fail when concurrent deletion vectors are added to source files, causing costly retries. The proposal records row\u2011position mappin\u2026",
+      "text": "The Iceberg Catalog community sync held on November 25, 2026 covered recent progress on catalog integration, community contributions, and upcoming roadmap items\u2026",
       "sources": [
         {
-          "id": "iceberg-ml-2gwjy0c810tzktfcfcnz3vps06p2k3kp",
-          "title": "DISCUSS] Resolving compaction conflicts with concurrent deletion vectors",
-          "url": "https://lists.apache.org/thread/2gwjy0c810tzktfcfcnz3vps06p2k3kp"
+          "id": "iceberg-yt-ytT4bW6_wEo",
+          "title": "Iceberg Catalog Community Sync Nov 25 2026",
+          "url": "https://www.youtube.com/watch?v=ytT4bW6_wEo"
         }
       ]
     },
     {
-      "text": "Iceberg Index Support Sync   2026 11 23",
+      "text": "The community sync covered recent progress on the Iceberg Catalog, including new features and upcoming releases. Participants discussed community contributions,\u2026",
       "sources": [
         {
-          "id": "iceberg-yt-RDwps1X3brE",
-          "title": "Iceberg Index Support Sync   2026 11 23",
-          "url": "https://www.youtube.com/watch?v=RDwps1X3brE"
+          "id": "iceberg-yt-OCrHZsn7vxE",
+          "title": "Iceberg Catalog Community Sync Nov 04 2026",
+          "url": "https://www.youtube.com/watch?v=OCrHZsn7vxE"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-25T17:02:05.020455+00:00",
-  "item_count": 13,
+  "generated_at": "2026-11-26T16:13:03.848706+00:00",
+  "item_count": 15,
   "period": "last_7_days",
   "coverage": {
     "from": "2026-11-19",
-    "to": "2026-11-25",
-    "thread_count": 13
+    "to": "2026-11-26",
+    "thread_count": 15
   }
 }

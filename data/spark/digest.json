@@ -1,6 +1,16 @@
 {
-  "summary": "The discussion proposes setting up the first Spark community sync on Nov 30, 2026, with a 50\u2011minute agenda covering recent changes, SPIPs, release status, and an open floor. Serge Rielau proposes a new SQL data type, OBJECT, that matches structured fields by name rather than position, addressing the current limitations of STRUCT. The discussion centers on a proposal to broaden Spark\u2019s Data Source V2 push-down capabilities to include full outer, semi, anti joins, alias tolerance, set operations, and window functions. Participants debate which join types are worth supporting and whether the new features should be enabled by default, while noting that the reference implementation targets JDBC/H2 and does not cover cross-source push-down.",
+  "summary": "Spark\u2019s current deterministic flag conflates repeatability with row-order, blocking pushdowns for expensive nondeterministic expressions such as random\u2011IV encryption and remote UDFs. The proposal introduces an opt\u2011in Expression.rowOrderIndependent property that lets Catalyst push down unrelated filters, dynamic partition pruning, and joins for row\u2011order\u2011independent expressions while preserving safety for existing nondeterministic functions. They monitor failure rates, which rise sharply for larger PRs, and are adjusting parallelism, timeouts, and security controls. The discussion proposes extending Spark\u2019s Data Source V2 push-down framework to support additional operators such as full outer, semi, and anti joins, alias tolerance, set operations, and window functions, aiming to reduce data transfer and improve performance.",
   "highlights": [
+    {
+      "text": "Serge Rielau proposes a new SQL data type, OBJECT, that behaves like STRUCT but matches fields by name instead of position, addressing issues with implicit posi\u2026",
+      "sources": [
+        {
+          "id": "spark-ml-8swj2oxkh5hxxpv9kvx63ks55pxch9z2",
+          "title": "[DISCUSS] SPIP: Add the OBJECT data type",
+          "url": "https://lists.apache.org/thread/8swj2oxkh5hxxpv9kvx63ks55pxch9z2"
+        }
+      ]
+    },
     {
       "text": "The proposal introduces a method to join streaming data with external static storage by performing on-demand lookups based on keys, rather than loading the enti\u2026",
       "sources": [
@@ -12,7 +22,7 @@
       ]
     },
     {
-      "text": "The discussion proposes adding an opt\u2011in Expression.rowOrderIndependent flag to Catalyst, allowing the engine to differentiate expressions whose output depends \u2026",
+      "text": "Spark\u2019s current deterministic flag conflates repeatability with row-order, blocking pushdowns for expensive nondeterministic expressions such as random\u2011IV encry\u2026",
       "sources": [
         {
           "id": "spark-ml-bgnofkm2srk0ypnlqpscn6mb45k7ywnk",
@@ -22,22 +32,12 @@
       ]
     },
     {
-      "text": "The discussion revolves around adding the SQL-standard GROUPS window frame type to Spark SQL, which currently supports only ROWS and RANGE. The proposal argues \u2026",
+      "text": "The discussion centers on a proposal to add SQL-standard GROUPS window frame support to Spark SQL",
       "sources": [
         {
           "id": "spark-ml-o6v6zf285k5t76qvc6fwf346h3c8tbfo",
           "title": "Re: [DISCUSS] Support GROUPS window frames in Spark SQL",
           "url": "https://lists.apache.org/thread/o6v6zf285k5t76qvc6fwf346h3c8tbfo"
-        }
-      ]
-    },
-    {
-      "text": "The team is testing an AI review bot that processes multiple pull requests in parallel, currently reviewing 4\u20138 PRs at a time and taking about an hour per revie\u2026",
-      "sources": [
-        {
-          "id": "spark-ml-8qwojcsfshkdcnqrqckrc8f8lndg16ds",
-          "title": "Re: [DISCUSS] Automated AI code review on new Spark PRs (trial)",
-          "url": "https://lists.apache.org/thread/8qwojcsfshkdcnqrqckrc8f8lndg16ds"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-25T16:33:04.476874+00:00",
-  "item_count": 11,
+  "generated_at": "2026-11-26T16:05:56.924643+00:00",
+  "item_count": 10,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-19",
+    "from": "2026-11-20",
     "to": "2026-11-25",
-    "thread_count": 11
+    "thread_count": 10
   }
 }

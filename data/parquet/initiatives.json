@@ -1,17 +1,17 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-11-26T16:08:36.168424+00:00",
-  "total": 85,
+  "generated_at": "2026-11-27T15:58:12.735117+00:00",
+  "total": 86,
   "initiatives": [
     {
       "id": "parquet-init-parquet-ml-vmbhp03spx6q2jfxv8zcnn9ynf67wocy",
       "title": "Parquet Size Recommendations",
-      "summary": "The initiative seeks to modernize Parquet configuration guidance by replacing the outdated 512\u202fMB\u20131\u202fGB row group recommendation with a trade\u2011off based approach that accounts for pruning, parallelism, writer memory, and footer size. It also proposes removing the 8\u202fKB page size recommendation, arguing that such a small page is suboptimal for compression and should be replaced with more flexible guidance.",
+      "summary": "The initiative seeks to modernize Parquet file configuration by replacing the outdated 512MB-1GB row group recommendation with a set of tradeoffs that account for pruning, parallelism, writer memory, and footer size. It also proposes removing the 8KB page size recommendation, offering guidance on more suitable page sizes for effective compression and performance.",
       "status": "discussion",
       "key_points": [
-        "Replace the 512\u202fMB\u20131\u202fGB row group recommendation with trade\u2011off based guidance considering pruning, parallelism, writer memory, and footer size.",
-        "Remove the 8\u202fKB page size recommendation and suggest larger page sizes for better compression.",
-        "Provide updated documentation that reflects these new recommendations and best practices."
+        "Replace 512MB-1GB row group recommendation with tradeoffs considering pruning, parallelism, writer memory, and footer size",
+        "Remove 8KB page size recommendation and provide guidance on appropriate page sizes for compression",
+        "Improve Parquet file performance and reduce overhead"
       ],
       "proposal_ids": [
         "parquet-ml-vmbhp03spx6q2jfxv8zcnn9ynf67wocy",
@@ -44,7 +44,6 @@
         "parquet-ml-qgrkw5yvobnxpf5pcqm7vpyr4tqfgxkk",
         "parquet-ml-rd2x7c15dqwf8qkdl70r7zr1ykmwkmf5",
         "parquet-ml-3h0ybjk5bg22msl1czvtjymmppllg59b",
-        "parquet-ml-4ks6fg3pt13xgkr1c1gf436opy951tnm",
         "parquet-ml-ott9f9rtdtwpr2pxfhrnb8g27ksnxmsl",
         "parquet-ml-hfoltdl6o6txc3zp4680nns1mh29h0r8",
         "parquet-ml-hgmd58wrv9yoopcrf61m1bg211l65tbt",
@@ -52,7 +51,6 @@
         "parquet-ml-optqjx4kg2lohl1148dykn6rhomod9s7",
         "parquet-ml-f930pg123w86wpqhthhsx603g27obgo2",
         "parquet-ml-jgq7wk3641ss27y851zdok1v2nskyvhd",
-        "parquet-ml-6fm50b3pmh6mz659jb5wx5vzmvwccz1n",
         "parquet-ml-od9hxfssjgnmsh23o18q78hszowq7pcy",
         "parquet-ml-nmq7odlbg1p6yx0hg00clzjbc3tb1tc3",
         "parquet-ml-m6p5shlt1hfk1b3h5y1pbqg8tpkwpcgz",
@@ -61,6 +59,8 @@
         "parquet-ml-8tlhnk2rrqo72onsr45on1zs1mhmcytj",
         "parquet-ml-7zfwc3o53btd2xbdb8bqf8lxsrk76cxr",
         "parquet-ml-k9q8nctkmoh0mwd7r470ytqr64f33w9g",
+        "parquet-ml-9xo3mp4n23p8psmrhso5t9q899vxwfjt",
+        "parquet-ml-0gxjk4tphxls0gcrc7lt775pf8s7gtz3",
         "parquet-ml-21f6xotkqstk81jcsk1t3r94g718jbzc"
       ],
       "proposal_count": 30,
@@ -125,16 +125,20 @@
         "cross_source",
         "vote_thread",
         "topic:performance",
-        "topic:parquet"
+        "topic:encoding"
       ],
       "archived": false
     },
     {
       "id": "parquet-init-parquet-ml-m3gs0h5qqd14j45pfktxxjk0q621qshb",
-      "title": "Page sizes in OffsetIndex",
-      "summary": "The initiative focuses on improving Parquet\u2019s metadata handling by adding page size information to the OffsetIndex",
+      "title": "Parquet Index & Metadata Optimization",
+      "summary": "The initiative focuses on enhancing Parquet\u2019s indexing and metadata to improve reader efficiency and reduce memory usage. It proposes adding page size information to the OffsetIndex, introducing a lightweight byte\u2011offset index to replace the FlatBuffer footer, and adding page\u2011level GEO statistics while deprecating rarely used fields.",
       "status": "discussion",
-      "key_points": [],
+      "key_points": [
+        "Add page size info to OffsetIndex for memory bounding",
+        "Introduce lightweight byte\u2011offset index to replace FlatBuffer footer",
+        "Add page\u2011level GEO statistics and deprecate unused fields"
+      ],
       "proposal_ids": [
         "parquet-ml-m3gs0h5qqd14j45pfktxxjk0q621qshb",
         "parquet-ml-czm2bk45wwtkhhpqxqvmx9dk5wkwk1kt",
@@ -154,8 +158,8 @@
     {
       "id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-2-rc2",
       "title": "Fix DataPageV2 Encryption in Parquet-Java",
-      "summary": "## What's Changed * Bump actions/stale from 10 to 11 by @dependabot[bot] in https://github.com/apache/parquet-java/pull/3705 * Bump com.github.luben:zstd-jni from 1.5.7-11 to 1.5.7-12 by @dependabot[b",
-      "status": "released",
+      "summary": "The initiative focuses on formalizing the release cadence and versioning strategy for Apache",
+      "status": "discussion",
       "key_points": [],
       "proposal_ids": [
         "parquet-gh-rel-apache-parquet-1-18-2",
@@ -177,6 +181,7 @@
         "parquet-ml-32p118d0oozy6025gthjorgwd2d58vmx",
         "parquet-ml-qk8hxpvycy6161lqop1bynr3yt028m7t",
         "parquet-ml-qlff21wcqj17wt6m7mjyok19x49085l0",
+        "parquet-ml-4ks6fg3pt13xgkr1c1gf436opy951tnm",
         "parquet-ml-bqn0f3w7v6vw0wkw7vp9zvss1bk8hco7",
         "parquet-ml-29bkrgwr7pt9jjzf5g5nd9zlhky58dx2",
         "parquet-ml-bdd0qt6n4po26nx9yx55q63bdz8pcgb0",
@@ -188,9 +193,10 @@
         "parquet-ml-qc031s9vp07bpkrvlnz3v3gn0qhn5l91",
         "parquet-ml-q6wbom1q9pndv2nj6wcynxjcjxxkc1hm",
         "parquet-ml-st8l40z5n4cx5c22rcog50ws4pkzdc3s",
+        "parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5",
+        "parquet-ml-4kq2gfgx3cmow26h8ofd93653z9zhs2t",
         "parquet-ml-m6j8lzc09ytyd45wt6pdcyn5qy95f0vt",
-        "parquet-ml-htmof8dodkcmsxbsxrhpx4nq6b3yk600",
-        "parquet-ml-gm7btrgvprdbrh8c5nv061f402txo0vt",
+        "parquet-ml-6fm50b3pmh6mz659jb5wx5vzmvwccz1n",
         "parquet-ml-jzjx3wcgo800166myz0k1993w8gwvd0b",
         "parquet-ml-h0k0hqo0sojqphnbnrkp8b0gmwdzq9on",
         "parquet-ml-sssbt86dxbo2tn7nfr2gvy71hfg1rqyw",
@@ -206,11 +212,9 @@
         "parquet-ml-zdxcn9o70mfoo6zrvp7nbz9m8lym6x2c",
         "parquet-ml-x7l8y8fo4q2f0fyqjgdw2z7341hj6j71",
         "parquet-ml-sc9zoxd3pd10odtgbrsh5qh7szhl2lhg",
-        "parquet-ml-cxhkft17vx24x1znnvo47hbh6lpqdnrx",
         "parquet-ml-h589zkwnpo592gc9n17v0y7qvd9jv1z4",
         "parquet-ml-8xmxc76nd00624qqps6s1qw6lhv1qwv5",
         "parquet-ml-ycgy43knhnw1co8korjp3mc216kqpznf",
-        "parquet-ml-w6r0fwj42wvpm5yflwxhtm2ss3z2hrl3",
         "parquet-ml-6k36mk46m9cnzlwmkh7015zhv5qjn9ob",
         "parquet-ml-999bzrst48mbkgtzplq1bv7711jff7mg",
         "parquet-ml-zdpswrd4yxrj845rmoopqozhk0vrm6vo",
@@ -271,13 +275,13 @@
     },
     {
       "id": "parquet-init-parquet-ml-fzxrc5bg8xqzgxoop6qsh3v7w1ly5k7f",
-      "title": "Parquet PMC Membership",
-      "summary": "This initiative focuses on expanding the Apache Parquet Project Management Committee by inviting new committers and members. Several proposals were submitted over the years, but most have been abandoned, with the latest discussion still ongoing. The goal is to strengthen governance and community involvement.",
+      "title": "Parquet PMC Membership Initiative",
+      "summary": "The initiative focused on adding new members and committers to the Apache Parquet Project Management Committee. Several announcements were made over the years, but most proposals were abandoned, leaving only a single discussion active.",
       "status": "discussion",
       "key_points": [
-        "Expansion of PMC",
-        "Committer invitations",
-        "Abandoned proposals"
+        "Multiple announcements of new PMC members and committers",
+        "Most proposals were abandoned",
+        "One discussion remains active"
       ],
       "proposal_ids": [
         "parquet-ml-fzxrc5bg8xqzgxoop6qsh3v7w1ly5k7f",
@@ -468,42 +472,26 @@
       "archived": false
     },
     {
-      "id": "parquet-init-parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5",
+      "id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",
       "title": "Extended Precision Nanosecond Timestamps",
-      "summary": "The thread proposes adding extension types to Parquet, inspired by Arrow's extension type system, to provide a flexible way to encode more precise column semantics without expanding the Thrift spec. T",
+      "summary": "The proposal introduces a new geometry logical type for Apache Parquet to enable native geospatial support, aiming for more efficient encoding, statistics, and filtering. It is in early stages, with c",
       "status": "released",
       "key_points": [],
       "proposal_ids": [
         "parquet-ml-v11pw7sbnkdxzjhkmcbsx06clyvjv0xx",
-        "parquet-ml-ln25w56zc7wx5dz93sgjyg3c16c3scl5",
-        "parquet-ml-4kq2gfgx3cmow26h8ofd93653z9zhs2t",
         "parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",
         "parquet-ml-tgkomrqsynzd5tm3385wm4tfk933lx6w",
         "parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo",
         "parquet-ml-q20b8kjvs27ly0w2zzxld029nwkc5fhx",
-        "parquet-ml-9xo3mp4n23p8psmrhso5t9q899vxwfjt",
-        "parquet-ml-zhpm9m7wgr2szmb1vlh3yqh04wctww89",
-        "parquet-ml-x3472kldrq5kjnld9ztj1jozz25f40hg",
-        "parquet-ml-7kc6kvdt6xt70v470om1w2fh1kl469mo",
-        "parquet-ml-63mtbq7mydrxd0b9nc5kwgqnhkmp7684",
         "parquet-ml-xjg1zrhll5ztqr4n5lv92f6tfwvfb8rm",
         "parquet-ml-wgobz41mfldbhqpg9q4mdwypghg2cxg2",
         "parquet-ml-m6o68jl7fosfxq66p8c85cqr2t2gv611"
       ],
-      "proposal_count": 15,
-      "shared_docs": [
-        {
-          "url": "https://docs.google.com/document/d/1KkoR0DjzYnLQXO-d0oRBv2k157IZU0_injqd4eV4WiI/edit",
-          "kind": "google_doc",
-          "fetched": true,
-          "title": "\ufeffParquet binary protocol extensions"
-        }
-      ],
+      "proposal_count": 8,
+      "shared_docs": [],
       "last_activity": "2026-09-11T11:59:55+00:00",
       "signals": [
-        "shared_doc",
         "vote_thread",
-        "topic:define-ordering",
         "topic:add-geometry"
       ],
       "archived": false
@@ -607,7 +595,7 @@
       "id": "parquet-init-parquet-gh-rel-apache-parquet-1-18-0",
       "title": "New page layouts for byte arrays",
       "summary": "## What's Changed * GH-2943: Remove hadoop-2 support by @steveloughran in https://github.com/apache/parquet-java/pull/3061 * MINOR: Use `exec-maven-plugin.version` property by @Fokko in https://github",
-      "status": "proposal",
+      "status": "released",
       "key_points": [],
       "proposal_ids": [
         "parquet-gh-rel-apache-parquet-1-18-0",
@@ -637,9 +625,11 @@
         "parquet-ml-nq7n6pbp222txrfo232ybgpvlvpmykbp",
         "parquet-ml-bcc13dtdvnxvg55nhyowbwzqomfljgvb",
         "parquet-ml-odx7x0k0q0jhz7mpsyb18bc0m67dxg2n",
-        "parquet-ml-df0v4hwb63fmzlh8c3xgqdq2cf9hhw8z"
+        "parquet-ml-df0v4hwb63fmzlh8c3xgqdq2cf9hhw8z",
+        "parquet-ml-cxhkft17vx24x1znnvo47hbh6lpqdnrx",
+        "parquet-ml-w6r0fwj42wvpm5yflwxhtm2ss3z2hrl3"
       ],
-      "proposal_count": 28,
+      "proposal_count": 30,
       "shared_docs": [],
       "last_activity": "2026-08-11T20:15:51Z",
       "signals": [
@@ -740,6 +730,24 @@
       "shared_docs": [],
       "last_activity": "2026-06-13T06:45:04+00:00",
       "signals": [],
+      "archived": false
+    },
+    {
+      "id": "parquet-init-parquet-ml-htmof8dodkcmsxbsxrhpx4nq6b3yk600",
+      "title": "Release parquet-format 2.13.0",
+      "summary": "The discussion proposes releasing parquet-format 2.13.0 after nine months since the last release, highlighting key updates such as IEEE 754 total order, clarified field ordering, and geospatial spec w",
+      "status": "proposal",
+      "key_points": [],
+      "proposal_ids": [
+        "parquet-ml-htmof8dodkcmsxbsxrhpx4nq6b3yk600",
+        "parquet-ml-gm7btrgvprdbrh8c5nv061f402txo0vt"
+      ],
+      "proposal_count": 2,
+      "shared_docs": [],
+      "last_activity": "2026-06-11T02:29:52+00:00",
+      "signals": [
+        "vote_thread"
+      ],
       "archived": false
     },
     {
@@ -1501,6 +1509,36 @@
       "archived": false
     },
     {
+      "id": "parquet-init-parquet-ml-x3472kldrq5kjnld9ztj1jozz25f40hg",
+      "title": "[RESULT] Parquet binary protocol extensions",
+      "summary": "The author proposes consolidating the fragmented discussion of Parquet extensions into a single Google document to streamline progress. They plan to continue the conversation there and finalize the PR",
+      "status": "proposal",
+      "key_points": [],
+      "proposal_ids": [
+        "parquet-ml-zhpm9m7wgr2szmb1vlh3yqh04wctww89",
+        "parquet-ml-x3472kldrq5kjnld9ztj1jozz25f40hg",
+        "parquet-ml-7kc6kvdt6xt70v470om1w2fh1kl469mo",
+        "parquet-ml-63mtbq7mydrxd0b9nc5kwgqnhkmp7684"
+      ],
+      "proposal_count": 4,
+      "shared_docs": [
+        {
+          "url": "https://docs.google.com/document/d/1KkoR0DjzYnLQXO-d0oRBv2k157IZU0_injqd4eV4WiI/edit",
+          "kind": "google_doc",
+          "fetched": true,
+          "title": "\ufeffParquet binary protocol extensions"
+        }
+      ],
+      "last_activity": "2024-09-06T08:41:36+00:00",
+      "signals": [
+        "shared_doc",
+        "vote_thread",
+        "topic:parquet-binary",
+        "topic:binary-protocol"
+      ],
+      "archived": false
+    },
+    {
       "id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i443",
       "title": "Add GitHub issue templates",
       "summary": "Add issue templates similar to parquet-java.",
@@ -1672,24 +1710,6 @@
       "last_activity": "2024-07-03T04:47:47Z",
       "signals": [],
       "archived": true
-    },
-    {
-      "id": "parquet-init-parquet-ml-0gxjk4tphxls0gcrc7lt775pf8s7gtz3",
-      "title": "Unify Record and Row Terminology",
-      "summary": "The discussion centers around standardizing the terminology in the parquet.thrift file by using 'row' instead of 'record' to avoid confusion. Several contributors agree that this change would enhance clarity, and a PR has been filed to implement this adjustment.",
-      "status": "discussion",
-      "key_points": [
-        "Agreement on using 'row' for consistency",
-        "PR filed to change terminology"
-      ],
-      "proposal_ids": [
-        "parquet-ml-0gxjk4tphxls0gcrc7lt775pf8s7gtz3"
-      ],
-      "proposal_count": 1,
-      "shared_docs": [],
-      "last_activity": "2024-06-13T12:01:54+00:00",
-      "signals": [],
-      "archived": false
     },
     {
       "id": "parquet-init-parquet-ml-v8y1f43vz39ms85691mss3slw1fx5gtw",

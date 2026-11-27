@@ -1,6 +1,16 @@
 {
-  "summary": "Spark\u2019s current deterministic flag conflates repeatability with row-order, blocking pushdowns for expensive nondeterministic expressions such as random\u2011IV encryption and remote UDFs. The proposal introduces an opt\u2011in Expression.rowOrderIndependent property that lets Catalyst push down unrelated filters, dynamic partition pruning, and joins for row\u2011order\u2011independent expressions while preserving safety for existing nondeterministic functions. They monitor failure rates, which rise sharply for larger PRs, and are adjusting parallelism, timeouts, and security controls. The discussion proposes extending Spark\u2019s Data Source V2 push-down framework to support additional operators such as full outer, semi, and anti joins, alias tolerance, set operations, and window functions, aiming to reduce data transfer and improve performance.",
+  "summary": "This change would enable more efficient query execution for functions such as random\u2011IV encryption or remote UDFs without compromising safety guarantees. A proposal aims to add GROUPS support with standard semantics, preserving existing behavior and requiring no new operator or API changes. They monitor failure rates, which rise sharply for larger PRs, and are adjusting parallelism, timeouts, and security controls. The discussion proposes setting up the first Spark community sync on Nov 30, 2026, with a 50\u2011minute agenda covering recent changes, SPIPs, release status, and open floor topics.",
   "highlights": [
+    {
+      "text": "The discussion proposes kicking off the final release of the Spark 4.0 line, 4.0.6, with 61 patches including critical fixes. The lead plans to cut RC1 early ne\u2026",
+      "sources": [
+        {
+          "id": "spark-ml-z91f43gs4tk1g72j86qpjz43kl2hry3v",
+          "title": "[DISCUSS] Release Apache Spark 4.0.6",
+          "url": "https://lists.apache.org/thread/z91f43gs4tk1g72j86qpjz43kl2hry3v"
+        }
+      ]
+    },
     {
       "text": "Serge Rielau proposes a new SQL data type, OBJECT, that behaves like STRUCT but matches fields by name instead of position, addressing issues with implicit posi\u2026",
       "sources": [
@@ -22,22 +32,12 @@
       ]
     },
     {
-      "text": "Spark\u2019s current deterministic flag conflates repeatability with row-order, blocking pushdowns for expensive nondeterministic expressions such as random\u2011IV encry\u2026",
+      "text": "The discussion proposes adding an opt\u2011in Expression.rowOrderIndependent property to Catalyst, allowing expensive nondeterministic functions that are independent\u2026",
       "sources": [
         {
           "id": "spark-ml-bgnofkm2srk0ypnlqpscn6mb45k7ywnk",
           "title": "[DISCUSS] SPIP: Distinguish row-order-independent nondeterministic expressions in Catalyst",
           "url": "https://lists.apache.org/thread/bgnofkm2srk0ypnlqpscn6mb45k7ywnk"
-        }
-      ]
-    },
-    {
-      "text": "The discussion centers on a proposal to add SQL-standard GROUPS window frame support to Spark SQL",
-      "sources": [
-        {
-          "id": "spark-ml-o6v6zf285k5t76qvc6fwf346h3c8tbfo",
-          "title": "Re: [DISCUSS] Support GROUPS window frames in Spark SQL",
-          "url": "https://lists.apache.org/thread/o6v6zf285k5t76qvc6fwf346h3c8tbfo"
         }
       ]
     }
@@ -47,12 +47,12 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-26T16:05:56.924643+00:00",
+  "generated_at": "2026-11-27T15:55:16.426181+00:00",
   "item_count": 10,
   "period": "last_7_days",
   "coverage": {
-    "from": "2026-11-20",
-    "to": "2026-11-25",
+    "from": "2026-11-21",
+    "to": "2026-11-27",
     "thread_count": 10
   }
 }

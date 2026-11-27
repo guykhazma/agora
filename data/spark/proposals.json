@@ -1,7 +1,7 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-11-26T16:06:46.094413+00:00",
-  "total": 728,
+  "generated_at": "2026-11-27T15:56:14.415119+00:00",
+  "total": 729,
   "proposals": [
     {
       "id": "spark-jira-SPARK-60031",
@@ -1574,7 +1574,7 @@
         "kubernetes-operator"
       ],
       "_content_hash": "8abb53a49d86",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-jira-SPARK-49834",
@@ -1856,7 +1856,7 @@
         "performance-improvement"
       ],
       "_content_hash": "9d9f4fb1df66",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-jira-SPARK-27067",
@@ -2111,6 +2111,43 @@
       "initiative_id": "spark-init-spark-jira-SPARK-58240"
     },
     {
+      "id": "spark-ml-z91f43gs4tk1g72j86qpjz43kl2hry3v",
+      "source": "mailing_list",
+      "kind": "thread",
+      "title": "[DISCUSS] Release Apache Spark 4.0.6",
+      "url": "https://lists.apache.org/thread/z91f43gs4tk1g72j86qpjz43kl2hry3v",
+      "author": "Uro\u0161 Bojani\u0107 via dev <de...@spark.apache.org>",
+      "state": "open",
+      "created_at": "2026-11-27T13:31:29+00:00",
+      "updated_at": "2026-11-27T13:40:20+00:00",
+      "body": "Hi all,\n\nI would like to propose kicking off the Spark 4.0.6 release, and I would be happy to volunteer to drive it.\n\nThe 4.0 line has been maintained and served well until now, and the 18 month window ended on November 23, 2026.\nPer the current versioning policy, the proposed Spark 4.0.6 release would be the final release of the 4.0 line.\n\nAs of today, branch-4.0 has a total of 61 additional patches after Apache Spark 4.0.5 was released on October 27, 2026.\nThis includes several correctness fixes and critical issues. If there are no objections, I plan to cut RC1 early next week.\n\nWhat do you folks think, should we proceed with 4.0.6 as proposed? Please let me know if you have more patches for branch-4.0.\n\nBest,\nUro\u0161\n\n---------------------------------------------------------------------\nTo unsubscribe e-mail: dev-unsubscribe@spark.apache.org\n\n",
+      "labels": [],
+      "linked_resources": [],
+      "llm_summary": "The discussion proposes kicking off the final release of the Spark 4.0 line, 4.0.6, with 61 patches including critical fixes. The lead plans to cut RC1 early next week and requests any objections or additional patches. A remaining correctness issue (SPARK-60579) is noted and should be included if 4.0.6 is the last release.",
+      "llm_status": "discussion",
+      "comment_count": 1,
+      "participant_count": 2,
+      "llm_key_points": [
+        "4.0.6 is the final release of the 4.0 line",
+        "61 patches have been added since 4.0.5",
+        "Pending issue SPARK-60579 must be addressed"
+      ],
+      "llm_topics": [
+        "release-management",
+        "bug-fixes"
+      ],
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
+      "_content_hash": "29166ffc7556",
+      "llm_title": "Apache Spark 4.0.6 Release",
+      "observed_history": [],
+      "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
+    },
+    {
       "id": "spark-ml-ny03mrrg82ofcvx9fccvfj08c5kmgmzd",
       "source": "mailing_list",
       "kind": "thread",
@@ -2174,6 +2211,12 @@
       "llm_status": "discussion",
       "comment_count": 3,
       "participant_count": 3,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
       "llm_key_points": [
         "Introduce OBJECT type that matches STRUCT by name",
         "Enforce name\u2011safe structured values across operations",
@@ -2183,14 +2226,8 @@
         "sql-types",
         "structured-data"
       ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "c234d302ffda",
       "llm_title": "Add OBJECT data type to Spark",
+      "_content_hash": "c234d302ffda",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-8swj2oxkh5hxxpv9kvx63ks55pxch9z2"
     },
@@ -2305,12 +2342,19 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "Spark\u2019s current deterministic flag conflates repeatability with row-order, blocking pushdowns for expensive nondeterministic expressions such as random\u2011IV encryption and remote UDFs. The proposal introduces an opt\u2011in Expression.rowOrderIndependent property that lets Catalyst push down unrelated filters, dynamic partition pruning, and joins for row\u2011order\u2011independent expressions while preserving safety for existing nondeterministic functions. The discussion evaluates whether this abstraction is appropriate for Catalyst\u2019s optimization framework.",
+      "llm_summary": "The discussion proposes adding an opt\u2011in Expression.rowOrderIndependent property to Catalyst, allowing expensive nondeterministic functions that are independent of row order to have filters, dynamic partition pruning, and joins pushed down while keeping existing nondeterministic functions like rand() and uuid() unchanged. This change would enable more efficient query execution for functions such as random\u2011IV encryption or remote UDFs without compromising safety guarantees. The conversation also touches on further distinctions such as per\u2011query determinism and vendor\u2011specific behaviors.",
       "llm_status": "discussion",
       "comment_count": 1,
       "participant_count": 2,
-      "llm_key_points": [],
-      "llm_topics": [],
+      "llm_key_points": [
+        "Introduce Expression.rowOrderIndependent opt\u2011in property",
+        "Enable pushdown of filters, DPP, semi\u2011joins for row\u2011order\u2011independent expressions",
+        "Existing nondeterministic functions remain unchanged"
+      ],
+      "llm_topics": [
+        "performance",
+        "nondeterministic-expressions"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -2318,6 +2362,7 @@
         "prompt_version": 1
       },
       "_content_hash": "abfd7b26416e",
+      "llm_title": "Row-order-independent nondeterministic expressions",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
@@ -2345,12 +2390,18 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion centers on a proposal to add SQL-standard GROUPS window frame support to Spark SQL",
+      "llm_summary": "Spark SQL currently supports ROWS and RANGE window frames but lacks GROUPS, which defines frames based on peer groups. A proposal aims to add GROUPS support with standard semantics, preserving existing behavior and requiring no new operator or API changes. The discussion covers implementation feasibility, compatibility, and potential impact on performance.",
       "llm_status": "discussion",
       "comment_count": 1,
       "participant_count": 1,
-      "llm_key_points": [],
-      "llm_topics": [],
+      "llm_key_points": [
+        "GROUPS frames define peer groups, addressing limitations of ROWS and RANGE for uneven batch sizes.",
+        "Adding GROUPS would not alter current queries and requires no new operator or API changes."
+      ],
+      "llm_topics": [
+        "window-functions",
+        "sql-standard"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -2358,6 +2409,7 @@
         "prompt_version": 1
       },
       "_content_hash": "f582ce0da532",
+      "llm_title": "Support GROUPS window frames in Spark SQL",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-o6v6zf285k5t76qvc6fwf346h3c8tbfo"
     },
@@ -2444,19 +2496,19 @@
           "title": "\ufeffApache Spark Community Sync"
         }
       ],
-      "llm_summary": "The Spark community is planning its first community sync on Nov 30, 2026, with a proposed agenda covering recent changes, SPIPs, release status, and an open floor. Participants have expressed support but raised concerns about the Pacific time slot being inconvenient for Asia contributors, suggesting a more inclusive time or rotating schedule.",
+      "llm_summary": "The discussion proposes setting up the first Spark community sync on Nov 30, 2026, with a 50\u2011minute agenda covering recent changes, SPIPs, release status, and open floor topics. Participants support the timing and suggest rotating meeting times to accommodate global regions. A Google Calendar invite and post\u2011meeting notes will be shared on the dev mailing list.",
       "llm_status": "discussion",
       "comment_count": 12,
       "participant_count": 10,
       "llm_key_points": [
-        "Proposed date/time and agenda for first community sync",
-        "Support for the initiative but concerns about Asia time zone",
-        "Suggestion to rotate meeting times to accommodate global contributors"
+        "Scheduling first community sync and agenda",
+        "Rotating meeting times for global participants",
+        "Open agenda and post\u2011meeting notes"
       ],
       "llm_topics": [
         "community-events",
         "meeting-scheduling",
-        "global-participation"
+        "spark-communication"
       ],
       "summary_generation": {
         "method": "llm",
@@ -2581,20 +2633,12 @@
           "title": "\ufeffSPIP: Extend DSv2 Push-Downs including Join, Set Operation, and Window Function Support"
         }
       ],
-      "llm_summary": "The discussion proposes extending Spark\u2019s Data Source V2 push-down framework to support additional operators such as full outer, semi, and anti joins, alias tolerance, set operations, and window functions, aiming to reduce data transfer and improve performance. Participants agree that modernizing DSv2 is timely and consider opt\u2011in interfaces and potentially enabling the feature by default. The proposal builds on existing join push\u2011down capabilities and targets remote execution engines.",
+      "llm_summary": "The discussion proposes extending Spark's Data Source V2 push\u2011down framework to support additional relational operators such",
       "llm_status": "discussion",
       "comment_count": 1,
       "participant_count": 2,
-      "llm_key_points": [
-        "Add support for full outer, semi, anti joins",
-        "Enable set operations and window functions",
-        "Introduce opt\u2011in interfaces and default enabling"
-      ],
-      "llm_topics": [
-        "data-source-v2",
-        "pushdown",
-        "performance"
-      ],
+      "llm_key_points": [],
+      "llm_topics": [],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -2602,7 +2646,6 @@
         "prompt_version": 1
       },
       "_content_hash": "bd77f86e8c92",
-      "llm_title": "Extend DSv2 push-down with joins, set ops, windows",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
@@ -2962,14 +3005,14 @@
           "title": "\ufeff[SPIP] Break the Stage Barrier: Pipelined Spark SQL for Agentic Workloads"
         }
       ],
-      "llm_summary": "The proposal extends Spark\u2019s Real\u2011Time Mode to eligible batch SQL and DataFrame queries, enabling pipelined shuffle that overlaps producer, transfer, and consumer stages to reduce latency. Early prototypes show a 1.64\u00d7 speedup on TPC\u2011H Q3 and aim to lower p95 agent\u2011step latency while preserving exact results. The discussion includes community feedback on planner selection, resource bounding, and handling of blocking operators.",
+      "llm_summary": "The proposal extends Spark\u2019s Real-Time Mode to eligible batch SQL and DataFrame queries, enabling pipelined shuffle boundaries that overlap producer, transfer, and consumer stages to reduce latency. It introduces opt\u2011in planner selection, consumer\u2011first admission, and bounded resource controls. Early prototype results show a 1.64\u00d7 speedup on distributed TPC\u2011H Q3 and a 95.6% reduction in shuffle writes.",
       "llm_status": "discussion",
       "comment_count": 4,
       "participant_count": 5,
       "llm_key_points": [
-        "Pipelined shuffle for eligible batch stages",
-        "Opt\u2011in planner selection with bounded resources",
-        "Prototype demonstrates 1.64\u00d7 speedup on TPC\u2011H Q3"
+        "Pipeline shuffle boundaries to reduce latency",
+        "Opt\u2011in planner selection with bounded resource controls",
+        "Prototype shows 1.64\u00d7 speedup on TPC\u2011H Q3"
       ],
       "llm_topics": [
         "real-time-mode",
@@ -3011,12 +3054,20 @@
           "kind": "github_issue"
         }
       ],
-      "llm_summary": "The discussion proposes adding a built-in ADBC data source to Spark to complement JDBC",
+      "llm_summary": "The discussion proposes adding a built\u2011in ADBC data source to Spark to complement the existing JDBC source, enabling columnar reads that are 3\u201110\u00d7 faster for analytical databases. It includes pushdown of predicates, two partitioning strategies, and bulk ingest writes, while keeping the JDBC API unchanged. The community has largely agreed to move the proposal to a vote.",
       "llm_status": "discussion",
       "comment_count": 1,
       "participant_count": 1,
-      "llm_key_points": [],
-      "llm_topics": [],
+      "llm_key_points": [
+        "Complement JDBC without deprecation",
+        "Columnar reads via Arrow batches improve performance",
+        "Supports pushdown, partitioning, and bulk writes"
+      ],
+      "llm_topics": [
+        "adbc",
+        "performance",
+        "data-source"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -3024,6 +3075,7 @@
         "prompt_version": 1
       },
       "_content_hash": "fd0b33335a38",
+      "llm_title": "ADBC Data Source for Spark",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
@@ -3047,13 +3099,14 @@
           "title": "\ufeffSpark Reading From Spark Connect & Parallel Spark Connect Reads"
         }
       ],
-      "llm_summary": "The discussion proposes using Spark Connect as a security barrier between trusted and untrusted Spark code to enforce fine\u2011grained access controls (FGAC). It outlines adding optional read\u2011restriction support, parallel reads, and limiting accepted operations to prevent bypassing the trust boundary.",
+      "llm_summary": "Holden Karau proposes updating Spark Connect to act as a security barrier between trusted and untrusted Spark code, enabling fine\u2011grained access controls and read restrictions. The plan includes adding parallel read support to avoid driver bottlenecks and limiting operations to verified safe ones, while keeping read restriction enforcement separate from user code. The discussion highlights potential use cases such as partial workload acceleration and multi\u2011vendor data bridging.",
       "llm_status": "discussion",
       "comment_count": 1,
       "participant_count": 2,
       "llm_key_points": [
-        "Use Spark Connect as a bridge to enforce read restrictions and separate trusted/untrusted code",
-        "Add parallel reads and restrict operations to safe ones to avoid bypassing security"
+        "Use Spark Connect as a bridge between trusted and untrusted Spark clusters to enforce read restrictions.",
+        "Add parallel read support to avoid driver bottlenecks.",
+        "Limit trusted engine operations to verified safe ones."
       ],
       "llm_topics": [
         "fine-grained-access",
@@ -3067,7 +3120,7 @@
         "prompt_version": 1
       },
       "_content_hash": "28cd8f4eed1d",
-      "llm_title": "Spark Connect Data Source for FGAC",
+      "llm_title": "Spark Connect Data Source for Spark FGAC",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-sj3kydnv9s4cf1mc9467k4wtl9p13cjg"
     },
@@ -3289,17 +3342,18 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "Morgan proposes an ai_query function for PySpark that lets users call AI models via a simple DataFrame API, and a prototype has passed end\u2011to\u2011end tests with Databricks and Bedrock. The discussion has moved toward a cross\u2011language implementation backed by Catalyst, with a shared SPIP draft guiding the design. The community is coordinating to expand the feature beyond PySpark and to address performance and reliability concerns of AI inference in Spark.",
+      "llm_summary": "A proposal to add an ai_query function to PySpark that takes a prompt column and returns model responses, with a prototype that passed tests on Databricks and Amazon Bedrock. The discussion is moving toward a cross\u2011language native implementation backed by Catalyst, rather than a PySpark\u2011only UDF. The community is exploring how to handle high\u2011variance AI workloads and improve performance and reliability.",
       "llm_status": "discussion",
       "comment_count": 4,
       "participant_count": 3,
       "llm_key_points": [
-        "Prototype ai_query function for PySpark that calls AI models via register_model",
-        "Prototype passed tests with Databricks and Amazon Bedrock",
-        "Discussion is moving toward a cross\u2011language implementation backed by Catalyst and a shared SPIP draft"
+        "Prototype ai_query function for PySpark with model registration",
+        "Exploration of a cross\u2011language native implementation via Catalyst",
+        "Addressing high\u2011variance and failure issues of AI inference in Spark"
       ],
       "llm_topics": [
-        "ai-functions",
+        "ai-inference",
+        "cross-language",
         "performance"
       ],
       "summary_generation": {
@@ -3563,7 +3617,7 @@
           "title": "\ufeff[DESIGN] A SERIALIZED_VALUE logical type for Parquet"
         }
       ],
-      "llm_summary": "{\"clean_title\":\"Spark support",
+      "llm_summary": "The discussion proposes a new Parquet logical type",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
@@ -3577,7 +3631,7 @@
       },
       "_content_hash": "3e77999d2bbd",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-jng7pgo8n7jwkkh35mg5wwcxomxq84ty"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-lpfwjy5bzo6wwlv6l41xpx9t1g2rkzc4",
@@ -3755,18 +3809,18 @@
           "title": "\ufeffSPIP: Bring GraphFrames into Apache Spark"
         }
       ],
-      "llm_summary": "The discussion proposes merging the GraphFrames library into the Apache Spark project to provide a native DataFrame-based graph API, improve maintenance, and support Spark Connect users. It aims to unify graph processing with Spark\u2019s core ecosystem and streamline releases and testing.",
+      "llm_summary": "The discussion proposes integrating the GraphFrames library into the Apache Spark project to provide a native DataFrame-based graph API, streamline maintenance, and eliminate the need for separate installations. It aims to fill the gap for Spark Connect users and offer a consistent experience across Scala and Python. The proposal is currently in the discussion phase, with key points focusing on integration, maintenance, and user experience.",
       "llm_status": "discussion",
       "comment_count": 3,
       "participant_count": 3,
       "llm_key_points": [
-        "Merge GraphFrames into Spark to provide a native graph DataFrame API",
-        "Improve maintenance and integration by moving the library in-tree",
-        "Enable consistent graph support for Spark Connect and other deployment models"
+        "Integrate GraphFrames into Spark to provide a native graph API and unify maintenance",
+        "Eliminate separate installation overhead and support Spark Connect",
+        "Offer a consistent experience across Scala and Python users"
       ],
       "llm_topics": [
         "graph-processing",
-        "in-tree-module",
+        "in-tree-modules",
         "spark-connect"
       ],
       "summary_generation": {
@@ -3776,7 +3830,7 @@
         "prompt_version": 1
       },
       "_content_hash": "1c94b6b5b3e7",
-      "llm_title": "Bring GraphFrames into Apache Spark",
+      "llm_title": "Merge GraphFrames into Spark",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
@@ -3800,18 +3854,19 @@
           "title": "\ufeffSPIP: Extending Spark 3.5 LTS Period For Security Fixes"
         }
       ],
-      "llm_summary": "The discussion considers whether to issue a new Spark 3.5.10 release, noting that 3.5.9 was released in July and the branch has accumulated 36 changes, including security hardening. The proposal to extend 3.5 LTS for security fixes until November 2027 is in place, and the timing of the 3.5.10 release is linked to the completion of the 4.3 RC3 vote. Participants are asked to weigh in on the need and timing of the release.",
+      "llm_summary": "The thread discusses whether to release Spark 3.5.10, noting that 3.5 is the most downloaded version and that 36 security-related changes have accumulated since 3.5.9. It highlights an approved proposal to extend 3.5 LTS for security fixes until November 2027 and suggests timing the release after the 4.3 RC3 vote. Participants are asked to weigh in on the need and timing for the new patch release.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "Interest in a new 3.5.10 release",
-        "Security-only support extended to Nov 2027",
-        "Release timing tied to 4.3 RC3 vote"
+        "Interest in extending 3.5 LTS to 3.5.10",
+        "Security-only support until Nov 2027",
+        "Timing release after 4.3 RC3 vote"
       ],
       "llm_topics": [
-        "security",
-        "release-management"
+        "security-fixes",
+        "lifecycle",
+        "release"
       ],
       "summary_generation": {
         "method": "llm",
@@ -3820,7 +3875,7 @@
         "prompt_version": 1
       },
       "_content_hash": "c0ed1f09ee9f",
-      "llm_title": "Release Apache Spark 3.5.10",
+      "llm_title": "Spark 3.5.10 Release Discussion",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
     },
@@ -6518,7 +6573,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -7884,7 +7939,7 @@
         "kubernetes-operator"
       ],
       "_content_hash": "321a70dec377",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-54kpt80xz2bt2wh1zwss8ckp2tmq7pno",
@@ -9229,7 +9284,7 @@
         "datafusion-comet"
       ],
       "_content_hash": "5f4dae60fa77",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-xq88d310v6nzwtppqsk69x9r9r2qgtmh",
@@ -9398,7 +9453,7 @@
         "spark-community"
       ],
       "_content_hash": "a33aeaa3db50",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-4gk7hqfwsz1s05hj47zyg8dqnqhcsmmr",
@@ -9594,7 +9649,7 @@
         "spark-community"
       ],
       "_content_hash": "6895e1ddb24b",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-v9qmqs2n15g5dp1gzv9jpc3qh6bg3w7c",
@@ -10353,7 +10408,7 @@
         "spark"
       ],
       "_content_hash": "34e97449307d",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-czlg2bbh3hc22810qdcptg04hzrtv424",
@@ -10716,7 +10771,7 @@
         "dongjoon-hyun"
       ],
       "_content_hash": "c3cf5385686c",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-8x7w4k9yqs385fqqctvdnrtrfhkcr766",
@@ -10833,7 +10888,7 @@
         "apache"
       ],
       "_content_hash": "89d4d89686b1",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-wh7jh98xjw9bk8jzw2gr8rk0zn3o5jm9",
@@ -11900,7 +11955,7 @@
         "apache"
       ],
       "_content_hash": "c6025214cd89",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-ft6t2qtkn7sosf18t02pjlv86p631t5x",
@@ -12453,7 +12508,7 @@
         "spark"
       ],
       "_content_hash": "ea685f8cf1cb",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-jml8gjom8pyxs04jm3xx6ttds0z0376g",
@@ -12795,7 +12850,7 @@
         "release"
       ],
       "_content_hash": "e2fe6a545972",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-7t82jvvdy1c57vzm5drztygfb39mk1bz",
@@ -14156,7 +14211,7 @@
         "apache"
       ],
       "_content_hash": "7f438d9bc5b2",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-hc37pwjvcsvdoydzb2d7ksvg951tq21v",
@@ -14440,7 +14495,7 @@
         "apache"
       ],
       "_content_hash": "6da8d9650cc2",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-wok5jwmzgm5jtg9dzdhq4von5mtg1897",
@@ -14678,7 +14733,7 @@
         "dongjoon"
       ],
       "_content_hash": "e5f3a2a7742d",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-6z3167c04l5s46j6vs07d90gjxxcts6t",
@@ -15594,7 +15649,7 @@
         "release"
       ],
       "_content_hash": "f52fa49848aa",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-9tm9ggr64b5ykv9yp52vxd18dpknrrtg",
@@ -16010,7 +16065,7 @@
         "operator"
       ],
       "_content_hash": "57a2b5de51f4",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-khl9oglldblfnop56fowvgsy0m06pngf",
@@ -16562,7 +16617,7 @@
         "spark"
       ],
       "_content_hash": "667a8bdd654d",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-xzjcog2hfczlxxp12cfy3x6zdycr1ogc",
@@ -17477,7 +17532,7 @@
         "apache-spark"
       ],
       "_content_hash": "99853a2065e3",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-0blhqx9yhxdhxsmy9fq11ppgg9k0v83j",
@@ -18101,7 +18156,7 @@
         "apache"
       ],
       "_content_hash": "ace6d952b2c1",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-yrbo7wz4y56ytxf448lsogh6rcp20lz8",
@@ -22067,7 +22122,7 @@
         "release-notes"
       ],
       "_content_hash": "66077141ace6",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-9kgvljw6q27d7b1tvqlll0tgbqtvf3ov"
     },
     {
       "id": "spark-ml-g6x3sqylvoyrcnwpfkhffh5fkbgnm6nm",
@@ -24575,7 +24630,7 @@
         "spark"
       ],
       "_content_hash": "bb2e07d0a0dc",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-w3v4fjk9lvxvp3lr5tngg0hvhfrkl5b0",
@@ -25663,7 +25718,7 @@
         "result"
       ],
       "_content_hash": "4b28b0ffadc3",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-5bkqlp3k2dpgpl24st4p4xtjqmcpd6nz"
     },
     {
       "id": "spark-ml-s9m1pvjogfwpkhjbythpojdvj05yylz7",
@@ -25729,7 +25784,7 @@
         "spark-jira"
       ],
       "_content_hash": "fcfe96f9a833",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-ztlwoz1v1sn81ssks12tb19x37zozxlz",
@@ -27087,7 +27142,7 @@
         "result"
       ],
       "_content_hash": "f47e09858f4a",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-kvcf74n603nspg4j7whhst06zdmk66th",
@@ -27205,7 +27260,7 @@
         "java-based-kubernetes"
       ],
       "_content_hash": "9726f0a6bbee",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-9f5z5lw2tg0yfvhwxvqspyyh45bppkf1",
@@ -29919,7 +29974,7 @@
         "performance-improvement"
       ],
       "_content_hash": "8b09357127ec",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-tdgf4gd4copzxjdoldkf1n2gn5m0kdkc",
@@ -30001,7 +30056,7 @@
         "performance-improvement"
       ],
       "_content_hash": "48429bc6df81",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-l6tprb580lrq1118c83kt9fst30jp8n3",
@@ -30192,7 +30247,7 @@
         "lazy-evaluation"
       ],
       "_content_hash": "48424c48251a",
-      "initiative_id": "spark-init-spark-jira-SPARK-49834",
+      "initiative_id": "spark-init-spark-jira-SPARK-42256",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -31641,7 +31696,7 @@
         "spip"
       ],
       "_content_hash": "f3cf472da1c5",
-      "initiative_id": "spark-init-spark-ml-smpwykpoqr0y5r5xgc9jpt1fjm72fvck"
+      "initiative_id": "spark-init-spark-jira-SPARK-42256"
     },
     {
       "id": "spark-ml-nbqj698v59skknrh7bp6ol0rrs9zsr6r",
@@ -35192,7 +35247,7 @@
         "announce-spark"
       ],
       "_content_hash": "00193636e2bd",
-      "initiative_id": "spark-init-spark-jira-SPARK-45923"
+      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
     },
     {
       "id": "spark-ml-n936z3211rw8z9t9gz6d0n47opvcfjo9",

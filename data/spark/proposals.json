@@ -1,6 +1,6 @@
 {
   "project_id": "spark",
-  "generated_at": "2026-11-27T15:56:14.415119+00:00",
+  "generated_at": "2026-11-28T14:50:37.242651+00:00",
   "total": 729,
   "proposals": [
     {
@@ -1856,7 +1856,7 @@
         "performance-improvement"
       ],
       "_content_hash": "9d9f4fb1df66",
-      "initiative_id": "spark-init-spark-jira-SPARK-42256"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-jira-SPARK-27067",
@@ -2127,6 +2127,12 @@
       "llm_status": "discussion",
       "comment_count": 1,
       "participant_count": 2,
+      "summary_generation": {
+        "method": "llm",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": 1
+      },
       "llm_key_points": [
         "4.0.6 is the final release of the 4.0 line",
         "61 patches have been added since 4.0.5",
@@ -2136,14 +2142,8 @@
         "release-management",
         "bug-fixes"
       ],
-      "summary_generation": {
-        "method": "llm",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "prompt_version": 1
-      },
-      "_content_hash": "29166ffc7556",
       "llm_title": "Apache Spark 4.0.6 Release",
+      "_content_hash": "29166ffc7556",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
     },
@@ -2342,19 +2342,12 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion proposes adding an opt\u2011in Expression.rowOrderIndependent property to Catalyst, allowing expensive nondeterministic functions that are independent of row order to have filters, dynamic partition pruning, and joins pushed down while keeping existing nondeterministic functions like rand() and uuid() unchanged. This change would enable more efficient query execution for functions such as random\u2011IV encryption or remote UDFs without compromising safety guarantees. The conversation also touches on further distinctions such as per\u2011query determinism and vendor\u2011specific behaviors.",
+      "llm_summary": "The discussion proposes adding an opt\u2011in Expression.rowOrderIndependent property to separate nondeterministic expressions that are independent of row order from those that depend on order or context. This change would allow Catalyst to push down unrelated filters, dynamic partition pruning, semi/anti\u2011joins, and DSv2 offsets for expensive stateless expressions such as random\u2011IV encryption or remote UDFs, while preserving the existing safety guarantees for deterministic=false functions like rand() and uuid().",
       "llm_status": "discussion",
       "comment_count": 1,
       "participant_count": 2,
-      "llm_key_points": [
-        "Introduce Expression.rowOrderIndependent opt\u2011in property",
-        "Enable pushdown of filters, DPP, semi\u2011joins for row\u2011order\u2011independent expressions",
-        "Existing nondeterministic functions remain unchanged"
-      ],
-      "llm_topics": [
-        "performance",
-        "nondeterministic-expressions"
-      ],
+      "llm_key_points": [],
+      "llm_topics": [],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -2362,7 +2355,6 @@
         "prompt_version": 1
       },
       "_content_hash": "abfd7b26416e",
-      "llm_title": "Row-order-independent nondeterministic expressions",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
@@ -2390,17 +2382,19 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "Spark SQL currently supports ROWS and RANGE window frames but lacks GROUPS, which defines frames based on peer groups. A proposal aims to add GROUPS support with standard semantics, preserving existing behavior and requiring no new operator or API changes. The discussion covers implementation feasibility, compatibility, and potential impact on performance.",
+      "llm_summary": "The discussion centers on adding the SQL-standard GROUPS window frame type to Spark SQL, which currently supports only ROWS and RANGE. The proposal outlines semantics, compatibility, and implementation feasibility, noting that GROUPS uses peer groups and would not change existing behavior or add new operators. Reviewers are coordinating via GitHub, with AI reviewer trials and committers adding spark-test as a reviewer.",
       "llm_status": "discussion",
       "comment_count": 1,
       "participant_count": 1,
       "llm_key_points": [
-        "GROUPS frames define peer groups, addressing limitations of ROWS and RANGE for uneven batch sizes.",
-        "Adding GROUPS would not alter current queries and requires no new operator or API changes."
+        "Proposal to add GROUPS window frame type to Spark SQL",
+        "Discussion on semantics, compatibility, and implementation feasibility",
+        "Review process includes AI reviewer trial and committers adding spark-test reviewer"
       ],
       "llm_topics": [
         "window-functions",
-        "sql-standard"
+        "sql-standard",
+        "performance"
       ],
       "summary_generation": {
         "method": "llm",
@@ -2411,7 +2405,7 @@
       "_content_hash": "f582ce0da532",
       "llm_title": "Support GROUPS window frames in Spark SQL",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-ml-o6v6zf285k5t76qvc6fwf346h3c8tbfo"
+      "initiative_id": "spark-init-spark-jira-SPARK-60031"
     },
     {
       "id": "spark-ml-8qwojcsfshkdcnqrqckrc8f8lndg16ds",
@@ -2496,20 +2490,12 @@
           "title": "\ufeffApache Spark Community Sync"
         }
       ],
-      "llm_summary": "The discussion proposes setting up the first Spark community sync on Nov 30, 2026, with a 50\u2011minute agenda covering recent changes, SPIPs, release status, and open floor topics. Participants support the timing and suggest rotating meeting times to accommodate global regions. A Google Calendar invite and post\u2011meeting notes will be shared on the dev mailing list.",
+      "llm_summary": "The discussion proposes the first Spark community sync on Nov 30, 2026, aiming to review recent changes, SPIPs, and release status. Participants highlighted time zone difficulties, especially for Asia contributors, and suggested rotating meeting times to accommodate all regions. The meeting will be held on Google Meet, with notes posted to dev@ after each session.",
       "llm_status": "discussion",
       "comment_count": 12,
       "participant_count": 10,
-      "llm_key_points": [
-        "Scheduling first community sync and agenda",
-        "Rotating meeting times for global participants",
-        "Open agenda and post\u2011meeting notes"
-      ],
-      "llm_topics": [
-        "community-events",
-        "meeting-scheduling",
-        "spark-communication"
-      ],
+      "llm_key_points": [],
+      "llm_topics": [],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -2517,7 +2503,6 @@
         "prompt_version": 1
       },
       "_content_hash": "bd9766d2e622",
-      "llm_title": "First Spark Community Sync",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-r8ms8fgfvtr0zr3hmxn7p01fb8lry352"
     },
@@ -3005,14 +2990,14 @@
           "title": "\ufeff[SPIP] Break the Stage Barrier: Pipelined Spark SQL for Agentic Workloads"
         }
       ],
-      "llm_summary": "The proposal extends Spark\u2019s Real-Time Mode to eligible batch SQL and DataFrame queries, enabling pipelined shuffle boundaries that overlap producer, transfer, and consumer stages to reduce latency. It introduces opt\u2011in planner selection, consumer\u2011first admission, and bounded resource controls. Early prototype results show a 1.64\u00d7 speedup on distributed TPC\u2011H Q3 and a 95.6% reduction in shuffle writes.",
+      "llm_summary": "The discussion proposes extending Spark\u2019s Real\u2011Time Mode (RTM) to eligible distributed batch SQL and DataFrame queries, enabling downstream stages to consume intermediate data as it arrives and overlap producer, transfer, and consumer work. Early prototype results show a 1.64\u00d7 speedup on TPC\u2011H Q3 and a 95.6% reduction in physical shuffle writes, aiming to reduce p95 agent\u2011step latency and increase throughput. The proposal remains in draft for community discussion.",
       "llm_status": "discussion",
       "comment_count": 4,
       "participant_count": 5,
       "llm_key_points": [
-        "Pipeline shuffle boundaries to reduce latency",
-        "Opt\u2011in planner selection with bounded resource controls",
-        "Prototype shows 1.64\u00d7 speedup on TPC\u2011H Q3"
+        "Extends RTM to batch SQL/DF queries",
+        "Allows pipelined shuffle to overlap stages",
+        "Prototype shows 1.64x speedup on TPC\u2011H Q3"
       ],
       "llm_topics": [
         "real-time-mode",
@@ -3054,14 +3039,14 @@
           "kind": "github_issue"
         }
       ],
-      "llm_summary": "The discussion proposes adding a built\u2011in ADBC data source to Spark to complement the existing JDBC source, enabling columnar reads that are 3\u201110\u00d7 faster for analytical databases. It includes pushdown of predicates, two partitioning strategies, and bulk ingest writes, while keeping the JDBC API unchanged. The community has largely agreed to move the proposal to a vote.",
+      "llm_summary": "The discussion proposes adding a built\u2011in ADBC data source to Spark to complement the existing JDBC source, enabling columnar Arrow batches for faster analytical reads and writes. It includes pushdown of filters, limits, aggregates, and supports both JDBC\u2011style range partitioning and driver\u2011partitioned execution. The community has agreed to move the proposal forward to a vote.",
       "llm_status": "discussion",
       "comment_count": 1,
       "participant_count": 1,
       "llm_key_points": [
-        "Complement JDBC without deprecation",
-        "Columnar reads via Arrow batches improve performance",
-        "Supports pushdown, partitioning, and bulk writes"
+        "ADBC data source complements JDBC and delivers columnar Arrow batches for faster reads",
+        "Supports pushdown of column pruning, filters, limits, Top\u2011N and aggregates",
+        "Provides JDBC\u2011style range and driver\u2011partitioned execution for partitioning"
       ],
       "llm_topics": [
         "adbc",
@@ -3099,14 +3084,14 @@
           "title": "\ufeffSpark Reading From Spark Connect & Parallel Spark Connect Reads"
         }
       ],
-      "llm_summary": "Holden Karau proposes updating Spark Connect to act as a security barrier between trusted and untrusted Spark code, enabling fine\u2011grained access controls and read restrictions. The plan includes adding parallel read support to avoid driver bottlenecks and limiting operations to verified safe ones, while keeping read restriction enforcement separate from user code. The discussion highlights potential use cases such as partial workload acceleration and multi\u2011vendor data bridging.",
+      "llm_summary": "The discussion proposes using Spark Connect as a security barrier between trusted and untrusted Spark code to enforce fine\u2011grained access controls. It outlines adding support for parallel reads and limiting trusted engine operations to prevent bypassing read restrictions. The goal is to separate user code from secure read enforcement while maintaining performance.",
       "llm_status": "discussion",
       "comment_count": 1,
       "participant_count": 2,
       "llm_key_points": [
-        "Use Spark Connect as a bridge between trusted and untrusted Spark clusters to enforce read restrictions.",
-        "Add parallel read support to avoid driver bottlenecks.",
-        "Limit trusted engine operations to verified safe ones."
+        "Proposes using Spark Connect as a barrier for fine\u2011grained access control",
+        "Requires small additions for parallel reads and driver bottleneck avoidance",
+        "Limits trusted engine operations to prevent trust boundary bypass"
       ],
       "llm_topics": [
         "fine-grained-access",
@@ -3342,19 +3327,19 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "A proposal to add an ai_query function to PySpark that takes a prompt column and returns model responses, with a prototype that passed tests on Databricks and Amazon Bedrock. The discussion is moving toward a cross\u2011language native implementation backed by Catalyst, rather than a PySpark\u2011only UDF. The community is exploring how to handle high\u2011variance AI workloads and improve performance and reliability.",
+      "llm_summary": "A proposal to add an ai_query function to PySpark that takes a prompt column and returns model responses, with a prototype that passed end\u2011to\u2011end tests on both Databricks Model Serving and Amazon Bedrock. The discussion has moved toward a cross\u2011language implementation, aiming for a native SQL function backed by Catalyst and shared execution backend, while addressing high\u2011variance and failure\u2011rate challenges of AI inference. The community is collaborating on a SPIP to formalize the design and integration.",
       "llm_status": "discussion",
       "comment_count": 4,
       "participant_count": 3,
       "llm_key_points": [
-        "Prototype ai_query function for PySpark with model registration",
-        "Exploration of a cross\u2011language native implementation via Catalyst",
-        "Addressing high\u2011variance and failure issues of AI inference in Spark"
+        "Prototype passed end\u2011to\u2011end tests with Databricks and Bedrock",
+        "Cross\u2011language implementation and native SQL function under consideration",
+        "Addressing high\u2011variance and failure\u2011rate issues in AI inference"
       ],
       "llm_topics": [
         "ai-inference",
-        "cross-language",
-        "performance"
+        "performance",
+        "cross-language"
       ],
       "summary_generation": {
         "method": "llm",
@@ -3617,12 +3602,20 @@
           "title": "\ufeff[DESIGN] A SERIALIZED_VALUE logical type for Parquet"
         }
       ],
-      "llm_summary": "The discussion proposes a new Parquet logical type",
+      "llm_summary": "The discussion proposes adding a SERIALIZED_VALUE logical type to Parquet, which annotates BYTE_ARRAY columns holding serialized protobuf, FlatBuffers, or Thrift messages and stores the format and schema in the file. This would let Spark automatically decode such columns without requiring users to supply schemas on each read, and the proposal outlines initial steps and potential benefits for cross-engine compatibility.",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
-      "llm_key_points": [],
-      "llm_topics": [],
+      "llm_key_points": [
+        "Introduce SERIALIZED_VALUE logical type to annotate serialized message bytes",
+        "Store format and schema in Parquet file for automatic decoding by Spark",
+        "Potential to improve cross-engine compatibility and reduce user effort"
+      ],
+      "llm_topics": [
+        "parquet-logical-type",
+        "spark-serialization",
+        "cross-engine-compatibility"
+      ],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -3630,8 +3623,9 @@
         "prompt_version": 1
       },
       "_content_hash": "3e77999d2bbd",
+      "llm_title": "Spark support for Parquet SERIALIZED_VALUE type",
       "observed_history": [],
-      "initiative_id": "spark-init-spark-jira-SPARK-42256"
+      "initiative_id": "spark-init-spark-ml-jng7pgo8n7jwkkh35mg5wwcxomxq84ty"
     },
     {
       "id": "spark-ml-lpfwjy5bzo6wwlv6l41xpx9t1g2rkzc4",
@@ -3809,18 +3803,17 @@
           "title": "\ufeffSPIP: Bring GraphFrames into Apache Spark"
         }
       ],
-      "llm_summary": "The discussion proposes integrating the GraphFrames library into the Apache Spark project to provide a native DataFrame-based graph API, streamline maintenance, and eliminate the need for separate installations. It aims to fill the gap for Spark Connect users and offer a consistent experience across Scala and Python. The proposal is currently in the discussion phase, with key points focusing on integration, maintenance, and user experience.",
+      "llm_summary": "The discussion proposes merging the GraphFrames library into Apache Spark as an in\u2011tree module, eliminating the need for a separate dependency and providing a unified graph API for DataFrames. This change would simplify installation, improve maintenance, and enable Spark Connect users to access graph functionality. The proposal clarifies that GraphX will remain available and that new graph query language work is separate.",
       "llm_status": "discussion",
       "comment_count": 3,
       "participant_count": 3,
       "llm_key_points": [
-        "Integrate GraphFrames into Spark to provide a native graph API and unify maintenance",
-        "Eliminate separate installation overhead and support Spark Connect",
-        "Offer a consistent experience across Scala and Python users"
+        "Merge GraphFrames into Spark to provide a built\u2011in graph API",
+        "Simplify installation, maintenance, and support Spark Connect"
       ],
       "llm_topics": [
         "graph-processing",
-        "in-tree-modules",
+        "in-tree-module",
         "spark-connect"
       ],
       "summary_generation": {
@@ -3830,7 +3823,7 @@
         "prompt_version": 1
       },
       "_content_hash": "1c94b6b5b3e7",
-      "llm_title": "Merge GraphFrames into Spark",
+      "llm_title": "Bring GraphFrames into Apache Spark",
       "observed_history": [],
       "initiative_id": "spark-init-spark-jira-SPARK-54783"
     },
@@ -3854,19 +3847,19 @@
           "title": "\ufeffSPIP: Extending Spark 3.5 LTS Period For Security Fixes"
         }
       ],
-      "llm_summary": "The thread discusses whether to release Spark 3.5.10, noting that 3.5 is the most downloaded version and that 36 security-related changes have accumulated since 3.5.9. It highlights an approved proposal to extend 3.5 LTS for security fixes until November 2027 and suggests timing the release after the 4.3 RC3 vote. Participants are asked to weigh in on the need and timing for the new patch release.",
+      "llm_summary": "The discussion centers on whether to issue a new 3.5.10 release, noting that Spark 3.5 is the most downloaded version and that the branch has accumulated security-related changes since the last release.  The proposal to extend 3.5 LTS support to November 2027 is referenced, and the timing of the release is linked to the ongoing 4.3 RC3 vote.  Participants are asked for interest and willingness to drive the release.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "Interest in extending 3.5 LTS to 3.5.10",
-        "Security-only support until Nov 2027",
-        "Timing release after 4.3 RC3 vote"
+        "Interest in issuing Spark 3.5.10",
+        "Security-only support for 3.5.x extended to Nov 2027",
+        "Release timing tied to 4.3 RC3 vote"
       ],
       "llm_topics": [
-        "security-fixes",
-        "lifecycle",
-        "release"
+        "security",
+        "release-cycle",
+        "lifecycle"
       ],
       "summary_generation": {
         "method": "llm",
@@ -3875,7 +3868,7 @@
         "prompt_version": 1
       },
       "_content_hash": "c0ed1f09ee9f",
-      "llm_title": "Spark 3.5.10 Release Discussion",
+      "llm_title": "Release Apache Spark 3.5.10",
       "observed_history": [],
       "initiative_id": "spark-init-spark-ml-tvzxk1d53hwrrrorszjzploggj8ljsl2"
     },
@@ -6573,7 +6566,7 @@
       ],
       "llm_title": "",
       "_content_hash": "afa33ecdedfe",
-      "initiative_id": "spark-init-spark-ml-thv6y8yhl6yd0n1xj92cd76msxskrd10"
+      "initiative_id": "spark-init-spark-ml-zh5o1wgnoogmmc6xor7qotgf7n8xqzy8"
     },
     {
       "id": "spark-ml-wlgwcn119msxgoq9r19chhrzo6whkr86",
@@ -8804,7 +8797,7 @@
         "spark"
       ],
       "_content_hash": "a7a9e86906e6",
-      "initiative_id": "spark-init-spark-ml-r8ms8fgfvtr0zr3hmxn7p01fb8lry352"
+      "initiative_id": "spark-init-spark-ml-ckpv8z0fqw42xkbrskqf3ggsl1yb81c4"
     },
     {
       "id": "spark-ml-pj765d6xw8yswty5stk0dfw18sqg1q8f",
@@ -15792,7 +15785,7 @@
         "approximate-aggregation"
       ],
       "_content_hash": "d2166ba0dda9",
-      "initiative_id": "spark-init-spark-jira-SPARK-60031",
+      "initiative_id": "spark-init-spark-ml-h8g17bz86fss0wv50fz66ctfrtfzsn3r",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -29974,7 +29967,7 @@
         "performance-improvement"
       ],
       "_content_hash": "8b09357127ec",
-      "initiative_id": "spark-init-spark-jira-SPARK-42256"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-tdgf4gd4copzxjdoldkf1n2gn5m0kdkc",
@@ -30056,7 +30049,7 @@
         "performance-improvement"
       ],
       "_content_hash": "48429bc6df81",
-      "initiative_id": "spark-init-spark-jira-SPARK-42256"
+      "initiative_id": "spark-init-spark-jira-SPARK-49834"
     },
     {
       "id": "spark-ml-l6tprb580lrq1118c83kt9fst30jp8n3",
@@ -30247,7 +30240,7 @@
         "lazy-evaluation"
       ],
       "_content_hash": "48424c48251a",
-      "initiative_id": "spark-init-spark-jira-SPARK-42256",
+      "initiative_id": "spark-init-spark-jira-SPARK-49834",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -31696,7 +31689,7 @@
         "spip"
       ],
       "_content_hash": "f3cf472da1c5",
-      "initiative_id": "spark-init-spark-jira-SPARK-42256"
+      "initiative_id": "spark-init-spark-ml-smpwykpoqr0y5r5xgc9jpt1fjm72fvck"
     },
     {
       "id": "spark-ml-nbqj698v59skknrh7bp6ol0rrs9zsr6r",

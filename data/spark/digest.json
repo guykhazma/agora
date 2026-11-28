@@ -1,5 +1,5 @@
 {
-  "summary": "This change would enable more efficient query execution for functions such as random\u2011IV encryption or remote UDFs without compromising safety guarantees. A proposal aims to add GROUPS support with standard semantics, preserving existing behavior and requiring no new operator or API changes. They monitor failure rates, which rise sharply for larger PRs, and are adjusting parallelism, timeouts, and security controls. The discussion proposes setting up the first Spark community sync on Nov 30, 2026, with a 50\u2011minute agenda covering recent changes, SPIPs, release status, and open floor topics.",
+  "summary": "This change would allow Catalyst to push down unrelated filters, dynamic partition pruning, semi/anti\u2011joins, and DSv2 offsets for expensive stateless expressions such as random\u2011IV encryption or remote UDFs, while preserving the existing safety guarantees for deterministic=false functions like rand() and uuid(). The discussion centers on adding the SQL-standard GROUPS window frame type to Spark SQL, which currently supports only ROWS and RANGE. They monitor failure rates, which rise sharply for larger PRs, and are adjusting parallelism, timeouts, and security controls. The discussion proposes the first Spark community sync on Nov 30, 2026, aiming to review recent changes, SPIPs, and release status.",
   "highlights": [
     {
       "text": "The discussion proposes kicking off the final release of the Spark 4.0 line, 4.0.6, with 61 patches including critical fixes. The lead plans to cut RC1 early ne\u2026",
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "text": "The discussion proposes adding an opt\u2011in Expression.rowOrderIndependent property to Catalyst, allowing expensive nondeterministic functions that are independent\u2026",
+      "text": "The discussion proposes adding an opt\u2011in Expression.rowOrderIndependent property to separate nondeterministic expressions that are independent of row order from\u2026",
       "sources": [
         {
           "id": "spark-ml-bgnofkm2srk0ypnlqpscn6mb45k7ywnk",
@@ -47,7 +47,7 @@
     "prompt_version": 2
   },
   "schema_version": 2,
-  "generated_at": "2026-11-27T15:55:16.426181+00:00",
+  "generated_at": "2026-11-28T14:49:43.482737+00:00",
   "item_count": 10,
   "period": "last_7_days",
   "coverage": {

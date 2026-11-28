@@ -1,6 +1,6 @@
 {
   "project_id": "parquet",
-  "generated_at": "2026-11-27T15:58:12.720895+00:00",
+  "generated_at": "2026-11-28T14:52:17.267941+00:00",
   "total": 321,
   "proposals": [
     {
@@ -3193,14 +3193,15 @@
           "kind": "github_pr"
         }
       ],
-      "llm_summary": "The discussion compares PFOR variants for Parquet, showing PFOR outperforms other codecs in decode throughput and compression ratio. Participants agree to include Delta mode and consider renaming the proposal to FastLanes, while planning to add interleaving and Unified Transpose Layout in future iterations.",
+      "llm_summary": "The discussion compares PFOR variants for Parquet, showing PFOR with conventional bit packing delivers the fastest decode throughput and best compression among tested methods. Participants debate whether to include Delta mode in the initial specification, the appropriate naming (PFOR vs FastLanes), and future enhancements such as interleaving and Unified Transpose Layout. The consensus leans toward adding Delta mode, retaining PFOR terminology for clarity, and deferring advanced layouts to later iterations.",
       "llm_status": "discussion",
       "comment_count": 5,
       "participant_count": 3,
       "llm_key_points": [
-        "PFOR achieves highest decode throughput and compression ratio",
-        "Delta mode should be included to improve compression for sorted columns",
-        "Proposal may be renamed to FastLanes and interleaving/UTL to be added later"
+        "PFOR achieves highest decode throughput and compression",
+        "Delta mode improves compression for sorted or slowly changing columns",
+        "Naming debate: PFOR vs FastLanes",
+        "Future work: interleaving and Unified Transpose Layout"
       ],
       "llm_topics": [
         "parquet",
@@ -3214,7 +3215,7 @@
         "prompt_version": 1
       },
       "_content_hash": "529ea5d174e3",
-      "llm_title": "FastLanes for Parquet Benchmark and Design",
+      "llm_title": "FastLanes for Parquet Benchmark Results",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
@@ -3430,20 +3431,12 @@
           "title": "\ufeff[DESIGN] A SERIALIZED_VALUE logical type for Parquet"
         }
       ],
-      "llm_summary": "The proposal introduces a SERIALIZED_VALUE logical type for BYTE_ARRAY columns that store serialized messages such as protobuf, FlatBuffers, or Thrift, recording the format and schema without decoding the bytes. It aims to provide a unified way for different engines to interpret the data and support use cases like archiving event streams. Feedback highlights that while it could standardize handling across engines, some see it as a niche feature that could be managed by struct columns instead.",
+      "llm_summary": "The proposal introduces a SERIALIZED_VALUE logical type for Parquet that annotates BYTE_ARRAY columns with the message format and embedded schema",
       "llm_status": "discussion",
       "comment_count": 2,
       "participant_count": 2,
-      "llm_key_points": [
-        "Introduces SERIALIZED_VALUE logical type for BYTE_ARRAY columns storing serialized messages",
-        "Stores format and schema info; Parquet does not decode bytes, enabling cross-engine consistency",
-        "Use case includes archiving event streams, though some view it as niche"
-      ],
-      "llm_topics": [
-        "logical-types",
-        "serialization",
-        "parquet"
-      ],
+      "llm_key_points": [],
+      "llm_topics": [],
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -3451,7 +3444,6 @@
         "prompt_version": 1
       },
       "_content_hash": "768a95e4a32a",
-      "llm_title": "SERIALIZED_VALUE logical type for serialized messages",
       "observed_history": [],
       "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
@@ -3562,17 +3554,18 @@
           "title": "\ufeffThe Modular Footer aims to reduce the metadata I/O and decoding work needed to start a scan. The goals and motivation f"
         }
       ],
-      "llm_summary": "The proposal introduces a page-first data layout for Parquet files, allowing each column to independently decide when to cut pages and where to place them, decoupling from row group boundaries. This aims to improve page sizing, reduce unnecessary dictionary resets, and preserve row-group statistics for efficient data skipping. It is a superset of the current layout, enabling writers to emit the same structure if desired.",
+      "llm_summary": "The proposal introduces a page-first data layout for Parquet files, allowing writers to cut pages independently per column rather than being bound to row group boundaries. This removes the physical coupling between columns, enabling better page sizing and reducing unnecessary dictionary resets while still preserving row group statistics for data skipping. The design aims to improve performance for wide, sparse, or asymmetric schemas without breaking existing readers.",
       "llm_status": "discussion",
       "comment_count": 0,
       "participant_count": 1,
       "llm_key_points": [
-        "Allows independent page cutting per column",
-        "Reduces coupling between row groups and column chunks",
-        "Improves page sizing and statistics granularity"
+        "Writers can cut pages independently per column",
+        "Removes row group constraints while preserving statistics",
+        "Improves page sizing and reduces dictionary overhead"
       ],
       "llm_topics": [
         "data-layout",
+        "parquet",
         "performance"
       ],
       "summary_generation": {
@@ -4627,7 +4620,7 @@
       },
       "_content_hash": "77db5732b161",
       "observed_history": [],
-      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z"
+      "initiative_id": "parquet-init-parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo"
     },
     {
       "id": "parquet-ml-ovo7vhh2gp31v32xzq6wm5f0grk97bs3",
@@ -10320,7 +10313,7 @@
       ],
       "_content_hash": "30797310e12c",
       "llm_title": "Integration Testing for Parquet Implementations",
-      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",
+      "initiative_id": "parquet-init-parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo",
       "observed_history": [],
       "summary_generation": {
         "method": "llm",
@@ -10401,7 +10394,7 @@
         "vote-thread"
       ],
       "_content_hash": "5b089dd0f010",
-      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z"
+      "initiative_id": "parquet-init-parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo"
     },
     {
       "id": "parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo",
@@ -10485,7 +10478,7 @@
         "geospatial-data"
       ],
       "_content_hash": "e206d626ef2e",
-      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z"
+      "initiative_id": "parquet-init-parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo"
     },
     {
       "id": "parquet-ml-p6jq3rgdqkqhx0xj8wjt7ldrpyrktw20",
@@ -10676,7 +10669,7 @@
       ],
       "_content_hash": "a936be3b69a6",
       "llm_title": "Add geometry logical type",
-      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z",
+      "initiative_id": "parquet-init-parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -11468,7 +11461,7 @@
       ],
       "_content_hash": "c2295ec268fe",
       "llm_title": "Extension types in Parquet",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533",
+      "initiative_id": "parquet-init-parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo",
       "summary_generation": {
         "method": "llm",
         "provider": "groq",
@@ -11582,7 +11575,7 @@
       ],
       "_content_hash": "209f31a55ed8",
       "llm_title": "Clarify min-max truncation in Parquet statistics",
-      "initiative_id": "parquet-init-parquet-ml-zfnmg5p51b7oylft5w5k4670wgkd4zv4"
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
     {
       "id": "parquet-ml-6h58hj39lhqtcyd2hlsyvqm4lzdh4b9z",
@@ -11893,7 +11886,7 @@
       ],
       "_content_hash": "c242c64ce298",
       "llm_title": "Clarify null_counts and distinct_counts in Parquet",
-      "initiative_id": "parquet-init-parquet-ml-zfnmg5p51b7oylft5w5k4670wgkd4zv4"
+      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
     },
     {
       "id": "parquet-ml-t9bbdft69rgk4jotmx26259m1vxhx83v",
@@ -12769,7 +12762,7 @@
       ],
       "_content_hash": "48cbc9c83c2b",
       "llm_title": "Unify Record and Row Terminology",
-      "initiative_id": "parquet-init-parquet-repo-apache%2Fparquet-format-gh-i533"
+      "initiative_id": "parquet-init-parquet-ml-0gxjk4tphxls0gcrc7lt775pf8s7gtz3"
     },
     {
       "id": "parquet-ml-h589zkwnpo592gc9n17v0y7qvd9jv1z4",
@@ -12981,7 +12974,7 @@
       ],
       "_content_hash": "2a08a456c011",
       "llm_title": "Integration Testing for Parquet Implementations",
-      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z"
+      "initiative_id": "parquet-init-parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo"
     },
     {
       "id": "parquet-ml-w6r0fwj42wvpm5yflwxhtm2ss3z2hrl3",
@@ -14251,7 +14244,7 @@
         "support-finer"
       ],
       "_content_hash": "20a49614491d",
-      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z"
+      "initiative_id": "parquet-init-parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo"
     },
     {
       "id": "parquet-ml-m6o68jl7fosfxq66p8c85cqr2t2gv611",
@@ -14287,7 +14280,7 @@
         "gidon-gershinsky"
       ],
       "_content_hash": "6cbbd5930920",
-      "initiative_id": "parquet-init-parquet-ml-8bh6w2147kt0c42k5thdmsc72mj9mk8z"
+      "initiative_id": "parquet-init-parquet-ml-s6s714c98cn9gg22mnk5nsn7xymym8xo"
     },
     {
       "id": "parquet-ml-5hnr6r45rg8wpvnq0psq7gb5895nwcb2",
